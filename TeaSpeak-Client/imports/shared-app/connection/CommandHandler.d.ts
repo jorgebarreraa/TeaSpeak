@@ -1,0 +1,50 @@
+import { AbstractServerConnection, CommandOptions, ServerCommand } from "../connection/ConnectionBase";
+import { CommandResult } from "../connection/ServerConnectionDeclaration";
+import { ConnectionHandler } from "../ConnectionHandler";
+import { AbstractCommandHandler, AbstractCommandHandlerBoss } from "../connection/AbstractCommandHandler";
+export declare class ServerConnectionCommandBoss extends AbstractCommandHandlerBoss {
+    constructor(connection: AbstractServerConnection);
+}
+export declare class ConnectionCommandHandler extends AbstractCommandHandler {
+    readonly connection: AbstractServerConnection;
+    readonly connection_handler: ConnectionHandler;
+    constructor(connection: AbstractServerConnection);
+    private loggable_invoker;
+    proxy_command_promise(promise: Promise<CommandResult>, options: CommandOptions): Promise<CommandResult>;
+    handle_command(command: ServerCommand): boolean;
+    set_handler(command: string, handler: any): void;
+    unset_handler(command: string, handler?: any): void;
+    handleCommandResult(json: any): void;
+    handleCommandServerInit(json: any): void;
+    handleNotifyServerConnectionInfo(json: any): void;
+    handleNotifyConnectionInfo(json: any): void;
+    private createChannelFromJson;
+    private batchTreeUpdateFinishedTimeout;
+    handleCommandChannelList(json: any): void;
+    handleCommandChannelListFinished(): void;
+    handleCommandChannelCreate(json: any): void;
+    handleCommandChannelShow(json: any): void;
+    handleCommandChannelDelete(json: any): void;
+    handleCommandChannelHide(json: any): void;
+    handleCommandClientEnterView(json: any): void;
+    handleCommandClientLeftView(json: any): number;
+    handleNotifyClientMoved(json: any): number;
+    handleNotifyChannelMoved(json: any): number;
+    handleNotifyChannelEdited(json: any): number;
+    handleNotifyChannelDescriptionChanged(json: any): void;
+    handleNotifyTextMessage(json: any): void;
+    notifyClientChatComposing(json: any): void;
+    handleNotifyClientChatClosed(json: any): void;
+    handleNotifyClientUpdated(json: any): void;
+    handleNotifyServerEdited(json: any): void;
+    handleNotifyServerUpdated(json: any): void;
+    handleNotifyMusicPlayerInfo(json: any): void;
+    handleNotifyClientPoke(json: any): void;
+    handleNotifyServerGroupClientAdd(json: any): void;
+    handleNotifyServerGroupClientRemove(json: any): void;
+    handleNotifyClientChannelGroupChanged(json: any): void;
+    handleNotifyChannelSubscribed(json: any): void;
+    handleNotifyChannelUnsubscribed(json: any): void;
+    handleNotifyMusicStatusUpdate(json: any[]): void;
+    handleMusicPlayerSongChange(json: any[]): void;
+}

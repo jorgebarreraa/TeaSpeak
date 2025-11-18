@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>SSL_CTX_set_tmp_ecdh</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>SSL_CTX_set_tmp_ecdh, SSL_set_tmp_ecdh, SSL_CTX_set_ecdh_auto, SSL_set_ecdh_auto
+- handle ECDH keys for ephemeral key exchange</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/ssl.h&gt;</pre>
+<pre>
+ long SSL_CTX_set_tmp_ecdh(SSL_CTX *ctx, const EC_KEY *ecdh);
+ long SSL_set_tmp_ecdh(SSL *ssl, const EC_KEY *ecdh);</pre>
+<pre>
+ long SSL_CTX_set_ecdh_auto(SSL_CTX *ctx, int state);
+ long SSL_set_ecdh_auto(SSL *ssl, int state);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><code>SSL_CTX_set_tmp_ecdh()</code> sets ECDH parameters to be used to be <strong>ecdh</strong>.
+The key is inherited by all <strong>ssl</strong> objects created from <strong>ctx</strong>.
+This macro is deprecated in favor of <em>SSL_CTX_set1_groups(3)</em>.</p>
+<p><code>SSL_set_tmp_ecdh()</code> sets the parameters only for <strong>ssl</strong>.
+This macro is deprecated in favor of <em>SSL_set1_groups(3)</em>.</p>
+<p><code>SSL_CTX_set_ecdh_auto()</code> and <code>SSL_set_ecdh_auto()</code> are deprecated and
+have no effect.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>SSL_CTX_set_tmp_ecdh()</code> and <code>SSL_set_tmp_ecdh()</code> return 1 on success and 0
+on failure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>ssl(7)</em>, <em>SSL_CTX_set1_curves(3)</em>, <em>SSL_CTX_set_cipher_list(3)</em>,
+<em>SSL_CTX_set_options(3)</em>, <em>SSL_CTX_set_tmp_dh_callback(3)</em>,
+<em>openssl-ciphers(1)</em>, <em>openssl-ecparam(1)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2018 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,415 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>provider</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#general">General</a></li>
+		<li><a href="#provider">Provider</a></li>
+		<li><a href="#operations">Operations</a></li>
+		<li><a href="#fetching_algorithms">Fetching algorithms</a></li>
+		<ul>
+
+			<li><a href="#explicit_fetch">Explicit fetch</a></li>
+			<li><a href="#implicit_fetch">Implicit fetch</a></li>
+			<li><a href="#algorithm_naming">Algorithm naming</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#openssl_providers">OPENSSL PROVIDERS</a></li>
+	<ul>
+
+		<li><a href="#default_provider">Default provider</a></li>
+		<li><a href="#fips_provider">FIPS provider</a></li>
+		<li><a href="#legacy_provider">Legacy provider</a></li>
+	</ul>
+
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#fetching">Fetching</a></li>
+	</ul>
+
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>provider - OpenSSL operation implementation providers</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>#include &lt;openssl/provider.h&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>
+</p>
+<h2><a name="general">General</a></h2>
+<p>A <em>provider</em>, in OpenSSL terms, is a unit of code that provides one
+or more implementations for various operations for diverse algorithms
+that one might want to perform.</p>
+<p>An <em>operation</em> is something one wants to do, such as encryption and
+decryption, key derivation, MAC calculation, signing and verification,
+etc.</p>
+<p>An <em>algorithm</em> is a named method to perform an operation.
+Very often, the algorithms revolve around cryptographic operations,
+but may also revolve around other types of operation, such as managing
+certain types of objects.</p>
+<p>
+</p>
+<h2><a name="provider">Provider</a></h2>
+<p><em>NOTE: This section is mostly interesting for provider authors.</em></p>
+<p>A <em>provider</em> offers an initialization function, as a set of base
+functions in the form of an <strong>OSSL_DISPATCH</strong> array, and by extension,
+a set of <strong>OSSL_ALGORITHM</strong>s (see <em>openssl-core.h(7)</em>).
+It may be a dynamically loadable module, or may be built-in, in
+OpenSSL libraries or in the application.
+If it's a dynamically loadable module, the initialization function
+must be named <code>OSSL_provider_init</code> and must be exported.
+If it's built-in, the initialization function may have any name.</p>
+<p>The initialization function must have the following signature:</p>
+<pre>
+ int NAME(const OSSL_PROVIDER *provider,
+          const OSSL_DISPATCH *in, const OSSL_DISPATCH **out,
+          void **provctx);</pre>
+<p><em>provider</em> is the OpenSSL library object for the provider, and works
+as a handle for everything the OpenSSL libraries need to know about
+the provider.
+For the provider itself, it may hold some interesting information,
+and is also passed to some of the functions given in the dispatch
+array <em>in</em>.</p>
+<p><em>in</em> is a dispatch array of base functions offered by the OpenSSL
+libraries, and the available functions are further described in
+<em>provider-base(7)</em>.</p>
+<p><em>*out</em> must be assigned a dispatch array of base functions that the
+provider offers to the OpenSSL libraries.
+The functions that may be offered are further described in
+<em>provider-base(7)</em>, and they are the central means of communication
+between the OpenSSL libraries and the provider.</p>
+<p><em>*provctx</em> should be assigned a provider specific context to allow
+the provider multiple simultaneous uses.
+This pointer will be passed to various operation functions offered by
+the provider.</p>
+<p>One of the functions the provider offers to the OpenSSL libraries is
+the central mechanism for the OpenSSL libraries to get access to
+operation implementations for diverse algorithms.
+Its referred to with the number <strong>OSSL_FUNC_PROVIDER_QUERY_OPERATION</strong>
+and has the following signature:</p>
+<pre>
+ const OSSL_ALGORITHM *provider_query_operation(void *provctx,
+                                                int operation_id,
+                                                const int *no_store);</pre>
+<p><em>provctx</em> is the provider specific context that was passed back by
+the initialization function.</p>
+<p><em>operation_id</em> is an operation identity (see <a href="#operations">Operations</a> below).</p>
+<p><em>no_store</em> is a flag back to the OpenSSL libraries which, when
+nonzero, signifies that the OpenSSL libraries will not store a
+reference to the returned data in their internal store of
+implementations.</p>
+<p>The returned <strong>OSSL_ALGORITHM</strong> is the foundation of any OpenSSL
+library API that uses providers for their implementation, most
+commonly in the <em>fetching</em> type of functions
+(see <a href="#fetching_algorithms">Fetching algorithms</a> below).</p>
+<p>
+</p>
+<h2><a name="operations">Operations</a></h2>
+<p><em>NOTE: This section is mostly interesting for provider authors.</em></p>
+<p>Operations are referred to with numbers, via macros with names
+starting with <code>OSSL_OP_</code>.</p>
+<p>With each operation comes a set of defined function types that a
+provider may or may not offer, depending on its needs.</p>
+<p>Currently available operations are:</p>
+<dl>
+<dt><strong><a name="digests" class="item">Digests</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>EVP_MD</strong>.
+The number for this operation is <strong>OSSL_OP_DIGEST</strong>.
+The functions the provider can offer are described in
+<em>provider-digest(7)</em></p>
+</dd>
+<dt><strong><a name="symmetric_ciphers" class="item">Symmetric ciphers</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>EVP_CIPHER</strong>.
+The number for this operation is <strong>OSSL_OP_CIPHER</strong>.
+The functions the provider can offer are described in
+<em>provider-cipher(7)</em></p>
+</dd>
+<dt><strong><a name="code" class="item">Message Authentication Code (MAC)</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>EVP_MAC</strong>.
+The number for this operation is <strong>OSSL_OP_MAC</strong>.
+The functions the provider can offer are described in
+<em>provider-mac(7)</em></p>
+</dd>
+<dt><strong><a name="function" class="item">Key Derivation Function (KDF)</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>EVP_KDF</strong>.
+The number for this operation is <strong>OSSL_OP_KDF</strong>.
+The functions the provider can offer are described in
+<em>provider-kdf(7)</em></p>
+</dd>
+<dt><strong><a name="key_exchange" class="item">Key Exchange</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>EVP_KEYEXCH</strong>.
+The number for this operation is <strong>OSSL_OP_KEYEXCH</strong>.
+The functions the provider can offer are described in
+<em>provider-keyexch(7)</em></p>
+</dd>
+<dt><strong><a name="serialization" class="item">Serialization</a></strong></dt>
+
+<dd>
+<p>In the OpenSSL libraries, the corresponding method object is
+<strong>OSSL_SERIALIZER</strong>.
+The number for this operation is <strong>OSSL_OP_SERIALIZER</strong>.
+The functions the provider can offer are described in
+<em>provider-serializer(7)</em></p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="fetching_algorithms">Fetching algorithms</a></h2>
+<p>
+</p>
+<h3><a name="explicit_fetch">Explicit fetch</a></h3>
+<p><em>NOTE: This section is mostly interesting to OpenSSL users.</em></p>
+<p>Users of the OpenSSL libraries never query the provider directly for
+its diverse implementations and dispatch tables.
+Instead, the diverse OpenSSL APIs often have fetching functions that
+do the work, and they return an appropriate method object back to the
+user.
+These functions usually have the name <code>APINAME_fetch</code>, where
+<code>APINAME</code> is the name of the API, for example <em>EVP_MD_fetch(3)</em>.</p>
+<p>These fetching functions follow a fairly common pattern, where three
+arguments are passed:</p>
+<dl>
+<dt><strong><a name="the_library_context" class="item">The library context</a></strong></dt>
+
+<dd>
+<p>See <em>OPENSSL_CTX(3)</em> for a more detailed description.
+This may be NULL to signify the default (global) library context, or a
+context created by the user.
+Only providers loaded in this library context (see
+<em>OSSL_PROVIDER_load(3)</em>) will be considered by the fetching
+function.</p>
+</dd>
+<dt><strong><a name="an_identifier" class="item">An identifier</a></strong></dt>
+
+<dd>
+<p>This is most commonly an algorithm name (this is the case for all EVP
+methods), but may also be called something else.</p>
+</dd>
+<dt><strong><a name="a_property_query_string" class="item">A property query string</a></strong></dt>
+
+<dd>
+<p>See <em>property(7)</em> for a more detailed description.
+This is used to select more exactly which providers will get to offer
+an implementation.</p>
+</dd>
+</dl>
+<p>The method object that is fetched can then be used with diverse other
+functions that use them, for example <em>EVP_DigestInit_ex(3)</em>.</p>
+<p>
+</p>
+<h3><a name="implicit_fetch">Implicit fetch</a></h3>
+<p><em>NOTE: This section is mostly interesting to OpenSSL users.</em></p>
+<p>OpenSSL has a number of functions that return a method object with no
+associated implementation, such as <em>EVP_sha256(3)</em>,
+<em>EVP_blake2b512(3)</em> or <em>EVP_aes_128_cbc(3)</em>, which are present for
+compatibility with OpenSSL before version 3.0.</p>
+<p>When they are used with functions like <em>EVP_DigestInit_ex(3)</em> or
+<em>EVP_CipherInit_ex(3)</em>, the actual implementation to be used is
+fetched implicitly using default search criteria.</p>
+<p>Implicit fetching can also occur when a NULL algorithm parameter is
+supplied.
+In this case an algorithm implementation is implicitly fetched using
+default search criteria and an algorithm name that is consistent with
+the type of EVP_PKEY being used.</p>
+<p>
+</p>
+<h3><a name="algorithm_naming">Algorithm naming</a></h3>
+<p>Algorithm names are case insensitive. Any particular algorithm can have multiple
+aliases associated with it. The canonical OpenSSL naming scheme follows this
+format:</p>
+<p>ALGNAME[VERSION?][-SUBNAME[VERSION?]?][-SIZE?][-MODE?]</p>
+<p>VERSION is only present if there are multiple versions of an algorithm (e.g.
+MD2, MD4, MD5).  It may be omitted if there is only one version.</p>
+<p>SUBNAME may be present where multiple algorithms are combined together,
+e.g. MD5-SHA1.</p>
+<p>SIZE is only present if multiple versions of an algorithm exist with different
+sizes (e.g. AES-128-CBC, AES-256-CBC)</p>
+<p>MODE is only present where applicable.</p>
+<p>Other aliases may exist for example where standards bodies or common practice
+use alternative names or names that OpenSSL has used historically.</p>
+<p>
+</p>
+<hr />
+<h1><a name="openssl_providers">OPENSSL PROVIDERS</a></h1>
+<p>OpenSSL comes with a set of providers.</p>
+<p>The algorithms available in each of these providers may vary due to build time
+configuration options. The <em>openssl-list(1)</em> command can be used to list the
+currently available algorithms.</p>
+<p>The names of the algorithms shown from <em>openssl-list(1)</em> can be used as an
+algorithm identifier to the appropriate fetching function.</p>
+<p>
+</p>
+<h2><a name="default_provider">Default provider</a></h2>
+<p>The default provider is built in as part of the <em class="file">libcrypto</em> library.
+Should it be needed (if other providers are loaded and offer
+implementations of the same algorithms), the property &quot;provider=default&quot;
+can be used as a search criterion for these implementations. Some
+non-cryptographic algorithms (such as serializers for loading keys and
+parameters from files) are not FIPS algorithm implementations in themselves but
+support algorithms from the FIPS provider and are allowed for use in &quot;FIPS
+mode&quot;. The property &quot;fips=yes&quot; can be used to select such algorithms.</p>
+<p>
+</p>
+<h2><a name="fips_provider">FIPS provider</a></h2>
+<p>The FIPS provider is a dynamically loadable module, and must therefore
+be loaded explicitly, either in code or through OpenSSL configuration
+(see <em>config(5)</em>).
+Should it be needed (if other providers are loaded and offer
+implementations of the same algorithms), the property &quot;provider=fips&quot; can
+be used as a search criterion for these implementations. All algorithm
+implementations in the FIPS provider can also be selected with the property
+&quot;fips=yes&quot;.</p>
+<p>
+</p>
+<h2><a name="legacy_provider">Legacy provider</a></h2>
+<p>The legacy provider is a dynamically loadable module, and must therefore
+be loaded explicitly, either in code or through OpenSSL configuration
+(see <em>config(5)</em>).
+Should it be needed (if other providers are loaded and offer
+implementations of the same algorithms), the property &quot;provider=legacy&quot; can be
+used as a search criterion for these implementations.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>
+</p>
+<h2><a name="fetching">Fetching</a></h2>
+<p>Fetch any available implementation of SHA2-256 in the default context:</p>
+<pre>
+ EVP_MD *md = EVP_MD_fetch(NULL, &quot;SHA2-256&quot;, NULL);
+ ...
+ EVP_MD_meth_free(md);</pre>
+<p>Fetch any available implementation of AES-128-CBC in the default context:</p>
+<pre>
+ EVP_CIPHER *cipher = EVP_CIPHER_fetch(NULL, &quot;AES-128-CBC&quot;, NULL);
+ ...
+ EVP_CIPHER_meth_free(cipher);</pre>
+<p>Fetch an implementation of SHA2-256 from the default provider in the default
+context:</p>
+<pre>
+ EVP_MD *md = EVP_MD_fetch(NULL, &quot;SHA2-256&quot;, &quot;provider=default&quot;);
+ ...
+ EVP_MD_meth_free(md);</pre>
+<p>Fetch an implementation of SHA2-256 that is not from the default provider in the
+default context:</p>
+<pre>
+ EVP_MD *md = EVP_MD_fetch(NULL, &quot;SHA2-256&quot;, &quot;provider!=default&quot;);
+ ...
+ EVP_MD_meth_free(md);</pre>
+<p>Fetch an implementation of SHA2-256 from the default provider in the specified
+context:</p>
+<pre>
+ EVP_MD *md = EVP_MD_fetch(ctx, &quot;SHA2-256&quot;, &quot;provider=default&quot;);
+ ...
+ EVP_MD_meth_free(md);</pre>
+<p>Load the legacy provider into the default context and then fetch an
+implementation of WHIRLPOOL from it:</p>
+<pre>
+ /* This only needs to be done once - usually at application start up */
+ OSSL_PROVIDER *legacy = OSSL_PROVIDER_load(NULL, &quot;legacy&quot;);</pre>
+<pre>
+ EVP_MD *md = EVP_MD_fetch(NULL, &quot;WHIRLPOOL&quot;, &quot;provider=legacy&quot;);
+ ...
+ EVP_MD_meth_free(md);</pre>
+<p>Note that in the above example the property string &quot;provider=legacy&quot; is optional
+since, assuming no other providers have been loaded, the only implementation of
+the &quot;whirlpool&quot; algorithm is in the &quot;legacy&quot; provider. Also note that the
+default provider should be explicitly loaded if it is required in addition to
+other providers:</p>
+<pre>
+ /* This only needs to be done once - usually at application start up */
+ OSSL_PROVIDER *legacy = OSSL_PROVIDER_load(NULL, &quot;legacy&quot;);
+ OSSL_PROVIDER *default = OSSL_PROVIDER_load(NULL, &quot;default&quot;);</pre>
+<pre>
+ EVP_MD *md_whirlpool = EVP_MD_fetch(NULL, &quot;whirlpool&quot;, NULL);
+ EVP_MD *md_sha256 = EVP_MD_fetch(NULL, &quot;SHA2-256&quot;, NULL);
+ ...
+ EVP_MD_meth_free(md_whirlpool);
+ EVP_MD_meth_free(md_sha256);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>EVP_DigestInit_ex(3)</em>, <em>EVP_EncryptInit_ex(3)</em>,
+<em>OPENSSL_CTX(3)</em>,
+<em>EVP_set_default_properties(3)</em>,
+<em>EVP_MD_fetch(3)</em>,
+<em>EVP_CIPHER_fetch(3)</em>,
+<em>EVP_KEYMGMT_fetch(3)</em>,
+<em>openssl-core.h(7)</em>,
+<em>provider-base(7)</em>,
+<em>provider-digest(7)</em>,
+<em>provider-cipher(7)</em>,
+<em>provider-keyexch(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The concept of providers and everything surrounding them was
+introduced in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

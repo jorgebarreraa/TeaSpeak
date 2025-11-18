@@ -1,0 +1,48 @@
+# Docker setup
+docker run --rm --privileged multiarch/qemu-user-static:register
+docker run -it --name build_arm32v7 arm32v7/ubuntu:14.04 /bin/bash
+
+sudo apt-get update && \
+sudo apt-get install build-essential software-properties-common -y && \
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
+sudo apt-get update && \
+sudo apt-get install gcc-9 g++-9 -y && \
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9 && \
+sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-9 60 --slave /usr/bin/c++ c++ /usr/bin/c++-9 # This fails for some reason
+
+# Sometimes its required to build from source: (Not required for ubuntu 14.04)
+https://raw.githubusercontent.com/darrenjs/howto/master/build_scripts/build_gcc_9.sh
+
+apt-get install -y autoconf git wget libssl-dev realpath libsqlite3-dev libmysqlclient-dev libpcre3-dev
+
+wget https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3.tar.gz && tar xvf cmake-3.16.3.tar.gz && \
+cd cmake-3.16.3 && ./configure --parallel=16 && \
+make -j16 && make install && \
+cd ..
+
+git config --global credential.helper store
+
+# Patchelf
+wget http://nixos.org/releases/patchelf/patchelf-0.10/patchelf-0.10.tar.bz2 && \
+tar xf patchelf-0.10.tar.bz2 && \
+cd patchelf-0.10 && \
+./configure && \
+make install
+
+# Create TeaSpeak
+git clone https://git.did.science/WolverinDEV/TeaSpeak-Parent.git server && cd server && \
+git submodule update --init --recursive
+./libraries/build.sh
+
+
+# External prebuild libraries
+# ------------ OpenSSL -------------
+git clone https://github.com/openssl/openssl.git && cd openssl && \
+git checkout OpenSSL_1_1_1-stable && \
+mkdir build && cd build && \
+../config --prefix=`pwd`/../out && \
+make -j30 && \
+make install
+
+# Build MySQL
+cmake ../ -DOPENSSL_ROOT_DIR=../../server/libraries/openssl-prebuild/linux_arm32v7/ -DDOWNLOAD_BOOST=1 -DWITH_BOOST=/tmp/boost/ -DCMAKE_INSTALL_PREFIX=../out

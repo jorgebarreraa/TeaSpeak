@@ -1,0 +1,11 @@
+Windows AMD64:
+cd libevent
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+
+cmake ../../ -G"Visual Studio 14 2015 Win64" -DEVENT_INSTALL_CMAKE_DIR=cmake -DCMAKE_INSTALL_PREFIX=. -DEVENT__DISABLE_BENCHMARK=ON -DEVENT__LIBRARY_TYPE=BOTH -DEVENT__MSVC_STATIC_RUNTIME=ON -DEVENT__DISABLE_TESTS=ON -DEVENT__DISABLE_SAMPLES=ON -DEVENT__DISABLE_OPENSSL=ON
+#MSBuild.exe //p:Configuration=Release //p:Platform=x64 event_shared.vcxproj
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 event_static.vcxproj
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 INSTALL.vcxproj

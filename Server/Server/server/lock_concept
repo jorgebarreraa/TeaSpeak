@@ -1,0 +1,64 @@
+Locking Order:
+Channel Tree:
+1. Server Channel Tree
+2. Client Channel Tree
+
+
+CommandResult handleCommandClientUpdate(Command&);
+CommandResult handleCommandClientEdit(Command&);
+CommandResult handleCommandClientEdit(Command&, const std::shared_ptr<ConnectedClient>& /* target */);
+CommandResult handleCommandClientMove(Command&);
+CommandResult handleCommandClientGetVariables(Command&);
+CommandResult handleCommandClientKick(Command&);
+CommandResult handleCommandClientPoke(Command&);
+
+CommandResult handleCommandChannelSubscribe(Command&); read lock: server channel tree => client lock write
+CommandResult handleCommandChannelSubscribeAll(Command&); read lock: server channel tree => client lock write
+CommandResult handleCommandChannelUnsubscribe(Command&); read lock: server channel tree => client lock write
+CommandResult handleCommandChannelUnsubscribeAll(Command&); read lock: server channel tree => client lock write
+CommandResult handleCommandChannelCreate(Command&); write lock server channel tree => iterate clients lock (write)
+CommandResult handleCommandChannelDelete(Command&); write lock server channel tree => iterate clients lock (write)
+CommandResult handleCommandChannelEdit(Command&); write lock server channel tree
+CommandResult handleCommandChannelGetDescription(Command&); read lock: server channel tree
+CommandResult handleCommandChannelMove(Command&); write lock server channel tree
+
+CommandResult handleCommandChannelAddPerm(Command&); read lock: server channel tree => all clients write lock
+CommandResult handleCommandChannelDelPerm(Command&); read lock: server channel tree => all clients write lock
+
+CommandResult handleCommandChannelGroupDel(Command&); read lock: server channel tree => all clients in the group should not be allowed to switch a channel
+CommandResult handleCommandSetClientChannelGroup(Command&); read lock: server channel tree => client should not be allowed to switch channel
+
+CommandResult handleCommandPluginCmd(Command&);
+
+CommandResult handleCommandClientMute(Command&);
+CommandResult handleCommandClientUnmute(Command&);
+
+//Original from query but still reachable for all
+CommandResult handleCommandClientList(Command&);
+
+CommandResult handleCommandClientFind(Command&);
+CommandResult handleCommandClientInfo(Command&);
+
+CommandResult handleCommandVerifyChannelPassword(Command&); read lock: server channel tree
+
+handleCommandChannelFind read lock: server channel tree
+handleCommandChannelInfo read lock: server channel tree
+
+General command handling: client_command_lock
+    Ensure that only one command at time will be handeled
+
+
+Read access server channel tree: read lock channel_tree_lock
+Write access server channel tree: lock channel_tree_lock
+Write access client channel tree: read lock channel_tree_lock => lock client channel tree
+    if we write to the server channel tree no client should have their channel tree updated
+Read access client channel tree: no lock required
+    Note: the server channel tree should not be accessed!
+
+Move client acts like access server channel tree: write lock channel_tree_lock => for each client write lock their tree
+
+
+TODO: Some kind of perm channel lock
+TODO: Fix handleCommandChannelEdit
+
+Test: Channel hide & show with clients! Multiple clients as well!

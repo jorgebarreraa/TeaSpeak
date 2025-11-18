@@ -1,0 +1,61 @@
+#==26762==    at 0x86C2DB1: g_closure_new_simple (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+#==26762==    by 0x86C448F: g_cclosure_new (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+#==26762==    by 0x86DD628: g_signal_connect_data (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+#==26762==    by 0x8C5BAFB: g_cancellable_source_new (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+#==26762==    by 0x8C9C14F: g_socket_create_source (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+
+{
+    g_closure_new
+    obj:ibgobject-2.0.so.0.5600.2
+    obj:ibgobject-2.0.so.0.5600.2
+    obj:ibgobject-2.0.so.0.5600.2
+    ...
+}
+
+#==30245== Invalid read of size 8
+# ==30245==    at 0x86E16A4: ??? (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x86E4918: ??? (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x86E8E24: g_type_add_interface_static (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x7A050F2: g_type_add_interface_static (in /usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0)
+# ==30245==    by 0x9AC63A1: gtk_button_get_type (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x9CBF2FB: gtk_toggle_button_get_type (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x190EF06F: gtk_module_init (in /usr/lib/x86_64-linux-gnu/gtk-3.0/modules/libcanberra-gtk3-module.so)
+# ==30245==    by 0x9BF02C6: ??? (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x9BF0557: ??? (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x9C5BA24: ??? (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x9C61076: ??? (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==    by 0x9BF05F7: ??? (in /usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
+# ==30245==  Address 0x321aadb68370 is 8 bytes inside a block of size 32 free'd
+# ==30245==    at 0x86C396B: g_closure_unref (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x86D5FF4: g_signal_handler_disconnect (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x8C5BA41: g_cancellable_disconnect (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8C5BA87: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8951199: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x89515CA: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x895417F: g_main_context_dispatch (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x89544BF: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x89547D1: g_main_loop_run (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x8CECF65: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x897BE84: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x82946DA: start_thread (pthread_create.c:463)
+# ==30245==  Block was alloc'd at
+# ==30245==    at 0x86C2E1C: g_closure_new_simple (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x86C448F: g_cclosure_new (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x86DD628: g_signal_connect_data (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.2)
+# ==30245==    by 0x8C5BAFB: g_cancellable_source_new (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8C9C14F: g_socket_create_source (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8CECDA6: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8CECE8F: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x8CECF3C: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+# ==30245==    by 0x89540F4: g_main_context_dispatch (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x89544BF: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x89547D1: g_main_loop_run (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.2)
+# ==30245==    by 0x8CECF65: ??? (in /usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.2)
+{
+    gtk_issues
+    Memcheck:read
+    obj:*/libgobject-2.0.so*
+    ...
+    obj:*/libgtk-3.so*
+    ...
+}

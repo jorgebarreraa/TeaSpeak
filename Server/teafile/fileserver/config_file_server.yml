@@ -1,0 +1,6 @@
+bindings:
+  - address: 0.0.0.0:30303
+
+fallback_certificates:
+  private_key: "certs/private_key.pem"
+  certificate: "certs/certificate.pem"

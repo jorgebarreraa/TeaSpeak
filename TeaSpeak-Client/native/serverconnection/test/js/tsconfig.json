@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "teaclient_connection.node": ["../../exports/exports.d.ts"]
+    },
+    "lib": [
+      "dom",
+      "es6",
+      "scripthost",
+    ]
+  }
+}

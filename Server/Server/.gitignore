@@ -1,0 +1,28 @@
+# Created by .ignore support plugin (hsz.mobi)
+**/.idea
+**/cmake-build-*
+**/build/
+server/environment/*
+!server/environment/geoloc
+!server/environment/providers
+!server/environment/resources
+#The remote repro
+server/repro/test
+MusicBot/enviroment/
+MusicBot/libs
+MusicBot/*.opus
+server/buildData.txt
+server/repro/env/buildVersion.txt
+server/repro/TeaSpeak-*
+server/repro/unstripped/
+server/repro/build_version.txt
+server/gui/ui/
+server/repro/crashes/
+server/repro/symbols/
+license/src/
+server/tmp.txt
+
+license/environment/**/*
+server/src/web/
+
+.git-old/

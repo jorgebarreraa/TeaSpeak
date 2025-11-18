@@ -1,0 +1,208 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>openssl-mac</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>openssl-mac - perform Message Authentication Code operations</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>openssl mac</strong>
+[<strong>-help</strong>]
+[<strong>-macopt</strong>]
+[<strong>-in</strong> <em>filename</em>]
+[<strong>-out</strong> <em>filename</em>]
+[<strong>-binary</strong>]
+<em>mac_name</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The message authentication code functions output the MAC of a supplied input
+file.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print a usage message.</p>
+</dd>
+<dt><strong><a name="in_filename" class="item"><strong>-in</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>Input filename to calculate a MAC for, or standard input by default.
+Standard input is used if the filename is '-'.
+Files are expected to be in binary format, standard input uses hexadecimal text
+format.</p>
+</dd>
+<dt><strong><a name="out_filename" class="item"><strong>-out</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>Filename to output to, or standard output by default.</p>
+</dd>
+<dt><strong><a name="binary" class="item"><strong>-binary</strong></a></strong></dt>
+
+<dd>
+<p>Output the MAC in binary form. Uses hexadecimal text format if not specified.</p>
+</dd>
+<dt><strong><a name="macopt_nm_v" class="item"><strong>-macopt</strong> <em>nm</em>:<em>v</em></a></strong></dt>
+
+<dd>
+<p>Passes options to the MAC algorithm.
+A comprehensive list of controls can be found in the EVP_MAC implementation
+documentation.
+Common parameter names used by <code>EVP_MAC_CTX_get_params()</code> are:</p>
+<dl>
+<dt><strong><a name="key_string" class="item"><strong>key:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Specifies the MAC key as an alphanumeric string (use if the key contains
+printable characters only).
+The string length must conform to any restrictions of the MAC algorithm.
+A key must be specified for every MAC algorithm.</p>
+</dd>
+<dt><strong><a name="hexkey_string" class="item"><strong>hexkey:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Specifies the MAC key in hexadecimal form (two hex digits per byte).
+The key length must conform to any restrictions of the MAC algorithm.
+A key must be specified for every MAC algorithm.</p>
+</dd>
+<dt><strong><a name="digest_string" class="item"><strong>digest:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by HMAC as an alphanumeric string (use if the key contains printable
+characters only).
+The string length must conform to any restrictions of the MAC algorithm.
+To see the list of supported digests, use <code>openssl list -digest-commands</code>.</p>
+</dd>
+<dt><strong><a name="cipher_string" class="item"><strong>cipher:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by CMAC and GMAC to specify the cipher algorithm.
+For CMAC it must be one of AES-128-CBC, AES-192-CBC, AES-256-CBC or
+DES-EDE3-CBC.
+For GMAC it should be a GCM mode cipher e.g. AES-128-GCM.</p>
+</dd>
+<dt><strong><a name="iv_string" class="item"><strong>iv:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by GMAC to specify an IV as an alphanumeric string (use if the IV contains
+printable characters only).</p>
+</dd>
+<dt><strong><a name="hexiv_string" class="item"><strong>hexiv:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by GMAC to specify an IV in hexadecimal form (two hex digits per byte).</p>
+</dd>
+<dt><strong><a name="size_int" class="item"><strong>size:</strong><em>int</em></a></strong></dt>
+
+<dd>
+<p>Used by KMAC128 or KMAC256 to specify an output length.
+The default sizes are 32 or 64 bytes respectively.</p>
+</dd>
+<dt><strong><a name="custom_string" class="item"><strong>custom:</strong><em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by KMAC128 or KMAC256 to specify a customization string.
+The default is the empty string &quot;&quot;.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong><a name="mac_name" class="item"><em>mac_name</em></a></strong></dt>
+
+<dd>
+<p>Specifies the name of a supported MAC algorithm which will be used.
+To see the list of supported MAC's use the command <code>opensssl list
+-mac-algorithms</code>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>To create a hex-encoded HMAC-SHA1 MAC of a file and write to stdout: \
+ openssl mac -macopt digest:SHA1 \
+         -macopt hexkey:000102030405060708090A0B0C0D0E0F10111213 \
+         -in msg.bin HMAC</p>
+<p>To create a SipHash MAC from a file with a binary file output: \
+ openssl mac -macopt hexkey:000102030405060708090A0B0C0D0E0F \
+         -in msg.bin -out out.bin -binary SipHash</p>
+<p>To create a hex-encoded CMAC-AES-128-CBC MAC from a file:\
+ openssl mac -macopt cipher:AES-128-CBC \
+         -macopt hexkey:77A77FAF290C1FA30C683DF16BA7A77B \
+         -in msg.bin CMAC</p>
+<p>To create a hex-encoded KMAC128 MAC from a file with a Customisation String
+'Tag' and output length of 16: \
+ openssl mac -macopt custom:Tag -macopt hexkey:40414243444546 \
+         -macopt size:16 -in msg.bin KMAC128</p>
+<p>To create a hex-encoded GMAC-AES-128-GCM with a IV from a file: \
+ openssl mac -macopt cipher:AES-128-GCM -macopt hexiv:E0E00F19FED7BA0136A797F3 \
+         -macopt hexkey:77A77FAF290C1FA30C683DF16BA7A77B -in msg.bin GMAC</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The MAC mechanisms that are available will depend on the options
+used when building OpenSSL.
+Use <code>openssl list -mac-algorithms</code> to list them.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl(1)</em>,
+<em>EVP_MAC(3)</em>,
+<em>EVP_MAC-CMAC(7)</em>,
+<em>EVP_MAC-GMAC(7)</em>,
+<em>EVP_MAC-HMAC(7)</em>,
+<em>EVP_MAC-KMAC(7)</em>,
+<em>EVP_MAC-Siphash(7)</em>,
+<em>EVP_MAC-Poly1305(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2018-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the OpenSSL license (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

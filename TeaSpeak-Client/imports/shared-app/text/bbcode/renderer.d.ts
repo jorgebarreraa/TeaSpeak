@@ -1,0 +1,13 @@
+import { Context } from "react";
+import TextRenderer from "vendor/xbbcode/renderer/text";
+import ReactRenderer from "vendor/xbbcode/renderer/react";
+import HTMLRenderer from "vendor/xbbcode/renderer/html";
+import "./emoji";
+import "./highlight";
+import "./YoutubeRenderer";
+import "./url";
+import "./image";
+export declare let BBCodeHandlerContext: Context<string>;
+export declare const rendererText: TextRenderer;
+export declare const rendererReact: ReactRenderer;
+export declare const rendererHTML: HTMLRenderer;

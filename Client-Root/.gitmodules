@@ -1,0 +1,71 @@
+#Some helpers
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/WolverinDEV/build-helpers.git
+
+#The TeaClient itself
+[submodule "client"]
+	path = client
+	url = https://git.did.science/WolverinDEV/TeaSpeak-Client.git
+
+#All third party libraries used by TeaSpeak
+[submodule "third_party/breakpad"]
+	path = third_party/breakpad
+	url = https://github.com/google/breakpad.git
+[submodule "third_party/DataPipes"]
+	path = third_party/DataPipes
+	url = https://github.com/WolverinDEV/DataPipes.git
+[submodule "third_party/ed25519"]
+	path = third_party/ed25519
+	url = https://github.com/WolverinDEV/ed25519.git
+[submodule "third_party/libevent"]
+	path = third_party/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "third_party/libfvad"]
+	path = third_party/libfvad
+	url = https://github.com/WolverinDEV/libfvad
+[submodule "third_party/opus"]
+	path = third_party/opus
+	url = https://github.com/xiph/opus.git
+[submodule "third_party/portaudio"]
+	path = third_party/portaudio
+	url = https://git.assembla.com/portaudio.git
+[submodule "third_party/soxr"]
+	path = third_party/soxr
+	url = https://git.code.sf.net/p/soxr/code
+[submodule "third_party/StringVariable"]
+	path = third_party/StringVariable
+	url = https://github.com/WolverinDEV/StringVariable.git
+[submodule "third_party/tomcrypt"]
+	path = third_party/tomcrypt
+	url = https://git.did.science/TeaSpeak/libraries/tomcrypt.git
+[submodule "third_party/tommath"]
+	path = third_party/tommath
+	url = https://git.did.science/TeaSpeak/libraries/tommath.git
+[submodule "third_party/yaml-cpp"]
+	path = third_party/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "shared"]
+	path = shared
+	url = https://git.did.science/TeaSpeak/TeaSpeakLibrary.git
+[submodule "build-helpers"]
+	path = build-helpers
+	url = https://github.com/WolverinDEV/build-helpers.git
+[submodule "third_party/unbound"]
+	path = third_party/unbound
+	url = https://github.com/WolverinDEV/unbound.git
+[submodule "third_party/soundio"]
+	path = third_party/soundio
+	url = https://github.com/WolverinDEV/libsoundio.git
+[submodule "third_party/rnnoise"]
+	path = third_party/rnnoise
+	url = https://github.com/TeaSpeak/rnnoise-cmake.git
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
+	url = https://git.did.science/TeaSpeak/libraries/spdlog.git
+[submodule "third_party/abseil-cpp"]
+	path = third_party/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
+[submodule "third_party/webrtc-audio-processing"]
+	path = third_party/webrtc-audio-processing
+	url = https://github.com/WolverinDEV/webrtc-audio-processin.git

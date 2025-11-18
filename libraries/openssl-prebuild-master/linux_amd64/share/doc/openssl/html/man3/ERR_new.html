@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ERR_new</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>ERR_new, ERR_set_debug, ERR_set_error, ERR_vset_error
+- Error recording building blocks</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/err.h&gt;</pre>
+<pre>
+ void ERR_new(void);
+ void ERR_set_debug(const char *file, int line, const char *func);
+ void ERR_set_error(int lib, int reason, const char *fmt, ...);
+ void ERR_vset_error(int lib, int reason, const char *fmt, va_list args);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The functions described here are generally not used directly, but
+rather through macros such as <em>ERR_raise(3)</em>.
+They can still be useful for anyone that wants to make their own
+macros.</p>
+<p><code>ERR_new()</code> allocates a new slot in the thread's error queue.</p>
+<p><code>ERR_set_debug()</code> sets the debug information related to the current
+error in the thread's error queue.
+The values that can be given are the filename <em>file</em>, line in the
+file <em>line</em> and the name of the function <em>func</em> where the error
+occurred.
+The names must be constant, this function will only save away the
+pointers, not copy the strings.</p>
+<p><code>ERR_set_error()</code> sets the error information, which are the library
+number <em>lib</em> and the reason code <em>reason</em>, and additional data as a
+format string <em>fmt</em> and an arbitrary number of arguments.
+The additional data is processed with <em>BIO_snprintf(3)</em> to form the
+additional data string, which is allocated and store in the error
+record.</p>
+<p><code>ERR_vset_error()</code> works like <code>ERR_set_error()</code>, but takes a <strong>va_list</strong>
+argument instead of a variable number of arguments.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p>ERR_new, ERR_set_debug, ERR_set_error and ERR_vset_error
+do not return any values.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The library number is unique to each unit that records errors.
+OpenSSL has a number of pre-allocated ones for its own uses, but
+others may allocate their own library number dynamically with
+<em>ERR_get_next_error_library(3)</em>.</p>
+<p>Reason codes are unique within each library, and may have an
+associated set of strings as a short description of the reason.
+For dynamically allocated library numbers, reason strings are recorded
+with <em>ERR_load_strings(3)</em>.</p>
+<p>Provider authors are supplied with core versions of these functions,
+see <em>provider-base(7)</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>ERR_raise(3)</em>, <em>ERR_get_next_error_library(3)</em>,
+<em>ERR_load_strings(3)</em>, <em>BIO_snprintf(3)</em>, <em>provider-base(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2000-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

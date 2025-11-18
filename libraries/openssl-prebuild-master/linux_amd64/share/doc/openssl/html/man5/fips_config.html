@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>fips_config</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>fips_config - OpenSSL FIPS configuration</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A separate configuration file containing data related to FIPS 'self tests' is
+written to during installation time.
+This data is used for 2 purposes when the fips module is loaded:</p>
+<dl>
+<dt><strong><a name="verify_the_module_s_checksum_each_time_the_fips_module_loads" class="item">- Verify the module's checksum each time the fips module loads.</a></strong></dt>
+
+<dt><strong><a name="kats" class="item">- Run the startup FIPS self test KATS (known answer tests).
+This only needs to be run once during installation.</a></strong></dt>
+
+</dl>
+<p>The supported options are:</p>
+<dl>
+<dt><strong><a name="module_checksum" class="item"><strong>module-checksum</strong></a></strong></dt>
+
+<dd>
+<p>The calculated MAC of the module file</p>
+</dd>
+<dt><strong><a name="install_version" class="item"><strong>install-version</strong></a></strong></dt>
+
+<dd>
+<p>A version number for the fips install process. Should be 1.</p>
+</dd>
+<dt><strong><a name="install_status" class="item"><strong>install-status</strong></a></strong></dt>
+
+<dd>
+<p>The install status indicator description that will be verified.
+If this field is not present the FIPS self tests will run when the fips module
+loads.
+This value should only be written to after the FIPS module has
+successfully passed its self tests during installation.</p>
+</dd>
+<dt><strong><a name="install_checksum" class="item"><strong>install-checksum</strong></a></strong></dt>
+
+<dd>
+<p>The calculated MAC of the install status indicator.
+It is initially empty and is written to at the same time as the install_status.</p>
+</dd>
+</dl>
+<p>For example:</p>
+<pre>
+ [fips_install]</pre>
+<pre>
+ install-version = 1
+ module-checksum = 41:D0:FA:C2:5D:41:75:CD:7D:C3:90:55:6F:A4:DC
+ install-checksum = FE:10:13:5A:D3:B4:C7:82:1B:1E:17:4C:AC:84:0C
+ install-status = INSTALL_SELF_TEST_KATS_RUN</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>config(5)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

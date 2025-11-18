@@ -1,0 +1,9 @@
+Windows AMD64:
+cd DataPipes
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+cmake ../../ -G"Visual Studio 14 2015 Win64" -DMSVC_RUNTIME=static -DBUILD_TESTS=OFF -DBUILD_WEBRTC=OFF -DCrypto_ROOT_DIR="C:\Users\WolverinDEV\TeaSpeak\third_party\boringssl" -DBUILD_SHARED=OFF -DBUILD_STATIC=ON -DCMAKE_INSTALL_PREFIX=.
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 DataPipes-Static.vcxproj
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 INSTALL.vcxproj

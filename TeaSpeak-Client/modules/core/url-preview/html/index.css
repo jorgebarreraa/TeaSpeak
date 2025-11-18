@@ -1,0 +1,103 @@
+#nav-body-ctrls {
+    background-color: #2a2a2a;
+    padding: 20px;
+    font-family: arial, serif
+}
+
+#nav-body-tabs {
+    flex-shrink: 0;
+    flex-grow: 1;
+
+    min-height: 36px;
+    max-height: fit-content;
+
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    background: linear-gradient(#2a2a2a 75%, #404040);
+    height: 36px;
+    font-family: arial, serif
+}
+
+#nav-body-views {
+    flex: 1
+}
+
+.nav-icons {
+    fill: #fcfcfc !important
+}
+
+.nav-icons:hover {
+    fill: #c2c2c2 !important
+}
+
+#nav-ctrls-back, #nav-ctrls-forward, #nav-ctrls-reload {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px
+}
+
+#nav-ctrls-url {
+    box-shadow: 0 0;
+    border: 0;
+    border-radius: 2px;
+    height: 30px !important;
+    margin-left: 8px;
+    font-size: 11pt;
+    outline: none;
+    padding-left: 10px;
+    color: #b7b7b7;
+    background-color: #404040
+}
+
+#nav-ctrls-url:focus {
+    color: #fcfcfc;
+    box-shadow: 0 0 5px #3d3d3d;
+}
+
+#nav-tabs-add {
+    margin: 5px
+}
+
+.nav-tabs-tab {
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.nav-tabs-tab:hover {
+    background-color: hsla(0, 0%, 20%, 1);
+}
+
+.nav-tabs-tab.active {
+    background-color: #404040
+}
+
+.nav-tabs-favicon {
+    margin: 6px
+}
+
+.nav-tabs-title {
+    padding-left: 5px;
+    font-style: normal;
+    font-weight: 700;
+    color: #fcfcfc;
+    cursor: pointer!important; /* for some reason something tries to override this */
+}
+
+.nav-tabs-tab:hover .nav-tabs-title {
+    color: #c2c2c2
+}
+
+.nav-tabs-close {
+    width: 20px;
+    height: 20px;
+    margin: 6px 6px 6px 2px;
+}
+
+.nav-tabs-close:hover {
+    fill: #dc143c !important
+}
+
+img[src=unknown] {
+    visibility: hidden;
+}

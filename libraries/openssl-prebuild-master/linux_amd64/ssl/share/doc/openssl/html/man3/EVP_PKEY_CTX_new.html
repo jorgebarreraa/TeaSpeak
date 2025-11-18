@@ -1,0 +1,132 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>EVP_PKEY_CTX_new</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>EVP_PKEY_CTX_new, EVP_PKEY_CTX_new_id, EVP_PKEY_CTX_new_from_name,
+EVP_PKEY_CTX_new_from_pkey, EVP_PKEY_CTX_dup, EVP_PKEY_CTX_free
+- public key algorithm context functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/evp.h&gt;</pre>
+<pre>
+ EVP_PKEY_CTX *EVP_PKEY_CTX_new(EVP_PKEY *pkey, ENGINE *e);
+ EVP_PKEY_CTX *EVP_PKEY_CTX_new_id(int id, ENGINE *e);
+ EVP_PKEY_CTX *EVP_PKEY_CTX_new_from_name(OPENSSL_CTX *libctx,
+                                          const char *name,
+                                          const char *propquery);
+ EVP_PKEY_CTX *EVP_PKEY_CTX_new_from_pkey(OPENSSL_CTX *libctx,
+                                          EVP_PKEY *pkey);
+ EVP_PKEY_CTX *EVP_PKEY_CTX_dup(const EVP_PKEY_CTX *ctx);
+ void EVP_PKEY_CTX_free(EVP_PKEY_CTX *ctx);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The <code>EVP_PKEY_CTX_new()</code> function allocates public key algorithm context using
+the <em>pkey</em> key type and ENGINE <em>e</em>.</p>
+<p>The <code>EVP_PKEY_CTX_new_id()</code> function allocates public key algorithm context
+using the key type specified by <em>id</em> and ENGINE <em>e</em>.</p>
+<p>The <code>EVP_PKEY_CTX_new_from_name()</code> function allocates a public key algorithm
+context using the library context <em>libctx</em> (see <em>OPENSSL_CTX(3)</em>), the
+key type specified by <em>name</em> and the property query <em>propquery</em>.  None
+of the arguments are duplicated, so they  must remain unchanged for the
+lifetime of the returned <strong>EVP_PKEY_CTX</strong> or of any of its duplicates.</p>
+<p>The <code>EVP_PKEY_CTX_new_from_pkey()</code> function allocates a public key algorithm
+context using the library context <em>libctx</em> (see <em>OPENSSL_CTX(3)</em>) and the
+algorithm specified by <em>pkey</em> and the property query <em>propquery</em>. None of the
+arguments are duplicated, so they must remain unchanged for the lifetime of the
+returned <strong>EVP_PKEY_CTX</strong> or any of its duplicates.</p>
+<p><code>EVP_PKEY_CTX_new_id()</code> and <code>EVP_PKEY_CTX_new_from_name()</code> are normally
+used when no <strong>EVP_PKEY</strong> structure is associated with the operations,
+for example during parameter generation or key generation for some
+algorithms.</p>
+<p><code>EVP_PKEY_CTX_dup()</code> duplicates the context <em>ctx</em>.</p>
+<p><code>EVP_PKEY_CTX_free()</code> frees up the context <em>ctx</em>.
+If <em>ctx</em> is NULL, nothing is done.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<ol>
+<li>
+<p>The <strong>EVP_PKEY_CTX</strong> structure is an opaque public key algorithm context used
+by the OpenSSL high level public key API. Contexts <strong>MUST NOT</strong> be shared between
+threads: that is it is not permissible to use the same context simultaneously
+in two threads.</p>
+</li>
+<li>
+<p>We mention &quot;key type&quot; in this manual, which is the same
+as &quot;algorithm&quot; in most cases, allowing either term to be used
+interchangeably.  There are algorithms where the <em>key type</em> and the
+<em>algorithm</em> of the operations that use the keys are not the same,
+such as EC keys being used for ECDSA and ECDH operations.</p>
+</li>
+</ol>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>EVP_PKEY_CTX_new()</code>, <code>EVP_PKEY_CTX_new_id()</code>, <code>EVP_PKEY_CTX_dup()</code> returns either
+the newly allocated <strong>EVP_PKEY_CTX</strong> structure of <strong>NULL</strong> if an error occurred.</p>
+<p><code>EVP_PKEY_CTX_free()</code> does not return a value.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>EVP_PKEY_new(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The <code>EVP_PKEY_CTX_new()</code>, <code>EVP_PKEY_CTX_new_id()</code>, <code>EVP_PKEY_CTX_dup()</code> and
+<code>EVP_PKEY_CTX_free()</code> functions were added in OpenSSL 1.0.0.</p>
+<p>The <code>EVP_PKEY_CTX_new_from_name()</code> and <code>EVP_PKEY_CTX_new_from_pkey()</code> functions were
+added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2006-2016 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>s2i_ASN1_IA5STRING</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>i2s_ASN1_IA5STRING,
+s2i_ASN1_IA5STRING,
+i2s_ASN1_INTEGER,
+s2i_ASN1_INTEGER,
+i2s_ASN1_OCTET_STRING,
+s2i_ASN1_OCTET_STRING,
+i2s_ASN1_ENUMERATED,
+i2s_ASN1_ENUMERATED_TABLE,
+- convert objects from/to ASN.1/string representation</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ char *i2s_ASN1_IA5STRING(X509V3_EXT_METHOD *method, ASN1_IA5STRING *ia5);
+ ASN1_IA5STRING *s2i_ASN1_IA5STRING(X509V3_EXT_METHOD *method,
+                                   X509V3_CTX *ctx, const char *str);
+ char *i2s_ASN1_INTEGER(X509V3_EXT_METHOD *method, const ASN1_INTEGER *a);
+ ASN1_INTEGER *s2i_ASN1_INTEGER(X509V3_EXT_METHOD *method, const char *value);
+ char *i2s_ASN1_OCTET_STRING(X509V3_EXT_METHOD *method,
+                            const ASN1_OCTET_STRING *oct);
+ ASN1_OCTET_STRING *s2i_ASN1_OCTET_STRING(X509V3_EXT_METHOD *method,
+                                         X509V3_CTX *ctx, const char *str);
+ char *i2s_ASN1_ENUMERATED(X509V3_EXT_METHOD *method, const ASN1_ENUMERATED *a);
+ char *i2s_ASN1_ENUMERATED_TABLE(X509V3_EXT_METHOD *method,
+                                const ASN1_ENUMERATED *e);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>These functions convert OpenSSL objects to and from their ASN.1/string
+representation. This function is used for <strong>X509v3</strong> extentions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The letters <strong>i</strong> and <strong>s</strong> in <strong>i2s_ASN1_IA5STRING</strong>() stand for
+&quot;internal&quot; (that is, an internal C structure) and string respectively.
+So <strong>i2s_ASN1_IA5STRING</strong>() converts from internal to string.</p>
+<p>It is the caller's responsibility to free the returned string.
+In the <strong>i2s_ASN1_IA5STRING</strong>() function the string is copied and
+the ownership of the original string remains with the caller.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><strong>i2s_ASN1_IA5STRING</strong>() returns the pointer to a IA5 string
+or NULL if an error occurs.</p>
+<p><strong>s2i_ASN1_IA5STRING</strong>() return a valid
+<strong>ASN1_IA5STRING</strong> structure or NULL if an error occurs.</p>
+<p><strong>i2s_ASN1_INTEGER</strong>() return a valid
+string or NULL if an error occurs.</p>
+<p><strong>s2i_ASN1_INTEGER</strong>() returns the pointer to a <strong>ASN1_INTEGER</strong>
+structure or NULL if an error occurs.</p>
+<p><strong>i2s_ASN1_OCTET_STRING</strong>() returns the pointer to a OCTET_STRING string
+or NULL if an error occurs.</p>
+<p><strong>s2i_ASN1_OCTET_STRING</strong>() return a valid
+<strong>ASN1_OCTET_STRING</strong> structure or NULL if an error occurs.</p>
+<p><strong>i2s_ASN1_ENUMERATED</strong>() return a valid
+string or NULL if an error occurs.</p>
+<p><strong>s2i_ASN1_ENUMERATED</strong>() returns the pointer to a <strong>ASN1_ENUMERATED</strong>
+structure or NULL if an error occurs.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2020 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

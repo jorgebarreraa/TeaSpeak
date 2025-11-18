@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "moduleResolution": "node",
+  },
+  "include": [
+    "./core",
+    "./crash_handler",
+    "./shared",
+    "../main.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "declarations",
+    "app/dummy-declarations/*.d.ts"
+  ]
+}

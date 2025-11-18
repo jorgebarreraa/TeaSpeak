@@ -1,0 +1,57 @@
+syntax = "proto2";
+package ts.proto.license;
+
+import "LicenseRequest.proto";
+
+//Requesting stuff
+message LicenseListRequest {
+    optional int64 offset = 1;
+    optional int64 count = 2;
+}
+message LicenseListResponse {
+    repeated LicenseInfo entries = 1;
+    required bool end = 2;
+}
+
+//Deleting stuff
+message LicenseDeleteRequest {
+    required bytes key = 1;
+    required bool full = 2;
+}
+message LicenseDeleteResponse {
+    required bool succeed = 1;
+}
+
+//License request
+message LicenseCreateRequest {
+    required string issuer_username = 1;
+    required string issuer_first_name = 2;
+    required string issuer_last_name = 3;
+    required string issuer_email = 4;
+
+    required int64 type = 5;
+    required int64 begin = 6;
+    required int64 end = 7;
+
+    /* if set the license will upgrade automatically */
+    optional bytes old_key = 8;
+}
+message LicenseCreateResponse {
+    oneof result {
+        string error = 2;
+        LicenseInfo license = 3;
+    }
+    optional string exported_key = 4;
+}
+
+//Auth
+message AuthorizationRequest {
+    required string username = 1;
+    required string password = 2;
+}
+message AuthorizationResponse {
+    oneof result {
+        string message = 1;
+        bool success = 2;
+    }
+}

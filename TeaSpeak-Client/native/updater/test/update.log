@@ -1,0 +1,633 @@
+[2] ----------- log started at 2019-04-16.00:15:35 -----------
+[2] loading config from file dummy_config.json
+[5] failed to load config: failed to parse file: [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+[2] ----------- log ended at 2019-04-16.00:15:35 -----------
+[2] ----------- log started at 2019-04-16.00:15:45 -----------
+[2] loading config from file dummy_config.json
+[5] failed to load config: failed to get key version. error: [json.exception.type_error.302] type must be number, but is null
+[2] ----------- log ended at 2019-04-16.00:15:45 -----------
+[2] ----------- log started at 2019-04-16.00:23:00 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] ----------- log ended at 2019-04-16.00:23:00 -----------
+[2] ----------- log started at 2019-04-16.00:34:31 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] ----------- log ended at 2019-04-16.00:34:31 -----------
+[2] ----------- log started at 2019-04-16.00:35:26 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\cmd.exe with success callback arguments /k "echo 'Update succeeded'
+[2] ----------- log ended at 2019-04-16.00:35:26 -----------
+[2] ----------- log started at 2019-04-16.00:35:41 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\cmd.exe with success callback arguments /k "echo 'Update succeeded' & pause
+[2] ----------- log ended at 2019-04-16.00:35:41 -----------
+[2] ----------- log started at 2019-04-16.00:51:50 -----------
+[2] loading config from file dummy_config.json
+[5] failed to load config: failed to parse file: [json.exception.parse_error.101] parse error at line 6, column 0: syntax error while parsing object key - invalid string: control character U+000A (LF) must be escaped to \u000A or \n; last read: '",<U+000A>'; expected string literal
+[2] ----------- log ended at 2019-04-16.00:51:50 -----------
+[2] ----------- log started at 2019-04-16.00:52:02 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:52:02 -----------
+[2] ----------- log started at 2019-04-16.00:53:10 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:53:10 -----------
+[2] ----------- log started at 2019-04-16.00:53:50 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:53:50 -----------
+[2] ----------- log started at 2019-04-16.00:54:21 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:54:21 -----------
+[2] ----------- log started at 2019-04-16.00:55:00 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:55:00 -----------
+[2] ----------- log started at 2019-04-16.00:55:12 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success callback arguments -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="
+[2] ----------- log ended at 2019-04-16.00:55:12 -----------
+[2] ----------- log started at 2019-04-16.11:48:58 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Source file has s as parent
+[2] ----------- log ended at 2019-04-16.11:48:58 -----------
+[2] ----------- log started at 2019-04-16.11:49:20 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Source file has "s" as parent
+[2] ----------- log ended at 2019-04-16.11:49:20 -----------
+[2] ----------- log started at 2019-04-16.11:49:59 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Source file has "C" as parent
+[2] ----------- log ended at 2019-04-16.11:49:59 -----------
+[2] ----------- log started at 2019-04-16.11:50:13 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Source file has "C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source" as parent
+[2] ----------- log ended at 2019-04-16.11:50:13 -----------
+[2] ----------- log started at 2019-04-16.11:54:32 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Source file has "C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source" as parent
+[2] ----------- log ended at 2019-04-16.11:54:32 -----------
+[2] ----------- log started at 2019-04-16.12:09:19 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[5] failed to move file to backup target (rename(p1, p2): invalid arguments: operation not permitted)
+[2] ----------- log ended at 2019-04-16.12:09:19 -----------
+[2] ----------- log started at 2019-04-16.12:10:03 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[5] failed to move file to backup target (rename(p1, p2): invalid arguments: operation not permitted)
+[2] ----------- log ended at 2019-04-16.12:10:03 -----------
+[2] ----------- log started at 2019-04-16.12:10:18 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[5] failed to move file to backup target (rename(p1, p2): invalid arguments: operation not permitted)
+[2] ----------- log ended at 2019-04-16.12:10:18 -----------
+[2] ----------- log started at 2019-04-16.12:12:11 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[2] ----------- log ended at 2019-04-16.12:12:11 -----------
+[2] ----------- log started at 2019-04-16.12:18:04 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[5] source file does not exists
+[2] ----------- log ended at 2019-04-16.12:18:04 -----------
+[2] ----------- log started at 2019-04-16.12:18:16 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[2] ----------- log ended at 2019-04-16.12:18:16 -----------
+[2] ----------- log started at 2019-04-16.12:19:45 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[2] Rollbacking 1 files
+[1] Attempting to restore ðBóš‡ to @Óòš‡
+[2] ----------- log ended at 2019-04-16.12:19:45 -----------
+[2] ----------- log started at 2019-04-16.12:20:27 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[2] Rollbacking 1 files
+[1] Attempting to restore d4RRKChSFVEEx6CnKKTs to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[2] ----------- log ended at 2019-04-16.12:20:27 -----------
+[2] ----------- log started at 2019-04-16.12:21:16 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[2] Rollbacking 1 files
+[1] Attempting to restore DVxdQTTYLCK3me84YGJt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] ----------- log ended at 2019-04-16.12:21:46 -----------
+[2] ----------- log started at 2019-04-16.12:21:54 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[5] source file does not exists
+[2] Rollbacking 1 files
+[1] Attempting to restore D38f4b2x1dg2LcMJrmKI to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] ----------- log ended at 2019-04-16.12:21:54 -----------
+[2] ----------- log started at 2019-04-16.12:22:56 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[1] Deleting file 
+[5] source file does not exists
+[2] Rollbacking 2 files
+[1] Attempting to restore T8HkKiOmclH5YxqN3wzk to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[1] Attempting to restore o3QFagTbuYwQQREL7G0g to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] => success
+[2] ----------- log ended at 2019-04-16.12:22:56 -----------
+[2] ----------- log started at 2019-04-16.12:23:19 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[1] Deleting file 
+[5] source file does not exists
+[2] Rollbacking 2 files
+[1] Attempting to restore TIlr90VMMXAjE6KXDNbo to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] => success
+[1] Attempting to restore gJbh5rztC6QQcuA3rObN to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] ----------- log ended at 2019-04-16.12:23:39 -----------
+[2] ----------- log started at 2019-04-16.12:33:02 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file 
+[1] Deleting file 
+[1] Moving file  to 
+[1] Source file has "C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source" as parent
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\xxx.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new_.txt
+[1] => success
+[2] Rollbacking 2 deleted files
+[1] Attempting to restore GblBXYziZYMFsFACmSJS to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] => success
+[1] Attempting to restore OQJYOfftfCe660CYJAEu to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:33:17 -----------
+[2] ----------- log started at 2019-04-16.12:35:37 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file [unknown]
+[1] Deleting file [unknown]
+[1] Moving file [unknown] to [unknown]
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\xxx.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new_.txt
+[1] => success
+[2] Rollbacking 2 deleted files
+[1] Attempting to restore 9HBeMfEfifVUOY1GzvUq to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] => success
+[1] Attempting to restore Y7N03C3wO0PD6ZPSkouI to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:35:52 -----------
+[2] ----------- log started at 2019-04-16.12:36:17 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[1] Deleting file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] Deleting file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] Moving file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new_.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\xxx.txt
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\xxx.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new_.txt
+[1] => success
+[2] Rollbacking 2 deleted files
+[1] Attempting to restore fsIFuz1vh7zdJI0TdgTW to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[1] Attempting to restore lAs4L8FpbPXgN1wqFj73 to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\dir
+[1] => success
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:36:32 -----------
+[2] ----------- log started at 2019-04-16.12:39:45 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 0 moving actions
+[2] Rollbacking 0 moved files
+[2] Rollbacking 0 deleted files
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:39:45 -----------
+[2] ----------- log started at 2019-04-16.12:40:25 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] Moving file from source/file_new.txt to target/file.txt
+[1] Moving file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] Target file already exists. Deleting it
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] Rollbacking 1 deleted files
+[1] Attempting to restore jAIYwQxBY6so6ZwEqq7L to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] => success
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:40:26 -----------
+[2] ----------- log started at 2019-04-16.12:40:48 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] Moving file from source/file_new.txt to target/file.txt
+[1] Moving file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] Target file already exists. Deleting it
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[1] => success
+[2] Rollbacking 1 deleted files
+[1] Attempting to restore wscVhZ2HcRW9A2mudIky to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] => success
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.12:41:03 -----------
+[2] ----------- log started at 2019-04-16.13:02:20 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[2] Moving file from source/file_new.txt to target/file.txt
+[1] Moving file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] Target file already exists. Deleting it
+[5] failed to move file source/file_new.txt to target/file.txt (failed to move file)
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt
+[3] Failed to moveback file from C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt (rename(p1, p2): invalid arguments: operation not permitted)
+[2] Rollbacking 1 deleted files
+[1] Attempting to restore zxYc4YWWr3v0C5CJTxPm to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] => success
+[2] Rollback done
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA==" bG9nX2ZpbGU6ZFhCa1lYUmxMbXh2Wnc9PTtlcnJvcl9pZDpNREF3TVE9PTtlcnJvcl9tZXNzYWdlOlptRnBiR1ZrSUhSdklHMXZkbVVnWm1sc1pRPT0=
+[2] ----------- log ended at 2019-04-16.13:02:20 -----------
+[2] ----------- log started at 2019-04-16.13:04:50 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[2] ----------- log ended at 2019-04-16.13:04:50 -----------
+[2] ----------- log started at 2019-04-16.13:05:50 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] Failed to open file!
+[2] ----------- log ended at 2019-04-16.13:05:50 -----------
+[2] ----------- log started at 2019-04-16.13:07:13 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] Failed to open file! (The process cannot access the file because it is being used by another process.
+)
+[2] ----------- log ended at 2019-04-16.13:07:13 -----------
+[2] ----------- log started at 2019-04-16.13:07:38 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[2] ----------- log ended at 2019-04-16.13:07:38 -----------
+[2] ----------- log started at 2019-04-16.13:07:51 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[2] ----------- log ended at 2019-04-16.13:10:21 -----------
+[2] ----------- log started at 2019-04-16.13:10:30 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[1] Moving file C:\Users\WolverinDEV\depends22_x86\depends.exe to C:\Users\WolverinDEV\depends22_x86\depends.exe_
+[5] failed to move file
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\depends22_x86\depends.exe_ to C:\Users\WolverinDEV\depends22_x86\depends.exe
+[3] Failed to moveback file from C:\Users\WolverinDEV\depends22_x86\depends.exe_ to C:\Users\WolverinDEV\depends22_x86\depends.exe (rename(p1, p2): invalid arguments: operation not permitted)
+[2] Rollbacking 0 deleted files
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.13:10:45 -----------
+[2] ----------- log started at 2019-04-16.14:26:37 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File open!
+[1] Moving file C:\Users\WolverinDEV\depends22_x86\depends.exe to C:\Users\WolverinDEV\depends22_x86\depends.exe_
+[5] failed to move file
+[2] Rollbacking 1 moved files
+[1] Attempting to moveback C:\Users\WolverinDEV\depends22_x86\depends.exe_ to C:\Users\WolverinDEV\depends22_x86\depends.exe
+[3] Failed to moveback file from C:\Users\WolverinDEV\depends22_x86\depends.exe_ to C:\Users\WolverinDEV\depends22_x86\depends.exe (rename(p1, p2): invalid arguments: operation not permitted)
+[2] Rollbacking 0 deleted files
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.14:26:52 -----------
+[2] ----------- log started at 2019-04-16.14:29:22 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] File locked: 0
+[2] File open!
+[2] Rollbacking 0 moved files
+[2] Rollbacking 0 deleted files
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.14:29:37 -----------
+[2] ----------- log started at 2019-04-16.14:29:52 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] Failed to open file! (The process cannot access the file because it is being used by another process.
+) (32)
+[2] File locked: 1
+[2] File open!
+[2] Rollbacking 0 moved files
+[2] Rollbacking 0 deleted files
+[2] Rollback done
+[2] ----------- log ended at 2019-04-16.14:30:07 -----------
+[2] ----------- log started at 2019-04-16.16:46:14 -----------
+[2] loading config from file dummy_config.json
+[1] Loaded 0 locking actions and 1 moving actions
+[2] App executed as admin: no
+[2] Requesting administrator rights
+[2] Awaiting the unlocking of all files
+[2] All files have been unlocked (0ms required)
+[2] Moving file from source/file_new.txt to target/file.txt
+[1] Moving file C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\source\file_new.txt to C:\Users\WolverinDEV\TeaSpeak\TeaSpeak-Client\native\updater\test\target\file.txt
+[1] Target file already exists. Deleting it
+[2] Update unpacking successfully!
+[2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with success with command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA==" bG9nX2ZpbGU6ZFhCa1lYUmxMbXh2Wnc9PQ==
+[2] ----------- log ended at 2019-04-16.16:46:25 -----------
+[523F][2] ----------- log started at 2020-04-22.19:51:40 -----------
+[523F][2] App executed as admin: no
+[523F][2] Requesting administrator rights
+[523F][2] Admin right granted. New updater instance executes the update now.
+[523F][2] ----------- log ended at 2020-04-22.19:51:43 -----------
+[3DC4][2] ----------- log started at 2020-04-22.19:51:43 -----------
+[3DC4][2] App executed as admin: yes
+[3DC4][2] loading config from file updater\test\dummy_config.json
+[3DC4][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.305] cannot use operator[] with a string argument with string
+[3DC4][2] ----------- log ended at 2020-04-22.19:51:43 -----------
+[39EE][2] ----------- log started at 2020-04-22.19:52:35 -----------
+[39EE][2] App executed as admin: no
+[39EE][2] Requesting administrator rights
+[39EE][2] Admin right granted. New updater instance executes the update now.
+[39EE][2] ----------- log ended at 2020-04-22.19:52:38 -----------
+[52B2][2] ----------- log started at 2020-04-22.19:52:38 -----------
+[52B2][2] App executed as admin: yes
+[52B2][2] loading config from file updater\test\dummy_config.json
+[52B2][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.305] cannot use operator[] with a string argument with string
+[52B2][2] ----------- log ended at 2020-04-22.19:52:38 -----------
+[35F3][2] ----------- log started at 2020-04-22.19:52:47 -----------
+[35F3][2] App executed as admin: no
+[35F3][2] Requesting administrator rights
+[35F3][2] Admin right granted. New updater instance executes the update now.
+[35F3][2] ----------- log ended at 2020-04-22.19:52:49 -----------
+[64D5][2] ----------- log started at 2020-04-22.19:52:49 -----------
+[64D5][2] App executed as admin: yes
+[64D5][2] loading config from file updater\test\dummy_config.json
+[64D5][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.305] cannot use operator[] with a string argument with string
+[64D5][2] ----------- log ended at 2020-04-22.19:52:49 -----------
+[65B6][2] ----------- log started at 2020-04-22.19:52:51 -----------
+[65B6][2] App executed as admin: no
+[65B6][2] Requesting administrator rights
+[65B6][5] callback file () is not executable! Ignoring fail callback
+[65B6][2] ----------- log ended at 2020-04-22.19:52:53 -----------
+[59A3][2] ----------- log started at 2020-04-22.19:53:00 -----------
+[59A3][2] App executed as admin: no
+[59A3][2] loading config from file updater\test\dummy_config.json
+[59A3][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.305] cannot use operator[] with a string argument with string
+[59A3][2] ----------- log ended at 2020-04-22.19:53:00 -----------
+[370F][2] ----------- log started at 2020-04-22.19:53:43 -----------
+[370F][2] App executed as admin: no
+[370F][2] loading config from file updater\test\dummy_config.json
+[370F][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.302] type must be string, but is null
+[370F][2] ----------- log ended at 2020-04-22.19:53:43 -----------
+[65DD][2] ----------- log started at 2020-04-22.19:53:45 -----------
+[65DD][2] App executed as admin: no
+[65DD][2] loading config from file updater\test\dummy_config.json
+[65DD][5] failed to load config: failed to get key error-id. error: [json.exception.type_error.302] type must be string, but is null
+[65DD][2] ----------- log ended at 2020-04-22.19:53:45 -----------
+[4225][2] ----------- log started at 2020-04-22.19:55:34 -----------
+[4225][2] App executed as admin: no
+[4225][2] loading config from file updater\test\dummy_config.json
+[4225][1] Loaded 1 locking actions and 1 moving actions
+[4225][2] Awaiting the unlocking of all files
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][2] Failed to open file! (The system cannot find the file specified.) (2)
+[4225][5] Failed to lock file lock_file.txt. Timeout: 5000, Time tried: 7941
+[4225][2] Rollbacking 0 moved files
+[4225][2] Rollbacking 0 deleted files
+[4225][2] Rollback done
+[4225][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6U0dWc2JHOGdWMjl5YkdRZ1pYSnliM0k9O2Vycm9yX21lc3NhZ2U6Ykc5amF5QjBhVzFsYjNWMElDZzFNREF3S1E9PQ==
+[4225][2] ----------- log ended at 2020-04-22.19:55:50 -----------
+[3BB5][2] ----------- log started at 2020-04-22.19:56:36 -----------
+[3BB5][2] App executed as admin: no
+[3BB5][2] loading config from file updater\test\dummy_config.json
+[3BB5][1] Loaded 1 locking actions and 1 moving actions
+[3BB5][2] Awaiting the unlocking of all files
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][2] Failed to open file! (The system cannot find the file specified.) (2)
+[3BB5][5] Failed to lock file lock_file.txt. Timeout: 5000, Time tried: 8660
+[3BB5][2] Rollbacking 0 moved files
+[3BB5][2] Rollbacking 0 deleted files
+[3BB5][2] Rollback done
+[3BB5][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6U0dWc2JHOGdWMjl5YkdRZ1pYSnliM0k9O2Vycm9yX21lc3NhZ2U6Ykc5amF5QjBhVzFsYjNWMElDZzFNREF3S1E9PQ==
+[3BB5][2] ----------- log ended at 2020-04-22.19:56:44 -----------
+[6DF9][2] ----------- log started at 2020-04-22.19:57:03 -----------
+[6DF9][2] App executed as admin: no
+[6DF9][2] loading config from file updater\test\dummy_config.json
+[6DF9][1] Loaded 1 locking actions and 1 moving actions
+[6DF9][2] Awaiting the unlocking of all files
+[6DF9][2] All files have been unlocked (0ms required)
+[6DF9][2] Moving file from source/file_new.txt to target/file.txt
+[6DF9][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[6DF9][2] Rollbacking 0 moved files
+[6DF9][2] Rollbacking 0 deleted files
+[6DF9][2] Rollback done
+[6DF9][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[6DF9][2] ----------- log ended at 2020-04-22.19:57:03 -----------
+[2B0D][2] ----------- log started at 2020-04-22.19:57:18 -----------
+[2B0D][2] App executed as admin: no
+[2B0D][2] loading config from file updater\test\dummy_config.json
+[2B0D][1] Loaded 1 locking actions and 1 moving actions
+[2B0D][2] Awaiting the unlocking of all files
+[2B0D][2] All files have been unlocked (0ms required)
+[2B0D][2] Moving file from source/file_new.txt to target/file.txt
+[2B0D][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[2B0D][2] Rollbacking 0 moved files
+[2B0D][2] Rollbacking 0 deleted files
+[2B0D][2] Rollback done
+[2B0D][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[2B0D][2] ----------- log ended at 2020-04-22.19:57:18 -----------
+[79AD][2] ----------- log started at 2020-04-22.19:57:34 -----------
+[79AD][2] App executed as admin: no
+[79AD][2] loading config from file updater\test\dummy_config.json
+[79AD][1] Loaded 1 locking actions and 1 moving actions
+[79AD][2] Awaiting the unlocking of all files
+[79AD][2] All files have been unlocked (0ms required)
+[79AD][2] Moving file from source/file_new.txt to target/file.txt
+[79AD][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[79AD][2] Rollbacking 0 moved files
+[79AD][2] Rollbacking 0 deleted files
+[79AD][2] Rollback done
+[79AD][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[79AD][2] ----------- log ended at 2020-04-22.19:57:34 -----------
+[5665][2] ----------- log started at 2020-04-22.19:57:35 -----------
+[5665][2] App executed as admin: no
+[5665][2] loading config from file updater\test\dummy_config.json
+[5665][1] Loaded 1 locking actions and 1 moving actions
+[5665][2] Awaiting the unlocking of all files
+[5665][2] All files have been unlocked (0ms required)
+[5665][2] Moving file from source/file_new.txt to target/file.txt
+[5665][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[5665][2] Rollbacking 0 moved files
+[5665][2] Rollbacking 0 deleted files
+[5665][2] Rollback done
+[5665][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[5665][2] ----------- log ended at 2020-04-22.19:57:35 -----------
+[0A74][2] ----------- log started at 2020-04-22.19:57:43 -----------
+[0A74][2] App executed as admin: no
+[0A74][2] loading config from file updater\test\dummy_config.json
+[0A74][1] Loaded 1 locking actions and 1 moving actions
+[0A74][2] Awaiting the unlocking of all files
+[0A74][2] All files have been unlocked (0ms required)
+[0A74][2] Moving file from source/file_new.txt to target/file.txt
+[0A74][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[0A74][2] Rollbacking 0 moved files
+[0A74][2] Rollbacking 0 deleted files
+[0A74][2] Rollback done
+[0A74][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[0A74][2] ----------- log ended at 2020-04-22.19:57:43 -----------
+[4337][2] ----------- log started at 2020-04-22.19:57:44 -----------
+[4337][2] App executed as admin: no
+[4337][2] loading config from file updater\test\dummy_config.json
+[4337][1] Loaded 1 locking actions and 1 moving actions
+[4337][2] Awaiting the unlocking of all files
+[4337][2] All files have been unlocked (0ms required)
+[4337][2] Moving file from source/file_new.txt to target/file.txt
+[4337][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[4337][2] Rollbacking 0 moved files
+[4337][2] Rollbacking 0 deleted files
+[4337][2] Rollback done
+[4337][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[4337][2] ----------- log ended at 2020-04-22.19:57:44 -----------
+[5F3A][2] ----------- log started at 2020-04-22.19:59:41 -----------
+[5F3A][2] App executed as admin: no
+[5F3A][2] loading config from file updater\test\dummy_config.json
+[5F3A][1] Loaded 1 locking actions and 1 moving actions
+[5F3A][2] Awaiting the unlocking of all files
+[5F3A][2] All files have been unlocked (0ms required)
+[5F3A][2] Moving file from source/file_new.txt to target/file.txt
+[5F3A][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[5F3A][2] Rollbacking 0 moved files
+[5F3A][2] Rollbacking 0 deleted files
+[5F3A][2] Rollback done
+[5F3A][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[5F3A][2] ----------- log ended at 2020-04-22.19:59:41 -----------
+[3179][2] ----------- log started at 2020-04-22.19:59:52 -----------
+[3179][2] App executed as admin: no
+[3179][2] loading config from file updater\test\dummy_config.json
+[3179][1] Loaded 1 locking actions and 1 moving actions
+[3179][2] Awaiting the unlocking of all files
+[3179][2] All files have been unlocked (0ms required)
+[3179][2] Moving file from source/file_new.txt to target/file.txt
+[3179][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[3179][2] Rollbacking 0 moved files
+[3179][2] Rollbacking 0 deleted files
+[3179][2] Rollback done
+[3179][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[3179][2] ----------- log ended at 2020-04-22.20:00:03 -----------
+[5E98][2] ----------- log started at 2020-04-22.20:00:53 -----------
+[5E98][2] App executed as admin: no
+[5E98][2] loading config from file updater\test\dummy_config.json
+[5E98][1] Loaded 1 locking actions and 1 moving actions
+[5E98][2] Awaiting the unlocking of all files
+[5E98][2] All files have been unlocked (0ms required)
+[5E98][2] Moving file from source/file_new.txt to target/file.txt
+[5E98][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[5E98][2] Rollbacking 0 moved files
+[5E98][2] Rollbacking 0 deleted files
+[5E98][2] Rollback done
+[5E98][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[5E98][2] ----------- log ended at 2020-04-22.20:00:54 -----------
+[59B2][2] ----------- log started at 2020-04-22.20:00:59 -----------
+[59B2][2] App executed as admin: no
+[59B2][2] loading config from file updater\test\dummy_config.json
+[59B2][1] Loaded 1 locking actions and 1 moving actions
+[59B2][2] Awaiting the unlocking of all files
+[59B2][2] All files have been unlocked (0ms required)
+[59B2][2] Moving file from source/file_new.txt to target/file.txt
+[59B2][5] failed to move file source/file_new.txt to target/file.txt (source file does not exists)
+[59B2][2] Rollbacking 0 moved files
+[59B2][2] Rollbacking 0 deleted files
+[59B2][2] Rollback done
+[59B2][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6TURBd01RPT07ZXJyb3JfbWVzc2FnZTpjMjkxY21ObElHWnBiR1VnWkc5bGN5QnViM1FnWlhocGMzUno=
+[59B2][2] ----------- log ended at 2020-04-22.20:01:11 -----------
+[5EA7][2] ----------- log started at 2020-04-22.20:01:37 -----------
+[5EA7][2] App executed as admin: no
+[5EA7][2] loading config from file updater\test\dummy_config.json
+[5EA7][1] Loaded 1 locking actions and 1 moving actions
+[5EA7][2] Awaiting the unlocking of all files
+[5EA7][5] Failed to lock file D:\Program Files\IDA 7.0\ida.exe. Timeout: 5000, Time tried: 70663
+[5EA7][2] Rollbacking 0 moved files
+[5EA7][2] Rollbacking 0 deleted files
+[5EA7][2] Rollback done
+[5EA7][2] executing callback file C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe with fail command line C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -EncodedCommand "QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA=="bG9nX2ZpbGU6ZFhCa1lYUmxjbHgwWlhOMFhIVndaR0YwWlM1c2IyYz07ZXJyb3JfaWQ6U0dWc2JHOGdWMjl5YkdRZ1pYSnliM0k9O2Vycm9yX21lc3NhZ2U6Wm1GcGJHVmtJSFJ2SUd4dlkyc2dabWxzWlE9PQ==
+[5EA7][2] ----------- log ended at 2020-04-22.20:02:48 -----------

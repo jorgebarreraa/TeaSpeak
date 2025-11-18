@@ -1,0 +1,73 @@
+Before you're doing something:
+First time: git submodule update --init --recursive --remote
+Afterworks: git submodule update --remote -f --merge --recursive
+
+
+#IMPORTANT:
+Build everything with -static-libgcc -static-libstdc++
+
+Build everythink with C++ ABI = 0
+(yaml-cpp needs CMakeLists.txt entry)
+
+make -j 12 CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+
+For libevent:
+cmake .. -DCMAKE_C_FLAGS="-fPIC"
+
+For jsoncpp:
+make -j 12 CXX_FLAGS="-std=c++11 -fPIC"
+NOTE: May was CXXFLAGS (without the underscore)
+
+For yaml:
+cmake .. -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_SHARED_LIBS=Release
+make -j 12 CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -std=c++11 -fPIC"
+
+For breakpad:
+git clone https://chromium.googlesource.com/linux-syscall-support src/third_party/lss
+../configure
+make CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1 -std=c++11"
+
+For MySQL:
+ATTENTION: Its important to use the latest mysql version (5.7)
+	   You may have to ling <...>_r.a
+git submodule update --init
+mkdir build && cd build
+cmake .. -DCMAKE_CXX_FLAGS="-static-libgcc -static-libstdc++" -DWITH_JDBC=ON 
+make -j 12
+
+For boringssl:
+cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE="Release"
+make -j 8
+
+Instal protobuf:
+sudo apt-get install -y git autoconf automake libtool curl make g++ unzip
+git clone https://github.com/google/protobuf.git
+cd protobuf/
+./autogen.sh
+./configure
+make
+make check
+sudo make install
+
+
+
+
+WebRTC:
+	Build:
+		edit file: webrtc/BUILD.gn and add 
+		gn gen out/release --args="enable_iterator_debugging=false is_debug=false is_desktop_linux=false use_ozone=true use_custom_libcxx=false"
+		
+
+find . -name '*.a' -exec nm -A -C {} \; | grep "rtc::FatalMessage"
+
+
+ar -rcs libraries/libboringssl_asm.a src/out/release/obj/third_party/boringssl/boringssl_asm/aes-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/aesni-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/bsaes-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/vpaes-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/rsaz-avx2.o src/out/release/obj/third_party/boringssl/boringssl_asm/x86_64-mont.o src/out/release/obj/third_party/boringssl/boringssl_asm/x86_64-mont5.o src/out/release/obj/third_party/boringssl/boringssl_asm/chacha-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/p256-x86_64-asm.o src/out/release/obj/third_party/boringssl/boringssl_asm/md5-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/aesni-gcm-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/ghash-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/rdrand-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/sha1-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/sha256-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/sha512-x86_64.o src/out/release/obj/third_party/boringssl/boringssl_asm/x25519-asm-x86_64.o
+
+ar -rcs libraries/libjsoncpp.a src/out/release/obj/third_party/jsoncpp/jsoncpp/json_reader.o src/out/release/obj/third_party/jsoncpp/jsoncpp/json_value.o src/out/release/obj/third_party/jsoncpp/jsoncpp/json_writer.o
+
+ln -s src/out/release/obj/third_party/boringssl/libboringssl.a libraries/
+ln -s src/out/release/obj/webrtc/system_wrappers/libfield_trial_default.a libraries/
+ln -s src/out/release/obj/webrtc/base/librtc_base.a libraries/
+ln -s src/out/release/obj/webrtc/base/librtc_base_approved.a libraries/
+ln -s src/out/release/obj/webrtc/p2p/librtc_p2p.a libraries/
+ln -s src/out/release/obj/third_party/protobuf/libprotobuf_lite.a libraries/

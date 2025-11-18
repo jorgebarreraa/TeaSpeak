@@ -1,0 +1,12 @@
+.idea
+/target
+Cargo.lock
+librtc.so
+glib-2.66.2
+gupnp-1.2.4
+libuuid-1.0.3
+build_libraries
+gssdp
+libsoup-2.72.0
+libteaspeak_rtc.so
+libteaspeak_rtc_development.so

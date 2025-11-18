@@ -1,0 +1,7 @@
+Windows AMD64:
+cd breakpad
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+#We dont build breakpad, we directly include that in out project

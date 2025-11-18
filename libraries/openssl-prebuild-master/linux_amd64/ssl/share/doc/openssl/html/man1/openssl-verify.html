@@ -1,0 +1,270 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>openssl-verify</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#diagnostics">DIAGNOSTICS</a></li>
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>openssl-verify - Utility to verify certificates</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>openssl</strong> <strong>verify</strong>
+[<strong>-help</strong>]
+[<strong>-CRLfile</strong> <em>file</em>]
+[<strong>-crl_download</strong>]
+[<strong>-show_chain</strong>]
+[<strong>-sm2-id</strong> <em>hexstring</em>]
+[<strong>-sm2-hex-id</strong> <em>hexstring</em>]
+[<strong>-verbose</strong>]
+[<strong>-trusted</strong> <em>file</em>]
+[<strong>-untrusted</strong> <em>file</em>]
+[<strong>-nameopt</strong> <em>option</em>]
+[<strong>-CAfile</strong> <em>file</em>]
+[<strong>-no-CAfile</strong>]
+[<strong>-CApath</strong> <em>dir</em>]
+[<strong>-no-CApath</strong>]
+[<strong>-CAstore</strong> <em>uri</em>]
+[<strong>-no-CAstore</strong>]
+[<strong>-engine</strong> <em>id</em>]
+[<strong>-allow_proxy_certs</strong>]
+[<strong>-attime</strong> <em>timestamp</em>]
+[<strong>-no_check_time</strong>]
+[<strong>-check_ss_sig</strong>]
+[<strong>-crl_check</strong>]
+[<strong>-crl_check_all</strong>]
+[<strong>-explicit_policy</strong>]
+[<strong>-extended_crl</strong>]
+[<strong>-ignore_critical</strong>]
+[<strong>-inhibit_any</strong>]
+[<strong>-inhibit_map</strong>]
+[<strong>-partial_chain</strong>]
+[<strong>-policy</strong> <em>arg</em>]
+[<strong>-policy_check</strong>]
+[<strong>-policy_print</strong>]
+[<strong>-purpose</strong> <em>purpose</em>]
+[<strong>-suiteB_128</strong>]
+[<strong>-suiteB_128_only</strong>]
+[<strong>-suiteB_192</strong>]
+[<strong>-trusted_first</strong>]
+[<strong>-no_alt_chains</strong>]
+[<strong>-use_deltas</strong>]
+[<strong>-auth_level</strong> <em>num</em>]
+[<strong>-verify_depth</strong> <em>num</em>]
+[<strong>-verify_email</strong> <em>email</em>]
+[<strong>-verify_hostname</strong> <em>hostname</em>]
+[<strong>-verify_ip</strong> <em>ip</em>]
+[<strong>-verify_name</strong> <em>name</em>]
+[<strong>-x509_strict</strong>]
+[<strong>-issuer_checks</strong>]</p>
+<p>[<strong>--</strong>]
+[<em>certificate</em> ...]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This command verifies certificate chains.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print out a usage message.</p>
+</dd>
+<dt><strong><a name="cafile_file_no_cafile_capath_dir_no_capath" class="item"><strong>-CAfile</strong> <em>file</em>, <strong>-no-CAfile</strong>, <strong>-CApath</strong> <em>dir</em>, <strong>-no-CApath</strong></a></strong></dt>
+
+<dd>
+<p>See <em>openssl(1)/Trusted Certificate Options</em> for more information.</p>
+</dd>
+<dt><strong><a name="crlfile_file" class="item"><strong>-CRLfile</strong> <em>file</em></a></strong></dt>
+
+<dd>
+<p>The <em>file</em> should contain one or more CRLs in PEM format.
+This option can be specified more than once to include CRLs from multiple
+<em>file</em>s.</p>
+</dd>
+<dt><strong><a name="crl_download" class="item"><strong>-crl_download</strong></a></strong></dt>
+
+<dd>
+<p>Attempt to download CRL information for this certificate.</p>
+</dd>
+<dt><strong><a name="show_chain" class="item"><strong>-show_chain</strong></a></strong></dt>
+
+<dd>
+<p>Display information about the certificate chain that has been built (if
+successful). Certificates in the chain that came from the untrusted list will be
+flagged as &quot;untrusted&quot;.</p>
+</dd>
+<dt><strong><a name="sm2_id_hexstring" class="item"><strong>-sm2-id</strong> <em>hexstring</em></a></strong></dt>
+
+<dd>
+<p>Specify the ID string to use when verifying an SM2 certificate. The ID string is
+required by the SM2 signature algorithm for signing and verification.</p>
+</dd>
+<dt><strong><a name="sm2_hex_id_hexstring" class="item"><strong>-sm2-hex-id</strong> <em>hexstring</em></a></strong></dt>
+
+<dd>
+<p>Specify a binary ID string to use when signing or verifying using an SM2
+certificate. The argument for this option is string of hexadecimal digits.</p>
+</dd>
+<dt><strong><a name="verbose" class="item"><strong>-verbose</strong></a></strong></dt>
+
+<dd>
+<p>Print extra information about the operations being performed.</p>
+</dd>
+<dt><strong><a name="trusted_file" class="item"><strong>-trusted</strong> <em>file</em></a></strong></dt>
+
+<dd>
+<p>A file of trusted certificates.</p>
+</dd>
+<dt><strong><a name="untrusted_file" class="item"><strong>-untrusted</strong> <em>file</em></a></strong></dt>
+
+<dd>
+<p>A file of untrusted certificates.</p>
+</dd>
+<dt><strong><a name="nameopt_option" class="item"><strong>-nameopt</strong> <em>option</em></a></strong></dt>
+
+<dd>
+<p>This specifies how the subject or issuer names are displayed.
+See <em>openssl(1)/Name Format Options</em> for details.</p>
+</dd>
+<dt><strong><a name="engine_id" class="item"><strong>-engine</strong> <em>id</em></a></strong></dt>
+
+<dd>
+<p>See <em>openssl(1)/Engine Options</em>.
+To load certificates or CRLs that require engine support, specify the
+<strong>-engine</strong> option before any of the
+<strong>-trusted</strong>, <strong>-untrusted</strong> or <strong>-CRLfile</strong> options.</p>
+</dd>
+<dt><strong><a name="cafile_file_no_cafile_capath_dir_no_capath_castore_uri_no_castore" class="item"><strong>-CAfile</strong> <em>file</em>, <strong>-no-CAfile</strong>, <strong>-CApath</strong> <em>dir</em>, <strong>-no-CApath</strong>,
+<strong>-CAstore</strong> <em>uri</em>, <strong>-no-CAstore</strong></a></strong></dt>
+
+<dd>
+<p>See <em>openssl(1)/Trusted Certificate Options</em> for details.</p>
+</dd>
+<dt><strong><a name="allow_proxy_certs_attime_no_check_time_check_ss_sig_crl_check_crl_check_all_explicit_policy_extended_crl_ignore_critical_inhibit_any_inhibit_map_no_alt_chains_partial_chain_policy_policy_check_policy_print_purpose_suiteb_128_suiteb_128_only_suiteb_192_trusted_first_use_deltas_auth_level_verify_depth_verify_email_verify_hostname_verify_ip_verify_name_x509_strict_issuer_checks" class="item"><strong>-allow_proxy_certs</strong>, <strong>-attime</strong>, <strong>-no_check_time</strong>,
+<strong>-check_ss_sig</strong>, <strong>-crl_check</strong>, <strong>-crl_check_all</strong>,
+<strong>-explicit_policy</strong>, <strong>-extended_crl</strong>, <strong>-ignore_critical</strong>, <strong>-inhibit_any</strong>,
+<strong>-inhibit_map</strong>, <strong>-no_alt_chains</strong>, <strong>-partial_chain</strong>, <strong>-policy</strong>,
+<strong>-policy_check</strong>, <strong>-policy_print</strong>, <strong>-purpose</strong>, <strong>-suiteB_128</strong>,
+<strong>-suiteB_128_only</strong>, <strong>-suiteB_192</strong>, <strong>-trusted_first</strong>, <strong>-use_deltas</strong>,
+<strong>-auth_level</strong>, <strong>-verify_depth</strong>, <strong>-verify_email</strong>, <strong>-verify_hostname</strong>,
+<strong>-verify_ip</strong>, <strong>-verify_name</strong>, <strong>-x509_strict</strong> <strong>-issuer_checks</strong></a></strong></dt>
+
+<dd>
+<p>Set various options of certificate chain verification.
+See <em>openssl(1)/Verification Options</em> for details.</p>
+</dd>
+<dt><strong><a name="__" class="item"><strong>--</strong></a></strong></dt>
+
+<dd>
+<p>Indicates the last option. All arguments following this are assumed to be
+certificate files. This is useful if the first certificate filename begins
+with a <strong>-</strong>.</p>
+</dd>
+<dt><strong><a name="certificate" class="item"><em>certificate</em> ...</a></strong></dt>
+
+<dd>
+<p>One or more certificates to verify. If no certificates are given,
+this command will attempt to read a certificate from standard input.
+Certificates must be in PEM format.
+If a certificate chain has multiple problems, this program tries to
+display all of them.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="diagnostics">DIAGNOSTICS</a></h1>
+<p>When a verify operation fails the output messages can be somewhat cryptic. The
+general form of the error message is:</p>
+<pre>
+ server.pem: /C=AU/ST=Queensland/O=CryptSoft Pty Ltd/CN=Test CA (1024 bit)
+ error 24 at 1 depth lookup:invalid CA certificate</pre>
+<p>The first line contains the name of the certificate being verified followed by
+the subject name of the certificate. The second line contains the error number
+and the depth. The depth is number of the certificate being verified when a
+problem was detected starting with zero for the certificate being verified itself
+then 1 for the CA that signed the certificate and so on. Finally a text version
+of the error number is presented.</p>
+<p>A list of the error codes and messages can be found in
+<em>X509_STORE_CTX_get_error(3)</em>; the full list is defined in the header file
+<em class="file">&lt;openssl/x509_vfy.h</em> &gt;&gt;.</p>
+<p>This command ignores many errors, in order to allow all the problems with a
+certificate chain to be determined.</p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>Although the issuer checks are a considerable improvement over the old
+technique they still suffer from limitations in the underlying X509_LOOKUP
+API. One consequence of this is that trusted certificates with matching
+subject name must either appear in a file (as specified by the <strong>-CAfile</strong>
+option), a directory (as specified by <strong>-CApath</strong>), or a store (as specified
+by <strong>-CAstore</strong>). If they occur in more than one location then only the
+certificates in the file will be recognised.</p>
+<p>Previous versions of OpenSSL assume certificates with matching subject
+name are identical and mishandled them.</p>
+<p>Previous versions of this documentation swapped the meaning of the
+<strong>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT</strong> and
+<strong>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY</strong> error codes.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl(1)</em>,
+<em>openssl-x509(1)</em>,
+<em>ossl_store-file(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The <strong>-show_chain</strong> option was added in OpenSSL 1.1.0.</p>
+<p>The <strong>-sm2-id</strong> and <strong>-sm2-hex-id</strong> options were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2000-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

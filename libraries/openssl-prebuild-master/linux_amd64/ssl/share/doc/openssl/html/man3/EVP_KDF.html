@@ -1,0 +1,299 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>EVP_KDF</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#types">Types</a></li>
+		<li><a href="#algorithm_implementation_fetching">Algorithm implementation fetching</a></li>
+		<li><a href="#context_manipulation_functions">Context manipulation functions</a></li>
+		<li><a href="#computing_functions">Computing functions</a></li>
+		<li><a href="#information_functions">Information functions</a></li>
+	</ul>
+
+	<li><a href="#parameters">PARAMETERS</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>EVP_KDF, EVP_KDF_fetch, EVP_KDF_free, EVP_KDF_up_ref,
+EVP_KDF_CTX, EVP_KDF_CTX_new, EVP_KDF_CTX_free, EVP_KDF_CTX_dup,
+EVP_KDF_reset, EVP_KDF_derive,
+EVP_KDF_size, EVP_KDF_provider, EVP_KDF_CTX_kdf, EVP_KDF_is_a,
+EVP_KDF_number, EVP_KDF_names_do_all,
+EVP_KDF_CTX_get_params, EVP_KDF_CTX_set_params, EVP_KDF_do_all_provided,
+EVP_KDF_get_params, EVP_KDF_gettable_ctx_params, EVP_KDF_settable_ctx_params,
+EVP_KDF_gettable_params - EVP KDF routines</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/kdf.h&gt;</pre>
+<pre>
+ typedef struct evp_kdf_st EVP_KDF;
+ typedef struct evp_kdf_ctx_st EVP_KDF_CTX;</pre>
+<pre>
+ EVP_KDF_CTX *EVP_KDF_CTX_new(const EVP_KDF *kdf);
+ const EVP_KDF *EVP_KDF_CTX_kdf(EVP_KDF_CTX *ctx);
+ void EVP_KDF_CTX_free(EVP_KDF_CTX *ctx);
+ EVP_KDF_CTX *EVP_KDF_CTX_dup(const EVP_KDF_CTX *src);
+ void EVP_KDF_reset(EVP_KDF_CTX *ctx);
+ size_t EVP_KDF_size(EVP_KDF_CTX *ctx);
+ int EVP_KDF_derive(EVP_KDF_CTX *ctx, unsigned char *key, size_t keylen);
+ int EVP_KDF_up_ref(EVP_KDF *kdf);
+ void EVP_KDF_free(EVP_KDF *kdf);
+ EVP_KDF *EVP_KDF_fetch(OPENSSL_CTX *libctx, const char *algorithm,
+                        const char *properties);
+ int EVP_KDF_number(const EVP_KDF *kdf);
+ int EVP_KDF_is_a(const EVP_KDF *kdf, const char *name);
+ const OSSL_PROVIDER *EVP_KDF_provider(const EVP_KDF *kdf);
+ void EVP_KDF_do_all_provided(OPENSSL_CTX *libctx,
+                              void (*fn)(EVP_KDF *kdf, void *arg),
+                              void *arg);
+ void EVP_KDF_names_do_all(const EVP_KDF *kdf,
+                           void (*fn)(const char *name, void *data),
+                           void *data);
+ int EVP_KDF_get_params(EVP_KDF *kdf, OSSL_PARAM params[]);
+ int EVP_KDF_CTX_get_params(EVP_KDF_CTX *ctx, OSSL_PARAM params[]);
+ int EVP_KDF_CTX_set_params(EVP_KDF_CTX *ctx, const OSSL_PARAM params[]);
+ const OSSL_PARAM *EVP_KDF_gettable_params(const EVP_KDF *kdf);
+ const OSSL_PARAM *EVP_KDF_gettable_ctx_params(const EVP_KDF *kdf);
+ const OSSL_PARAM *EVP_KDF_settable_ctx_params(const EVP_KDF *kdf);
+ const OSSL_PROVIDER *EVP_KDF_provider(const EVP_KDF *kdf);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The EVP KDF routines are a high level interface to Key Derivation Function
+algorithms and should be used instead of algorithm-specific functions.</p>
+<p>After creating a <strong>EVP_KDF_CTX</strong> for the required algorithm using
+<code>EVP_KDF_CTX_new()</code>, inputs to the algorithm are supplied
+using calls to <code>EVP_KDF_CTX_set_params()</code> before
+calling <code>EVP_KDF_derive()</code> to derive the key.</p>
+<p>
+</p>
+<h2><a name="types">Types</a></h2>
+<p><strong>EVP_KDF</strong> is a type that holds the implementation of a KDF.</p>
+<p><strong>EVP_KDF_CTX</strong> is a context type that holds the algorithm inputs.</p>
+<p>
+</p>
+<h2><a name="algorithm_implementation_fetching">Algorithm implementation fetching</a></h2>
+<p><code>EVP_KDF_fetch()</code> fetches an implementation of a KDF <em>algorithm</em>, given
+a library context <em>libctx</em> and a set of <em>properties</em>.
+See <em>provider(7)/Fetching algorithms</em> for further information.</p>
+<p>The returned value must eventually be freed with
+<em>EVP_KDF_free(3)</em>.</p>
+<p><code>EVP_KDF_up_ref()</code> increments the reference count of an already fetched
+KDF.</p>
+<p><code>EVP_KDF_free()</code> frees a fetched algorithm.
+NULL is a valid parameter, for which this function is a no-op.</p>
+<p>
+</p>
+<h2><a name="context_manipulation_functions">Context manipulation functions</a></h2>
+<p><code>EVP_KDF_CTX_new()</code> creates a new context for the KDF implementation <em>kdf</em>.</p>
+<p><code>EVP_KDF_CTX_free()</code> frees up the context <em>ctx</em>.  If <em>ctx</em> is NULL, nothing
+is done.</p>
+<p><code>EVP_KDF_CTX_kdf()</code> returns the <strong>EVP_KDF</strong> associated with the context
+<em>ctx</em>.</p>
+<p>
+</p>
+<h2><a name="computing_functions">Computing functions</a></h2>
+<p><code>EVP_KDF_reset()</code> resets the context to the default state as if the context
+had just been created.</p>
+<p><code>EVP_KDF_derive()</code> derives <em>keylen</em> bytes of key material and places it in the
+<em>key</em> buffer.  If the algorithm produces a fixed amount of output then an
+error will occur unless the <em>keylen</em> parameter is equal to that output size,
+as returned by <code>EVP_KDF_size()</code>.</p>
+<p><code>EVP_KDF_get_params()</code> retrieves details about the implementation
+<em>kdf</em>.
+The set of parameters given with <em>params</em> determine exactly what
+parameters should be retrieved.
+Note that a parameter that is unknown in the underlying context is
+simply ignored.</p>
+<p><code>EVP_KDF_CTX_get_params()</code> retrieves chosen parameters, given the
+context <em>ctx</em> and its underlying context.
+The set of parameters given with <em>params</em> determine exactly what
+parameters should be retrieved.
+Note that a parameter that is unknown in the underlying context is
+simply ignored.</p>
+<p><code>EVP_KDF_CTX_set_params()</code> passes chosen parameters to the underlying
+context, given a context <em>ctx</em>.
+The set of parameters given with <em>params</em> determine exactly what
+parameters are passed down.
+Note that a parameter that is unknown in the underlying context is
+simply ignored.
+Also, what happens when a needed parameter isn't passed down is
+defined by the implementation.</p>
+<p><code>EVP_KDF_gettable_params()</code>, <code>EVP_KDF_gettable_ctx_params()</code> and
+<code>EVP_KDF_settable_ctx_params()</code> get a constant <strong>OSSL_PARAM</strong> array that
+describes the retrievable and settable parameters, i.e. parameters that
+can be used with <code>EVP_KDF_get_params()</code>, <code>EVP_KDF_CTX_get_params()</code>
+and <code>EVP_KDF_CTX_set_params()</code>, respectively.
+See <em>OSSL_PARAM(3)</em> for the use of <strong>OSSL_PARAM</strong> as parameter descriptor.</p>
+<p>
+</p>
+<h2><a name="information_functions">Information functions</a></h2>
+<p><code>EVP_KDF_size()</code> returns the output size if the algorithm produces a fixed amount
+of output and <strong>SIZE_MAX</strong> otherwise.  If an error occurs then 0 is returned.
+For some algorithms an error may result if input parameters necessary to
+calculate a fixed output size have not yet been supplied.</p>
+<p><code>EVP_KDF_is_a()</code> returns 1 if <em>kdf</em> is an implementation of an
+algorithm that's identifiable with <em>name</em>, otherwise 0.</p>
+<p><code>EVP_KDF_provider()</code> returns the provider that holds the implementation
+of the given <em>kdf</em>.</p>
+<p><code>EVP_KDF_do_all_provided()</code> traverses all KDF implemented by all activated
+providers in the given library context <em>libctx</em>, and for each of the
+implementations, calls the given function <em>fn</em> with the implementation method
+and the given <em>arg</em> as argument.</p>
+<p><code>EVP_KDF_number()</code> returns the internal dynamic number assigned to
+<em>kdf</em>.</p>
+<p><code>EVP_KDF_names_do_all()</code> traverses all names for <em>kdf</em>, and calls
+<em>fn</em> with each name and <em>data</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="parameters">PARAMETERS</a></h1>
+<p>The standard parameter names are:</p>
+<dl>
+<dt><strong><a name="pass_ossl_kdf_param_password_octet_string" class="item">&quot;pass&quot; (<strong>OSSL_KDF_PARAM_PASSWORD</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>Some KDF implementations require a password.
+For those KDF implementations that support it, this parameter sets the password.</p>
+</dd>
+<dt><strong><a name="salt_ossl_kdf_param_salt_octet_string" class="item">&quot;salt&quot; (<strong>OSSL_KDF_PARAM_SALT</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>Some KDF implementations can take a salt.
+For those KDF implementations that support it, this parameter sets the salt.</p>
+<p>The default value, if any, is implementation dependent.</p>
+</dd>
+<dt><strong><a name="iter_ossl_kdf_param_iter_unsigned_integer" class="item">&quot;iter&quot; (<strong>OSSL_KDF_PARAM_ITER</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Some KDF implementations require an iteration count.
+For those KDF implementations that support it, this parameter sets the
+iteration count.</p>
+<p>The default value, if any, is implementation dependent.</p>
+</dd>
+<dt><strong><a name="properties_ossl_kdf_param_properties_utf8_string" class="item">&quot;properties&quot; (<strong>OSSL_KDF_PARAM_PROPERTIES</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="mac_ossl_kdf_param_mac_utf8_string" class="item">&quot;mac&quot; (<strong>OSSL_KDF_PARAM_MAC</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="digest_ossl_kdf_param_digest_utf8_string" class="item">&quot;digest&quot; (<strong>OSSL_KDF_PARAM_DIGEST</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="cipher_ossl_kdf_param_cipher_utf8_string" class="item">&quot;cipher&quot; (<strong>OSSL_KDF_PARAM_CIPHER</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>For KDF implementations that use an underlying computation MAC, digest or
+cipher, these parameters set what the algorithm should be.</p>
+<p>The value is always the name of the intended algorithm,
+or the properties.</p>
+<p>Note that not all algorithms may support all possible underlying
+implementations.</p>
+</dd>
+<dt><strong><a name="key_ossl_kdf_param_key_octet_string" class="item">&quot;key&quot; (<strong>OSSL_KDF_PARAM_KEY</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>Some KDF implementations require a key.
+For those KDF implementations that support it, this octet string parameter
+sets the key.</p>
+</dd>
+<dt><strong><a name="maclen_ossl_kdf_param_mac_size_unsigned_integer" class="item">&quot;maclen&quot; (<strong>OSSL_KDF_PARAM_MAC_SIZE</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Used by implementations that use a MAC with a variable output size (KMAC).
+For those KDF implementations that support it, this parameter
+sets the MAC output size.</p>
+<p>The default value, if any, is implementation dependent.
+The length must never exceed what can be given with a <strong>size_t</strong>.</p>
+</dd>
+<dt><strong><a name="maxmem_bytes_ossl_kdf_param_scrypt_maxmem_unsigned_integer" class="item">&quot;maxmem_bytes&quot; (<strong>OSSL_KDF_PARAM_SCRYPT_MAXMEM</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Memory-hard password-based KDF algorithms, such as scrypt, use an amount of
+memory that depends on the load factors provided as input.
+For those KDF implementations that support it, this <strong>uint64_t</strong> parameter sets
+an upper limit on the amount of memory that may be consumed while performing
+a key derivation.
+If this memory usage limit is exceeded because the load factors are chosen
+too high, the key derivation will fail.</p>
+<p>The default value is implementation dependent.
+The memory size must never exceed what can be given with a <strong>size_t</strong>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>EVP_KDF_fetch()</code> returns a pointer to a newly fetched <strong>EVP_KDF</strong>, or
+NULL if allocation failed.</p>
+<p><code>EVP_KDF_provider()</code> returns a pointer to the provider for the KDF, or
+NULL on error.</p>
+<p><code>EVP_KDF_up_ref()</code> returns 1 on success, 0 on error.</p>
+<p><code>EVP_KDF_CTX_new()</code> returns either the newly allocated
+<strong>EVP_KDF_CTX</strong> structure or NULL if an error occurred.</p>
+<p><code>EVP_KDF_CTX_free()</code> and <code>EVP_KDF_reset()</code> do not return a value.</p>
+<p><code>EVP_KDF_size()</code> returns the output size.  <strong>SIZE_MAX</strong> is returned to indicate
+that the algorithm produces a variable amount of output; 0 to indicate failure.</p>
+<p>The remaining functions return 1 for success and 0 or a negative value for
+failure.  In particular, a return value of -2 indicates the operation is not
+supported by the KDF algorithm.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>EVP_KDF-SCRYPT(7)</em>
+<em>EVP_KDF-TLS1_PRF(7)</em>
+<em>EVP_KDF-PBKDF2(7)</em>
+<em>EVP_KDF-HKDF(7)</em>
+<em>EVP_KDF-SS(7)</em>
+<em>EVP_KDF-SSHKDF(7)</em>
+<em>EVP_KDF-X963(7)</em>
+<em>EVP_KDF-X942(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>This functionality was added to OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

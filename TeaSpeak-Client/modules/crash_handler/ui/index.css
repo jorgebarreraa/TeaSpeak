@@ -1,0 +1,42 @@
+body {
+  background-color: grey;
+  min-width: 750px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.container .container-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: fit-content;
+}
+.container .container-header > * {
+  flex-shrink: 0;
+}
+.container .container-header img {
+  vertical-align: middle;
+  display: inline-block;
+  width: 128px;
+  height: 128px;
+}
+.container .container-header .text {
+  margin-left: 20px;
+  display: inline-block;
+  text-align: left;
+  align-self: center;
+}
+.container .container-header .text h1 {
+  color: darkred;
+  margin-bottom: 0;
+}
+.container .container-header .text h2 {
+  font-size: 1.25em;
+  margin-top: 0.2em;
+}
+.container .error-dump {
+  color: red;
+}
+
+/*# sourceMappingURL=index.css.map */

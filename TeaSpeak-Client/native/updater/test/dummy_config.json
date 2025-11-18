@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "backup": true,
+  "backup-directory": "backup",
+  "callback_file": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "callback_argument_fail": "-EncodedCommand \"QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAZgBhAGkAbABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA==\"",
+  "callback_argument_success": "-EncodedCommand \"QQBkAGQALQBUAHkAcABlACAALQBBAHMAcwBlAG0AYgBsAHkATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVwBpAG4AZABvAHcAcwAuAEYAbwByAG0AcwA7ACAAWwBTAHkAcwB0AGUAbQAuAFcAaQBuAGQAbwB3AHMALgBGAG8AcgBtAHMALgBNAGUAcwBzAGEAZwBlAEIAbwB4AF0AOgA6AFMAaABvAHcAKAAiAFUAcABkAGEAdABlACAAcwB1AGMAYwBlAGUAZABlAGQAIgAsACIAVQBwAGQAYQB0AGUAcgAiACwAMAApAA==\"",
+  "locks": [{
+    "filename": "D:\\Program Files\\IDA 7.0\\ida.exe",
+    "timeout": 5000,
+    "error-id": "Hello World error"
+  }],
+  "moves": [
+    {
+      "source": "source/file_new.txt",
+      "target": "target/file.txt",
+      "error-id": "0001"
+    }
+  ]
+}

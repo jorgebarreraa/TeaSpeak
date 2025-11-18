@@ -1,0 +1,297 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>provider-asym_cipher</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#context_management_functions">Context Management Functions</a></li>
+		<li><a href="#encryption_functions">Encryption Functions</a></li>
+		<li><a href="#decryption_functions">Decryption Functions</a></li>
+		<li><a href="#asymmetric_cipher_parameters">Asymmetric Cipher Parameters</a></li>
+	</ul>
+
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>provider-asym_cipher - The asym_cipher library &lt;-&gt; provider functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/core_numbers.h&gt;
+ #include &lt;openssl/core_names.h&gt;</pre>
+<pre>
+ /*
+  * None of these are actual functions, but are displayed like this for
+  * the function signatures for functions that are offered as function
+  * pointers in OSSL_DISPATCH arrays.
+  */</pre>
+<pre>
+ /* Context management */
+ void *OP_asym_cipher_newctx(void *provctx);
+ void OP_asym_cipher_freectx(void *ctx);
+ void *OP_asym_cipher_dupctx(void *ctx);</pre>
+<pre>
+ /* Encryption */
+ int OP_asym_cipher_encrypt_init(void *ctx, void *provkey);
+ int OP_asym_cipher_encrypt(void *ctx, unsigned char *out, size_t *outlen,
+                            size_t outsize, const unsigned char *in,
+                            size_t inlen);</pre>
+<pre>
+ /* Decryption */
+ int OP_asym_cipher_decrypt_init(void *ctx, void *provkey);
+ int OP_asym_cipher_decrypt(void *ctx, unsigned char *out, size_t *outlen,
+                            size_t outsize, const unsigned char *in,
+                            size_t inlen);</pre>
+<pre>
+ /* Asymmetric Cipher parameters */
+ int OP_asym_cipher_get_ctx_params(void *ctx, OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_asym_cipher_gettable_ctx_params(void);
+ int OP_asym_cipher_set_ctx_params(void *ctx, const OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_asym_cipher_settable_ctx_params(void);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This documentation is primarily aimed at provider authors. See <em>provider(7)</em>
+for further information.</p>
+<p>The asymmetric cipher (OSSL_OP_ASYM_CIPHER) operation enables providers to
+implement asymmetric cipher algorithms and make them available to applications
+via the API functions <em>EVP_PKEY_encrypt(3)</em>,
+<em>EVP_PKEY_decrypt(3)</em> and
+other related functions).</p>
+<p>All &quot;functions&quot; mentioned here are passed as function pointers between
+<em class="file">libcrypto</em> and the provider in <strong>OSSL_DISPATCH</strong> arrays via
+<strong>OSSL_ALGORITHM</strong> arrays that are returned by the provider's
+<code>provider_query_operation()</code> function
+(see <em>provider-base(7)/Provider Functions</em>).</p>
+<p>All these &quot;functions&quot; have a corresponding function type definition
+named <strong>OSSL_{name}_fn</strong>, and a helper function to retrieve the
+function pointer from an <strong>OSSL_DISPATCH</strong> element named
+<strong>OSSL_get_{name}</strong>.
+For example, the &quot;function&quot; <code>OP_asym_cipher_newctx()</code> has these:</p>
+<pre>
+ typedef void *(OSSL_OP_asym_cipher_newctx_fn)(void *provctx);
+ static ossl_inline OSSL_OP_asym_cipher_newctx_fn
+     OSSL_get_OP_asym_cipher_newctx(const OSSL_DISPATCH *opf);</pre>
+<p><strong>OSSL_DISPATCH</strong> arrays are indexed by numbers that are provided as
+macros in <em>openssl-core_numbers.h(7)</em>, as follows:</p>
+<pre>
+ OP_asym_cipher_newctx               OSSL_FUNC_ASYM_CIPHER_NEWCTX
+ OP_asym_cipher_freectx              OSSL_FUNC_ASYM_CIPHER_FREECTX
+ OP_asym_cipher_dupctx               OSSL_FUNC_ASYM_CIPHER_DUPCTX</pre>
+<pre>
+ OP_asym_cipher_encrypt_init         OSSL_FUNC_ASYM_CIPHER_ENCRYPT_INIT
+ OP_asym_cipher_encrypt              OSSL_FUNC_ASYM_CIPHER_ENCRYPT</pre>
+<pre>
+ OP_asym_cipher_decrypt_init         OSSL_FUNC_ASYM_CIPHER_DECRYPT_INIT
+ OP_asym_cipher_decrypt              OSSL_FUNC_ASYM_CIPHER_DECRYPT</pre>
+<pre>
+ OP_asym_cipher_get_ctx_params       OSSL_FUNC_ASYM_CIPHER_GET_CTX_PARAMS
+ OP_asym_cipher_gettable_ctx_params  OSSL_FUNC_ASYM_CIPHER_GETTABLE_CTX_PARAMS
+ OP_asym_cipher_set_ctx_params       OSSL_FUNC_ASYM_CIPHER_SET_CTX_PARAMS
+ OP_asym_cipher_settable_ctx_params  OSSL_FUNC_ASYM_CIPHER_SETTABLE_CTX_PARAMS</pre>
+<p>An asymmetric cipher algorithm implementation may not implement all of these
+functions.
+In order to be a consistent set of functions a provider must implement
+OP_asym_cipher_newctx and OP_asym_cipher_freectx.
+It must also implement both of OP_asym_cipher_encrypt_init and
+OP_asym_cipher_encrypt, or both of OP_asym_cipher_decrypt_init and
+OP_asym_cipher_decrypt.
+OP_asym_cipher_get_ctx_params is optional but if it is present then so must
+OP_asym_cipher_gettable_ctx_params.
+Similarly, OP_asym_cipher_set_ctx_params is optional but if it is present then
+so must OP_asym_cipher_settable_ctx_params.</p>
+<p>An asymmetric cipher algorithm must also implement some mechanism for generating,
+loading or importing keys via the key management (OSSL_OP_KEYMGMT) operation.
+See <em>provider-keymgmt(7)</em> for further details.</p>
+<p>
+</p>
+<h2><a name="context_management_functions">Context Management Functions</a></h2>
+<p><code>OP_asym_cipher_newctx()</code> should create and return a pointer to a provider side
+structure for holding context information during an asymmetric cipher operation.
+A pointer to this context will be passed back in a number of the other
+asymmetric cipher operation function calls.
+The parameter <em>provctx</em> is the provider context generated during provider
+initialisation (see <em>provider(7)</em>).</p>
+<p><code>OP_asym_cipher_freectx()</code> is passed a pointer to the provider side asymmetric
+cipher context in the <em>ctx</em> parameter.
+This function should free any resources associated with that context.</p>
+<p><code>OP_asym_cipher_dupctx()</code> should duplicate the provider side asymmetric cipher
+context in the <em>ctx</em> parameter and return the duplicate copy.</p>
+<p>
+</p>
+<h2><a name="encryption_functions">Encryption Functions</a></h2>
+<p><code>OP_asym_cipher_encrypt_init()</code> initialises a context for an asymmetric encryption
+given a provider side asymmetric cipher context in the <em>ctx</em> parameter, and a
+pointer to a provider key object in the <em>provkey</em> parameter.
+The key object should have been previously generated, loaded or imported into
+the provider using the key management (OSSL_OP_KEYMGMT) operation (see
+provider-keymgmt(7)&gt;.</p>
+<p><code>OP_asym_cipher_encrypt()</code> performs the actual encryption itself.
+A previously initialised asymmetric cipher context is passed in the <em>ctx</em>
+parameter.
+The data to be encrypted is pointed to by the <em>in</em> parameter which is <em>inlen</em>
+bytes long.
+Unless <em>out</em> is NULL, the encrypted data should be written to the location
+pointed to by the <em>out</em> parameter and it should not exceed <em>outsize</em> bytes in
+length.
+The length of the encrypted data should be written to <em>*outlen</em>.
+If <em>out</em> is NULL then the maximum length of the encrypted data should be
+written to <em>*outlen</em>.</p>
+<p>
+</p>
+<h2><a name="decryption_functions">Decryption Functions</a></h2>
+<p><code>OP_asym_cipher_decrypt_init()</code> initialises a context for an asymmetric decryption
+given a provider side asymmetric cipher context in the <em>ctx</em> parameter, and a
+pointer to a provider key object in the <em>provkey</em> parameter.
+The key object should have been previously generated, loaded or imported into
+the provider using the key management (OSSL_OP_KEYMGMT) operation (see
+provider-keymgmt(7)&gt;.</p>
+<p><code>OP_asym_cipher_decrypt()</code> performs the actual decryption itself.
+A previously initialised asymmetric cipher context is passed in the <em>ctx</em>
+parameter.
+The data to be decrypted is pointed to by the <em>in</em> parameter which is <em>inlen</em>
+bytes long.
+Unless <em>out</em> is NULL, the decrypted data should be written to the location
+pointed to by the <em>out</em> parameter and it should not exceed <em>outsize</em> bytes in
+length.
+The length of the decrypted data should be written to <em>*outlen</em>.
+If <em>out</em> is NULL then the maximum length of the decrypted data should be
+written to <em>*outlen</em>.</p>
+<p>
+</p>
+<h2><a name="asymmetric_cipher_parameters">Asymmetric Cipher Parameters</a></h2>
+<p>See <em>OSSL_PARAM(3)</em> for further details on the parameters structure used by
+the <code>OP_asym_cipher_get_ctx_params()</code> and <code>OP_asym_cipher_set_ctx_params()</code>
+functions.</p>
+<p><code>OP_asym_cipher_get_ctx_params()</code> gets asymmetric cipher parameters associated
+with the given provider side asymmetric cipher context <em>ctx</em> and stores them in
+<em>params</em>.
+<code>OP_asym_cipher_set_ctx_params()</code> sets the asymmetric cipher parameters associated
+with the given provider side asymmetric cipher context <em>ctx</em> to <em>params</em>.
+Any parameter settings are additional to any that were previously set.</p>
+<p>Parameters currently recognised by built-in asymmetric cipher algorithms are as
+follows.
+Not all parameters are relevant to, or are understood by all asymmetric cipher
+algorithms:</p>
+<dl>
+<dt><strong><a name="pad_mode_ossl_asym_cipher_param_pad_mode_integer" class="item">&quot;pad-mode&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_PAD_MODE</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The type of padding to be used. The interpretation of this value will depend
+on the algorithm in use. The default provider understands these RSA padding
+modes: 1 (RSA_PKCS1_PADDING), 2 (RSA_SSLV23_PADDING), 3 (RSA_NO_PADDING),
+4 (RSA_PKCS1_OAEP_PADDING), 5 (RSA_X931_PADDING), 6 (RSA_PKCS1_PSS_PADDING) and
+7 (RSA_PKCS1_WITH_TLS_PADDING). See <em>EVP_PKEY_CTX_set_rsa_padding(3)</em> for
+further details.</p>
+</dd>
+<dt><strong><a name="digest_ossl_asym_cipher_param_oaep_digest_utf8_string" class="item">&quot;digest&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_OAEP_DIGEST</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets or sets the name of the OAEP digest algorithm used when OAEP padding is in
+use.</p>
+</dd>
+<dt><strong><a name="digest_props_ossl_asym_cipher_param_oaep_digest_props_utf8_string" class="item">&quot;digest-props&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_OAEP_DIGEST_PROPS</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets or sets the properties to use when fetching the OAEP digest algorithm.</p>
+</dd>
+<dt><strong><a name="mgf1_digest_ossl_asym_cipher_param_mgf1_digest_utf8_string" class="item">&quot;mgf1-digest&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_MGF1_DIGEST</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets or sets the name of the MGF1 digest algorithm used when OAEP or PSS padding
+is in use.</p>
+</dd>
+<dt><strong><a name="mgf1_digest_props_ossl_asym_cipher_param_mgf1_digest_props_utf8_string" class="item">&quot;mgf1-digest-props&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_MGF1_DIGEST_PROPS</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets or sets the properties to use when fetching the MGF1 digest algorithm.</p>
+</dd>
+<dt><strong><a name="oaep_label_ossl_asym_cipher_param_oaep_label_octet_string" class="item">&quot;oaep-label&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_OAEP_LABEL</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets or sets the OAEP label used when OAEP padding is in use.</p>
+</dd>
+<dt><strong><a name="oaep_label_len_ossl_asym_cipher_param_oaep_label_len_size_t" class="item">&quot;oaep-label-len&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_OAEP_LABEL_LEN</strong>) &lt;size_t&gt;</a></strong></dt>
+
+<dd>
+<p>Gets the length of an OAEP label when OAEP padding is in use.</p>
+</dd>
+<dt><strong><a name="tls_client_version_ossl_asym_cipher_param_tls_client_version_unsigned_integer" class="item">&quot;tls-client-version&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_TLS_CLIENT_VERSION</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>The TLS protocol version first requested by the client. See
+<strong>RSA_PKCS1_WITH_TLS_PADDING</strong> on the page <em>EVP_PKEY_CTX_set_rsa_padding(3)</em>.</p>
+</dd>
+<dt><strong><a name="tls_negotiated_version_ossl_asym_cipher_param_tls_client_version_unsigned_integer" class="item">&quot;tls-negotiated-version&quot; (<strong>OSSL_ASYM_CIPHER_PARAM_TLS_CLIENT_VERSION</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>The negotiated TLS protocol version. See
+<strong>RSA_PKCS1_WITH_TLS_PADDING</strong> on the page <em>EVP_PKEY_CTX_set_rsa_padding(3)</em>.</p>
+</dd>
+</dl>
+<p><code>OP_asym_cipher_gettable_ctx_params()</code> and <code>OP_asym_cipher_settable_ctx_params()</code>
+get a constant <strong>OSSL_PARAM</strong> array that describes the gettable and settable
+parameters, i.e. parameters that can be used with <code>OP_asym_cipherget_ctx_params()</code>
+and <code>OP_asym_cipher_set_ctx_params()</code> respectively.
+See <em>OSSL_PARAM(3)</em> for the use of <strong>OSSL_PARAM</strong> as parameter descriptor.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OP_asym_cipher_newctx()</code> and <code>OP_asym_cipher_dupctx()</code> should return the newly
+created provider side asymmetric cipher context, or NULL on failure.</p>
+<p>All other functions should return 1 for success or 0 on error.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The provider ASYM_CIPHER interface was introduced in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

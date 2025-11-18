@@ -1,0 +1,9 @@
+Windows AMD64:
+cd opus
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+cmake ../../ -G"Visual Studio 14 2015 Win64" -DCMAKE_C_FLAGS="/arch:SSE" -DCMAKE_INSTALL_PREFIX=. -DOPUS_X86_PRESUME_AVX=OFF -DOPUS_X86_PRESUME_SSE4_1=OFF 
+sed -i 's/AdvancedVectorExtensions/NoExtensions/g' *.vcxproj
+MSBuild.exe //p:Configuration=RelWithDebInfo //p:Platform=x64 INSTALL.vcxproj 

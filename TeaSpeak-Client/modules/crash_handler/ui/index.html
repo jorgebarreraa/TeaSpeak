@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Application crashed!</title>
+        <link rel="stylesheet" type="text/css" href="index.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="container-header">
+                <img src="crash_logo.svg" alt="TeaClient - Crashed">
+                <div class="text">
+                    <h1>Ooops, something went incredible wrong!</h1>
+                    <h2>It seems like your TeaSpeak Client has been crashed.</h2>
+                </div>
+            </div>
+            <div class="container-body">
+                <p>
+                    Please report this crash to TeaSpeak and help improving the client!<br>
+                    Official issue and bug tracker url: <a href="#" onclick="openIssueTracker(); return false;">https://github.com/TeaSpeak/TeaClient/issues</a><br>
+                    <b>Attention:</b> Crash reports without a crash dump file will be ignored!
+                </p>
+                <p class="error-hide">
+                    Crash dump file: <a href="#" class="crash-dump-directory">undefined</a>
+                </p>
+                <p class="error-dump error-show">
+                    Failed to create crash dump file: <a class="crash-dump-error"></a>
+                </p>
+            </div>
+        </div>
+        <script>
+            let exports = {};
+        </script>
+        <script src="index.js"></script>
+    </body>
+</html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OSSL_CRMF_pbmp_new</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OSSL_CRMF_pbm_new,
+OSSL_CRMF_pbmp_new
+- functions for producing Password-Based MAC (PBM)</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  #include &lt;openssl/crmf.h&gt;</pre>
+<pre>
+  int OSSL_CRMF_pbm_new(const OSSL_CRMF_PBMPARAMETER *pbmp,
+                        const unsigned char *msg, size_t msglen,
+                        const unsigned char *sec, size_t seclen,
+                        unsigned char **mac, size_t *maclen);</pre>
+<pre>
+  OSSL_CRMF_PBMPARAMETER *OSSL_CRMF_pbmp_new(size_t saltlen, int owfnid,
+                                             int itercnt, int macnid);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><code>OSSL_CRMF_pbm_new()</code> generates a PBM (Password-Based MAC) based on given PBM
+parameters <strong>pbmp</strong>, message <strong>msg</strong>, and secret <strong>sec</strong>, along with the respective
+lengths <strong>msglen</strong> and <strong>seclen</strong>. On success writes the address of the newly
+allocated MAC via the <strong>mac</strong> reference parameter and writes the length via the
+<strong>maclen</strong> reference parameter unless it its NULL.</p>
+<p>The iteration count must be at least 100, as stipulated by <a href="http://www.ietf.org/rfc/rfc4211.txt" class="rfc">RFC 4211</a>, and is
+limited to at most 100000 to avoid DoS through manipulated or otherwise
+malformed input.</p>
+<p><code>OSSL_CRMF_pbmp_new()</code> initializes and returns a new PBMParameter
+structure with a new random salt of given length <strong>saltlen</strong>, OWF (one-way
+function) NID <strong>owfnid</strong>, iteration count <strong>itercnt</strong>, and MAC NID <strong>macnid</strong>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The algorithms for the OWF (one-way function) and for the MAC (message
+authentication code) may be any with a NID defined in <strong>openssl/objects.h</strong>.
+As specified by <a href="http://www.ietf.org/rfc/rfc4210.txt" class="rfc">RFC 4210</a>, these should include NID_hmac_sha1.</p>
+<p>RFC 4210 recommends that the salt SHOULD be at least 8 bytes (64 bits) long.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OSSL_CRMF_pbm_new()</code> returns 1 on success, 0 on error.</p>
+<p><code>OSSL_CRMF_pbmp_new()</code> returns a new and initialized OSSL_CRMF_PBMPARAMETER
+structure, or NULL on error.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+ OSSL_CRMF_PBMPARAMETER *pbm = NULL;
+ unsigned char *msg = &quot;Hello&quot;;
+ unsigned char *sec = &quot;SeCrEt&quot;;
+ unsigned char *mac = NULL;
+ size_t maclen;</pre>
+<pre>
+ if ((pbm = OSSL_CRMF_pbmp_new(16, NID_sha256, 500, NID_hmac_sha1) == NULL))
+     goto err;
+ if (!OSSL_CRMF_pbm_new(pbm, msg, 5, sec, 6, &amp;mac, &amp;maclen))
+     goto err;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>RFC 4211 section 4.4</p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The OpenSSL CRMF support was added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2007-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

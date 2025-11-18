@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "listFiles": true,
+    "module": "system",
+    "moduleResolution": "node",
+    "target": "es6",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowJs": false,
+    "checkJs": false,
+
+    "outFile": "declarations/native_api",
+    "typeRoots" : ["app/imports/", "node_modules/@types"]
+  },
+  "exclude": ["node_modules"],
+  "include": [
+    "app/native/**/*.ts"
+  ]
+}

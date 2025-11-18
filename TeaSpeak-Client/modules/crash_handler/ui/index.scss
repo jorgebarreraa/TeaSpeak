@@ -1,0 +1,51 @@
+body {
+	background-color: grey;
+	min-width: 750px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.container {
+	.container-header {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		width: fit-content;
+
+		> * {
+			flex-shrink: 0;
+		}
+
+		img {
+			vertical-align: middle;
+			display: inline-block;
+
+			width: 128px;
+			height: 128px;
+		}
+
+		.text {
+			margin-left: 20px;
+
+			display: inline-block;;
+			text-align: left;
+			align-self: center;
+
+			h1 {
+				color: darkred;
+				margin-bottom: 0;
+			}
+
+			h2 {
+				font-size: 1.25em;
+				margin-top: .2em;
+			}
+		}
+	}
+
+	.error-dump {
+		color: red;
+	}
+}

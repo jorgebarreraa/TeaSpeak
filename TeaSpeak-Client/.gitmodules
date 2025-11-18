@@ -1,0 +1,14 @@
+[submodule "native/codec/libraries/opus"]
+	path = native/codec/libraries/opus
+	url = https://github.com/xiph/opus.git
+[submodule "native/codec/libraries/speex"]
+	path = native/codec/libraries/speex
+	url = https://github.com/xiph/speex.git
+[submodule "native/codec/libraries/celt"]
+	path = native/codec/libraries/celt
+	url = https://github.com/WolverinDEV/celt-0.11.0.git
+[submodule "DbConnector"]
+	branch = stable
+[submodule "github"]
+	path = github
+	url = https://github.com/TeaSpeak/TeaClient

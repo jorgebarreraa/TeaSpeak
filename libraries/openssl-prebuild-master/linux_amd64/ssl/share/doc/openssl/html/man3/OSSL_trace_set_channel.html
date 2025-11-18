@@ -1,0 +1,366 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OSSL_trace_set_channel</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#functions">Functions</a></li>
+		<li><a href="#trace_callback">Trace callback</a></li>
+		<li><a href="#trace_categories">Trace categories</a></li>
+	</ul>
+
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<ul>
+
+		<li><a href="#simple_example">Simple example</a></li>
+		<li><a href="#advanced_example">Advanced example</a></li>
+	</ul>
+
+	<li><a href="#notes">NOTES</a></li>
+	<ul>
+
+		<li><a href="#configure_tracing">Configure Tracing</a></li>
+	</ul>
+
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OSSL_trace_set_channel, OSSL_trace_set_prefix, OSSL_trace_set_suffix,
+OSSL_trace_set_callback, OSSL_trace_cb - Enabling trace output</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/trace.h&gt;</pre>
+<pre>
+ typedef size_t (*OSSL_trace_cb)(const char *buf, size_t cnt,
+                                 int category, int cmd, void *data);</pre>
+<pre>
+ void OSSL_trace_set_channel(int category, BIO *bio);
+ void OSSL_trace_set_prefix(int category, const char *prefix);
+ void OSSL_trace_set_suffix(int category, const char *suffix);
+ void OSSL_trace_set_callback(int category, OSSL_trace_cb cb, void  *data);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>If available (see <a href="#notes">NOTES</a> below), the application can request
+internal trace output.
+This output comes in form of free text for humans to read.</p>
+<p>The trace output is divided into categories which can be
+enabled individually.
+Every category can be enabled individually by attaching a so called
+<em>trace channel</em> to it, which in the simplest case is just a BIO object
+to which the application can write the tracing output for this category.
+Alternatively, the application can provide a tracer callback in order to
+get more finegrained trace information. This callback will be wrapped
+internally by a dedicated BIO object.</p>
+<p>For the tracing code, both trace channel types are indistinguishable.
+These are called a <em>simple trace channel</em> and a <em>callback trace channel</em>,
+respectively.</p>
+<p>
+</p>
+<h2><a name="functions">Functions</a></h2>
+<p><code>OSSL_trace_set_channel()</code> is used to enable the given trace <code>category</code>
+by attaching the <strong>BIO</strong> <code>bio</code> object as (simple) trace channel.</p>
+<p><code>OSSL_trace_set_prefix()</code> and <code>OSSL_trace_set_suffix()</code> can be used to add
+an extra line for each channel, to be output before and after group of
+tracing output.
+What constitues an output group is decided by the code that produces
+the output.
+The lines given here are considered immutable; for more dynamic
+tracing prefixes, consider setting a callback with
+<code>OSSL_trace_set_callback()</code> instead.</p>
+<p><code>OSSL_trace_set_callback()</code> is used to enable the given trace
+<code>category</code> by giving it the tracer callback <code>cb</code> with the associated
+data <code>data</code>, which will simply be passed through to <code>cb</code> whenever
+it's called. The callback function is internally wrapped by a
+dedicated BIO object, the so called <em>callback trace channel</em>.
+This should be used when it's desirable to do form the trace output to
+something suitable for application needs where a prefix and suffix
+line aren't enough.</p>
+<p><code>OSSL_trace_set_channel()</code> and <code>OSSL_trace_set_callback()</code> are mutually
+exclusive, calling one of them will clear whatever was set by the
+previous call.</p>
+<p>Calling <code>OSSL_trace_set_channel()</code> with <code>NULL</code> for <code>channel</code> or
+<code>OSSL_trace_set_callback()</code> with <code>NULL</code> for <code>cb</code> disables tracing for
+the given <code>category</code></p>
+<p>
+</p>
+<h2><a name="trace_callback">Trace callback</a></h2>
+<p>The tracer callback must return a <code>size_t</code>, which must be zero on
+error and otherwise return the number of bytes that were output.
+It receives a text buffer <code>buf</code> with <code>cnt</code> bytes of text, as well as
+the <code>category</code>, a control number <code>cmd</code>, and the <code>data</code> that was
+passed to <code>OSSL_trace_set_callback()</code>.</p>
+<p>The possible control numbers are:</p>
+<dl>
+<dt><strong><a name="ossl_trace_ctrl_begin" class="item"><code>OSSL_TRACE_CTRL_BEGIN</code></a></strong></dt>
+
+<dd>
+<p>The callback is called from <code>OSSL_trace_begin()</code>, which gives the
+callback the possibility to output a dynamic starting line, or set a
+prefix that should be output at the beginning of each line, or
+something other.</p>
+</dd>
+<dt><strong><a name="ossl_trace_ctrl_write" class="item"><code>OSSL_TRACE_CTRL_WRITE</code></a></strong></dt>
+
+<dd>
+<p>This callback is called whenever data is written to the BIO by some
+regular BIO output routine.
+An arbitrary number of <a href="#ossl_trace_ctrl_write"><code>OSSL_TRACE_CTRL_WRITE</code></a> callbacks can occur
+inside a group marked by a pair of <a href="#ossl_trace_ctrl_begin"><code>OSSL_TRACE_CTRL_BEGIN</code></a> and
+<a href="#ossl_trace_ctrl_end"><code>OSSL_TRACE_CTRL_END</code></a> calls, but never outside such a group.</p>
+</dd>
+<dt><strong><a name="ossl_trace_ctrl_end" class="item"><code>OSSL_TRACE_CTRL_END</code></a></strong></dt>
+
+<dd>
+<p>The callback is called from <code>OSSL_trace_end()</code>, which gives the callback
+the possibility to output a dynamic ending line, or reset the line
+prefix that was set with OSSL_TRACE_CTRL_BEGIN, or something other.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="trace_categories">Trace categories</a></h2>
+<p>The trace categories are simple numbers available through macros.</p>
+<dl>
+<dt><strong><a name="ossl_trace_category_trace" class="item"><code>OSSL_TRACE_CATEGORY_TRACE</code></a></strong></dt>
+
+<dd>
+<p>Traces the OpenSSL trace API itself.</p>
+<p>More precisely, this will generate trace output any time a new
+trace hook is set.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_init" class="item"><code>OSSL_TRACE_CATEGORY_INIT</code></a></strong></dt>
+
+<dd>
+<p>Traces OpenSSL library initialization and cleanup.</p>
+<p>This needs special care, as OpenSSL will do automatic cleanup after
+exit from <code>main()</code>, and any tracing output done during this cleanup
+will be lost if the tracing channel or callback were cleaned away
+prematurely.
+A suggestion is to make such cleanup part of a function that's
+registered very early with <em>atexit(3)</em>.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_tls" class="item"><code>OSSL_TRACE_CATEGORY_TLS</code></a></strong></dt>
+
+<dd>
+<p>Traces the TLS/SSL protocol.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_tls_cipher" class="item"><code>OSSL_TRACE_CATEGORY_TLS_CIPHER</code></a></strong></dt>
+
+<dd>
+<p>Traces the ciphers used by the TLS/SSL protocol.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_engine_conf" class="item"><code>OSSL_TRACE_CATEGORY_ENGINE_CONF</code></a></strong></dt>
+
+<dd>
+<p>Traces the ENGINE configuration.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_engine_table" class="item"><code>OSSL_TRACE_CATEGORY_ENGINE_TABLE</code></a></strong></dt>
+
+<dd>
+<p>Traces the ENGINE algorithm table selection.</p>
+<p>More precisely, <code>engine_table_select()</code>, the function that is used by
+RSA, DSA (etc) code to select registered ENGINEs, cache defaults and
+functional references (etc), will generate trace summaries.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_engine_ref_count" class="item"><code>OSSL_TRACE_CATEGORY_ENGINE_REF_COUNT</code></a></strong></dt>
+
+<dd>
+<p>Tracds the ENGINE reference counting.</p>
+<p>More precisely, both reference counts in the ENGINE structure will be
+monitored with a line of trace output generated for each change.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_pkcs5v2" class="item"><code>OSSL_TRACE_CATEGORY_PKCS5V2</code></a></strong></dt>
+
+<dd>
+<p>Traces PKCS#5 v2 key generation.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_pkcs12_keygen" class="item"><code>OSSL_TRACE_CATEGORY_PKCS12_KEYGEN</code></a></strong></dt>
+
+<dd>
+<p>Traces PKCS#12 key generation.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_pkcs12_decrypt" class="item"><code>OSSL_TRACE_CATEGORY_PKCS12_DECRYPT</code></a></strong></dt>
+
+<dd>
+<p>Traces PKCS#12 decryption.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_x509v3_policy" class="item"><code>OSSL_TRACE_CATEGORY_X509V3_POLICY</code></a></strong></dt>
+
+<dd>
+<p>Traces X509v3 policy processing.</p>
+<p>More precisely, this generates the complete policy tree at various
+point during evaluation.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_bn_ctx" class="item"><code>OSSL_TRACE_CATEGORY_BN_CTX</code></a></strong></dt>
+
+<dd>
+<p>Traces BIGNUM context operations.</p>
+</dd>
+<dt><strong><a name="ossl_trace_category_provider_conf" class="item"><code>OSSL_TRACE_CATEGORY_PROVIDER_CONF</code></a></strong></dt>
+
+<dd>
+<p>Traces the OSSL_PROVIDER configuration.</p>
+</dd>
+</dl>
+<p>There is also <code>OSSL_TRACE_CATEGORY_ALL</code>, which works as a fallback
+and can be used to get <em>all</em> trace output.</p>
+<p>Note, however, that in this case all trace output will effectively be
+associated with the 'ALL' category, which is undesirable if the
+application intends to include the category name in the trace output.
+In this case it is better to register separate channels for each
+trace category instead.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OSSL_trace_set_channel()</code>, <code>OSSL_trace_set_prefix()</code>,
+<code>OSSL_trace_set_suffix()</code>, and <code>OSSL_trace_set_callback()</code> return 1 on
+success, or 0 on failure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>In all examples below, the trace producing code is assumed to be
+the following:</p>
+<pre>
+ int foo = 42;
+ const char bar[] = { 0,  1,  2,  3,  4,  5,  6,  7,
+                      8,  9, 10, 11, 12, 13, 14, 15 };</pre>
+<pre>
+ OSSL_TRACE_BEGIN(TLS) {
+     BIO_puts(trc_out, &quot;foo: &quot;);
+     BIO_printf(trc_out, &quot;%d\n&quot;, foo);
+     BIO_dump(trc_out, bar, sizeof(bar));
+ } OSSL_TRACE_END(TLS);</pre>
+<p>
+</p>
+<h2><a name="simple_example">Simple example</a></h2>
+<p>An example with just a channel and constant prefix / suffix.</p>
+<pre>
+ int main(int argc, char *argv[])
+ {
+     BIO *err = BIO_new_fp(stderr, BIO_NOCLOSE | BIO_FP_TEXT);
+     OSSL_trace_set_channel(OSSL_TRACE_CATEGORY_SSL, err);
+     OSSL_trace_set_prefix(OSSL_TRACE_CATEGORY_SSL, &quot;BEGIN TRACE[TLS]&quot;);
+     OSSL_trace_set_suffix(OSSL_TRACE_CATEGORY_SSL, &quot;END TRACE[TLS]&quot;);</pre>
+<pre>
+     /* ... work ... */
+ }</pre>
+<p>When the trace producing code above is performed, this will be output
+on standard error:</p>
+<pre>
+ BEGIN TRACE[TLS]
+ foo: 42
+ 0000 - 00 01 02 03 04 05 06 07-08 09 0a 0b 0c 0d 0e 0f   ................
+ END TRACE[TLS]</pre>
+<p>
+</p>
+<h2><a name="advanced_example">Advanced example</a></h2>
+<p>This example uses the callback, and depends on pthreads functionality.</p>
+<pre>
+ static size_t cb(const char *buf, size_t cnt,
+                 int category, int cmd, void *vdata)
+ {
+     BIO *bio = vdata;
+     const char *label = NULL;</pre>
+<pre>
+     switch (cmd) {
+     case OSSL_TRACE_CTRL_BEGIN:
+         label = &quot;BEGIN&quot;;
+         break;
+     case OSSL_TRACE_CTRL_END:
+         label = &quot;END&quot;;
+         break;
+     }</pre>
+<pre>
+     if (label != NULL) {
+         union {
+             pthread_t tid;
+             unsigned long ltid;
+         } tid;</pre>
+<pre>
+         tid.tid = pthread_self();
+         BIO_printf(bio, &quot;%s TRACE[%s]:%lx\n&quot;,
+                    label, OSSL_trace_get_category_name(category), tid.ltid);
+     }
+     return (size_t)BIO_puts(bio, buf);
+ }</pre>
+<pre>
+ int main(int argc, char *argv[])
+ {
+     BIO *err = BIO_new_fp(stderr, BIO_NOCLOSE | BIO_FP_TEXT);
+     OSSL_trace_set_callback(OSSL_TRACE_CATEGORY_SSL, cb, err);</pre>
+<pre>
+     /* ... work ... */
+ }</pre>
+<p>The output is almost the same as for the simple example above.</p>
+<pre>
+ BEGIN TRACE[TLS]:7f9eb0193b80
+ foo: 42
+ 0000 - 00 01 02 03 04 05 06 07-08 09 0a 0b 0c 0d 0e 0f   ................
+ END TRACE[TLS]:7f9eb0193b80</pre>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>
+</p>
+<h2><a name="configure_tracing">Configure Tracing</a></h2>
+<p>By default, the OpenSSL library is built with tracing disabled. To
+use the tracing functionality documented here, it is therefore
+necessary to configure and build OpenSSL with the 'enable-trace' option.</p>
+<p>When the library is built with tracing disabled, the macro
+<code>OPENSSL_NO_TRACE</code> is defined in <code>openssl/opensslconf.h</code> and all
+functions described here are inoperational, i.e. will do nothing.</p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p><code>OSSL_trace_set_channel()</code>, <code>OSSL_trace_set_prefix()</code>,
+<code>OSSL_trace_set_suffix()</code>, and <code>OSSL_trace_set_callback()</code> were all added
+in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

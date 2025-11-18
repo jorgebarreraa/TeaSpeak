@@ -1,0 +1,33 @@
+import { AbstractVoiceConnection, VoiceConnectionStatus, WhisperSessionInitializer } from "../connection/VoiceConnection";
+import { RecorderProfile } from "../voice/RecorderProfile";
+import { AbstractServerConnection, ConnectionStatistics } from "../connection/ConnectionBase";
+import { VoiceClient } from "../voice/VoiceClient";
+import { WhisperSession, WhisperTarget } from "../voice/VoiceWhisper";
+export declare class DummyVoiceConnection extends AbstractVoiceConnection {
+    private recorder;
+    private voiceClients;
+    private triggerUnmountEvent;
+    constructor(connection: AbstractServerConnection);
+    acquireVoiceRecorder(recorder: RecorderProfile | undefined): Promise<void>;
+    availableVoiceClients(): VoiceClient[];
+    decodingSupported(codec: number): boolean;
+    encodingSupported(codec: number): boolean;
+    getConnectionState(): VoiceConnectionStatus;
+    getEncoderCodec(): number;
+    registerVoiceClient(clientId: number): VoiceClient;
+    setEncoderCodec(codec: number): void;
+    unregisterVoiceClient(client: VoiceClient): Promise<void>;
+    voiceRecorder(): RecorderProfile;
+    dropWhisperSession(session: WhisperSession): void;
+    getWhisperSessionInitializer(): WhisperSessionInitializer | undefined;
+    getWhisperSessions(): WhisperSession[];
+    setWhisperSessionInitializer(initializer: WhisperSessionInitializer | undefined): void;
+    getWhisperTarget(): WhisperTarget | undefined;
+    startWhisper(target: WhisperTarget): Promise<void>;
+    stopWhisper(): void;
+    getFailedMessage(): string;
+    isReplayingVoice(): boolean;
+    stopAllVoiceReplays(): void;
+    getConnectionStats(): Promise<ConnectionStatistics>;
+    getRetryTimestamp(): number | 0;
+}

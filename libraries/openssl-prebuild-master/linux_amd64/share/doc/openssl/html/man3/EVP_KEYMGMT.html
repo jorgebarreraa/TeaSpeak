@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>EVP_KEYMGMT</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>EVP_KEYMGMT,
+EVP_KEYMGMT_fetch,
+EVP_KEYMGMT_up_ref,
+EVP_KEYMGMT_free,
+EVP_KEYMGMT_provider,
+EVP_KEYMGMT_is_a,
+EVP_KEYMGMT_number,
+EVP_KEYMGMT_do_all_provided,
+EVP_KEYMGMT_names_do_all
+- EVP key management routines</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/evp.h&gt;</pre>
+<pre>
+ typedef struct evp_keymgmt_st EVP_KEYMGMT;</pre>
+<pre>
+ EVP_KEYMGMT *EVP_KEYMGMT_fetch(OPENSSL_CTX *ctx, const char *algorithm,
+                                const char *properties);
+ int EVP_KEYMGMT_up_ref(EVP_KEYMGMT *keymgmt);
+ void EVP_KEYMGMT_free(EVP_KEYMGMT *keymgmt);
+ const OSSL_PROVIDER *EVP_KEYMGMT_provider(const EVP_KEYMGMT *keymgmt);
+ int EVP_KEYMGMT_is_a(const EVP_KEYMGMT *keymgmt, const char *name);
+ int EVP_KEYMGMT_number(const EVP_KEYMGMT *keymgmt);
+ void EVP_KEYMGMT_do_all_provided(OPENSSL_CTX *libctx,
+                                  void (*fn)(EVP_KEYMGMT *keymgmt, void *arg),
+                                  void *arg);
+ void EVP_KEYMGMT_names_do_all(const EVP_KEYMGMT *keymgmt,
+                               void (*fn)(const char *name, void *data),
+                               void *data);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>EVP_KEYMGMT</strong> is a method object that represents key management
+implementations for different cryptographic algorithms.
+This method object provides functionality to have providers import key
+material from the outside, as well as export key material to the
+outside.
+Most of the functionality can only be used internally and has no
+public interface, this object is simply passed into other functions
+when needed.</p>
+<p><code>EVP_KEYMGMT_fetch()</code> looks for an algorithm within the provider that
+has been loaded into the <strong>OPENSSL_CTX</strong> given by <em>ctx</em>, having the
+name given by <em>algorithm</em> and the properties given by <em>properties</em>.</p>
+<p><code>EVP_KEYMGMT_up_ref()</code> increments the reference count for the given
+<strong>EVP_KEYMGMT</strong> <em>keymgmt</em>.</p>
+<p><code>EVP_KEYMGMT_free()</code> decrements the reference count for the given
+<strong>EVP_KEYMGMT</strong> <em>keymgmt</em>, and when the count reaches zero, frees it.</p>
+<p><code>EVP_KEYMGMT_provider()</code> returns the provider that has this particular
+implementation.</p>
+<p><code>EVP_KEYMGMT_is_a()</code> checks if <em>keymgmt</em> is an implementation of an
+algorithm that's identifiable with <em>name</em>.</p>
+<p><code>EVP_KEYMGMT_number()</code> returns the internal dynamic number assigned to
+the <em>keymgmt</em>.</p>
+<p><code>EVP_KEYMGMT_names_do_all()</code> traverses all names for the <em>keymgmt</em>, and
+calls <em>fn</em> with each name and <em>data</em>.</p>
+<p><code>EVP_KEYMGMT_do_all_provided()</code> traverses all key keymgmt implementations by
+all activated providers in the library context <em>libctx</em>, and for each
+of the implementations, calls <em>fn</em> with the implementation method and
+<em>data</em> as arguments.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p><code>EVP_KEYMGMT_fetch()</code> may be called implicitly by other fetching
+functions, using the same library context and properties.
+Any other API that uses keys will typically do this.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>EVP_KEYMGMT_fetch()</code> returns a pointer to the key management
+implementation represented by an EVP_KEYMGMT object, or NULL on
+error.</p>
+<p><code>EVP_KEYMGMT_up_ref()</code> returns 1 on success, or 0 on error.</p>
+<p><code>EVP_KEYMGMT_free()</code> doesn't return any value.</p>
+<p><code>EVP_KEYMGMT_provider()</code> returns a pointer to a provider object, or NULL
+on error.</p>
+<p><code>EVP_KEYMGMT_is_a()</code> returns 1 of <em>keymgmt</em> was identifiable,
+otherwise 0.</p>
+<p><code>EVP_KEYMGMT_number()</code> returns an integer.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>EVP_MD_fetch(3)</em>, <em>OPENSSL_CTX(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The functions described here were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

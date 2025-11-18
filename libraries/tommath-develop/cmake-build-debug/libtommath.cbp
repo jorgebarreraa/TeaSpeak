@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="libtommath"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="msvc8"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tommathShared">
+				<Option output="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug/tommathShared.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 tommathShared"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tommathShared/fast">
+				<Option output="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug/tommathShared.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 tommathShared/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tommathStatic">
+				<Option output="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug/tommathStatic.lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 tommathStatic"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tommathStatic/fast">
+				<Option output="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug/tommathStatic.lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+					<Add directory="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.16.27023\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 tommathStatic/fast"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/local">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 install/local"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 install"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="list_install_components">
+				<Option working_dir="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 list_install_components"/>
+					<CompileFile command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f C:\Users\WolverinDEV\TeaRoot-Client\third_party\tommath\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_error.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_fast_mp_invmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_fast_mp_montgomery_reduce.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_fast_s_mp_mul_digs.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_fast_s_mp_mul_high_digs.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_fast_s_mp_sqr.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_2expt.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_abs.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_add.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_add_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_addmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_and.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_clamp.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_clear.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_clear_multi.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_cmp.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_cmp_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_cmp_mag.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_cnt_lsb.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_complement.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_copy.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_count_bits.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_div.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_div_2.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_div_2d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_div_3.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_div_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_dr_is_modulus.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_dr_reduce.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_dr_setup.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_exch.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_export.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_expt_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_expt_d_ex.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_exptmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_exptmod_fast.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_exteuclid.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_fread.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_fwrite.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_gcd.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_get_bit.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_get_double.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_get_int.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_get_long.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_get_long_long.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_grow.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_import.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init_copy.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init_multi.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init_set.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init_set_int.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_init_size.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_invmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_invmod_slow.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_is_square.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_jacobi.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_karatsuba_mul.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_karatsuba_sqr.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_kronecker.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_lcm.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_lshd.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mod_2d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mod_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_montgomery_calc_normalization.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_montgomery_reduce.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_montgomery_setup.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mul.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mul_2.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mul_2d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mul_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_mulmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_n_root.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_n_root_ex.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_neg.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_or.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_fermat.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_frobenius_underwood.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_is_divisible.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_is_prime.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_miller_rabin.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_next_prime.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_rabin_miller_trials.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_random_ex.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_prime_strong_lucas_selfridge.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_radix_size.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_radix_smap.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_rand.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_read_radix.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_read_signed_bin.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_read_unsigned_bin.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_2k.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_2k_l.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_2k_setup.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_2k_setup_l.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_is_2k.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_is_2k_l.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_reduce_setup.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_rshd.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_set.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_set_double.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_set_int.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_set_long.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_set_long_long.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_shrink.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_signed_bin_size.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sqr.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sqrmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sqrt.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sqrtmod_prime.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sub.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_sub_d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_submod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_tc_and.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_tc_div_2d.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_tc_or.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_tc_xor.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_to_signed_bin.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_to_signed_bin_n.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_to_unsigned_bin.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_to_unsigned_bin_n.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_toom_mul.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_toom_sqr.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_toradix.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_toradix_n.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_unsigned_bin_size.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_xor.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_mp_zero.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_prime_tab.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_reverse.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_add.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_exptmod.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_mul_digs.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_mul_high_digs.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_sqr.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bn_s_mp_sub.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/bncore.c">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/tommath.h">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/tommath_class.h">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/tommath_private.h">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/tommath_superclass.h">
+			<Option target="tommathShared"/>
+			<Option target="tommathStatic"/>
+		</Unit>
+		<Unit filename="C:/Users/WolverinDEV/TeaRoot-Client/third_party/tommath/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

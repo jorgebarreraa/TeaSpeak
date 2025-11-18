@@ -1,0 +1,9 @@
+prefix=/root/glib-2.62.0/packages
+libdir=${prefix}/lib/i386-linux-gnu
+includedir=${prefix}/include
+
+Name: ffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.2.9999
+Libs: -L${libdir} -lffi
+Cflags: -I${includedir}

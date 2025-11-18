@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY,
+OSSL_SERIALIZER_CTX_set_cipher,
+OSSL_SERIALIZER_CTX_set_passphrase,
+OSSL_SERIALIZER_CTX_set_passphrase_cb,
+OSSL_SERIALIZER_CTX_set_passphrase_ui,
+OSSL_SERIALIZER_PUBKEY_TO_PEM_PQ,
+OSSL_SERIALIZER_PrivateKey_TO_PEM_PQ,
+OSSL_SERIALIZER_Parameters_TO_PEM_PQ,
+OSSL_SERIALIZER_PUBKEY_TO_DER_PQ,
+OSSL_SERIALIZER_PrivateKey_TO_DER_PQ,
+OSSL_SERIALIZER_Parameters_TO_DER_PQ,
+OSSL_SERIALIZER_PUBKEY_TO_TEXT_PQ,
+OSSL_SERIALIZER_PrivateKey_TO_TEXT_PQ,
+OSSL_SERIALIZER_Parameters_TO_TEXT_PQ
+- Serializer routines to serialize EVP_PKEYs</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/serializer.h&gt;</pre>
+<pre>
+ OSSL_SERIALIZER_CTX *OSSL_SERIALIZER_CTX_new_by_EVP_PKEY(const EVP_PKEY *pkey,
+                                                          const char *propquery);</pre>
+<pre>
+ int OSSL_SERIALIZER_CTX_set_cipher(OSSL_SERIALIZER_CTX *ctx,
+                                    const char *cipher_name,
+                                    const char *propquery);
+ int OSSL_SERIALIZER_CTX_set_passphrase(OSSL_SERIALIZER_CTX *ctx,
+                                        const unsigned char *kstr,
+                                        size_t klen);
+ int OSSL_SERIALIZER_CTX_set_passphrase_cb(OSSL_SERIALIZER_CTX *ctx, int enc,
+                                           pem_password_cb *cb, void *cbarg);
+ int OSSL_SERIALIZER_CTX_set_passphrase_ui(OSSL_SERIALIZER_CTX *ctx,
+                                           const UI_METHOD *ui_method,
+                                           void *ui_data);</pre>
+<pre>
+ #define OSSL_SERIALIZER_PUBKEY_TO_PEM_PQ &quot;format=pem,type=public&quot;
+ #define OSSL_SERIALIZER_PrivateKey_TO_PEM_PQ &quot;format=pem,type=private&quot;
+ #define OSSL_SERIALIZER_Parameters_TO_PEM_PQ &quot;format=pem,type=parameters&quot;</pre>
+<pre>
+ #define OSSL_SERIALIZER_PUBKEY_TO_DER_PQ &quot;format=der,type=public&quot;
+ #define OSSL_SERIALIZER_PrivateKey_TO_DER_PQ &quot;format=der,type=private&quot;
+ #define OSSL_SERIALIZER_Parameters_TO_DER_PQ &quot;format=der,type=parameters&quot;</pre>
+<pre>
+ #define OSSL_SERIALIZER_PUBKEY_TO_TEXT_PQ &quot;format=text,type=public&quot;
+ #define OSSL_SERIALIZER_PrivateKey_TO_TEXT_PQ &quot;format=text,type=private&quot;
+ #define OSSL_SERIALIZER_Parameters_TO_TEXT_PQ &quot;format=text,type=parameters&quot;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><code>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY()</code> creates a <strong>OSSL_SERIALIZER_CTX</strong>
+with a suitable attached output routine for <strong>EVP_PKEY</strong>s.  It will
+search for a serializer implementation that matches the algorithm of
+the <strong>EVP_PKEY</strong> and the property query given with <em>propquery</em>.  It
+will prefer to find a serializer from the same provider as the key
+data of the <strong>EVP_PKEY</strong> itself, but failing that, it will choose the
+first serializer that supplies a generic serializing function.</p>
+<p>If no suitable serializer was found, <code>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY()</code>
+still creates a <strong>OSSL_SERIALIZER_CTX</strong>, but with no associated
+serializer (<em>OSSL_SERIALIZER_CTX_get_serializer(3)</em> returns NULL).
+This helps the caller distinguish between an error when creating
+the <strong>OSSL_SERIALIZER_CTX</strong>, and the lack the serializer support and
+act accordingly.</p>
+<p><code>OSSL_SERIALIZER_CTX_set_cipher()</code> tells the implementation what cipher
+should be used to encrypt serialized keys.  The cipher is given by
+name <em>cipher_name</em>.  The interpretation of that <em>cipher_name</em> is
+implementation dependent.  The implementation may implement the digest
+directly itself or by other implementations, or it may choose to fetch
+it.  If the implementation supports fetching the cipher, then it may
+use <em>propquery</em> as properties to be queried for when fetching.
+<em>cipher_name</em> may also be NULL, which will result in unencrypted
+serialization.</p>
+<p><code>OSSL_SERIALIZER_CTX_set_passphrase()</code> gives the implementation a
+pass phrase to use when encrypting the serialized private key.
+Alternatively, a pass phrase callback may be specified with the
+following functions.</p>
+<p><code>OSSL_SERIALIZER_CTX_set_passphrase_cb()</code> and
+<code>OSSL_SERIALIZER_CTX_set_passphrase_ui()</code> sets up a callback method that
+the implementation can use to prompt for a pass phrase.</p>
+<p>The macros <strong>OSSL_SERIALIZER_PUBKEY_TO_PEM_PQ</strong>,
+<strong>OSSL_SERIALIZER_PrivateKey_TO_PEM_PQ</strong>,
+<strong>OSSL_SERIALIZER_Parameters_TO_PEM_PQ</strong>,
+<strong>OSSL_SERIALIZER_PUBKEY_TO_DER_PQ</strong>,
+<strong>OSSL_SERIALIZER_PrivateKey_TO_DER_PQ</strong>,
+<strong>OSSL_SERIALIZER_Parameters_TO_DER_PQ</strong>,
+<strong>OSSL_SERIALIZER_PUBKEY_TO_TEXT_PQ</strong>,
+<strong>OSSL_SERIALIZER_PrivateKey_TO_TEXT_PQ</strong>,
+<strong>OSSL_SERIALIZER_Parameters_TO_TEXT_PQ</strong> are convenience macros with
+property queries to serialize the <strong>EVP_PKEY</strong> as a public key, private
+key or parameters to <strong>PEM</strong>, to <strong>DER</strong>, or to text.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY()</code> returns a pointer to a
+<strong>OSSL_SERIALIZER_CTX</strong>, or NULL if it couldn't be created.</p>
+<p><code>OSSL_SERIALIZER_CTX_set_cipher()</code>,
+<code>OSSL_SERIALIZER_CTX_set_passphrase()</code>,
+<code>OSSL_SERIALIZER_CTX_set_passphrase_cb()</code>, and
+<code>OSSL_SERIALIZER_CTX_set_passphrase_ui()</code> all return 1 on success, or 0
+on failure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>Parts of the function and macro names are made to match already
+existing OpenSSL names.</p>
+<p><strong>EVP_PKEY</strong> in <code>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY()</code> matches the type
+name, thus making for the naming pattern
+<strong>OSSL_SERIALIZER_CTX_new_by_<em>TYPE</em></strong>() when new types are handled.</p>
+<p><strong>PUBKEY</strong>, <strong>PrivateKey</strong> and <strong>Parameters</strong> in the macro names match
+the <strong><em>TYPE</em></strong> part of of <strong>PEM_write_bio_<em>TYPE</em></strong> functions as well
+as <strong>i2d_<em>TYPE</em>_bio</strong> functions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em>, <em>OSSL_SERIALIZER(3)</em>, <em>OSSL_SERIALIZER_CTX(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The functions described here were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

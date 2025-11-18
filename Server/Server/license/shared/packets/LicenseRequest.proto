@@ -1,0 +1,94 @@
+syntax = "proto2";
+
+package ts.proto.license;
+
+enum BlacklistState {
+    VALID                           = 0;
+    SUSPICIOUS                      = 1;
+    BLACKLISTED                     = 2;
+}
+
+message Blacklist {
+    required BlacklistState state   = 1;
+    optional string reason          = 2;
+}
+
+message LicenseInfo {
+    required bytes  key             = 1;
+    required string username        = 2;
+    required string first_name      = 3;
+    required string last_name       = 4;
+    required string email           = 5;
+    required int32  type            = 6;
+    required int64  begin           = 7;
+    required int64  end             = 8;
+    required int64  created         = 9;
+
+    reserved
+        10, //music_limit
+        11; //speach_limit
+}
+
+message ServerInfo {
+    required string version         = 1;
+    required string uname           = 2;
+    required int64  timestamp       = 3;
+    optional string unique_id       = 4;
+}
+
+message ServerValidation {
+    required bool licensed          = 1;
+    required bool license_info      = 2;
+    optional bytes license          = 3;
+    optional ServerInfo info        = 4; //Change somewhere to required but its currently for legacy support
+    optional bool memory_valid      = 5;
+}
+
+message LicenseResponse {
+    required bool valid                         = 1;
+    optional string invalid_reason              = 5; /* in protocol version 2 the blacklist.reason field will contain the message */
+
+    required Blacklist blacklist                = 2;
+    optional LicenseInfo license_info           = 3; //Only available when ServerValidation::license_info = true
+    optional bool update_pending                = 4; /* if an update is pending */
+    optional bool deprecate_third_party_clients = 6;
+}
+
+message PropertyUpdateRequest {
+    required int64 speach_total         = 1;
+    required int64 speach_dead          = 2;
+    required int64 speach_online        = 3;
+    required int64 speach_varianz       = 4;
+
+    required int64 clients_online       = 7;
+    required int64 web_clients_online   = 8;
+    required int64 bots_online          = 9;
+    required int64 queries_online       = 10;
+    required int64 servers_online       = 11;
+
+    optional bytes web_cert_revision    = 12;
+}
+
+message RequestLicenseUpgrade { }
+message LicenseUpgradeResponse {
+    required bool valid                 = 1;
+    oneof result {
+        bytes license_key               = 2;
+        string error_message            = 3;
+    }
+}
+
+message WebCertificate {
+    required bytes revision             = 1;
+    required string key                 = 2;
+    required string certificate         = 3;
+}
+
+message PropertyUpdateResponse {
+    required bool accepted                      = 1;
+    required int64 speach_total_remote          = 2;
+    required int64 speach_varianz_corrector     = 3;
+
+    optional bool reset_speach                  = 4;
+    optional WebCertificate web_certificate     = 5;
+}

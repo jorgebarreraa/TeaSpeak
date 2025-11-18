@@ -1,0 +1,72 @@
+Windows:
+    Make sure you have MSBuild.exe within your PATH variable!
+    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+Update/initialize git submodules (Using the refs given!):
+#Update the module
+git submodule update --init --recursive -f
+#Resetting local made changes
+git submodule foreach git reset --hard
+
+CMake defs:
+-DNO_EMBETTED_LIBEVENT=ON -DCMAKE_MODULE_PATH=C:/Users/WolverinDEV/TeaRoot-Client/cmake/ -DCMAKE_INCLUDE_FILE=C:/Users/WolverinDEV/TeaRoot-Client/cmake/config/tearoot-client.cmake -DLIBRARY_PATH=C:/Users/WolverinDEV/TeaRoot-Client/third_party
+
+build_os_type: [linux|win32]
+
+build_os_type linux
+    -> build_os_arch: [x86|amd64]
+
+build_os_type win32
+    -> build_os_arch: [x86|amd64]
+
+
+docker setup:
+
+# General setup
+echo "deb http://archive.debian.org/debian/ wheezy main contrib non-free" > /etc/apt/sources.list
+
+apt-get update
+apt-get install aptitude
+aptitude install sudo wget curl python-software-properties realpath autoconf libz-dev gettext libcurl4-openssl-dev
+apt-get install golang-go #For boringssl
+apt-get install libx11-dev libasound-dev libjack-dev #For the client (Audio/PPT libs)
+# Install git 2.X
+wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.20.0.tar.gz
+tar xvf git-2.20.0.tar.gz
+make configure
+./configure --prefix=/usr --with-openssl
+make -j 12
+sudo make install
+
+#Build GLIBC
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.26.tar.xz
+tar xvf glibc-2.26.tar.xz && cd glibc-*
+mkdir build && cd build
+
+# Setup GCC-9 from source
+aptitude install build-essential
+wget ftp://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-9.1.0/gcc-9.1.0.tar.gz
+tar xvf gcc-9.1.0.tar.gz
+cd gcc-9.1.0
+mkdir build && cd build
+./contrib/download_prerequisites
+../configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=/usr/local/gcc-9.1 --enable-checking=release --enable-languages=c,c++ --disable-multilib --program-suffix=-9.1
+make -j 12
+sudo make install
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/local/gcc-9.1/bin/gcc-9.1 800 --slave /usr/bin/g++ g++ /usr/local/gcc-9.1/bin/g++-9.1
+
+# Setup go
+wget https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz
+sudo tar -xvf go1.12.6.linux-amd64.tar.gz
+sudo mv go /usr/local
+export GOROOT=/usr/local/go
+export PATH=$GOROOT/bin:$PATH
+
+#Install cmake
+wget https://github.com/Kitware/CMake/releases/download/v3.15.0-rc3/cmake-3.15.0-rc3-Linux-x86_64.sh
+chmod +x cmake-3.15.0-rc3-Linux-x86_64.sh
+./cmake-3.15.0-rc3-Linux-x86_64.sh --prefix=/ --skip-license
+
+#Install nvm
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+nvm install 8 #At least 8 because of promisify and async!

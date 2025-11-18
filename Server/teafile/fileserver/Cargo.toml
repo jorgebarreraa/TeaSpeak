@@ -1,0 +1,18 @@
+[package]
+name = "fileserver"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+teaspeak_filelib = { path = "../filelib" }
+slog = { version = "2.7.0", features = ["max_level_trace", "release_max_level_debug"] }
+parking_lot = "0.11.1"
+chrono = "0.4.19"
+tokio = { version = "1", features = ["full"] }
+lazy_static = "1.4.0"
+crossterm = { version = "0.19.0", features = ["event-stream"] }
+serde_yaml = "0.8.15"
+futures = "0.3.12"
+slog-async = "2.5.0"

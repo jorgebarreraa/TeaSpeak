@@ -1,0 +1,8 @@
+Windows AMD64:
+cd soxr
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+cmake ../../ -G"Visual Studio 14 2015 Win64" -DBUILD_SHARED_RUNTIME=OFF -DWITH_OPENMP=OFF -DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=.
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 INSTALL.vcxproj

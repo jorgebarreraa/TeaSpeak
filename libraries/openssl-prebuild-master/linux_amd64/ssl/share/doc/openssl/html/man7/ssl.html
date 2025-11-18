@@ -1,0 +1,154 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ssl</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#data_structures">DATA STRUCTURES</a></li>
+	<li><a href="#header_files">HEADER FILES</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>ssl - OpenSSL SSL/TLS library</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>See the individual manual pages for details.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The OpenSSL <strong>ssl</strong> library implements several versions of the
+Secure Sockets Layer, Transport Layer Security, and Datagram Transport Layer
+Security protocols.
+This page gives a brief overview of the extensive API and data types
+provided by the library.</p>
+<p>An <strong>SSL_CTX</strong> object is created as a framework to establish
+TLS/SSL enabled connections (see <em>SSL_CTX_new(3)</em>).
+Various options regarding certificates, algorithms etc. can be set
+in this object.</p>
+<p>When a network connection has been created, it can be assigned to an
+<strong>SSL</strong> object. After the <strong>SSL</strong> object has been created using
+<em>SSL_new(3)</em>, <em>SSL_set_fd(3)</em> or
+<em>SSL_set_bio(3)</em> can be used to associate the network
+connection with the object.</p>
+<p>When the TLS/SSL handshake is performed using
+<em>SSL_accept(3)</em> or <em>SSL_connect(3)</em>
+respectively.
+<em>SSL_read_ex(3)</em>, <em>SSL_read(3)</em>, <em>SSL_write_ex(3)</em> and <em>SSL_write(3)</em> are
+used to read and write data on the TLS/SSL connection.
+<em>SSL_shutdown(3)</em> can be used to shut down the
+TLS/SSL connection.</p>
+<p>
+</p>
+<hr />
+<h1><a name="data_structures">DATA STRUCTURES</a></h1>
+<p>Here are some of the main data structures in the library.</p>
+<dl>
+<dt><strong><a name="ssl_method" class="item"><strong>SSL_METHOD</strong> (SSL Method)</a></strong></dt>
+
+<dd>
+<p>This is a dispatch structure describing the internal <strong>ssl</strong> library
+methods/functions which implement the various protocol versions (SSLv3
+TLSv1, ...). It's needed to create an <strong>SSL_CTX</strong>.</p>
+</dd>
+<dt><strong><a name="ssl_cipher" class="item"><strong>SSL_CIPHER</strong> (SSL Cipher)</a></strong></dt>
+
+<dd>
+<p>This structure holds the algorithm information for a particular cipher which
+are a core part of the SSL/TLS protocol. The available ciphers are configured
+on a <strong>SSL_CTX</strong> basis and the actual ones used are then part of the
+<strong>SSL_SESSION</strong>.</p>
+</dd>
+<dt><strong><a name="ssl_ctx" class="item"><strong>SSL_CTX</strong> (SSL Context)</a></strong></dt>
+
+<dd>
+<p>This is the global context structure which is created by a server or client
+once per program life-time and which holds mainly default values for the
+<strong>SSL</strong> structures which are later created for the connections.</p>
+</dd>
+<dt><strong><a name="ssl_session" class="item"><strong>SSL_SESSION</strong> (SSL Session)</a></strong></dt>
+
+<dd>
+<p>This is a structure containing the current TLS/SSL session details for a
+connection: <strong>SSL_CIPHER</strong>s, client and server certificates, keys, etc.</p>
+</dd>
+<dt><strong><a name="ssl" class="item"><strong>SSL</strong> (SSL Connection)</a></strong></dt>
+
+<dd>
+<p>This is the main SSL/TLS structure which is created by a server or client per
+established connection. This actually is the core structure in the SSL API.
+At run-time the application usually deals with this structure which has
+links to mostly all other structures.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="header_files">HEADER FILES</a></h1>
+<p>Currently the OpenSSL <strong>ssl</strong> library provides the following C header files
+containing the prototypes for the data structures and functions:</p>
+<dl>
+<dt><strong><a name="openssl_ssl_h" class="item"><em class="file">&lt;openssl/ssl.h</em> &gt;&gt;</a></strong></dt>
+
+<dd>
+<p>This is the common header file for the SSL/TLS API.  Include it into your
+program to make the API of the <strong>ssl</strong> library available. It internally
+includes both more private SSL headers and headers from the <strong>crypto</strong> library.
+Whenever you need hard-core details on the internals of the SSL API, look
+inside this header file.
+This file also includes the others listed below.</p>
+</dd>
+<dt><strong><a name="openssl_ssl2_h" class="item"><em class="file">&lt;openssl/ssl2.h</em> &gt;&gt;</a></strong></dt>
+
+<dd>
+<p>Unused. Present for backwards compatibility only.</p>
+</dd>
+<dt><strong><a name="openssl_ssl3_h" class="item"><em class="file">&lt;openssl/ssl3.h</em> &gt;&gt;</a></strong></dt>
+
+<dd>
+<p>This is the sub header file dealing with the SSLv3 protocol only.</p>
+</dd>
+<dt><strong><a name="openssl_tls1_h" class="item"><em class="file">&lt;openssl/tls1.h</em> &gt;&gt;</a></strong></dt>
+
+<dd>
+<p>This is the sub header file dealing with the TLSv1 protocol only.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2000-2018 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

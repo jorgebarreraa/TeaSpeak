@@ -1,0 +1,7 @@
+**/*.js.map
+**/*.js
+
+**/*.css.map
+**/*.css
+
+!url-preview/html/index.css

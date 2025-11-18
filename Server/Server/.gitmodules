@@ -1,0 +1,16 @@
+[submodule "git-teaspeak"]
+	path = git-teaspeak
+	url = https://github.com/TeaSpeak/TeaSpeak.git
+	branch = master
+[submodule "shared"]
+	path = shared
+	url = https://git.did.science/TeaSpeak/TeaSpeakLibrary.git
+[submodule "music"]
+	path = music
+	url = https://github.com/TeaSpeak/TeaMusic-Providers.git
+[submodule "rtclib"]
+	path = rtclib
+	url = https://git.did.science/TeaSpeak/Server/rtc.git
+[submodule "file-rust"]
+	path = file-rust
+	url = https://git.did.science/TeaSpeak/Server/teafile.git

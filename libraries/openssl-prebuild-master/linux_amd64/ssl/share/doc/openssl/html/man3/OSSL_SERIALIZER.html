@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OSSL_SERIALIZER</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OSSL_SERIALIZER,
+OSSL_SERIALIZER_fetch,
+OSSL_SERIALIZER_up_ref,
+OSSL_SERIALIZER_free,
+OSSL_SERIALIZER_provider,
+OSSL_SERIALIZER_properties,
+OSSL_SERIALIZER_is_a,
+OSSL_SERIALIZER_number,
+OSSL_SERIALIZER_do_all_provided,
+OSSL_SERIALIZER_names_do_all
+- Serializer method routines</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/serializer.h&gt;</pre>
+<pre>
+ typedef struct ossl_serializer_st OSSL_SERIALIZER;</pre>
+<pre>
+ OSSL_SERIALIZER *OSSL_SERIALIZER_fetch(OPENSSL_CTX *ctx, const char *name,
+                                        const char *properties);
+ int OSSL_SERIALIZER_up_ref(OSSL_SERIALIZER *serializer);
+ void OSSL_SERIALIZER_free(OSSL_SERIALIZER *serializer);
+ const OSSL_PROVIDER *OSSL_SERIALIZER_provider(const OSSL_SERIALIZER
+                                               *serializer);
+ const char *OSSL_SERIALIZER_properties(const OSSL_SERIALIZER *ser);
+ int OSSL_SERIALIZER_is_a(const OSSL_SERIALIZER *serializer,
+                          const char *name);
+ int OSSL_SERIALIZER_number(const OSSL_SERIALIZER *serializer);
+ void OSSL_SERIALIZER_do_all_provided(OPENSSL_CTX *libctx,
+                                      void (*fn)(OSSL_SERIALIZER *serializer,
+                                                 void *arg),
+                                      void *arg);
+ void OSSL_SERIALIZER_names_do_all(const OSSL_SERIALIZER *serializer,
+                                   void (*fn)(const char *name, void *data),
+                                   void *data);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>OSSL_SERIALIZER</strong> is a method for serializers, which know how to
+serialize an object of some kind to a serialized form, such as PEM,
+DER, or even human readable text.</p>
+<p><code>OSSL_SERIALIZER_fetch()</code> looks for an algorithm within the provider that
+has been loaded into the <strong>OPENSSL_CTX</strong> given by <em>ctx</em>, having the
+name given by <em>name</em> and the properties given by <em>properties</em>.
+The <em>name</em> determines what type of object the fetched serializer
+method is expected to be able to serialize, and the properties are
+used to determine the expected output type.
+For known properties and the values they may have, please have a look
+in <em>provider-serializer(7)/Names and properties</em>.</p>
+<p><code>OSSL_SERIALIZER_up_ref()</code> increments the reference count for the given
+<em>serializer</em>.</p>
+<p><code>OSSL_SERIALIZER_free()</code> decrements the reference count for the given
+<em>serializer</em>, and when the count reaches zero, frees it.</p>
+<p><code>OSSL_SERIALIZER_provider()</code> returns the provider of the given
+<em>serializer</em>.</p>
+<p><code>OSSL_SERIALIZER_provider()</code> returns the property definition associated
+with the given <em>serializer</em>.</p>
+<p><code>OSSL_SERIALIZER_is_a()</code> checks if <em>serializer</em> is an implementation of an
+algorithm that's identifiable with <em>name</em>.</p>
+<p><code>OSSL_SERIALIZER_number()</code> returns the internal dynamic number assigned to
+the given <em>serializer</em>.</p>
+<p><code>OSSL_SERIALIZER_names_do_all()</code> traverses all names for the given
+<em>serializer</em>, and calls <em>fn</em> with each name and <em>data</em>.</p>
+<p><code>OSSL_SERIALIZER_do_all_provided()</code> traverses all serializer
+implementations by all activated providers in the library context
+<em>libctx</em>, and for each of the implementations, calls <em>fn</em> with the
+implementation method and <em>data</em> as arguments.</p>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p><code>OSSL_SERIALIZER_fetch()</code> may be called implicitly by other fetching
+functions, using the same library context and properties.
+Any other API that uses keys will typically do this.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OSSL_SERIALIZER_fetch()</code> returns a pointer to the key management
+implementation represented by an OSSL_SERIALIZER object, or NULL on
+error.</p>
+<p><code>OSSL_SERIALIZER_up_ref()</code> returns 1 on success, or 0 on error.</p>
+<p><code>OSSL_SERIALIZER_free()</code> doesn't return any value.</p>
+<p><code>OSSL_SERIALIZER_provider()</code> returns a pointer to a provider object, or
+NULL on error.</p>
+<p><code>OSSL_SERIALIZER_properties()</code> returns a pointer to a property
+definition string, or NULL on error.</p>
+<p><code>OSSL_SERIALIZER_is_a()</code> returns 1 of <em>serializer</em> was identifiable,
+otherwise 0.</p>
+<p><code>OSSL_SERIALIZER_number()</code> returns an integer.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em>, <em>OSSL_SERIALIZER_CTX(3)</em>, <em>OSSL_SERIALIZER_to_bio(3)</em>,
+<em>OSSL_SERIALIZER_CTX_new_by_EVP_PKEY(3)</em>, <em>OPENSSL_CTX(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The functions described here were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

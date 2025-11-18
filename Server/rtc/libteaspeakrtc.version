@@ -1,0 +1,4 @@
+TEA_RTC_1.0 {
+  global: librtc_*;
+  local: *;
+};

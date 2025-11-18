@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>SRP_create_verifier</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>SRP_create_verifier,
+SRP_create_verifier_BN,
+SRP_check_known_gN_param,
+SRP_get_default_gN
+- SRP authentication primitives</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/srp.h&gt;</pre>
+<pre>
+ char *SRP_create_verifier_BN(const char *user, const char *pass, BIGNUM **salt,
+                              BIGNUM **verifier, const BIGNUM *N, const BIGNUM *g);
+ char *SRP_create_verifier(const char *user, const char *pass, char **salt,
+                           char **verifier, const char *N, const char *g);</pre>
+<pre>
+ char *SRP_check_known_gN_param(const BIGNUM *g, const BIGNUM *N);
+ SRP_gN *SRP_get_default_gN(const char *id);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The <code>SRP_create_verifier_BN()</code> function creates an SRP password verifier from
+the supplied parameters as defined in section 2.4 of <a href="http://www.ietf.org/rfc/rfc5054.txt" class="rfc">RFC 5054</a>.
+On successful exit <strong>*verifier</strong> will point to a newly allocated BIGNUM containing
+the verifier and (if a salt was not provided) <strong>*salt</strong> will be populated with a
+newly allocated BIGNUM containing a random salt. If <strong>*salt</strong> is not NULL then
+the provided salt is used instead.
+The caller is responsible for freeing the allocated <strong>*salt</strong> and <strong>*verifier</strong>
+BIGNUMS (use <em>BN_free(3)</em>).</p>
+<p>The <code>SRP_create_verifier()</code> function is similar to <code>SRP_create_verifier_BN()</code> but
+all numeric parameters are in a non-standard base64 encoding originally designed
+for compatibility with libsrp. This is mainly present for historical compatibility
+and its use is discouraged.
+It is possible to pass NULL as <strong>N</strong> and an SRP group id as <strong>g</strong> instead to
+load the appropriate gN values (see SRP_get_default_gN()).
+If both <strong>N</strong> and <strong>g</strong> are NULL the 8192-bit SRP group parameters are used.
+The caller is responsible for freeing the allocated <strong>*salt</strong> and <strong>*verifier</strong>
+(use <em>OPENSSL_free(3)</em>).</p>
+<p>The <code>SRP_check_known_gN_param()</code> function checks that <strong>g</strong> and <strong>N</strong> are valid
+SRP group parameters from <a href="http://www.ietf.org/rfc/rfc5054.txt" class="rfc">RFC 5054</a> appendix A.</p>
+<p>The <code>SRP_get_default_gN()</code> function returns the gN parameters for the <a href="http://www.ietf.org/rfc/rfc5054.txt" class="rfc">RFC 5054</a> <strong>id</strong>
+SRP group size.
+The known ids are &quot;1024&quot;, &quot;1536&quot;, &quot;2048&quot;, &quot;3072&quot;, &quot;4096&quot;, &quot;6144&quot; and &quot;8192&quot;.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>SRP_create_verifier_BN()</code> returns 1 on success and 0 on failure.</p>
+<p><code>SRP_create_verifier()</code> returns NULL on failure and a non-NULL value on success:
+&quot;*&quot; if <strong>N</strong> is not NULL, the selected group id otherwise. This value should
+not be freed.</p>
+<p><code>SRP_check_known_gN_param()</code> returns the text representation of the group id
+(ie. the prime bit size) or NULL if the arguments are not valid SRP group parameters.
+This value should not be freed.</p>
+<p><code>SRP_get_default_gN()</code> returns NULL if <strong>id</strong> is not a valid group size,
+or the 8192-bit group parameters if <strong>id</strong> is NULL.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Generate and store a 8192 bit password verifier (error handling
+omitted for clarity):</p>
+<pre>
+ #include &lt;openssl/bn.h&gt;
+ #include &lt;openssl/srp.h&gt;</pre>
+<pre>
+ const char *username = &quot;username&quot;;
+ const char *password = &quot;password&quot;;</pre>
+<pre>
+ SRP_VBASE *srpData = SRP_VBASE_new(NULL);</pre>
+<pre>
+ SRP_gN *gN = SRP_get_default_gN(&quot;8192&quot;);</pre>
+<pre>
+ BIGNUM *salt = NULL, *verifier = NULL;
+ SRP_create_verifier_BN(username, password, &amp;salt, &amp;verifier, gN-&gt;N, gN-&gt;g);</pre>
+<pre>
+ SRP_user_pwd *pwd = SRP_user_pwd_new();
+ SRP_user_pwd_set1_ids(pwd, username, NULL);
+ SRP_user_pwd_set0_sv(pwd, salt, verifier);
+ SRP_user_pwd_set_gN(pwd, gN-&gt;g, gN-&gt;N);</pre>
+<pre>
+ SRP_VBASE_add0_user(srpData, pwd);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl-srp(1)</em>,
+<em>SRP_VBASE_new(3)</em>,
+<em>SRP_user_pwd_new(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>These functions were added in OpenSSL 1.0.1.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2018 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

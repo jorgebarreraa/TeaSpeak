@@ -1,0 +1,307 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OSSL_PROVIDER-FIPS</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#self_testing">SELF TESTING</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OSSL_PROVIDER-FIPS - OPENSSL FIPS provider</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The OPENSSL FIPS provider is a special provider that conforms to the Federal 
+Information Processing Standards (FIPS) specified in FIPS 140-2. This 'module'
+contains an approved set of cryptographic algorithms that is validated by an
+accredited testing laboratory.</p>
+<p>
+</p>
+<hr />
+<h1><a name="self_testing">SELF TESTING</a></h1>
+<p>One of the requirements for the FIPS module is self testing. An optional callback
+mechanism is available to return information to the user using
+<em>OSSL_SELF_TEST_set_callback(3)</em>.</p>
+<p>The OPENSSL FIPS module uses the following mechanism to provide information
+about the self tests as they run.
+This is useful for debugging if a self test is failing.
+The callback also allows forcing any self test to fail, in order to check that
+it operates correctly on failure.</p>
+<p>The 'args' parameter of <strong>OSSL_CALLBACK</strong> contains the <strong>OPENSSL_CTX</strong> associated
+with the provider that is triggering the self test. This may be useful if
+multiple fips providers are present.</p>
+<p>The OSSL_PARAM names used are:</p>
+<dl>
+<dt><strong><a name="st_phase_ossl_prov_param_self_test_phase_utf8_string" class="item">&quot;st-phase&quot; (<strong>OSSL_PROV_PARAM_SELF_TEST_PHASE</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Each self test calls the callback 3 times with the following string values
+for the phase.</p>
+<dl>
+<dt><strong><a name="start_ossl_self_test_phase_start" class="item">&quot;Start&quot; (<strong>OSSL_SELF_TEST_PHASE_START</strong>)</a></strong></dt>
+
+<dd>
+<p>This is the initial phase before the self test has run.
+This is used for informational purposes only.
+The value returned by the callback is ignored.</p>
+</dd>
+<dt><strong><a name="corrupt_ossl_self_test_phase_corrupt" class="item">&quot;Corrupt&quot; (<strong>OSSL_SELF_TEST_PHASE_CORRUPT</strong>)</a></strong></dt>
+
+<dd>
+<p>The corrupt phase is run after the self test has calculated its known value.
+The callback may be used to force the self test to fail by returning a value
+of 0 from the callback during this phase.
+Returning any other value from the callback causes the self test to run normally.</p>
+</dd>
+<dt><strong><a name="pass_ossl_self_test_phase_pass" class="item">&quot;Pass&quot; (<strong>OSSL_SELF_TEST_PHASE_PASS</strong>)</a></strong></dt>
+
+<dt><strong><a name="fail_ossl_self_test_phase_fail" class="item">&quot;Fail&quot; (<strong>OSSL_SELF_TEST_PHASE_FAIL</strong>)</a></strong></dt>
+
+<dd>
+<p>The final phase runs after the self test is complete and indicates if a self
+test passed or failed. This is used for informational purposes only.
+The value returned by the callback is ignored.
+&quot;Fail&quot; should normally only be returned if any self test was forced to fail
+during the &quot;Corrupt&quot; phase (or if there was an error such as the integrity
+check of the module failed).</p>
+<p>Note that all self tests run even if a self test failure occurs.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong><a name="st_type_ossl_prov_param_self_test_type_utf8_string" class="item">&quot;st-type&quot; (<strong>OSSL_PROV_PARAM_SELF_TEST_TYPE</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Used as a category to identify the type of self test being run.
+It includes the following string values:</p>
+<dl>
+<dt><strong><a name="module_integrity_ossl_self_test_type_module_integrity" class="item">&quot;Module_Integrity&quot; (<strong>OSSL_SELF_TEST_TYPE_MODULE_INTEGRITY</strong>)</a></strong></dt>
+
+<dd>
+<p>Uses HMAC SHA256 on the module file to validate that the module has not been
+modified. The integrity value is compared to a value written to a configuration
+file during installation.</p>
+</dd>
+<dt><strong><a name="install_integrity_ossl_self_test_type_install_integrity" class="item">&quot;Install_Integrity&quot; (<strong>OSSL_SELF_TEST_TYPE_INSTALL_INTEGRITY</strong>)</a></strong></dt>
+
+<dd>
+<p>Uses HMAC SHA256 on a fixed string to validate that the installation process
+has already been performed and the self test KATS have already been tested,
+The integrity value is compared to a value written to a configuration
+file after successfully running the self tests during installation.</p>
+</dd>
+<dt><strong><a name="kat_cipher_ossl_self_test_type_kat_cipher" class="item">&quot;KAT_Cipher&quot; (<strong>OSSL_SELF_TEST_TYPE_KAT_CIPHER</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for a symmetric cipher.</p>
+</dd>
+<dt><strong><a name="kat_digest_ossl_self_test_type_kat_digest" class="item">&quot;KAT_Digest&quot; (<strong>OSSL_SELF_TEST_TYPE_KAT_DIGEST</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for a digest.</p>
+</dd>
+<dt><strong><a name="kat_signature_ossl_self_test_type_kat_signature" class="item">&quot;KAT_Signature&quot; (<strong>OSSL_SELF_TEST_TYPE_KAT_SIGNATURE</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for a signature.</p>
+</dd>
+<dt><strong><a name="kat_kdf_ossl_self_test_type_kat_kdf" class="item">&quot;KAT_KDF&quot; (<strong>OSSL_SELF_TEST_TYPE_KAT_KDF</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for a key derivation function.</p>
+</dd>
+<dt><strong><a name="kat_ka_ossl_self_test_type_kat_ka" class="item">&quot;KAT_KA&quot; (<strong>OSSL_SELF_TEST_TYPE_KAT_KA</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for key agreement.</p>
+</dd>
+<dt><strong><a name="drbg_ossl_self_test_type_drbg" class="item">&quot;DRBG&quot; (<strong>OSSL_SELF_TEST_TYPE_DRBG</strong>)</a></strong></dt>
+
+<dd>
+<p>Known answer test for a Deterministic Random Bit Generator.</p>
+</dd>
+<dt><strong><a name="pairwise_consistency_test_ossl_self_test_type_pct" class="item">&quot;Pairwise_Consistency_Test&quot; (<strong>OSSL_SELF_TEST_TYPE_PCT</strong>)</a></strong></dt>
+
+<dd>
+<p>Conditional test that is run during the generation of key pairs.</p>
+</dd>
+</dl>
+<p>The &quot;Module_Integrity&quot; self test is always run at startup.
+The &quot;Install_Integrity&quot; self test is used to check if the self tests have
+already been run at installation time. If they have already run then the
+self tests are not run on subsequent startups.
+All other self test categories are run once at installation time, except for the
+&quot;Pairwise_Consistency_Test&quot;.</p>
+<p>There is only one instance of the &quot;Module_Integrity&quot; and &quot;Install_Integrity&quot;
+self tests. All other self tests may have multiple instances.</p>
+</dd>
+<dt><strong><a name="st_desc_ossl_prov_param_self_test_desc_utf8_string" class="item">&quot;st-desc&quot; (<strong>OSSL_PROV_PARAM_SELF_TEST_DESC</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Used as a sub category to identify an individual self test.
+The following description strings are used.</p>
+<dl>
+<dt><strong><a name="hmac_ossl_self_test_desc_integrity_hmac" class="item">&quot;HMAC&quot; (<strong>OSSL_SELF_TEST_DESC_INTEGRITY_HMAC</strong>)</a></strong></dt>
+
+<dd>
+<p>&quot;Module_Integrity&quot; and &quot;Install_Integrity&quot; use this.</p>
+</dd>
+<dt><strong><a name="rsa_ossl_self_test_desc_pct_rsa_pkcs1" class="item">&quot;RSA&quot; (<strong>OSSL_SELF_TEST_DESC_PCT_RSA_PKCS1</strong>)</a></strong></dt>
+
+<dt><strong><a name="ecdsa_ossl_self_test_desc_pct_ecdsa" class="item">&quot;ECDSA&quot; (<strong>OSSL_SELF_TEST_DESC_PCT_ECDSA</strong>)</a></strong></dt>
+
+<dt><strong><a name="dsa_ossl_self_test_desc_pct_dsa" class="item">&quot;DSA&quot; (<strong>OSSL_SELF_TEST_DESC_PCT_DSA</strong>)</a></strong></dt>
+
+<dd>
+<p>Key generation tests used with the &quot;Pairwise_Consistency_Test&quot; type.</p>
+</dd>
+<dt><strong><a name="aes_gcm_ossl_self_test_desc_cipher_aes_gcm" class="item">&quot;AES_GCM&quot; (<strong>OSSL_SELF_TEST_DESC_CIPHER_AES_GCM</strong>)</a></strong></dt>
+
+<dt><strong><a name="tdes_ossl_self_test_desc_cipher_tdes" class="item">&quot;TDES&quot; (<strong>OSSL_SELF_TEST_DESC_CIPHER_TDES</strong>)</a></strong></dt>
+
+<dd>
+<p>Symmetric cipher tests used with the &quot;KAT_Cipher&quot; type.</p>
+</dd>
+<dt><strong><a name="sha1_ossl_self_test_desc_md_sha1" class="item">&quot;SHA1&quot; (<strong>OSSL_SELF_TEST_DESC_MD_SHA1</strong>)</a></strong></dt>
+
+<dt><strong><a name="sha2_ossl_self_test_desc_md_sha2" class="item">&quot;SHA2&quot; (<strong>OSSL_SELF_TEST_DESC_MD_SHA2</strong>)</a></strong></dt>
+
+<dt><strong><a name="sha3_ossl_self_test_desc_md_sha3" class="item">&quot;SHA3&quot; (<strong>OSSL_SELF_TEST_DESC_MD_SHA3</strong>)</a></strong></dt>
+
+<dd>
+<p>Digest tests used with the &quot;KAT_Digest&quot; type.</p>
+</dd>
+<dt><strong><a name="dsa_ossl_self_test_desc_sign_dsa" class="item">&quot;DSA&quot; (<strong>OSSL_SELF_TEST_DESC_SIGN_DSA</strong>)</a></strong></dt>
+
+<dt><strong><a name="rsa_ossl_self_test_desc_sign_rsa" class="item">&quot;RSA&quot; (<strong>OSSL_SELF_TEST_DESC_SIGN_RSA</strong>)</a></strong></dt>
+
+<dt><strong><a name="ecdsa_ossl_self_test_desc_sign_ecdsa" class="item">&quot;ECDSA&quot; (<strong>OSSL_SELF_TEST_DESC_SIGN_ECDSA</strong>)</a></strong></dt>
+
+<dd>
+<p>Signature tests used with the &quot;KAT_Signature&quot; type.</p>
+</dd>
+<dt><strong><a name="ecdh_ossl_self_test_desc_ka_ecdh" class="item">&quot;ECDH&quot; (<strong>OSSL_SELF_TEST_DESC_KA_ECDH</strong>)</a></strong></dt>
+
+<dt><strong><a name="ecdsa_ossl_self_test_desc_ka_ecdsa" class="item">&quot;ECDSA&quot; (<strong>OSSL_SELF_TEST_DESC_KA_ECDSA</strong>)</a></strong></dt>
+
+<dd>
+<p>Key agreement tests used with the &quot;KAT_KA&quot; type.</p>
+</dd>
+<dt><strong><a name="hkdf_ossl_self_test_desc_kdf_hkdf" class="item">&quot;HKDF&quot; (<strong>OSSL_SELF_TEST_DESC_KDF_HKDF</strong>)</a></strong></dt>
+
+<dd>
+<p>Key Derivation Function tests used with the &quot;KAT_KDF&quot; type.</p>
+</dd>
+<dt><strong><a name="ctr_ossl_self_test_desc_drbg_ctr" class="item">&quot;CTR&quot; (<strong>OSSL_SELF_TEST_DESC_DRBG_CTR</strong>)</a></strong></dt>
+
+<dt><strong><a name="hash_ossl_self_test_desc_drbg_hash" class="item">&quot;HASH&quot; (<strong>OSSL_SELF_TEST_DESC_DRBG_HASH</strong>)</a></strong></dt>
+
+<dt><strong><a name="hmac_ossl_self_test_desc_drbg_hmac" class="item">&quot;HMAC&quot; (<strong>OSSL_SELF_TEST_DESC_DRBG_HMAC</strong>)</a></strong></dt>
+
+<dd>
+<p>DRBG tests used with the &quot;DRBG&quot; type.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>A simple self test callback is shown below for illustrative purposes.</p>
+<pre>
+  #include &lt;openssl/self_test.h&gt;</pre>
+<pre>
+  static OSSL_CALLBACK self_test_cb;</pre>
+<pre>
+  static int self_test_cb(const OSSL_PARAM params[], void *arg)
+  {
+    int ret = 0;
+    const OSSL_PARAM *p = NULL;
+    const char *phase = NULL, *type = NULL, *desc = NULL;</pre>
+<pre>
+    p = OSSL_PARAM_locate_const(params, OSSL_PROV_PARAM_SELF_TEST_PHASE);
+    if (p == NULL || p-&gt;data_type != OSSL_PARAM_UTF8_STRING)
+        goto err;
+    phase = (const char *)p-&gt;data;</pre>
+<pre>
+    p = OSSL_PARAM_locate_const(params, OSSL_PROV_PARAM_SELF_TEST_DESC);
+    if (p == NULL || p-&gt;data_type != OSSL_PARAM_UTF8_STRING)
+        goto err;
+    desc = (const char *)p-&gt;data;</pre>
+<pre>
+    p = OSSL_PARAM_locate_const(params, OSSL_PROV_PARAM_SELF_TEST_TYPE);
+    if (p == NULL || p-&gt;data_type != OSSL_PARAM_UTF8_STRING)
+        goto err;
+    type = (const char *)p-&gt;data;</pre>
+<pre>
+    /* Do some logging */
+    if (strcmp(phase, OSSL_SELF_TEST_PHASE_START) == 0)
+        BIO_printf(bio_out, &quot;%s : (%s) : &quot;, desc, type);
+    if (strcmp(phase, OSSL_SELF_TEST_PHASE_PASS) == 0
+            || strcmp(phase, OSSL_SELF_TEST_PHASE_FAIL) == 0)
+        BIO_printf(bio_out, &quot;%s\n&quot;, phase);</pre>
+<pre>
+    /* Corrupt the SHA1 self test during the 'corrupt' phase by returning 0 */
+    if (strcmp(phase, OSSL_SELF_TEST_PHASE_CORRUPT) == 0
+            &amp;&amp; strcmp(desc, OSSL_SELF_TEST_DESC_MD_SHA1) == 0) {
+        BIO_printf(bio_out, &quot;%s %s&quot;, phase, desc);
+        return 0;
+    }
+    ret = 1;
+  err:
+    return ret;
+  }</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl-fipsinstall(1)</em>,
+<em>fips_config(5)</em>,
+<em>OSSL_SELF_TEST_set_callback(3)</em>,
+<em>OSSL_PARAM(3)</em>,
+<em>openssl-core.h(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The type and functions described here were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

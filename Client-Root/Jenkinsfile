@@ -1,0 +1,98 @@
+pipeline {
+	agent any
+
+    parameters {
+       booleanParam(defaultValue: true, description: 'Deploy this build', name: 'deploy_build')
+       choice(choices: ['none', 'win32', 'linux'], description: 'Which os do you want to build?', name: 'os_type')
+       choice(choices: ['amd64'], description: 'Which target do you want to build?', name: 'os_arch')
+       choice(choices: ['release'], description: 'Target build channel', name: 'channel')
+       text(name: 'force_rebuild', defaultValue: '', description: 'Force rebuild libraries (Separate with a ";" | * = everything)')
+    }
+
+	environment {
+		//General flags
+		CXX_FLAGS = ''
+		C_FLAGS = ''
+
+		//CMake specific flags
+		CMAKE_OPTIONS = ''
+		CMAKE_MAKE_OPTIONS = '-j12'
+
+		//Make specific flags
+		MAKE_OPTIONS = '-j12'
+
+		force_rebuild="${params.force_rebuild}"
+
+		build_os_type="${params.os_type}"
+		build_os_arch="${params.os_arch}"
+        teaclient_deploy_channel = "${params.deploy_build ? "${params.channel}" : ""}"
+	}
+
+	stages {
+		stage ('build::linux') {
+            when {
+                expression { params.os_type == "linux" }
+            }
+
+		    stages {
+                stage ('build::linux::amd64') {
+                    agent {
+                        label 'linux && amd64 && teaspeak-client'
+                    }
+                    when {
+                        expression { params.os_arch == "amd64" }
+                    }
+
+                    environment {
+                        CMAKE_BUILD_TYPE="RelWithDebInfo" /* we build out libraries every time in release mode! (Performance improve) */
+                    }
+
+                    stages {
+                        stage('build::linux::amd64::libraries') {
+                            steps {
+                                sh 'git submodule update --init --recursive -f'
+                                sh 'git submodule foreach git reset --hard'
+                                sh './third_party/build.sh'
+                                sh './build_shared.sh'
+                            }
+                        }
+                        stage('build::linux::amd64::build') {
+                            steps {
+                                echo "Deploy channel (empty on no deploy): ${teaclient_deploy_channel}"
+                                withCredentials([string(credentialsId: 'teaclient_deploy_secret', variable: 'teaclient_deploy_secret')]) {
+                                    sh './build_client.sh'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+		}
+		stage ('build::win32') {
+            when {
+                expression { params.os_type == "win32" }
+            }
+
+		    stages {
+                stage ('build::win32::amd64') {
+                    agent {
+                        label 'win32 && amd64 && teaspeak-client'
+                    }
+                    when {
+                        expression { params.os_arch == "amd64" }
+                    }
+
+                    stages {
+                        stage('build::win32::amd64::libraries') {
+                            steps {
+                                sh 'git submodule update --init --recursive -f'
+                                sh 'git submodule foreach git reset --hard'
+                            }
+                        }
+                    }
+                }
+            }
+		}
+	}
+}
+

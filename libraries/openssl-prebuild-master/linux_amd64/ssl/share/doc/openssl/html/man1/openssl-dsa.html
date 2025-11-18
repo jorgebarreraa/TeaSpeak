@@ -1,0 +1,213 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>openssl-dsa</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>openssl-dsa - DSA key processing</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>openssl</strong> <strong>dsa</strong>
+[<strong>-help</strong>]
+[<strong>-inform</strong> <strong>DER</strong>|<strong>PEM</strong>]
+[<strong>-outform</strong> <strong>DER</strong>|<strong>PEM</strong>]
+[<strong>-in</strong> <em>filename</em>]
+[<strong>-passin</strong> <em>arg</em>]
+[<strong>-out</strong> <em>filename</em>]
+[<strong>-passout</strong> <em>arg</em>]
+[<strong>-aes128</strong>]
+[<strong>-aes192</strong>]
+[<strong>-aes256</strong>]
+[<strong>-aria128</strong>]
+[<strong>-aria192</strong>]
+[<strong>-aria256</strong>]
+[<strong>-camellia128</strong>]
+[<strong>-camellia192</strong>]
+[<strong>-camellia256</strong>]
+[<strong>-des</strong>]
+[<strong>-des3</strong>]
+[<strong>-idea</strong>]
+[<strong>-text</strong>]
+[<strong>-noout</strong>]
+[<strong>-modulus</strong>]
+[<strong>-pubin</strong>]
+[<strong>-pubout</strong>]
+[<strong>-engine</strong> <em>id</em>]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This command has been deprecated.
+The <em>openssl-pkey(1)</em> command should be used instead.</p>
+<p>This command processes DSA keys. They can be converted between various
+forms and their components printed out. <strong>Note</strong> This command uses the
+traditional SSLeay compatible format for private key encryption: newer
+applications should use the more secure PKCS#8 format using the <strong>pkcs8</strong></p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print out a usage message.</p>
+</dd>
+<dt><strong><a name="inform_der_pem_outform_der_pem" class="item"><strong>-inform</strong> <strong>DER</strong>|<strong>PEM</strong>, <strong>-outform</strong> <strong>DER</strong>|<strong>PEM</strong></a></strong></dt>
+
+<dd>
+<p>The input and formats; the default is <strong>PEM</strong>.
+See <em>openssl(1)/Format Options</em> for details.</p>
+<p>Private keys are a sequence of <strong>ASN.1 INTEGERS</strong>: the version (zero), <strong>p</strong>,
+<strong>q</strong>, <strong>g</strong>, and the public and and private key components.  Public keys
+are a <strong>SubjectPublicKeyInfo</strong> structure with the <strong>DSA</strong> type.</p>
+<p>The <strong>PEM</strong> format also accepts PKCS#8 data.</p>
+</dd>
+<dt><strong><a name="in_filename" class="item"><strong>-in</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>This specifies the input filename to read a key from or standard input if this
+option is not specified. If the key is encrypted a pass phrase will be
+prompted for.</p>
+</dd>
+<dt><strong><a name="out_filename" class="item"><strong>-out</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>This specifies the output filename to write a key to or standard output by
+is not specified. If any encryption options are set then a pass phrase will be
+prompted for. The output filename should <strong>not</strong> be the same as the input
+filename.</p>
+</dd>
+<dt><strong><a name="passin_arg_passout_arg" class="item"><strong>-passin</strong> <em>arg</em>, <strong>-passout</strong> <em>arg</em></a></strong></dt>
+
+<dd>
+<p>The password source for the input and output file.
+For more information about the format of <strong>arg</strong>
+see <em>openssl(1)/Pass Phrase Options</em>.</p>
+</dd>
+<dt><strong><a name="aes128_aes192_aes256_aria128_aria192_aria256_camellia128_camellia192_camellia256_des_des3_idea" class="item"><strong>-aes128</strong>, <strong>-aes192</strong>, <strong>-aes256</strong>, <strong>-aria128</strong>, <strong>-aria192</strong>, <strong>-aria256</strong>, <strong>-camellia128</strong>, <strong>-camellia192</strong>, <strong>-camellia256</strong>, <strong>-des</strong>, <strong>-des3</strong>, <strong>-idea</strong></a></strong></dt>
+
+<dd>
+<p>These options encrypt the private key with the specified
+cipher before outputting it. A pass phrase is prompted for.
+If none of these options is specified the key is written in plain text. This
+means that this command can be used to remove the pass phrase from a key
+by not giving any encryption option is given, or to add or change the pass
+phrase by setting them.
+These options can only be used with PEM format output files.</p>
+</dd>
+<dt><strong><a name="text" class="item"><strong>-text</strong></a></strong></dt>
+
+<dd>
+<p>Prints out the public, private key components and parameters.</p>
+</dd>
+<dt><strong><a name="noout" class="item"><strong>-noout</strong></a></strong></dt>
+
+<dd>
+<p>This option prevents output of the encoded version of the key.</p>
+</dd>
+<dt><strong><a name="modulus" class="item"><strong>-modulus</strong></a></strong></dt>
+
+<dd>
+<p>This option prints out the value of the public key component of the key.</p>
+</dd>
+<dt><strong><a name="pubin" class="item"><strong>-pubin</strong></a></strong></dt>
+
+<dd>
+<p>By default, a private key is read from the input file. With this option a
+public key is read instead.</p>
+</dd>
+<dt><strong><a name="pubout" class="item"><strong>-pubout</strong></a></strong></dt>
+
+<dd>
+<p>By default, a private key is output. With this option a public
+key will be output instead. This option is automatically set if the input is
+a public key.</p>
+</dd>
+<dt><strong><a name="engine_id" class="item"><strong>-engine</strong> <em>id</em></a></strong></dt>
+
+<dd>
+<p>See <em>openssl(1)/Engine Options</em>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Examples equivalent to these can be found in the documentation for the
+non-deprecated <em>openssl-pkey(1)</em> command.</p>
+<p>To remove the pass phrase on a DSA private key:</p>
+<pre>
+ openssl dsa -in key.pem -out keyout.pem</pre>
+<p>To encrypt a private key using triple DES:</p>
+<pre>
+ openssl dsa -in key.pem -des3 -out keyout.pem</pre>
+<p>To convert a private key from PEM to DER format:</p>
+<pre>
+ openssl dsa -in key.pem -outform DER -out keyout.der</pre>
+<p>To print out the components of a private key to standard output:</p>
+<pre>
+ openssl dsa -in key.pem -text -noout</pre>
+<p>To just output the public part of a private key:</p>
+<pre>
+ openssl dsa -in key.pem -pubout -out pubkey.pem</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl(1)</em>,
+<em>openssl-pkey(1)</em>,
+<em>openssl-dsaparam(1)</em>,
+<em>openssl-gendsa(1)</em>,
+<em>openssl-rsa(1)</em>,
+<em>openssl-genrsa(1)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>This command was deprecated in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2000-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

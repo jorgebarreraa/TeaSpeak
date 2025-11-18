@@ -1,0 +1,8 @@
+Windows AMD64:
+cd portaudio
+if [[ ! -d out/win32_amd64 ]]; then
+	mkdir -p out/win32_amd64
+fi
+cd out/win32_amd64
+cmake ../../ -G"Visual Studio 14 2015 Win64" -DPA_BUILD_SHARED=OFF -DPA_BUILD_STATIC=ON -DPA_BUILD_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=.
+MSBuild.exe //p:Configuration=Release //p:Platform=x64 INSTALL.vcxproj

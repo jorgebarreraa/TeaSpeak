@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "moduleResolution": "node",
+
+    "baseUrl": "..",
+    "paths": {
+      "tc-shared/*": ["imports/shared-app/*"],
+      "tc-loader": ["imports/loader"],
+      "svg-sprites/*": ["imports/svg-sprites/*"],
+      "tc-events": ["imports/vendor/TeaEventBus/src/index.d.ts"],
+      "tc-services": ["imports/vendor/TeaClientServices/src/index.d.ts"],
+      "tc-native/connection": ["native/serverconnection/exports/exports.d.ts"]
+    }
+  },
+  "include": [
+    "./renderer",
+    "./renderer-manifest",
+    "./crash_handler",
+    "./shared/*.ts",
+    "../native/*/exports/"
+  ],
+  "exclude": [
+    "./renderer/imports/.copy_*.d.ts"
+  ]
+}

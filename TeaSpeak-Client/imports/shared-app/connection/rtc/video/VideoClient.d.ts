@@ -1,0 +1,36 @@
+import { VideoBroadcastState, VideoBroadcastType, VideoClient, VideoClientEvents } from "tc-shared/connection/VideoConnection";
+import { Registry } from "tc-shared/events";
+import { RemoteRTPVideoTrack } from "../RemoteTrack";
+import { RTCConnection } from "tc-shared/connection/rtc/Connection";
+export declare class RtpVideoClient implements VideoClient {
+    private readonly handle;
+    private readonly clientId;
+    private readonly events;
+    private readonly listenerTrackStateChanged;
+    private dismissedStates;
+    private currentTrack;
+    private trackStates;
+    private broadcastIds;
+    private joinedStates;
+    private pipElement;
+    private pipBroadcastType;
+    constructor(handle: RTCConnection, clientId: number);
+    getClientId(): number;
+    getEvents(): Registry<VideoClientEvents>;
+    getVideoStream(broadcastType: VideoBroadcastType): MediaStream;
+    getVideoState(broadcastType: VideoBroadcastType): VideoBroadcastState;
+    joinBroadcast(broadcastType: VideoBroadcastType): Promise<void>;
+    leaveBroadcast(broadcastType: VideoBroadcastType): void;
+    destroy(): void;
+    getRtpTrack(type: VideoBroadcastType): RemoteRTPVideoTrack | undefined;
+    setRtpTrack(type: VideoBroadcastType, track: RemoteRTPVideoTrack | undefined): void;
+    setBroadcastId(type: VideoBroadcastType, id: number | undefined): void;
+    private setBroadcastDismissed;
+    dismissBroadcast(broadcastType: VideoBroadcastType): void;
+    isBroadcastDismissed(broadcastType: VideoBroadcastType): boolean;
+    showPip(broadcastType: VideoBroadcastType): Promise<void>;
+    private stopPip;
+    private setBroadcastState;
+    private handleTrackStateChanged;
+    private updateBroadcastState;
+}

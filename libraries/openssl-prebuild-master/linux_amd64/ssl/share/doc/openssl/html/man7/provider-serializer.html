@@ -1,0 +1,297 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>provider-serializer</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#names_and_properties">Names and properties</a></li>
+		<li><a href="#context_functions">Context functions</a></li>
+		<li><a href="#serializing_functions">Serializing functions</a></li>
+		<li><a href="#serializer_parameters">Serializer parameters</a></li>
+	</ul>
+
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>provider-serializer - The SERIALIZER library &lt;-&gt; provider functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/core_numbers.h&gt;</pre>
+<pre>
+ /*
+  * None of these are actual functions, but are displayed like this for
+  * the function signatures for functions that are offered as function
+  * pointers in OSSL_DISPATCH arrays.
+  */</pre>
+<pre>
+ /* Functions to construct / destruct / manipulate the serializer context */
+ void *OP_serializer_newctx(void *provctx);
+ void OP_serializer_freectx(void *ctx);
+ int OP_serializer_set_ctx_params(void *ctx, const OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_serializer_settable_ctx_params(void)</pre>
+<pre>
+ /* Functions to serialize object data */
+ int OP_serializer_serialize_data(void *ctx, const OSSL_PARAM *data,
+                                  BIO *out,
+                                  OSSL_PASSPHRASE_CALLBACK *cb,
+                                  void *cbarg);
+ int OP_serializer_serialize_object(void *ctx, void *obj, BIO *out,
+                                    OSSL_PASSPHRASE_CALLBACK *cb,
+                                    void *cbarg);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The SERIALIZER is a generic method to serialize any set of object data
+in <em>OSSL_PARAM(3)</em> array form, or any provider side object into
+serialized form, and write it to the given BIO.  If the caller wants
+to get the serialized stream to memory, it should provide a
+<em>BIO_s_membuf(3)</em>.</p>
+<p>The serializer doesn't need to know more about the <strong>BIO</strong> pointer than
+being able to pass it to the appropriate BIO upcalls (see
+<em>provider-base(7)/Core functions</em>).</p>
+<p>The serialization using the <em>OSSL_PARAM(3)</em> array form allows a
+serializer to be used for data that's been exported from another
+provider, and thereby allow them to exist independently of each
+other.</p>
+<p>The serialization using a provider side object can only be safely used
+with provider data coming from the same provider, for example keys
+with the <em>KEYMGMT</em> provider.</p>
+<p>All &quot;functions&quot; mentioned here are passed as function pointers between
+<em class="file">libcrypto</em> and the provider in <strong>OSSL_DISPATCH</strong> arrays via
+<strong>OSSL_ALGORITHM</strong> arrays that are returned by the provider's
+<code>provider_query_operation()</code> function
+(see <em>provider-base(7)/Provider Functions</em>).</p>
+<p>All these &quot;functions&quot; have a corresponding function type definition
+named <strong>OSSL_{name}_fn</strong>, and a helper function to retrieve the
+function pointer from a <strong>OSSL_DISPATCH</strong> element named
+<strong>OSSL_get_{name}</strong>.
+For example, the &quot;function&quot; <code>OP_serializer_serialize_data()</code> has these:</p>
+<pre>
+ typedef int
+     (OSSL_OP_serializer_serialize_data_fn)(void *provctx,
+                                            const OSSL_PARAM params[],
+                                            BIO *out);
+ static ossl_inline OSSL_OP_serializer_serialize_data_fn
+     OSSL_get_OP_serializer_serialize_data(const OSSL_DISPATCH *opf);</pre>
+<p><strong>OSSL_DISPATCH</strong> arrays are indexed by numbers that are provided as
+macros in <em>openssl-core_numbers.h(7)</em>, as follows:</p>
+<pre>
+ OP_serializer_newctx              OSSL_FUNC_SERIALIZER_NEWCTX
+ OP_serializer_freectx             OSSL_FUNC_SERIALIZER_FREECTX
+ OP_serializer_set_ctx_params      OSSL_FUNC_SERIALIZER_SET_CTX_PARAMS
+ OP_serializer_settable_ctx_params OSSL_FUNC_SERIALIZER_SETTABLE_CTX_PARAMS</pre>
+<pre>
+ OP_serializer_serialize_data      OSSL_FUNC_SERIALIZER_SERIALIZE_DATA
+ OP_serializer_serialize_object    OSSL_FUNC_SERIALIZER_SERIALIZE_OBJECT</pre>
+<p>
+</p>
+<h2><a name="names_and_properties">Names and properties</a></h2>
+<p>The name of an implementation should match the type of object it
+handles.  For example, an implementation that serializes an RSA key
+should be named accordingly.</p>
+<p>To be able to specify exactly what serialization format and what type
+of data a serializer implementation is expected to handle, two
+additional properties may be given:</p>
+<dl>
+<dt><strong><a name="format" class="item">format</a></strong></dt>
+
+<dd>
+<p>This property is used to specify what kind of output format the
+implementation produces.  Currently known formats are:</p>
+<dl>
+<dt><strong><a name="text" class="item">text</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs human
+readable text, making that implementation suitable for <a href="#text"><code>-text</code></a> output
+in diverse <em>openssl(1)</em> commands.</p>
+</dd>
+<dt><strong><a name="pem" class="item">pem</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs PEM
+formatted data.</p>
+</dd>
+<dt><strong><a name="der" class="item">der</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs DER
+formatted data.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong><a name="type" class="item">type</a></strong></dt>
+
+<dd>
+<p>With objects that have multiple purposes, this can be used to specify
+the purpose type.  The currently known use cases are asymmetric keys
+and key parameters, where the type can be one of:</p>
+<dl>
+<dt><strong><a name="private" class="item">private</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs a private
+key.</p>
+</dd>
+<dt><strong><a name="public" class="item">public</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs a public
+key.</p>
+</dd>
+<dt><strong><a name="parameters" class="item">parameters</a></strong></dt>
+
+<dd>
+<p>An implementation with that format property value outputs key
+parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>The possible values of both these properties is open ended.  A
+provider may very well specify other formats that libcrypto doesn't
+know anything about.</p>
+<p>
+</p>
+<h2><a name="context_functions">Context functions</a></h2>
+<p><code>OP_serializer_newctx()</code> returns a context to be used with the rest of
+the functions.</p>
+<p><code>OP_serializer_freectx()</code> frees the given <em>ctx</em>, if it was created by
+<code>OP_serializer_newctx()</code>.</p>
+<p><code>OP_serializer_set_ctx_params()</code> sets context data according to
+parameters from <em>params</em> that it recognises.  Unrecognised parameters
+should be ignored.</p>
+<p><code>OP_serializer_settable_ctx_params()</code> returns a constant <strong>OSSL_PARAM</strong>
+array describing the parameters that <code>OP_serializer_set_ctx_params()</code>
+can handle.</p>
+<p>See <em>OSSL_PARAM(3)</em> for further details on the parameters structure used
+by <code>OP_serializer_set_ctx_params()</code> and <code>OP_serializer_settable_ctx_params()</code>.</p>
+<p>
+</p>
+<h2><a name="serializing_functions">Serializing functions</a></h2>
+<p><code>OP_serializer_serialize_data()</code> should take an array of <strong>OSSL_PARAM</strong>,
+<em>data</em>, and if it contains the data necessary for the object type
+that the implementation handles, it should output the object in
+serialized form to the <strong>BIO</strong>.</p>
+<p><code>OP_serializer_serialize_object()</code> should take a pointer to an object
+that it knows intimately, and output that object in serialized form to
+the <strong>BIO</strong>.  The caller <em>must</em> ensure that this function is called
+with a pointer that the provider of this function is familiar with.
+It is not suitable to use with object pointers coming from other
+providers.</p>
+<p>Both serialization functions also take an <strong>OSSL_PASSPHRASE_CALLBACK</strong>
+function pointer along with a pointer to application data <em>cbarg</em>,
+which should be used when a pass phrase prompt is needed.</p>
+<p>
+</p>
+<h2><a name="serializer_parameters">Serializer parameters</a></h2>
+<p>Parameters currently recognised by built-in serializers are as
+follows:</p>
+<dl>
+<dt><strong><a name="cipher_ossl_serializer_param_cipher_utf8_string" class="item">&quot;cipher&quot; (<strong>OSSL_SERIALIZER_PARAM_CIPHER</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>The name of the encryption cipher to be used when generating encrypted
+serialization.  This is used when serializing private keys, as well as
+other objects that need protection.</p>
+<p>If this name is invalid for the serialization implementation, the
+implementation should refuse to perform the serialization, i.e.
+<code>OP_serializer_serialize_data()</code> and <code>OP_serializer_serialize_object()</code>
+should return an error.</p>
+</dd>
+<dt><strong><a name="properties_ossl_serializer_param_properties_utf8_string" class="item">&quot;properties&quot; (<strong>OSSL_SERIALIZER_PARAM_PROPERTIES</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>The properties to be queried when trying to fetch the algorithm given
+with the &quot;cipher&quot; parameter.
+This must be given together with the &quot;cipher&quot; parameter to be
+considered valid.</p>
+<p>The serialization implementation isn't obligated to use this value.
+However, it is recommended that implementations that do not handle
+property strings return an error on receiving this parameter unless
+its value NULL or the empty string.</p>
+</dd>
+<dt><strong><a name="passphrase_ossl_serializer_param_pass_octet_string" class="item">&quot;passphrase&quot; (<strong>OSSL_SERIALIZER_PARAM_PASS</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>A pass phrase provided by the application.  When this is given, the
+built-in serializers will not attempt to use the passphrase callback.</p>
+</dd>
+</dl>
+<p>Parameters currently recognised by the built-in pass phrase callback:</p>
+<dl>
+<dt><strong><a name="info_ossl_passphrase_param_info_utf8_string" class="item">&quot;info&quot; (<strong>OSSL_PASSPHRASE_PARAM_INFO</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>A string of information that will become part of the pass phrase
+prompt.  This could be used to give the user information on what kind
+of object it's being prompted for.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OP_serializer_newctx()</code> returns a pointer to a context, or NULL on
+failure.</p>
+<p><code>OP_serializer_set_ctx_params()</code> returns 1, unless a recognised
+parameters was invalid or caused an error, for which 0 is returned.</p>
+<p><code>OP_serializer_settable_ctx_params()</code> returns a pointer to an array of
+constant <strong>OSSL_PARAM</strong> elements.</p>
+<p><code>OP_serializer_serialize_data()</code> and <code>OP_serializer_serialize_object()</code>
+return 1 on success, or 0 on failure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The SERIALIZER interface was introduced in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

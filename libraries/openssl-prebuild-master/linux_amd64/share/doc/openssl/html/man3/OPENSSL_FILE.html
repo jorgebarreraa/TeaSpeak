@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>OPENSSL_FILE</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>OPENSSL_FILE, OPENSSL_LINE, OPENSSL_FUNC,
+OPENSSL_MSTR, OPENSSL_MSTR_HELPER
+- generic C programming utility macros</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/macros.h&gt;</pre>
+<pre>
+ #define OPENSSL_FILE /* typically: __FILE__ */
+ #define OPENSSL_LINE /* typically: __LINE__ */
+ #define OPENSSL_FUNC /* typically: __func__ */</pre>
+<pre>
+ #define OPENSSL_MSTR_HELPER(x) #x
+ #define OPENSSL_MSTR(x) OPENSSL_MSTR_HELPER(x)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The macros <strong>OPENSSL_FILE</strong> and <strong>OPENSSL_LINE</strong>
+typically yield the current filename and line number during C compilation.
+When <strong>OPENSSL_NO_FILENAMES</strong> is defined they yield <strong>&quot;&quot;</strong> and <strong>0</strong>, respectively.</p>
+<p>The macro <strong>OPENSSL_FUNC</strong> attempts to yield the name of the C function
+currently being compiled, as far as language and compiler versions allow.
+Otherwise, it yields &quot;(unknown function)&quot;.</p>
+<p>The macro <strong>OPENSSL_MSTR</strong> yields the expansion of the macro given as argument,
+which is useful for concatenation with string constants.
+The macro <strong>OPENSSL_MSTR_HELPER</strong> is an auxiliary macro for this purpose.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p>see above</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>crypto(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p><strong>OPENSSL_FUNC</strong>, <strong>OPENSSL_MSTR</strong>, and <strong>OPENSSL_MSTR_HELPER</strong>
+were added in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2018-2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

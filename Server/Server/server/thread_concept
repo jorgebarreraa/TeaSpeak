@@ -1,0 +1,17 @@
+Voice client:
+    IO-Thread:
+        - Read & Write data
+        - Parse read data / decrypt
+
+    Executor thread:
+        - Reassemble packets
+        - Handle reassembled packets
+            - Voice
+            - Commands
+            - Ping/Pong
+
+Web client:
+    IO-Thread: ??
+
+    Executor thread:
+        -

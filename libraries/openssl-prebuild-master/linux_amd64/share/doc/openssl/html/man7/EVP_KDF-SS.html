@@ -1,0 +1,239 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>EVP_KDF-SS</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#auxiliary_function">Auxiliary function</a></li>
+		<li><a href="#identity">Identity</a></li>
+		<li><a href="#supported_parameters">Supported parameters</a></li>
+	</ul>
+
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#conforming_to">CONFORMING TO</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>EVP_KDF-SS - The Single Step / One Step EVP_KDF implementation</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The EVP_KDF-SS algorithm implements the Single Step key derivation function (SSKDF).
+SSKDF derives a key using input such as a shared secret key (that was generated
+during the execution of a key establishment scheme) and fixedinfo.
+SSKDF is also informally referred to as 'Concat KDF'.</p>
+<p>
+</p>
+<h2><a name="auxiliary_function">Auxiliary function</a></h2>
+<p>The implementation uses a selectable auxiliary function H, which can be one of:</p>
+<dl>
+<dt><strong><a name="h" class="item"><strong>H(x) = hash(x, digest=md)</strong></a></strong></dt>
+
+<dt><strong><strong>H(x) = HMAC_hash(x, key=salt, digest=md)</strong></strong></dt>
+
+<dt><strong><strong>H(x) = KMACxxx(x, key=salt, custom=&quot;KDF&quot;, outlen=mac_size)</strong></strong></dt>
+
+</dl>
+<p>Both the HMAC and KMAC implementations set the key using the 'salt' value.
+The hash and HMAC also require the digest to be set.</p>
+<p>
+</p>
+<h2><a name="identity">Identity</a></h2>
+<p>&quot;SSKDF&quot; is the name for this implementation; it
+can be used with the <code>EVP_KDF_fetch()</code> function.</p>
+<p>
+</p>
+<h2><a name="supported_parameters">Supported parameters</a></h2>
+<p>The supported parameters are:</p>
+<dl>
+<dt><strong><a name="properties_ossl_kdf_param_properties_utf8_string" class="item">&quot;properties&quot; (<strong>OSSL_KDF_PARAM_PROPERTIES</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="digest_ossl_kdf_param_digest_utf8_string" class="item">&quot;digest&quot; (<strong>OSSL_KDF_PARAM_DIGEST</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="mac_ossl_kdf_param_mac_utf8_string" class="item">&quot;mac&quot; (<strong>OSSL_KDF_PARAM_MAC</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dt><strong><a name="maclen_ossl_kdf_param_mac_size_unsigned_integer" class="item">&quot;maclen&quot; (<strong>OSSL_KDF_PARAM_MAC_SIZE</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dt><strong><a name="salt_ossl_kdf_param_salt_octet_string" class="item">&quot;salt&quot; (<strong>OSSL_KDF_PARAM_SALT</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>These parameters work as described in <em>EVP_KDF(3)/PARAMETERS</em>.</p>
+</dd>
+<dt><strong><a name="key_evp_kdf_ctrl_set_key_octet_string" class="item">&quot;key&quot; (<strong>EVP_KDF_CTRL_SET_KEY</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>This parameter set the shared secret that is used for key derivation.</p>
+</dd>
+<dt><strong><a name="info_ossl_kdf_param_info_octet_string" class="item">&quot;info&quot; (<strong>OSSL_KDF_PARAM_INFO</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>This parameter sets an optional value for fixedinfo, also known as otherinfo.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>A context for SSKDF can be obtained by calling:</p>
+<pre>
+ EVP_KDF *kdf = EVP_KDF_fetch(NULL, &quot;SSKDF&quot;, NULL);
+ EVP_KDF_CTX *kctx = EVP_KDF_CTX_new(kdf);</pre>
+<p>The output length of an SSKDF is specified via the <em>keylen</em>
+parameter to the <em>EVP_KDF_derive(3)</em> function.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>This example derives 10 bytes using H(x) = SHA-256, with the secret key &quot;secret&quot;
+and fixedinfo value &quot;label&quot;:</p>
+<pre>
+ EVP_KDF *kdf;
+ EVP_KDF_CTX *kctx;
+ unsigned char out[10];
+ OSSL_PARAM params[4], *p = params;</pre>
+<pre>
+ kdf = EVP_KDF_fetch(NULL, &quot;SSKDF&quot;, NULL);
+ kctx = EVP_KDF_CTX_new(kdf);
+ EVP_KDF_free(kdf);</pre>
+<pre>
+ *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST,
+                                         SN_sha256, strlen(SN_sha256));
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_KEY,
+                                          &quot;secret&quot;, (size_t)6);
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_INFO,
+                                          &quot;label&quot;, (size_t)5);
+ *p = OSSL_PARAM_construct_end();
+ if (EVP_KDF_CTX_set_params(kctx, params) &lt;= 0) {
+     error(&quot;EVP_KDF_CTX_set_params&quot;);
+ }
+ if (EVP_KDF_derive(kctx, out, sizeof(out)) &lt;= 0) {
+     error(&quot;EVP_KDF_derive&quot;);
+ }</pre>
+<pre>
+ EVP_KDF_CTX_free(kctx);</pre>
+<p>This example derives 10 bytes using H(x) = HMAC(SHA-256), with the secret key &quot;secret&quot;,
+fixedinfo value &quot;label&quot; and salt &quot;salt&quot;:</p>
+<pre>
+ EVP_KDF *kdf;
+ EVP_KDF_CTX *kctx;
+ unsigned char out[10];
+ OSSL_PARAM params[6], *p = params;</pre>
+<pre>
+ kdf = EVP_KDF_fetch(NULL, &quot;SSKDF&quot;, NULL);
+ kctx = EVP_KDF_CTX_new(kdf);
+ EVP_KDF_free(kdf);</pre>
+<pre>
+ *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_MAC,
+                                         SN_hmac, strlen(SN_hmac));
+ *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST,
+                                         SN_sha256, strlen(SN_sha256));
+ *p++ = OSSL_PARAM_construct_octet_string(EVP_KDF_CTRL_SET_KEY,
+                                          &quot;secret&quot;, (size_t)6);
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_INFO,
+                                          &quot;label&quot;, (size_t)5);
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT,
+                                          &quot;salt&quot;, (size_t)4);
+ *p = OSSL_PARAM_construct_end();
+ if (EVP_KDF_CTX_set_params(kctx, params) &lt;= 0) {
+     error(&quot;EVP_KDF_CTX_set_params&quot;);
+ }
+ if (EVP_KDF_derive(kctx, out, sizeof(out)) &lt;= 0) {
+     error(&quot;EVP_KDF_derive&quot;);
+ }</pre>
+<pre>
+ EVP_KDF_CTX_free(kctx);</pre>
+<p>This example derives 10 bytes using H(x) = KMAC128(x,salt,outlen), with the secret key &quot;secret&quot;
+fixedinfo value &quot;label&quot;, salt of &quot;salt&quot; and KMAC outlen of 20:</p>
+<pre>
+ EVP_KDF *kdf;
+ EVP_KDF_CTX *kctx;
+ unsigned char out[10];
+ OSSL_PARAM params[7], *p = params;</pre>
+<pre>
+ kdf = EVP_KDF_fetch(NULL, &quot;SSKDF&quot;, NULL);
+ kctx = EVP_KDF_CTX_new(kdf);
+ EVP_KDF_free(kdf);</pre>
+<pre>
+ *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_MAC,
+                                         SN_kmac128, strlen(SN_kmac128));
+ *p++ = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST,
+                                         SN_sha256, strlen(SN_sha256));
+ *p++ = OSSL_PARAM_construct_octet_string(EVP_KDF_CTRL_SET_KEY,
+                                          &quot;secret&quot;, (size_t)6);
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_INFO,
+                                          &quot;label&quot;, (size_t)5);
+ *p++ = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT,
+                                          &quot;salt&quot;, (size_t)4);
+ *p++ = OSSL_PARAM_construct_size_t(OSSL_KDF_PARAM_MAC_SIZE, (size_t)20);
+ *p = OSSL_PARAM_construct_end();
+ if (EVP_KDF_CTX_set_params(kctx, params) &lt;= 0) {
+     error(&quot;EVP_KDF_CTX_set_params&quot;);
+ }
+ if (EVP_KDF_derive(kctx, out, sizeof(out)) &lt;= 0) {
+     error(&quot;EVP_KDF_derive&quot;);
+ }</pre>
+<pre>
+ EVP_KDF_CTX_free(kctx);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="conforming_to">CONFORMING TO</a></h1>
+<p>NIST SP800-56Cr1.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>EVP_KDF(3)</em>,
+<em>EVP_KDF_CTX_new(3)</em>,
+<em>EVP_KDF_CTX_free(3)</em>,
+<em>EVP_KDF_CTX_set_params(3)</em>,
+<em>EVP_KDF_size(3)</em>,
+<em>EVP_KDF_derive(3)</em>,
+<em>EVP_KDF(3)/PARAMETERS</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>This functionality was added to OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.  Copyright
+(c) 2019, Oracle and/or its affiliates.  All rights reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

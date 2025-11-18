@@ -1,0 +1,461 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>provider-keymgmt</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#key_objects">Key Objects</a></li>
+		<li><a href="#constructing_and_destructing_functions">Constructing and Destructing Functions</a></li>
+		<li><a href="#key_object_information_functions">Key Object Information Functions</a></li>
+		<li><a href="#key_object_checking_functions">Key Object Checking Functions</a></li>
+		<li><a href="#key_object_import__export_and_copy_functions">Key Object Import, Export and Copy Functions</a></li>
+		<li><a href="#built_in_rsa_import_export_types">Built-in RSA Import/Export Types</a></li>
+		<li><a href="#built_in_dsa_and_diffie_hellman_import_export_types">Built-in DSA and Diffie-Hellman Import/Export Types</a></li>
+		<li><a href="#built_in_x25519__x448__ed25519_and_ed448_import_export_types">Built-in X25519, X448, ED25519 and ED448 Import/Export Types</a></li>
+		<li><a href="#information_parameters">Information Parameters</a></li>
+	</ul>
+
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>provider-keymgmt - The KEYMGMT library &lt;-&gt; provider functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/core_numbers.h&gt;</pre>
+<pre>
+ /*
+  * None of these are actual functions, but are displayed like this for
+  * the function signatures for functions that are offered as function
+  * pointers in OSSL_DISPATCH arrays.
+  */</pre>
+<pre>
+ /* Key object (keydata) creation and destruction */
+ void *OP_keymgmt_new(void *provctx);
+ void OP_keymgmt_free(void *keydata);</pre>
+<pre>
+ /* Key object information */
+ int OP_keymgmt_get_params(void *keydata, OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_keymgmt_gettable_params(void);
+ int OP_keymgmt_set_params(void *keydata, const OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_keymgmt_settable_params(void);</pre>
+<pre>
+ /* Key object content checks */
+ int OP_keymgmt_has(void *keydata, int selection);
+ int OP_keymgmt_match(const void *keydata1, const void *keydata2,
+                      int selection);</pre>
+<pre>
+ /* Discovery of supported operations */
+ const char *OP_keymgmt_query_operation_name(int operation_id);</pre>
+<pre>
+ /* Key object import and export functions */
+ int OP_keymgmt_import(int selection, void *keydata, const OSSL_PARAM params[]);
+ const OSSL_PARAM *OP_keymgmt_import_types(int selection);
+ int OP_keymgmt_export(int selection, void *keydata,
+                       OSSL_CALLBACK *param_cb, void *cbarg);
+ const OSSL_PARAM *OP_keymgmt_export_types(int selection);</pre>
+<pre>
+ /* Key object copy */
+ int OP_keymgmt_copy(void *keydata_to, const void *keydata_from, int selection);</pre>
+<pre>
+ /* Key object validation */
+ int OP_keymgmt_validate(void *keydata, int selection);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The KEYMGMT operation doesn't have much public visibility in OpenSSL
+libraries, it's rather an internal operation that's designed to work
+in tandem with operations that use private/public key pairs.</p>
+<p>Because the KEYMGMT operation shares knowledge with the operations it
+works with in tandem, they must belong to the same provider.
+The OpenSSL libraries will ensure that they do.</p>
+<p>The primary responsibility of the KEYMGMT operation is to hold the
+provider side key data for the OpenSSL library EVP_PKEY structure.</p>
+<p>All &quot;functions&quot; mentioned here are passed as function pointers between
+<em class="file">libcrypto</em> and the provider in <strong>OSSL_DISPATCH</strong> arrays via
+<strong>OSSL_ALGORITHM</strong> arrays that are returned by the provider's
+<code>provider_query_operation()</code> function
+(see <em>provider-base(7)/Provider Functions</em>).</p>
+<p>All these &quot;functions&quot; have a corresponding function type definition
+named <strong>OSSL_{name}_fn</strong>, and a helper function to retrieve the
+function pointer from a <strong>OSSL_DISPATCH</strong> element named
+<strong>OSSL_get_{name}</strong>.
+For example, the &quot;function&quot; <code>OP_keymgmt_new()</code> has these:</p>
+<pre>
+ typedef void *(OSSL_OP_keymgmt_new_fn)(void *provctx);
+ static ossl_inline OSSL_OP_keymgmt_new_fn
+     OSSL_get_OP_keymgmt_new(const OSSL_DISPATCH *opf);</pre>
+<p><strong>OSSL_DISPATCH</strong> arrays are indexed by numbers that are provided as
+macros in <em>openssl-core_numbers.h(7)</em>, as follows:</p>
+<pre>
+ OP_keymgmt_new                  OSSL_FUNC_KEYMGMT_NEW
+ OP_keymgmt_free                 OSSL_FUNC_KEYMGMT_FREE</pre>
+<pre>
+ OP_keymgmt_get_params           OSSL_FUNC_KEYMGMT_GET_PARAMS
+ OP_keymgmt_gettable_params      OSSL_FUNC_KEYMGMT_GETTABLE_PARAMS
+ OP_keymgmt_set_params           OSSL_FUNC_KEYMGMT_SET_PARAMS
+ OP_keymgmt_settable_params      OSSL_FUNC_KEYMGMT_SETTABLE_PARAMS</pre>
+<pre>
+ OP_keymgmt_query_operation_name OSSL_FUNC_KEYMGMT_QUERY_OPERATION_NAME</pre>
+<pre>
+ OP_keymgmt_has                  OSSL_FUNC_KEYMGMT_HAS
+ OP_keymgmt_validate             OSSL_FUNC_KEYMGMT_VALIDATE
+ OP_keymgmt_match                OSSL_FUNC_KEYMGMT_MATCH</pre>
+<pre>
+ OP_keymgmt_import               OSSL_FUNC_KEYMGMT_IMPORT
+ OP_keymgmt_import_types         OSSL_FUNC_KEYMGMT_IMPORT_TYPES
+ OP_keymgmt_export               OSSL_FUNC_KEYMGMT_EXPORT
+ OP_keymgmt_export_types         OSSL_FUNC_KEYMGMT_EXPORT_TYPES</pre>
+<pre>
+ OP_keymgmt_copy                 OSSL_FUNC_KEYMGMT_COPY</pre>
+<p>
+</p>
+<h2><a name="key_objects">Key Objects</a></h2>
+<p>A key object is a collection of data for an asymmetric key, and is
+represented as <em>keydata</em> in this manual.</p>
+<p>The exact contents of a key object are defined by the provider, and it
+is assumed that different operations in one and the same provider use
+the exact same structure to represent this collection of data, so that
+for example, a key object that has been created using the KEYMGMT
+interface that we document here can be passed as is to other provider
+operations, such as <code>OP_signature_sign_init()</code> (see
+<em>provider-signature(7)</em>).</p>
+<p>With some of the KEYMGMT functions, it's possible to select a specific
+subset of data to handle, governed by the bits in a <em>selection</em>
+indicator.  The bits are:</p>
+<dl>
+<dt><strong><a name="ossl_keymgmt_select_private_key" class="item"><strong>OSSL_KEYMGMT_SELECT_PRIVATE_KEY</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that the private key data in a key object should be
+considered.</p>
+</dd>
+<dt><strong><a name="ossl_keymgmt_select_public_key" class="item"><strong>OSSL_KEYMGMT_SELECT_PUBLIC_KEY</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that the public key data in a key object should be
+considered.</p>
+</dd>
+<dt><strong><a name="ossl_keymgmt_select_domain_parameters" class="item"><strong>OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that the domain parameters in a key object should be
+considered.</p>
+</dd>
+<dt><strong><a name="ossl_keymgmt_select_other_parameters" class="item"><strong>OSSL_KEYMGMT_SELECT_OTHER_PARAMETERS</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that other parameters in a key object should be
+considered.</p>
+<p>Other parameters are key parameters that don't fit any other
+classification.  In other words, this particular selector bit works as
+a last resort bit bucket selector.</p>
+</dd>
+</dl>
+<p>Some selector bits have also been combined for easier use:</p>
+<dl>
+<dt><strong><a name="ossl_keymgmt_select_all_parameters" class="item"><strong>OSSL_KEYMGMT_SELECT_ALL_PARAMETERS</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that all key object parameters should be considered,
+regardless of their more granular classification.</p>
+<p>This is a combination of <strong>OSSL_KEYMGMT_SELECT_DOMAIN_PARAMETERS</strong> and
+<strong>OSSL_KEYMGMT_SELECT_OTHER_PARAMETERS</strong>.</p>
+</dd>
+<dt><strong><a name="ossl_keymgmt_select_keypair" class="item"><strong>OSSL_KEYMGMT_SELECT_KEYPAIR</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that both the whole key pair in a key object should be
+considered, i.e. the combination of public and private key.</p>
+<p>This is a combination of <strong>OSSL_KEYMGMT_SELECT_PRIVATE_KEY</strong> and
+<strong>OSSL_KEYMGMT_SELECT_PUBLIC_KEY</strong>.</p>
+</dd>
+<dt><strong><a name="ossl_keymgmt_select_all" class="item"><strong>OSSL_KEYMGMT_SELECT_ALL</strong></a></strong></dt>
+
+<dd>
+<p>Indicating that everything in a key object should be considered.</p>
+</dd>
+</dl>
+<p>The exact interpretation of those bits or how they combine is left to
+each function where you can specify a selector.</p>
+<p>
+</p>
+<h2><a name="constructing_and_destructing_functions">Constructing and Destructing Functions</a></h2>
+<p><code>OP_keymgmt_new()</code> should create a provider side key object.  The
+provider context <em>provctx</em> is passed and may be incorporated in the
+key object, but that is not mandatory.</p>
+<p><code>OP_keymgmt_free()</code> should free the passed <em>keydata</em>.</p>
+<p>The constructor and destructor are mandatory, a KEYMGMT implementation
+without them will not be accepted.</p>
+<p>
+</p>
+<h2><a name="key_object_information_functions">Key Object Information Functions</a></h2>
+<p><code>OP_keymgmt_get_params()</code> should extract information data associated
+with the given <em>keydata</em>, see <a href="#information_parameters">Information Parameters</a>.</p>
+<p><code>OP_keymgmt_gettable_params()</code> should return a constant array of
+descriptor <strong>OSSL_PARAM</strong>, for parameters that <code>OP_keymgmt_get_params()</code>
+can handle.</p>
+<p>If <code>OP_keymgmt_gettable_params()</code> is present, <code>OP_keymgmt_get_params()</code>
+must also be present, and vice versa.</p>
+<p><code>OP_keymgmt_set_params()</code> should update information data associated
+with the given <em>keydata</em>, see <a href="#information_parameters">Information Parameters</a>.</p>
+<p><code>OP_keymgmt_settable_params()</code> should return a constant array of
+descriptor <strong>OSSL_PARAM</strong>, for parameters that <code>OP_keymgmt_set_params()</code>
+can handle.</p>
+<p>If <code>OP_keymgmt_settable_params()</code> is present, <code>OP_keymgmt_set_params()</code>
+must also be present, and vice versa.</p>
+<p>
+</p>
+<h2><a name="key_object_checking_functions">Key Object Checking Functions</a></h2>
+<p><code>OP_keymgmt_query_operation_name()</code> should return the name of the
+supported algorithm for the operation <em>operation_id</em>.  This is
+similar to <code>provider_query_operation()</code> (see <em>provider-base(7)</em>),
+but only works as an advisory.  If this function is not present, or
+returns NULL, the caller is free to assume that there's an algorithm
+from the same provider, of the same name as the one used to fetch the
+keymgmt and try to use that.</p>
+<p><code>OP_keymgmt_has()</code> should check whether the given <em>keydata</em> contains the subsets
+of data indicated by the <em>selector</em>.  A combination of several
+selector bits must consider all those subsets, not just one.  An
+implementation is, however, free to consider an empty subset of data
+to still be a valid subset.</p>
+<p><code>OP_keymgmt_validate()</code> should check if the <em>keydata</em> contains valid
+data subsets indicated by <em>selection</em>.  Some combined selections of
+data subsets may cause validation of the combined data.
+For example, the combination of <strong>OSSL_KEYMGMT_SELECT_PRIVATE_KEY</strong> and
+<strong>OSSL_KEYMGMT_SELECT_PUBLIC_KEY</strong> (or <strong>OSSL_KEYMGMT_SELECT_KEYPAIR</strong>
+for short) is expected to check that the pairwise consistency of
+<em>keydata</em> is valid.</p>
+<p><code>OP_keymgmt_match()</code> should check if the data subset indicated by
+<em>selection</em> in <em>keydata1</em> and <em>keydata2</em> match.  It is assumed that
+the caller has ensured that <em>keydata1</em> and <em>keydata2</em> are both owned
+by the implementation of this function.</p>
+<p>
+</p>
+<h2><a name="key_object_import__export_and_copy_functions">Key Object Import, Export and Copy Functions</a></h2>
+<p><code>OP_keymgmt_import()</code> should import data indicated by <em>selection</em> into
+<em>keydata</em> with values taken from the <strong>OSSL_PARAM</strong> array <em>params</em>.</p>
+<p><code>OP_keymgmt_export()</code> should extract values indicated by <em>selection</em>
+from <em>keydata</em>, create an <strong>OSSL_PARAM</strong> array with them and call
+<em>param_cb</em> with that array as well as the given <em>cbarg</em>.</p>
+<p><code>OP_keymgmt_import_types()</code> should return a constant array of descriptor
+<strong>OSSL_PARAM</strong> for data indicated by <em>selection</em>, for parameters that
+<code>OP_keymgmt_import()</code> can handle.</p>
+<p><code>OP_keymgmt_export_types()</code> should return a constant array of descriptor
+<strong>OSSL_PARAM</strong> for data indicated by <em>selection</em>, that the
+<code>OP_keymgmt_export()</code> callback can expect to receive.</p>
+<p><code>OP_keymgmt_copy()</code> should copy data subsets indicated by <em>selection</em>
+from <em>keydata_from</em> to <em>keydata_to</em>.  It is assumed that the caller
+has ensured that <em>keydata_to</em> and <em>keydata_from</em> are both owned by
+the implementation of this function.</p>
+<p>
+</p>
+<h2><a name="built_in_rsa_import_export_types">Built-in RSA Import/Export Types</a></h2>
+<p>The following Import/Export types are available for the built-in RSA algorithm:</p>
+<dl>
+<dt><strong><a name="n_ossl_pkey_param_rsa_n_integer" class="item">&quot;n&quot; (<strong>OSSL_PKEY_PARAM_RSA_N</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The RSA &quot;n&quot; value.</p>
+</dd>
+<dt><strong><a name="e_ossl_pkey_param_rsa_e_integer" class="item">&quot;e&quot; (<strong>OSSL_PKEY_PARAM_RSA_E</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The RSA &quot;e&quot; value.</p>
+</dd>
+<dt><strong><a name="d_ossl_pkey_param_rsa_d_integer" class="item">&quot;d&quot; (<strong>OSSL_PKEY_PARAM_RSA_D</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The RSA &quot;d&quot; value.</p>
+</dd>
+<dt><strong><a name="rsa_factor_ossl_pkey_param_rsa_factor_integer" class="item">&quot;rsa-factor&quot; (<strong>OSSL_PKEY_PARAM_RSA_FACTOR</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>An RSA factor. In 2 prime RSA these are often known as &quot;p&quot; or &quot;q&quot;. This value
+may be repeated up to 10 times in a single key.</p>
+</dd>
+<dt><strong><a name="rsa_exponent_ossl_pkey_param_rsa_exponent_integer" class="item">&quot;rsa-exponent&quot; (<strong>OSSL_PKEY_PARAM_RSA_EXPONENT</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>An RSA CRT (Chinese Remainder Theorem) exponent. This value may be repeated up
+to 10 times in a single key.</p>
+</dd>
+<dt><strong><a name="rsa_coefficient_ossl_pkey_param_rsa_coefficient_integer" class="item">&quot;rsa-coefficient&quot; (<strong>OSSL_PKEY_PARAM_RSA_COEFFICIENT</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>An RSA CRT (Chinese Remainder Theorem) coefficient. This value may be repeated
+up to 9 times in a single key.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="built_in_dsa_and_diffie_hellman_import_export_types">Built-in DSA and Diffie-Hellman Import/Export Types</a></h2>
+<p>The following Import/Export types are available for the built-in DSA and
+Diffie-Hellman algorithms:</p>
+<dl>
+<dt><strong><a name="pub_ossl_pkey_param_pub_key_integer_or_octet_string" class="item">&quot;pub&quot; (<strong>OSSL_PKEY_PARAM_PUB_KEY</strong>) &lt;integer&gt; or &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>The public key value.</p>
+</dd>
+<dt><strong><a name="priv_ossl_pkey_param_priv_key_integer_or_octet_string" class="item">&quot;priv&quot; (<strong>OSSL_PKEY_PARAM_PRIV_KEY</strong>) &lt;integer&gt; or &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>The private key value.</p>
+</dd>
+<dt><strong><a name="p_ossl_pkey_param_ffc_p_integer" class="item">&quot;p&quot; (<strong>OSSL_PKEY_PARAM_FFC_P</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>A DSA or Diffie-Hellman &quot;p&quot; value.</p>
+</dd>
+<dt><strong><a name="q_ossl_pkey_param_ffc_q_integer" class="item">&quot;q&quot; (<strong>OSSL_PKEY_PARAM_FFC_Q</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>A DSA or Diffie-Hellman &quot;q&quot; value.</p>
+</dd>
+<dt><strong><a name="g_ossl_pkey_param_ffc_g_integer" class="item">&quot;g&quot; (<strong>OSSL_PKEY_PARAM_FFC_G</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>A DSA or Diffie-Hellman &quot;g&quot; value.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="built_in_x25519__x448__ed25519_and_ed448_import_export_types">Built-in X25519, X448, ED25519 and ED448 Import/Export Types</a></h2>
+<p>The following Import/Export types are available for the built-in X25519, X448,
+ED25519 and X448 algorithms:</p>
+<dl>
+<dt><strong><a name="pub_ossl_pkey_param_pub_key_octet_string" class="item">&quot;pub&quot; (<strong>OSSL_PKEY_PARAM_PUB_KEY</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>The public key value.</p>
+</dd>
+<dt><strong><a name="priv_ossl_pkey_param_priv_key_octet_string" class="item">&quot;priv&quot; (<strong>OSSL_PKEY_PARAM_PRIV_KEY</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>The private key value.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="information_parameters">Information Parameters</a></h2>
+<p>See <em>OSSL_PARAM(3)</em> for further details on the parameters structure.</p>
+<p>Parameters currently recognised by built-in keymgmt algorithms
+are as follows.
+Not all parameters are relevant to, or are understood by all keymgmt
+algorithms:</p>
+<dl>
+<dt><strong><a name="bits_ossl_pkey_param_bits_integer" class="item">&quot;bits&quot; (<strong>OSSL_PKEY_PARAM_BITS</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The value should be the cryptographic length of the cryptosystem to
+which the key belongs, in bits.  The definition of cryptographic
+length is specific to the key cryptosystem.</p>
+</dd>
+<dt><strong><a name="max_size_ossl_pkey_param_max_size_integer" class="item">&quot;max-size&quot; (<strong>OSSL_PKEY_PARAM_MAX_SIZE</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The value should be the maximum size that a caller should allocate to
+safely store a signature (called <em>sig</em> in <em>provider-signature(7)</em>),
+the result of asymmmetric encryption / decryption (<em>out</em> in
+<em>provider-asym_cipher(7)</em>, a derived secret (<em>secret</em> in
+<em>provider-keyexch(7)</em>, and similar data).</p>
+<p>Because an EVP_KEYMGMT method is always tightly bound to another method
+(signature, asymmetric cipher, key exchange, ...) and must be of the
+same provider, this number only needs to be synchronised with the
+dimensions handled in the rest of the same provider.</p>
+</dd>
+<dt><strong><a name="security_bits_ossl_pkey_param_security_bits_integer" class="item">&quot;security-bits&quot; (<strong>OSSL_PKEY_PARAM_SECURITY_BITS</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The value should be the number of security bits of the given key.
+Bits of security is defined in SP800-57.</p>
+</dd>
+<dt><strong><a name="use_cofactor_flag_ossl_pkey_param_use_cofactor_flag_ossl_pkey_param_use_cofactor_ecdh_integer" class="item">&quot;use-cofactor-flag&quot; (<strong>OSSL_PKEY_PARAM_USE_COFACTOR_FLAG</strong>,
+<strong>OSSL_PKEY_PARAM_USE_COFACTOR_ECDH</strong>) &lt;integer&gt;</a></strong></dt>
+
+<dd>
+<p>The value should be either 1 or 0, to respectively enable or disable
+use of the cofactor in operations using this key.</p>
+<p>In the context of a key that can be used to perform an Elliptic Curve
+Diffie-Hellman key exchange, this parameter can be used to mark a requirement
+for using the Cofactor Diffie-Hellman (CDH) variant of the key exchange
+algorithm.</p>
+<p>See also <em>provider-keyexch(7)</em> for the related
+<strong>OSSL_EXCHANGE_PARAM_EC_ECDH_COFACTOR_MODE</strong> parameter that can be set on a
+per-operation basis.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OP_keymgmt_new()</code> should return a valid reference to the newly created provider
+side key object, or NULL on failure.</p>
+<p><code>OP_keymgmt_import()</code>, <code>OP_keymgmt_export()</code>, <code>OP_keymgmt_get_params()</code> and
+<code>OP_keymgmt_set_params()</code> should return 1 for success or 0 on error.</p>
+<p><code>OP_keymgmt_validate()</code> should return 1 on successful validation, or 0 on
+failure.</p>
+<p><code>OP_keymgmt_has()</code> should return 1 if all the selected data subsets are contained
+in the given <em>keydata</em> or 0 otherwise.</p>
+<p><code>OP_keymgmt_query_operation_name()</code> should return a pointer to a string matching
+the requested operation, or NULL if the same name used to fetch the keymgmt
+applies.</p>
+<p><code>OP_keymgmt_gettable_params()</code> and <code>OP_keymgmt_settable_params()</code>
+<code>OP_keymgmt_import_types()</code>, <code>OP_keymgmt_export_types()</code>
+should
+always return a constant <strong>OSSL_PARAM</strong> array.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The KEYMGMT interface was introduced in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019-2020 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

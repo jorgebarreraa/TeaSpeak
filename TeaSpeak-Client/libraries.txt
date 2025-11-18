@@ -1,0 +1,11 @@
+https://git.assembla.com/portaudio.git
+https://github.com/WolverinDEV/libfvad
+
+
+git clone https://git.code.sf.net/p/soxr/code soxr
+mkdir -p out/linux_x64
+cd out/linux_x674
+
+cmake ../../ -DWITH_OPENMP=OFF -DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-fPIC"
+make -j 12
+sudo make install

@@ -1,0 +1,104 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>SRP_user_pwd_new</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>SRP_user_pwd_new,
+SRP_user_pwd_free,
+SRP_user_pwd_set1_ids,
+SRP_user_pwd_set_gN,
+SRP_user_pwd_set0_sv
+- Functions to create a record of SRP user verifier information</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/srp.h&gt;</pre>
+<pre>
+ SRP_user_pwd *SRP_user_pwd_new(void);
+ void SRP_user_pwd_free(SRP_user_pwd *user_pwd);</pre>
+<pre>
+ int SRP_user_pwd_set1_ids(SRP_user_pwd *user_pwd, const char *id, const char *info);
+ void SRP_user_pwd_set_gN(SRP_user_pwd *user_pwd, const BIGNUM *g, const BIGNUM *N);
+ int SRP_user_pwd_set0_sv(SRP_user_pwd *user_pwd, BIGNUM *s, BIGNUM *v);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The <code>SRP_user_pwd_new()</code> function allocates a structure to store a user verifier
+record.</p>
+<p>The <code>SRP_user_pwd_free()</code> function frees up the <strong>user_pwd</strong> structure.
+If <strong>user_pwd</strong> is NULL, nothing is done.</p>
+<p>The SRP_user_pwd_set1_ids() function sets the username to <strong>id</strong> and the optional
+user info to <strong>info</strong> for <strong>user_pwd</strong>.
+The library allocates new copies of <strong>id</strong> and <strong>info</strong>, the caller still
+owns the original memory.</p>
+<p>The SRP_user_pwd_set0_sv() function sets the user salt to <strong>s</strong> and the verifier
+to <strong>v</strong> for <strong>user_pwd</strong>.
+The library takes ownership of the values, they should not be freed by the caller.</p>
+<p>The <code>SRP_user_pwd_set_gN()</code> function sets the SRP group parameters for <strong>user_pwd</strong>.
+The memory is not freed by <code>SRP_user_pwd_free()</code>, the caller must make sure it is
+freed once it is no longer used.</p>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p>SRP_user_pwd_set1_ids() returns 1 on success and 0 on failure or if <strong>id</strong> was NULL.</p>
+<p>SRP_user_pwd_set0_sv() returns 1 if both <strong>s</strong> and <strong>v</strong> are not NULL, 0 otherwise.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>openssl-srp(1)</em>,
+<em>SRP_create_verifier(3)</em>,
+<em>SRP_VBASE_new(3)</em>,
+<em>SSL_CTX_set_srp_password(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>These functions were made public in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2018 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

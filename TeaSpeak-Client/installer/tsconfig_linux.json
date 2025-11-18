@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "./deploy/",
+    "build.ts",
+    "package.ts",
+    "package_linux.ts"
+  ]
+}

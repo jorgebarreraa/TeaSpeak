@@ -1,0 +1,329 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>provider-digest</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#context_management_functions">Context Management Functions</a></li>
+		<li><a href="#digest_generation_functions">Digest Generation Functions</a></li>
+		<li><a href="#digest_parameters">Digest Parameters</a></li>
+		<li><a href="#digest_context_parameters">Digest Context Parameters</a></li>
+	</ul>
+
+	<li><a href="#return_values">RETURN VALUES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>provider-digest - The digest library &lt;-&gt; provider functions</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ #include &lt;openssl/core_numbers.h&gt;
+ #include &lt;openssl/core_names.h&gt;</pre>
+<pre>
+ /*
+  * Digests support the following function signatures in OSSL_DISPATCH arrays.
+  * (The function signatures are not actual functions).
+  */</pre>
+<pre>
+ /* Context management */
+ void *OP_digest_newctx(void *provctx);
+ void OP_digest_freectx(void *dctx);
+ void *OP_digest_dupctx(void *dctx);</pre>
+<pre>
+ /* Digest generation */
+ int OP_digest_init(void *dctx);
+ int OP_digest_update(void *dctx, const unsigned char *in, size_t inl);
+ int OP_digest_final(void *dctx, unsigned char *out, size_t *outl,
+                     size_t outsz);
+ int OP_digest_digest(void *provctx, const unsigned char *in, size_t inl,
+                      unsigned char *out, size_t *outl, size_t outsz);</pre>
+<pre>
+ /* Digest parameter descriptors */
+ const OSSL_PARAM *OP_digest_gettable_params(void);</pre>
+<pre>
+ /* Digest operation parameter descriptors */
+ const OSSL_PARAM *OP_digest_gettable_ctx_params(void);
+ const OSSL_PARAM *OP_digest_settable_ctx_params(void);</pre>
+<pre>
+ /* Digest parameters */
+ int OP_digest_get_params(OSSL_PARAM params[]);</pre>
+<pre>
+ /* Digest operation parameters */
+ int OP_digest_set_ctx_params(void *dctx, const OSSL_PARAM params[]);
+ int OP_digest_get_ctx_params(void *dctx, OSSL_PARAM params[]);</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This documentation is primarily aimed at provider authors. See <em>provider(7)</em>
+for further information.</p>
+<p>The DIGEST operation enables providers to implement digest algorithms and make
+them available to applications via the API functions <em>EVP_DigestInit_ex(3)</em>,
+<em>EVP_DigestUpdate(3)</em> and <em>EVP_DigestFinal(3)</em> (and other related functions).</p>
+<p>All &quot;functions&quot; mentioned here are passed as function pointers between
+<em class="file">libcrypto</em> and the provider in <strong>OSSL_DISPATCH</strong> arrays via
+<strong>OSSL_ALGORITHM</strong> arrays that are returned by the provider's
+<code>provider_query_operation()</code> function
+(see <em>provider-base(7)/Provider Functions</em>).</p>
+<p>All these &quot;functions&quot; have a corresponding function type definition
+named <strong>OSSL_{name}_fn</strong>, and a helper function to retrieve the
+function pointer from an <strong>OSSL_DISPATCH</strong> element named
+<strong>OSSL_get_{name}</strong>.
+For example, the &quot;function&quot; <code>OP_digest_newctx()</code> has these:</p>
+<pre>
+ typedef void *(OSSL_OP_digest_newctx_fn)(void *provctx);
+ static ossl_inline OSSL_OP_digest_newctx_fn
+     OSSL_get_OP_digest_newctx(const OSSL_DISPATCH *opf);</pre>
+<p><strong>OSSL_DISPATCH</strong> arrays are indexed by numbers that are provided as
+macros in <em>openssl-core_numbers.h(7)</em>, as follows:</p>
+<pre>
+ OP_digest_newctx               OSSL_FUNC_DIGEST_NEWCTX
+ OP_digest_freectx              OSSL_FUNC_DIGEST_FREECTX
+ OP_digest_dupctx               OSSL_FUNC_DIGEST_DUPCTX</pre>
+<pre>
+ OP_digest_init                 OSSL_FUNC_DIGEST_INIT
+ OP_digest_update               OSSL_FUNC_DIGEST_UPDATE
+ OP_digest_final                OSSL_FUNC_DIGEST_FINAL
+ OP_digest_digest               OSSL_FUNC_DIGEST_DIGEST</pre>
+<pre>
+ OP_digest_get_params           OSSL_FUNC_DIGEST_GET_PARAMS
+ OP_digest_get_ctx_params       OSSL_FUNC_DIGEST_GET_CTX_PARAMS
+ OP_digest_set_ctx_params       OSSL_FUNC_DIGEST_SET_CTX_PARAMS</pre>
+<pre>
+ OP_digest_gettable_params      OSSL_FUNC_DIGEST_GETTABLE_PARAMS
+ OP_digest_gettable_ctx_params  OSSL_FUNC_DIGEST_GETTABLE_CTX_PARAMS
+ OP_digest_settable_ctx_params  OSSL_FUNC_DIGEST_SETTABLE_CTX_PARAMS</pre>
+<p>A digest algorithm implementation may not implement all of these functions.
+In order to be usable all or none of OP_digest_newctx, OP_digest_freectx,
+OP_digest_init, OP_digest_update and OP_digest_final should be implemented.
+All other functions are optional.</p>
+<p>
+</p>
+<h2><a name="context_management_functions">Context Management Functions</a></h2>
+<p><code>OP_digest_newctx()</code> should create and return a pointer to a provider side
+structure for holding context information during a digest operation.
+A pointer to this context will be passed back in a number of the other digest
+operation function calls.
+The parameter <em>provctx</em> is the provider context generated during provider
+initialisation (see <em>provider(7)</em>).</p>
+<p><code>OP_digest_freectx()</code> is passed a pointer to the provider side digest context in
+the <em>dctx</em> parameter.
+This function should free any resources associated with that context.</p>
+<p><code>OP_digest_dupctx()</code> should duplicate the provider side digest context in the
+<em>dctx</em> parameter and return the duplicate copy.</p>
+<p>
+</p>
+<h2><a name="digest_generation_functions">Digest Generation Functions</a></h2>
+<p><code>OP_digest_init()</code> initialises a digest operation given a newly created
+provider side digest context in the <em>dctx</em> parameter.</p>
+<p><code>OP_digest_update()</code> is called to supply data to be digested as part of a
+previously initialised digest operation.
+The <em>dctx</em> parameter contains a pointer to a previously initialised provider
+side context.
+<code>OP_digest_update()</code> should digest <em>inl</em> bytes of data at the location pointed to
+by <em>in</em>.
+<code>OP_digest_update()</code> may be called multiple times for a single digest operation.</p>
+<p><code>OP_digest_final()</code> generates a digest started through previous <code>OP_digest_init()</code>
+and <code>OP_digest_update()</code> calls.
+The <em>dctx</em> parameter contains a pointer to the provider side context.
+The digest should be written to <em>*out</em> and the length of the digest to
+<em>*outl</em>.
+The digest should not exceed <em>outsz</em> bytes.</p>
+<p><code>OP_digest_digest()</code> is a &quot;oneshot&quot; digest function.
+No provider side digest context is used.
+Instead the provider context that was created during provider initialisation is
+passed in the <em>provctx</em> parameter (see <em>provider(7)</em>).
+<em>inl</em> bytes at <em>in</em> should be digested and the result should be stored at
+<em>out</em>. The length of the digest should be stored in <em>*outl</em> which should not
+exceed <em>outsz</em> bytes.</p>
+<p>
+</p>
+<h2><a name="digest_parameters">Digest Parameters</a></h2>
+<p>See <em>OSSL_PARAM(3)</em> for further details on the parameters structure used by
+these functions.</p>
+<p><code>OP_digest_get_params()</code> gets details of the algorithm implementation
+and stores them in <em>params</em>.</p>
+<p><code>OP_digest_set_ctx_params()</code> sets digest operation parameters for the
+provider side digest context <em>dctx</em> to <em>params</em>.
+Any parameter settings are additional to any that were previously set.</p>
+<p><code>OP_digest_get_ctx_params()</code> gets digest operation details details from
+the given provider side digest context <em>dctx</em> and stores them in <em>params</em>.</p>
+<p><code>OP_digest_gettable_params()</code>, <code>OP_digest_gettable_ctx_params()</code>, and
+<code>OP_digest_settable_ctx_params()</code> all return constant <strong>OSSL_PARAM</strong> arrays
+as descriptors of the parameters that <code>OP_digest_get_params()</code>,
+<code>OP_digest_get_ctx_params()</code>, and <code>OP_digest_set_ctx_params()</code> can handle,
+respectively.</p>
+<p>Parameters currently recognised by built-in digests with this function
+are as follows. Not all parameters are relevant to, or are understood
+by all digests:</p>
+<dl>
+<dt><strong><a name="blocksize_ossl_digest_param_block_size_unsigned_integer" class="item">&quot;blocksize&quot; (<strong>OSSL_DIGEST_PARAM_BLOCK_SIZE</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>The digest block size.
+The length of the &quot;blocksize&quot; parameter should not exceed that of a <strong>size_t</strong>.</p>
+</dd>
+<dt><strong><a name="size_ossl_digest_param_size_unsigned_integer" class="item">&quot;size&quot; (<strong>OSSL_DIGEST_PARAM_SIZE</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>The digest output size.
+The length of the &quot;size&quot; parameter should not exceed that of a <strong>size_t</strong>.</p>
+</dd>
+<dt><strong><a name="flags_ossl_digest_param_flags_unsigned_integer" class="item">&quot;flags&quot; (<strong>OSSL_DIGEST_PARAM_FLAGS</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Diverse flags that describe exceptional behaviour for the digest:</p>
+<dl>
+<dt><strong><a name="evp_md_flag_oneshot" class="item"><strong>EVP_MD_FLAG_ONESHOT</strong></a></strong></dt>
+
+<dd>
+<p>This digest method can only handle one block of input.</p>
+</dd>
+<dt><strong><a name="evp_md_flag_xof" class="item"><strong>EVP_MD_FLAG_XOF</strong></a></strong></dt>
+
+<dd>
+<p>This digest method is an extensible-output function (XOF) and supports
+setting the <strong>OSSL_DIGEST_PARAM_XOFLEN</strong> parameter.</p>
+</dd>
+<dt><strong><a name="evp_md_flag_digalgid_null" class="item"><strong>EVP_MD_FLAG_DIGALGID_NULL</strong></a></strong></dt>
+
+<dd>
+<p>When setting up a DigestAlgorithmIdentifier, this flag will have the
+parameter set to NULL by default.  Use this for PKCS#1.  <em>Note: if
+combined with EVP_MD_FLAG_DIGALGID_ABSENT, the latter will override.</em></p>
+</dd>
+<dt><strong><a name="evp_md_flag_digalgid_absent" class="item"><strong>EVP_MD_FLAG_DIGALGID_ABSENT</strong></a></strong></dt>
+
+<dd>
+<p>When setting up a DigestAlgorithmIdentifier, this flag will have the
+parameter be left absent by default.  <em>Note: if combined with
+EVP_MD_FLAG_DIGALGID_NULL, the latter will be overridden.</em></p>
+</dd>
+<dt><strong><a name="evp_md_flag_digalgid_custom" class="item"><strong>EVP_MD_FLAG_DIGALGID_CUSTOM</strong></a></strong></dt>
+
+<dd>
+<p>Custom DigestAlgorithmIdentifier handling via ctrl, with
+<strong>EVP_MD_FLAG_DIGALGID_ABSENT</strong> as default.  <em>Note: if combined with
+EVP_MD_FLAG_DIGALGID_NULL, the latter will be overridden.</em>
+Currently unused.</p>
+</dd>
+</dl>
+<p>The length of the &quot;flags&quot; parameter should equal that of an
+<strong>unsigned long int</strong>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<h2><a name="digest_context_parameters">Digest Context Parameters</a></h2>
+<p><code>OP_digest_set_ctx_params()</code> sets digest parameters associated with the
+given provider side digest context <em>dctx</em> to <em>params</em>.
+Any parameter settings are additional to any that were previously set.
+See <em>OSSL_PARAM(3)</em> for further details on the parameters structure.</p>
+<p><code>OP_digest_get_ctx_params()</code> gets details of currently set parameters
+values associated with the give provider side digest context <em>dctx</em>
+and stores them in <em>params</em>.
+See <em>OSSL_PARAM(3)</em> for further details on the parameters structure.</p>
+<p>Parameters currently recognised by built-in digests are as follows. Not all
+parameters are relevant to, or are understood by all digests:</p>
+<dl>
+<dt><strong><a name="xoflen_ossl_digest_param_xoflen_unsigned_integer" class="item">&quot;xoflen&quot; (<strong>OSSL_DIGEST_PARAM_XOFLEN</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Sets the digest length for extendable output functions.
+The length of the &quot;xoflen&quot; parameter should not exceed that of a <strong>size_t</strong>.</p>
+</dd>
+<dt><strong><a name="ssl3_ms_ossl_digest_param_ssl3_ms_octet_string" class="item">&quot;ssl3-ms&quot; (<strong>OSSL_DIGEST_PARAM_SSL3_MS</strong>) &lt;octet string&gt;</a></strong></dt>
+
+<dd>
+<p>This parameter is set by libssl in order to calculate a signature hash for an
+SSLv3 CertificateVerify message as per <a href="http://www.ietf.org/rfc/rfc6101.txt" class="rfc">RFC6101</a>.
+It is only set after all handshake messages have already been digested via
+<code>OP_digest_update()</code> calls.
+The parameter provides the master secret value to be added to the digest.
+The digest implementation should calculate the complete digest as per <a href="http://www.ietf.org/rfc/rfc6101.txt" class="rfc">RFC6101</a>
+section 5.6.8.
+The next call after setting this parameter will be <code>OP_digest_final()</code>.
+This is only relevant for implementations of SHA1 or MD5_SHA1.</p>
+</dd>
+<dt><strong><a name="pad_type_ossl_digest_param_pad_type_unsigned_integer" class="item">&quot;pad_type&quot; (<strong>OSSL_DIGEST_PARAM_PAD_TYPE</strong>) &lt;unsigned integer&gt;</a></strong></dt>
+
+<dd>
+<p>Sets the pad type to be used.
+The only built-in digest that uses this is MDC2.
+Normally the final MDC2 block is padded with 0s.
+If the pad type is set to 2 then the final block is padded with 0x80 followed by
+0s.</p>
+</dd>
+<dt><strong><a name="micalg_ossl_digest_param_micalg_utf8_string" class="item">&quot;micalg&quot; (<strong>OSSL_DIGEST_PARAM_MICALG</strong>) &lt;UTF8 string&gt;</a></strong></dt>
+
+<dd>
+<p>Gets the digest Message Integrity Check algorithm string.
+This is used when creating S/MIME multipart/signed messages, as specified in
+<a href="http://www.ietf.org/rfc/rfc5751.txt" class="rfc">RFC 5751</a>.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="return_values">RETURN VALUES</a></h1>
+<p><code>OP_digest_newctx()</code> and <code>OP_digest_dupctx()</code> should return the newly created
+provider side digest context, or NULL on failure.</p>
+<p><code>OP_digest_init()</code>, <code>OP_digest_update()</code>, <code>OP_digest_final()</code>, <code>OP_digest_digest()</code>,
+<code>OP_digest_set_params()</code> and <code>OP_digest_get_params()</code> should return 1 for success or
+0 on error.</p>
+<p><code>OP_digest_size()</code> should return the digest size.</p>
+<p><code>OP_digest_block_size()</code> should return the block size of the underlying digest
+algorithm.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>provider(7)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p>The provider DIGEST interface was introduced in OpenSSL 3.0.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

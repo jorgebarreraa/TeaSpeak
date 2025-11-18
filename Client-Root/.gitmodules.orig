@@ -1,0 +1,78 @@
+#The TeaClient itself
+[submodule "client"]
+	path = client
+	url = https://git.did.science/WolverinDEV/TeaSpeak-Client.git
+
+#All third party libraries used by TeaSpeak
+[submodule "third_party/breakpad"]
+	path = third_party/breakpad
+	url = https://github.com/google/breakpad.git
+[submodule "third_party/DataPipes"]
+	path = third_party/DataPipes
+	url = https://github.com/WolverinDEV/DataPipes.git
+[submodule "third_party/ed25519"]
+	path = third_party/ed25519
+	url = https://github.com/WolverinDEV/ed25519.git
+[submodule "third_party/libevent"]
+	path = third_party/libevent
+	url = https://github.com/libevent/libevent.git
+[submodule "third_party/libfvad"]
+	path = third_party/libfvad
+	url = https://github.com/WolverinDEV/libfvad
+[submodule "third_party/opus"]
+	path = third_party/opus
+	url = https://github.com/xiph/opus.git
+[submodule "third_party/portaudio"]
+	path = third_party/portaudio
+	url = https://git.assembla.com/portaudio.git
+[submodule "third_party/soxr"]
+	path = third_party/soxr
+	url = https://git.code.sf.net/p/soxr/code
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
+	url = https://git.did.science/WolverinDEV/spdlog.git
+[submodule "third_party/StringVariable"]
+	path = third_party/StringVariable
+	url = https://github.com/WolverinDEV/StringVariable.git
+[submodule "third_party/Thread-Pool"]
+	path = third_party/Thread-Pool
+	url = https://git.did.science/WolverinDEV/Thread-Pool.git
+[submodule "third_party/tomcrypt"]
+	path = third_party/tomcrypt
+	url = https://git.did.science/WolverinDEV/tomcrypt.git
+[submodule "third_party/tommath"]
+	path = third_party/tommath
+	url = https://git.did.science/WolverinDEV/tommath.git
+[submodule "third_party/jsoncpp"]
+	path = third_party/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "third_party/protobuf"]
+	path = third_party/protobuf
+	url = https://github.com/google/protobuf.git
+[submodule "third_party/mysqlconnector"]
+	path = third_party/mysqlconnector
+	url = https://github.com/mysql/mysql-connector-cpp.git
+[submodule "third_party/yaml-cpp"]
+	path = third_party/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "third_party/jemalloc"]
+	path = third_party/jemalloc
+	url = https://github.com/jemalloc/jemalloc.git
+[submodule "shared"]
+	path = shared
+	url = https://git.did.science/WolverinDEV/TeaSpeak-SharedLib.git
+[submodule "third_party/boringssl"]
+	path = third_party/boringssl
+	url = https://git.did.science/WolverinDEV/boringssl.git
+[submodule "build-helpers"]
+	path = build-helpers
+	url = https://github.com/WolverinDEV/build-helpers.git
+<<<<<<< HEAD
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/WolverinDEV/build-helpers.git
+=======
+[submodule "third_party/unbound"]
+	path = third_party/unbound
+	url = https://github.com/NLnetLabs/unbound.git
+>>>>>>> 67839ab85eedb795a76c857ddb8c929b731cac23

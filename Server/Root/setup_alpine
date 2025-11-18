@@ -1,0 +1,18 @@
+# Basic Setup
+#linux-headers for unistd.h
+#bsd-compat-headers for sys/cdefs.h (arm only!)
+apk add bash coreutils build-base autoconf git wget sqlite-dev openssl-dev cmake patchelf go linux-headers bsd-compat-headers libexecinfo-dev
+git config --global credential.helper store
+
+# Create TeaSpeak
+git clone https://git.did.science/WolverinDEV/TeaSpeak-Parent.git server && cd server && \
+git submodule update --init --recursive
+./libraries/build.sh
+
+
+# -------- Troubleshooting ----------
+If go raises an error/crashes install a newer version:
+$ sudo add-apt-repository ppa:gophers/archive
+$ sudo apt-get update
+$ sudo apt-get install golang-1.11-go
+sudo update-alternatives --install /usr/bin/go go /usr/lib/go-1.11/bin/go 1

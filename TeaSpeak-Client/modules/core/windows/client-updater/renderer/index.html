@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Updating app</title>
+
+        <script type="module" src="index.js"></script>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <img alt="TeaSpeak - Updater" src="logo.png" draggable="false" />
+            </div>
+            <div class="body">
+                <div class="container-loading" id="container-info">
+                    <div class="section local">
+                        <div class="title">Client Version</div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="key">Client Version</div>
+                                <div class="value" id="local-client-version"></div>
+                            </div>
+                            <div class="row">
+                                <div class="key">Build Timestamp</div>
+                                <div class="value" id="local-build-timestamp"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section remote">
+                        <div class="title">
+                            <a>Latest Version</a>
+
+                            <select id="update-channel">
+                                <option value="loading" style="display: none" selected></option>
+                            </select>
+                        </div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="key">Client Version</div>
+                                <div class="value" id="remote-client-version"></div>
+                            </div>
+                            <div class="row">
+                                <div class="key">Build Timestamp</div>
+                                <div class="value" id="remote-build-timestamp"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="update-availability-status" id="update-availability-status">
+                        <div class="content unavailable">
+                            <img src="unavailable.svg" alt="Update unavailable" />
+                            <div>
+                                <h2>Update unavailable!</h2>
+                                <h3>You can't update your client.</h3>
+                            </div>
+                        </div>
+
+                        <div class="content available">
+                            <img src="update.svg" alt="Update available" />
+                            <div>
+                                <h2>Update available!</h2>
+                                <h3>Update your client to 1.5.1.</h3>
+                            </div>
+                        </div>
+
+                        <div class="content up2date">
+                            <img src="up2date.svg" alt="Client up2date" />
+                            <div>
+                                <h2>No update available.</h2>
+                                <h3>Your client is up to date!</h3>
+                            </div>
+                        </div>
+
+
+                        <div class="content loading shown">
+                            <h2>loading&nbsp;<div class="loading-dots"></div></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-executing" id="container-execute">
+                    <div class="update-progress" id="update-execute-progress">
+                        <div class="info">Loading client update</div>
+                        <div class="bar-container type-normal">
+                            <div class="filler" style="width: 50%"></div>
+                            <div class="text">50%</div>
+                        </div>
+                    </div>
+                    <div class="update-log" id="update-execute-log">
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-red" id="button-cancel">Cancel</button>
+                    <button class="btn btn-green" id="button-submit">Update Client</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

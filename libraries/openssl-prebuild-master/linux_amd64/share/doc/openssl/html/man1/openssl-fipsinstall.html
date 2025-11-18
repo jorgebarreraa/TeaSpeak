@@ -1,0 +1,217 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>openssl-fipsinstall</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>openssl-fipsinstall - perform FIPS configuration installation</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>openssl fipsinstall</strong>
+[<strong>-help</strong>]
+[<strong>-in</strong> <em>configfilename</em>]
+[<strong>-out</strong> <em>configfilename</em>]
+[<strong>-module</strong> <em>modulefilename</em>]
+[<strong>-provider_name</strong> <em>providername</em>]
+[<strong>-section_name</strong> <em>sectionname</em>]
+[<strong>-verify</strong>]
+[<strong>-mac_name</strong> <em>macname</em>]
+[<strong>-macopt</strong> <em>nm</em>:<em>v</em>]
+[<strong>-noout</strong>]
+[<strong>-corrupt_desc</strong> <em>selftest_description</em>]
+[<strong>-corrupt_type</strong> <em>selftest_type</em>]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This command is used to generate a FIPS module configuration file.
+The generated configuration file consists of:</p>
+<dl>
+<dt><strong><a name="a_mac_of_the_fips_module_file" class="item">- A mac of the FIPS module file.</a></strong></dt>
+
+<dt><strong><a name="tests" class="item">- A status indicator that indicates if the known answer Self Tests (KAT's)
+have successfully run.</a></strong></dt>
+
+</dl>
+<p>This configuration file can be used each time a FIPS module is loaded
+in order to pass data to the FIPS modules self tests. The FIPS module always
+verifies the modules MAC, but only needs to run the KATS once during install.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="help" class="item"><strong>-help</strong></a></strong></dt>
+
+<dd>
+<p>Print a usage message.</p>
+</dd>
+<dt><strong><a name="module_filename" class="item"><strong>-module</strong> <em>filename</em></a></strong></dt>
+
+<dd>
+<p>Filename of a fips module to perform an integrity check on.</p>
+</dd>
+<dt><strong><a name="out_configfilename" class="item"><strong>-out</strong> <em>configfilename</em></a></strong></dt>
+
+<dd>
+<p>Filename to output the configuration data to, or standard output by default.</p>
+</dd>
+<dt><strong><a name="in_configfilename" class="item"><strong>-in</strong> <em>configfilename</em></a></strong></dt>
+
+<dd>
+<p>Input filename to load configuration data from. Used with the '-verify' option.
+Standard input is used if the filename is '-'.</p>
+</dd>
+<dt><strong><a name="verify" class="item"><strong>-verify</strong></a></strong></dt>
+
+<dd>
+<p>Verify that the input configuration file contains the correct information</p>
+</dd>
+<dt><strong><a name="provider_name_providername" class="item"><strong>-provider_name</strong> <em>providername</em></a></strong></dt>
+
+<dd>
+<p>Name of the provider inside the configuration file.</p>
+</dd>
+<dt><strong><a name="section_name_sectionname" class="item"><strong>-section_name</strong> <em>sectionname</em></a></strong></dt>
+
+<dd>
+<p>Name of the section inside the configuration file.</p>
+</dd>
+<dt><strong><a name="mac_name_name" class="item"><strong>-mac_name</strong> <em>name</em></a></strong></dt>
+
+<dd>
+<p>Specifies the name of a supported MAC algorithm which will be used.
+To see the list of supported MAC's use the command
+<code>openssl list -mac-algorithms</code>.  The default is <strong>HMAC</strong>.</p>
+</dd>
+<dt><strong><a name="macopt_nm_v" class="item"><strong>-macopt</strong> <em>nm</em>:<em>v</em></a></strong></dt>
+
+<dd>
+<p>Passes options to the MAC algorithm.
+A comprehensive list of controls can be found in the EVP_MAC implementation
+documentation.
+Common control strings used for fipsinstall are:</p>
+<dl>
+<dt><strong><a name="key_string" class="item"><strong>key</strong>:<em>string</em></a></strong></dt>
+
+<dd>
+<p>Specifies the MAC key as an alphanumeric string (use if the key contains
+printable characters only).
+The string length must conform to any restrictions of the MAC algorithm.
+A key must be specified for every MAC algorithm.</p>
+</dd>
+<dt><strong><a name="hexkey_string" class="item"><strong>hexkey</strong>:<em>string</em></a></strong></dt>
+
+<dd>
+<p>Specifies the MAC key in hexadecimal form (two hex digits per byte).
+The key length must conform to any restrictions of the MAC algorithm.
+A key must be specified for every MAC algorithm.</p>
+</dd>
+<dt><strong><a name="digest_string" class="item"><strong>digest</strong>:<em>string</em></a></strong></dt>
+
+<dd>
+<p>Used by HMAC as an alphanumeric string (use if the key contains printable
+characters only).
+The string length must conform to any restrictions of the MAC algorithm.
+To see the list of supported digests, use the command
+<code>openssl list -digest-commands</code>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong><a name="noout" class="item"><strong>-noout</strong></a></strong></dt>
+
+<dd>
+<p>Disable logging of the self tests.</p>
+</dd>
+<dt><strong><a name="corrupt_desc_selftest_description" class="item"><strong>-corrupt_desc</strong> <em>selftest_description</em></a></strong></dt>
+
+<dt><strong><a name="corrupt_type_selftest_type" class="item"><strong>-corrupt_type</strong> <em>selftest_type</em></a></strong></dt>
+
+<dd>
+<p>The corrupt options can be used to test failure of one or more self test(s) by
+name.
+Either option or both may be used to select the self test(s) to corrupt.
+Refer to the entries for &quot;st-desc&quot; and &quot;st-type&quot; in <em>OSSL_PROVIDER-FIPS(7)</em> for
+values that can be used.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Calculate the mac of a FIPS module <em class="file">fips.so</em> and run a FIPS self test
+for the module, and save the <em class="file">fips.conf</em> configuration file:</p>
+<pre>
+ openssl fipsinstall -module ./fips.so -out fips.conf -provider_name fips \
+         -section_name fipsinstall -mac_name HMAC -macopt digest:SHA256 \
+         -macopt hexkey:000102030405060708090A0B0C0D0E0F10111213</pre>
+<p>Verify that the configuration file <em class="file">fips.conf</em> contains the correct info:</p>
+<pre>
+ openssl fipsinstall -module ./fips.so -in fips.conf  -provider_name fips \
+          -section_name fips_install -mac_name HMAC -macopt digest:SHA256 \
+          -macopt hexkey:000102030405060708090A0B0C0D0E0F10111213 -verify</pre>
+<p>Corrupt any self tests which have the description 'SHA1':</p>
+<pre>
+ openssl fipsinstall -module ./fips.so -out fips.conf -provider_name fips \
+         -section_name fipsinstall -mac_name HMAC -macopt digest:SHA256 \
+         -macopt hexkey:000102030405060708090A0B0C0D0E0F10111213 \
+         -corrupt_desc', 'SHA1'</pre>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>The MAC mechanisms that are available will depend on the options
+used when building OpenSSL.
+The command <code>openssl list -mac-algorithms</code> command can be used to list them.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><em>fips_config(5)</em>,
+<em>OSSL_PROVIDER-FIPS(7)</em>,
+<em>EVP_MAC(3)</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the OpenSSL license (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

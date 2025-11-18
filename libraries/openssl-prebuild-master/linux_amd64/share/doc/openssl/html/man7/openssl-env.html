@@ -1,0 +1,119 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>openssl-env</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>openssl-env - OpenSSL environment variables</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The OpenSSL libraries use environment variables to override the
+compiled-in default paths for various data.
+To avoid security risks, the environment is usually not consulted when
+the executable is set-user-ID or set-group-ID.</p>
+<dl>
+<dt><strong><a name="ctlog_file" class="item"><strong>CTLOG_FILE</strong></a></strong></dt>
+
+<dd>
+<p>Specifies the path to a certificate transparency log list.
+See <em>CTLOG_STORE_new(3)</em>.</p>
+</dd>
+<dt><strong><a name="openssl" class="item"><strong>OPENSSL</strong></a></strong></dt>
+
+<dd>
+<p>Specifies the path to the <strong>openssl</strong> executable. Only used by
+the <strong>rehash</strong> script.
+See <em>openssl-rehash(1)/Script Configuration</em>.</p>
+</dd>
+<dt><strong><a name="openssl_conf" class="item"><strong>OPENSSL_CONF</strong></a></strong></dt>
+
+<dd>
+<p>Specifies the path to a configuration file.
+See <em>openssl(1)</em> and <em>config(5)</em>.</p>
+</dd>
+<dt><strong><a name="openssl_engines" class="item"><strong>OPENSSL_ENGINES</strong></a></strong></dt>
+
+<dd>
+<p>Specifies the directory from which dynamic engines are loaded.
+See <em>openssl-engine(1)</em>.</p>
+</dd>
+<dt><strong><a name="openssl_malloc_fd_openssl_malloc_failures" class="item"><strong>OPENSSL_MALLOC_FD</strong>, <strong>OPENSSL_MALLOC_FAILURES</strong></a></strong></dt>
+
+<dd>
+<p>If built with debugging, this allows memory allocation to fail.
+See <em>OPENSSL_malloc(3)</em>.</p>
+</dd>
+<dt><strong><a name="openssl_modules" class="item"><strong>OPENSSL_MODULES</strong></a></strong></dt>
+
+<dd>
+<p>Specifies the directory from which cryptographic providers are loaded.
+See <em>openssl-provider(1)</em>.</p>
+</dd>
+<dt><strong><a name="openssl_win32_utf8" class="item"><strong>OPENSSL_WIN32_UTF8</strong></a></strong></dt>
+
+<dd>
+<p>If set, then <em>UI_OpenSSL(3)</em> returns UTF-8 encoded strings, rather than
+ones encoded in the current code page, and
+the <em>openssl(1)</em> program also transcodes the command-line parameters
+from the current code page to UTF-8.
+This environment variable is only checked on Microsoft Windows platforms.</p>
+</dd>
+<dt><strong><a name="randfile" class="item"><strong>RANDFILE</strong></a></strong></dt>
+
+<dd>
+<p>The state file for the random number generator.
+This should not be needed in normal use.
+See <em>RAND_load_file(3)</em>.</p>
+</dd>
+<dt><strong><a name="ssl_cert_dir_ssl_cert_file" class="item"><strong>SSL_CERT_DIR</strong>, <strong>SSL_CERT_FILE</strong></a></strong></dt>
+
+<dd>
+<p>Specify the default directory or file containing CA certificates.
+See <em>SSL_CTX_load_verify_locations(3)</em>.</p>
+</dd>
+<dt><strong><a name="tsget" class="item"><strong>TSGET</strong></a></strong></dt>
+
+<dd>
+<p>Additional arguments for the <em>tsget(1)</em> command.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright 2019 The OpenSSL Project Authors. All Rights Reserved.</p>
+<p>Licensed under the Apache License 2.0 (the &quot;License&quot;).  You may not use
+this file except in compliance with the License.  You can obtain a copy
+in the file LICENSE in the source distribution or at
+<a href="https://www.openssl.org/source/license.html">https://www.openssl.org/source/license.html</a>.</p>
+
+</body>
+
+</html>

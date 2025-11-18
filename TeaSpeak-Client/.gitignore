@@ -1,0 +1,21 @@
+.idea/
+.sass-cache/
+tmp/
+node_modules/
+/build/
+updater/postzip/test
+updater/postzip/cmake-build-*/
+updater/postzip/.idea
+updater/postzip/TeaClient-linux.tar.gz
+
+#For the main JS file
+*.js.map
+*.js
+
+.deploy_secret
+
+modules/**/*.d.ts
+!/imports/
+!/modules/renderer/imports/.copy_*.d.ts
+
+npm-debug.log

@@ -1,0 +1,88 @@
+html, body {
+    background: #18BC9C;
+    user-select: none;
+
+    -webkit-app-region: drag;
+}
+
+body {
+    text-align: center;
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    margin-left: 18px;
+    margin-right: 18px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    -ms-overflow-style: none;
+}
+
+img {
+    position: absolute;
+    display: block;
+
+    width: 200px;
+    height: 200px;
+}
+
+.smoke {
+    z-index: 2;
+}
+
+.logo {
+    z-index: 1;
+}
+
+.container-logo {
+    align-self: center;
+    position: relative;
+    display: inline-block;
+
+    width: 200px;
+    height: 200px;
+}
+
+.container-info a {
+    display: inline-block;
+    color: #FFFFFF;
+    font-family: "Arial",serif;
+    font-size: 20px;
+}
+
+.container-bar {
+    position: relative;
+    margin-top: 5px;
+    border: white solid 2px;
+    height: 18px;
+}
+
+.container-bar .bar {
+    z-index: 1;
+    position: absolute;
+    display: block;
+
+    background: whitesmoke;
+    border: none;
+    width: 0;
+    height: 100%;
+}
+
+#current-status {
+    margin-top: 3px;
+    font-size: 18px;
+
+    max-width: 100%;
+    width: 100%;
+    text-align: left;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
