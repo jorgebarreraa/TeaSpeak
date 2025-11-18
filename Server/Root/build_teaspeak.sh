@@ -43,12 +43,13 @@ if [[ "$no_web" == "1" ]]; then
     _web_flag="OFF"
 else
     _web_flag="ON"
-fi
 
-crypto_library_path="$(pwd)/libraries/openssl-prebuild/${build_os_type}_${build_os_arch}/" \
-./TeaSpeak/rtclib/generate_shared_library.sh
-if [ $? -ne 0 ]; then
-	exit 1
+    # Only build rtclib if web support is enabled
+    crypto_library_path="$(pwd)/libraries/openssl-prebuild/${build_os_type}_${build_os_arch}/" \
+    ./TeaSpeak/rtclib/generate_shared_library.sh
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 fi
 
 
