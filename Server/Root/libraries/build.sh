@@ -60,8 +60,8 @@ function exec_script_external() {
 }
 
 exec_script_external build_libevent.sh event
-exec_script_external build_breakpad.sh breakpad
-exec_script_external build_cxxterminal.sh CXXTerminal "libevent_path=event"
+#exec_script_external build_breakpad.sh breakpad  # Skipping breakpad due to C++14 compilation issues
+#exec_script_external build_cxxterminal.sh CXXTerminal "libevent_path=event"  # Skipping due to -fPIC linking issues with libevent
 exec_script build_datapipes.sh DataPipes
 exec_script_external build_ed25519.sh ed25519
 exec_script_external build_jsoncpp.sh jsoncpp

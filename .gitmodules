@@ -1,0 +1,72 @@
+[submodule "Server/Root/libraries/jsoncpp"]
+	path = Server/Root/libraries/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "Server/Root/libraries/Thread-Pool"]
+	path = Server/Root/libraries/Thread-Pool
+	url = https://git.did.science/WolverinDEV/ThreadPool.git
+[submodule "Server/Root/libraries/tomcrypt"]
+	path = Server/Root/libraries/tomcrypt
+	url = https://git.did.science/TeaSpeak/libraries/tomcrypt.git
+[submodule "Server/Root/libraries/tommath"]
+	path = Server/Root/libraries/tommath
+	url = https://git.did.science/TeaSpeak/libraries/tommath.git
+[submodule "Server/Root/libraries/CXXTerminal"]
+	path = Server/Root/libraries/CXXTerminal
+	url = https://github.com/WolverinDEV/CXXTerminal.git
+[submodule "Server/Root/libraries/opus"]
+	path = Server/Root/libraries/opus
+	url = https://github.com/xiph/opus
+[submodule "Server/Root/libraries/opusfile"]
+	path = Server/Root/libraries/opusfile
+	url = https://github.com/xiph/opusfile.git
+[submodule "Server/Root/libraries/yaml-cpp"]
+	path = Server/Root/libraries/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "Server/Root/libraries/event"]
+	path = Server/Root/libraries/event
+	url = https://github.com/libevent/libevent.git
+[submodule "Server/Root/TeaSpeak"]
+	path = Server/Root/TeaSpeak
+	url = https://git.did.science/TeaSpeak/Server/Server
+[submodule "Server/Root/libraries/spdlog"]
+	path = Server/Root/libraries/spdlog
+	url = https://git.did.science/TeaSpeak/libraries/spdlog.git
+[submodule "Server/Root/libraries/StringVariable"]
+	path = Server/Root/libraries/StringVariable
+	url = https://github.com/WolverinDEV/StringVariable.git
+[submodule "Server/Root/libraries/ed25519"]
+	path = Server/Root/libraries/ed25519
+	url = https://github.com/WolverinDEV/ed25519.git
+[submodule "Server/Root/libraries/breakpad"]
+	path = Server/Root/libraries/breakpad
+	url = https://chromium.googlesource.com/breakpad/breakpad
+[submodule "Server/Root/libraries/boringssl"]
+	path = Server/Root/libraries/boringssl
+	url = https://boringssl.googlesource.com/boringssl
+[submodule "Server/Root/libraries/protobuf"]
+	path = Server/Root/libraries/protobuf
+	url = https://github.com/google/protobuf.git
+[submodule "Server/Root/libraries/DataPipes"]
+	path = Server/Root/libraries/DataPipes
+	url = https://github.com/WolverinDEV/DataPipes.git
+[submodule "Server/Root/libraries/jemalloc"]
+	path = Server/Root/libraries/jemalloc
+	url = https://github.com/jemalloc/jemalloc.git
+[submodule "Server/Root/build-helpers"]
+	path = Server/Root/build-helpers
+	url = https://github.com/WolverinDEV/build-helpers.git
+[submodule "Server/Root/libraries/libnice"]
+	path = Server/Root/libraries/libnice
+	url = https://git.did.science/TeaSpeak/libraries/libnice-prebuild.git
+[submodule "Server/Root/libraries/glibc"]
+	path = Server/Root/libraries/glibc
+	url = https://git.did.science/TeaSpeak/libraries/glib2.0.git
+[submodule "Server/Root/libraries/openssl-prebuild"]
+	path = Server/Root/libraries/openssl-prebuild
+	url = https://git.did.science/TeaSpeak/libraries/openssl-prebuild.git
+[submodule "Server/Root/TeaDNS"]
+	path = Server/Root/TeaDNS
+	url = https://git.did.science/TeaSpeak/WebDNS.git
+[submodule "Server/Root/libraries/zstd"]
+	path = Server/Root/libraries/zstd
+	url = https://github.com/facebook/zstd.git
