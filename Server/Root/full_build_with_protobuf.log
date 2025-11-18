@@ -1,0 +1,784 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+Disabling web support
+Build type: RelWithDebInfo
+> cmake .. -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DCMAKE_CXX_FLAGS="" -DBUILD_INCLUDE_FILE="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/config/tearoot-server.cmake" -DCMAKE_MODULE_PATH="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT="OFF" -DBUILD_TYPE=1 -DBUILD_TYPE_NAME=beta -Dmysql_ROOT_DIR="/home/user/TeaSpeak/Server/Root/TeaSpeak/build/../../../mysql-server/out"
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+-- Found TomMath: /home/user/TeaSpeak/Server/Root/libraries/tommath/out/linux_amd64/include  
+-- Found TomCrypt: /home/user/TeaSpeak/Server/Root/libraries/tomcrypt/out/linux_amd64/include  
+Breakpad: Breakpad_INCLUDE_DIR-NOTFOUND
+-- Found Crypto: /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/include  
+-- Found ThreadPool: /home/user/TeaSpeak/Server/Root/libraries/Thread-Pool/out/linux_amd64/include  
+-- Found StringVariable: /home/user/TeaSpeak/Server/Root/libraries/StringVariable/out/linux_amd64/include  
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (opus) does
+  not match the name of the calling package (Opus).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:65 (find_package_handle_standard_args)
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:69 (resolve_opus)
+  CMakeLists.txt:63 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Could NOT find opus (missing: opus_INCLUDE_DIR) 
+-- Found Threads: TRUE  
+-- Found Jemalloc: /home/user/TeaSpeak/Server/Root/libraries/jemalloc/out/linux_amd64/include  
+/home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//zstd/build/cmake//out/linux_amd64/lib/cmake/zstd/
+Use static libevent
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Libevent version: 1
+-- Looking for mysql/mysql.h
+-- Looking for mysql/mysql.h - not found
+-- Looking for mysql.h
+-- Looking for mysql.h - not found
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  shared/CMakeLists.txt:45 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found ed25519: /home/user/TeaSpeak/Server/Root/libraries/ed25519/out/linux_amd64/include  
+HAVE JSON!
+
+Building without MySQL Support
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Skipping librtc linkage - Web client support disabled
+-- Found Protobuf: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries/protobuf/out/linux_amd64/lib/libprotobuf.a (found version "6.34.0") 
+-- Configuring done (3.1s)
+CMake Warning (dev) at shared/CMakeLists.txt:283 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:290 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:298 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:301 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:305 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:308 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:283 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:290 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:298 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:301 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:305 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:308 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:283 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:290 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:298 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:301 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:305 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:308 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:283 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:290 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:298 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:301 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:305 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:308 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:283 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:290 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:298 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:301 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:305 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:308 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Error at shared/CMakeLists.txt:229 (target_link_libraries):
+  Target "TeaSpeak" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:283 (target_link_libraries):
+  Target "RingTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:287 (target_link_libraries):
+  Target "CommandTest" links to:
+
+    DataPipes::core::shared
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:290 (target_link_libraries):
+  Target "WebsocketTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:298 (target_link_libraries):
+  Target "ChannelTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:301 (target_link_libraries):
+  Target "EndianessTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:305 (target_link_libraries):
+  Target "CrashTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:308 (target_link_libraries):
+  Target "PorpertyTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:311 (target_link_libraries):
+  Target "BBTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:314 (target_link_libraries):
+  Target "LinkedTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:317 (target_link_libraries):
+  Target "PermissionTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at shared/CMakeLists.txt:320 (target_link_libraries):
+  Target "GenerationTest" links to:
+
+    CXXTerminal::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+CMake Error at server/CMakeLists.txt:241 (target_link_libraries):
+  Target "TeaSpeakServer" links to:
+
+    opus::static
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+-- Generating done (1.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    DISABLE_CUSTOM_OUTPUT
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.
+Failed to run CMAKE project

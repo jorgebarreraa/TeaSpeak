@@ -1,0 +1,27 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+Disabling web support
+Build type: RelWithDebInfo
+> cmake .. -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DCMAKE_CXX_FLAGS="" -DBUILD_INCLUDE_FILE="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/config/tearoot-server.cmake" -DCMAKE_MODULE_PATH="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT="OFF" -DBUILD_TYPE=1 -DBUILD_TYPE_NAME=beta -Dmysql_ROOT_DIR="/home/user/TeaSpeak/Server/Root/TeaSpeak/build/../../../mysql-server/out"
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+Breakpad: Breakpad_INCLUDE_DIR-NOTFOUND
+-- Found StringVariable: /home/user/TeaSpeak/Server/Root/libraries/StringVariable/out/linux_amd64/include  
+CMake Error at CMakeLists.txt:57 (find_package):
+  By not providing "Findyaml-cpp.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "yaml-cpp",
+  but CMake did not find one.
+
+  Could not find a package configuration file provided by "yaml-cpp" with any
+  of the following names:
+
+    yaml-cppConfig.cmake
+    yaml-cpp-config.cmake
+
+  Add the installation prefix of "yaml-cpp" to CMAKE_PREFIX_PATH or set
+  "yaml-cpp_DIR" to a directory containing one of the above files.  If
+  "yaml-cpp" provides a separate development package or SDK, be sure it has
+  been installed.
+
+
+-- Configuring incomplete, errors occurred!
+Failed to run CMAKE project

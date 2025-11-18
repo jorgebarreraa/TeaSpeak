@@ -67,7 +67,7 @@ exec_script_external build_ed25519.sh ed25519
 exec_script_external build_jsoncpp.sh jsoncpp
 #exec_script build_mysqlconnector.sh
 #exec_script_external build_opus.sh opus  # Skipping opus - AVX2 instruction errors
-#exec_script build_protobuf.sh protobuf  # Skipping protobuf - CMakeLists.txt missing
+exec_script_external build_protobuf.sh protobuf
 exec_script_external build_spdlog.sh spdlog
 exec_script_external build_stringvariable.sh StringVariable
 exec_script_external build_threadpool.sh Thread-Pool
