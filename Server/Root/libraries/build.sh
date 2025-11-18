@@ -60,13 +60,13 @@ function exec_script_external() {
 }
 
 exec_script_external build_libevent.sh event
-#exec_script_external build_breakpad.sh breakpad  # Skipping breakpad due to C++14 compilation issues
-#exec_script_external build_cxxterminal.sh CXXTerminal "libevent_path=event"  # Skipping due to -fPIC linking issues with libevent
+exec_script_external build_breakpad.sh breakpad
+exec_script_external build_cxxterminal.sh CXXTerminal "libevent_path=event"
 #exec_script build_datapipes.sh DataPipes  # Skipping DataPipes - requires WebRTC dependencies
 exec_script_external build_ed25519.sh ed25519
 exec_script_external build_jsoncpp.sh jsoncpp
 #exec_script build_mysqlconnector.sh
-#exec_script_external build_opus.sh opus  # Skipping opus - AVX2 instruction errors
+exec_script_external build_opus.sh opus
 exec_script_external build_protobuf.sh protobuf
 exec_script_external build_spdlog.sh spdlog
 exec_script_external build_stringvariable.sh StringVariable

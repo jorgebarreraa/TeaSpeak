@@ -1,0 +1,245 @@
+================================================================= [92mBuilding libraries[39m =================================================================
+================================================================= [92mBuilding libevent[39m ==================================================================
+Building library with script [92mbuild_libevent.sh[39m
+> library_path="event"  ./../build-helpers/libraries/"build_libevent.sh"
+Testing library build status at event (/home/user/TeaSpeak/Server/Root/libraries/event)
+Reading data from /home/user/TeaSpeak/Server/Root/libraries/event/.build_linux_amd64.txt
+[92mLast build at Tue Nov 18 21:44:24 UTC 2025 was successful![39m Git rev: 7ef754aa7ea92b5befe0f6b799a936638f0543cf. No need to rebuild.
+============================================================= [92mFinished libevent (0 sec)[39m ==============================================================
+
+================================================================= [92mBuilding breakpad[39m ==================================================================
+Building library with script [92mbuild_breakpad.sh[39m
+> library_path="breakpad"  ./../build-helpers/libraries/"build_breakpad.sh"
+Testing library build status at breakpad (/home/user/TeaSpeak/Server/Root/libraries/breakpad)
+Build check file is missing. Rebuilding!
+fatal: destination path 'src/third_party/lss' already exists and is not an empty directory.
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /usr/bin/mkdir -p
+checking for gawk... no
+checking for mawk... mawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether UID '0' is supported by ustar format... yes
+checking whether GID '0' is supported by ustar format... yes
+checking how to create a ustar tar archive... gnutar
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking whether make supports the include directive... yes (GNU style)
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking dependency style of gcc... gcc3
+checking for ar... ar
+checking the archiver (ar) interface... ar
+checking dependency style of gcc... gcc3
+checking for gcc... (cached) gcc
+checking whether the compiler supports GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for gcc option to enable C11 features... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking dependency style of gcc... (cached) gcc3
+checking how to run the C preprocessor... gcc -E
+checking for g++... g++
+checking whether the compiler supports GNU C++... yes
+checking whether g++ accepts -g... yes
+checking for g++ option to enable C++11 features... none needed
+checking dependency style of g++... gcc3
+checking for ranlib... ranlib
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking for the pthreads library -lpthreads... no
+checking whether pthreads work without any flags... yes
+checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+checking if more special flags are required for pthreads... no
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for a.out.h... yes
+checking for sys/mman.h... yes
+checking for sys/random.h... yes
+checking for arc4random... yes
+checking for getcontext... yes
+checking for getrandom... yes
+checking for memfd_create... yes
+checking whether g++ supports C++20 features by default... no
+checking whether g++ supports C++20 features with -std=gnu++20... yes
+checking whether C++ compiler accepts -Werror=unknown-warning-option... no
+checking whether C++ compiler accepts -Wmissing-braces... yes
+checking whether C++ compiler accepts -Wnon-virtual-dtor... yes
+checking whether C++ compiler accepts -Woverloaded-virtual... yes
+checking whether C++ compiler accepts -Wreorder... yes
+checking whether C++ compiler accepts -Wsign-compare... yes
+checking whether C++ compiler accepts -Wunused-local-typedefs... yes
+checking whether C++ compiler accepts -Wunused-variable... yes
+checking whether C++ compiler accepts -Wvla... yes
+checking for O_CLOEXEC defined in fcntl.h... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating breakpad.pc
+config.status: creating breakpad-client.pc
+config.status: creating Makefile
+config.status: creating src/config.h
+config.status: executing depfiles commands
+depbase=`echo src/processor/disassembler_objdump.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/disassembler_objdump.o -MD -MP -MF $depbase.Tpo -c -o src/processor/disassembler_objdump.o ../../src/processor/disassembler_objdump.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/minidump_dump.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/minidump_dump.o -MD -MP -MF $depbase.Tpo -c -o src/processor/minidump_dump.o ../../src/processor/minidump_dump.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/minidump.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/minidump.o -MD -MP -MF $depbase.Tpo -c -o src/processor/minidump.o ../../src/processor/minidump.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/proc_maps_linux.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/proc_maps_linux.o -MD -MP -MF $depbase.Tpo -c -o src/processor/proc_maps_linux.o ../../src/processor/proc_maps_linux.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/minidump_stackwalk.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/minidump_stackwalk.o -MD -MP -MF $depbase.Tpo -c -o src/processor/minidump_stackwalk.o ../../src/processor/minidump_stackwalk.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/exploitability.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/exploitability.o -MD -MP -MF $depbase.Tpo -c -o src/processor/exploitability.o ../../src/processor/exploitability.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/exploitability_linux.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/exploitability_linux.o -MD -MP -MF $depbase.Tpo -c -o src/processor/exploitability_linux.o ../../src/processor/exploitability_linux.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/exploitability_win.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/exploitability_win.o -MD -MP -MF $depbase.Tpo -c -o src/processor/exploitability_win.o ../../src/processor/exploitability_win.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/minidump_processor.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/minidump_processor.o -MD -MP -MF $depbase.Tpo -c -o src/processor/minidump_processor.o ../../src/processor/minidump_processor.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/processor/symbolic_constants_win.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/processor/symbolic_constants_win.o -MD -MP -MF $depbase.Tpo -c -o src/processor/symbolic_constants_win.o ../../src/processor/symbolic_constants_win.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/convert_UTF.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/convert_UTF.o -MD -MP -MF $depbase.Tpo -c -o src/common/convert_UTF.o ../../src/common/convert_UTF.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/md5.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/md5.o -MD -MP -MF $depbase.Tpo -c -o src/common/md5.o ../../src/common/md5.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/string_conversion.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/string_conversion.o -MD -MP -MF $depbase.Tpo -c -o src/common/string_conversion.o ../../src/common/string_conversion.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/elf_core_dump.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/elf_core_dump.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/elf_core_dump.o ../../src/common/linux/elf_core_dump.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/elfutils.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/elfutils.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/elfutils.o ../../src/common/linux/elfutils.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/file_id.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/file_id.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/file_id.o ../../src/common/linux/file_id.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/guid_creator.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/guid_creator.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/guid_creator.o ../../src/common/linux/guid_creator.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/linux_libc_support.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/linux_libc_support.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/linux_libc_support.o ../../src/common/linux/linux_libc_support.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/memory_mapped_file.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/memory_mapped_file.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/memory_mapped_file.o ../../src/common/linux/memory_mapped_file.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo src/common/linux/safe_readlink.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/safe_readlink.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/safe_readlink.o ../../src/common/linux/safe_readlink.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-dwarf_cfi_to_module.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-dwarf_cfi_to_module.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-dwarf_cfi_to_module.o `test -f 'src/common/dwarf_cfi_to_module.cc' || echo '../../'`src/common/dwarf_cfi_to_module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-dwarf_cu_to_module.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-dwarf_cu_to_module.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-dwarf_cu_to_module.o `test -f 'src/common/dwarf_cu_to_module.cc' || echo '../../'`src/common/dwarf_cu_to_module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-dwarf_line_to_module.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-dwarf_line_to_module.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-dwarf_line_to_module.o `test -f 'src/common/dwarf_line_to_module.cc' || echo '../../'`src/common/dwarf_line_to_module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-dwarf_range_list_handler.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-dwarf_range_list_handler.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-dwarf_range_list_handler.o `test -f 'src/common/dwarf_range_list_handler.cc' || echo '../../'`src/common/dwarf_range_list_handler.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-language.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-language.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-language.o `test -f 'src/common/language.cc' || echo '../../'`src/common/language.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-module.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-module.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-module.o `test -f 'src/common/module.cc' || echo '../../'`src/common/module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-path_helper.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-path_helper.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-path_helper.o `test -f 'src/common/path_helper.cc' || echo '../../'`src/common/path_helper.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-stabs_reader.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_reader.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-stabs_reader.o `test -f 'src/common/stabs_reader.cc' || echo '../../'`src/common/stabs_reader.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/tools_linux_dump_syms_dump_syms-stabs_to_module.o -MD -MP -MF src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_to_module.Tpo -c -o src/common/tools_linux_dump_syms_dump_syms-stabs_to_module.o `test -f 'src/common/stabs_to_module.cc' || echo '../../'`src/common/stabs_to_module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-crc32.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-crc32.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-crc32.o `test -f 'src/common/linux/crc32.cc' || echo '../../'`src/common/linux/crc32.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-dump_symbols.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-dump_symbols.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-dump_symbols.o `test -f 'src/common/linux/dump_symbols.cc' || echo '../../'`src/common/linux/dump_symbols.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-elf_symbols_to_module.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elf_symbols_to_module.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-elf_symbols_to_module.o `test -f 'src/common/linux/elf_symbols_to_module.cc' || echo '../../'`src/common/linux/elf_symbols_to_module.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-elfutils.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elfutils.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-elfutils.o `test -f 'src/common/linux/elfutils.cc' || echo '../../'`src/common/linux/elfutils.cc
+mv -f src/common/.deps/tools_linux_dump_syms_dump_syms-language.Tpo src/common/.deps/tools_linux_dump_syms_dump_syms-language.Po
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-file_id.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-file_id.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-file_id.o `test -f 'src/common/linux/file_id.cc' || echo '../../'`src/common/linux/file_id.cc
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-linux_libc_support.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-linux_libc_support.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-linux_libc_support.o `test -f 'src/common/linux/linux_libc_support.cc' || echo '../../'`src/common/linux/linux_libc_support.cc
+mv -f src/common/.deps/tools_linux_dump_syms_dump_syms-path_helper.Tpo src/common/.deps/tools_linux_dump_syms_dump_syms-path_helper.Po
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-memory_mapped_file.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-memory_mapped_file.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-memory_mapped_file.o `test -f 'src/common/linux/memory_mapped_file.cc' || echo '../../'`src/common/linux/memory_mapped_file.cc
+mv -f src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_reader.Tpo src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_reader.Po
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-crc32.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-crc32.Po
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src    -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/tools_linux_dump_syms_dump_syms-safe_readlink.o -MD -MP -MF src/common/linux/.deps/tools_linux_dump_syms_dump_syms-safe_readlink.Tpo -c -o src/common/linux/tools_linux_dump_syms_dump_syms-safe_readlink.o `test -f 'src/common/linux/safe_readlink.cc' || echo '../../'`src/common/linux/safe_readlink.cc
+In file included from ../../src/common/dwarf/dwarf2reader.h:56,
+                 from ../../src/common/dwarf_cfi_to_module.h:50,
+                 from ../../src/common/dwarf_cfi_to_module.cc:47:
+../../src/common/dwarf/elf_reader.h:148:38: error: 'std::string_view' has not been declared
+  148 |   static bool SectionNamesMatch(std::string_view name,
+      |                                      ^~~~~~~~~~~
+../../src/common/dwarf/elf_reader.h:149:38: error: 'std::string_view' has not been declared
+  149 |                                 std::string_view sh_name);
+      |                                      ^~~~~~~~~~~
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-linux_libc_support.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-linux_libc_support.Po
+In file included from ../../src/common/dwarf/dwarf2reader.h:56,
+                 from ../../src/common/dwarf/dwarf2diehandler.h:166,
+                 from ../../src/common/dwarf_cu_to_module.h:49,
+                 from ../../src/common/dwarf_cu_to_module.cc:42:
+../../src/common/dwarf/elf_reader.h:148:38: error: 'std::string_view' has not been declared
+  148 |   static bool SectionNamesMatch(std::string_view name,
+      |                                      ^~~~~~~~~~~
+../../src/common/dwarf/elf_reader.h:149:38: error: 'std::string_view' has not been declared
+  149 |                                 std::string_view sh_name);
+      |                                      ^~~~~~~~~~~
+In file included from ../../src/common/dwarf/dwarf2reader.h:56,
+                 from ../../src/common/dwarf_line_to_module.h:43,
+                 from ../../src/common/dwarf_line_to_module.cc:42:
+../../src/common/dwarf/elf_reader.h:148:38: error: 'std::string_view' has not been declared
+  148 |   static bool SectionNamesMatch(std::string_view name,
+      |                                      ^~~~~~~~~~~
+../../src/common/dwarf/elf_reader.h:149:38: error: 'std::string_view' has not been declared
+  149 |                                 std::string_view sh_name);
+      |                                      ^~~~~~~~~~~
+depbase=`echo src/common/linux/http_upload.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+g++ -std=gnu++20 -DHAVE_CONFIG_H -I. -I../.. -I./src  -I../../src   -Wmissing-braces -Wnon-virtual-dtor -Woverloaded-virtual -Wreorder -Wsign-compare -Wunused-local-typedefs -Wunused-variable -Wvla -Werror -fPIC -std=c++14  -static-libgcc -static-libstdc++ -MT src/common/linux/http_upload.o -MD -MP -MF $depbase.Tpo -c -o src/common/linux/http_upload.o ../../src/common/linux/http_upload.cc &&\
+mv -f $depbase.Tpo $depbase.Po
+In file included from ../../src/common/dwarf/dwarf2reader.h:56,
+                 from ../../src/common/dwarf_range_list_handler.h:44,
+                 from ../../src/common/dwarf_range_list_handler.cc:41:
+../../src/common/dwarf/elf_reader.h:148:38: error: 'std::string_view' has not been declared
+  148 |   static bool SectionNamesMatch(std::string_view name,
+      |                                      ^~~~~~~~~~~
+../../src/common/dwarf/elf_reader.h:149:38: error: 'std::string_view' has not been declared
+  149 |                                 std::string_view sh_name);
+      |                                      ^~~~~~~~~~~
+make: *** [Makefile:7899: src/common/tools_linux_dump_syms_dump_syms-dwarf_cfi_to_module.o] Error 1
+make: *** Waiting for unfinished jobs....
+make: *** [Makefile:7927: src/common/tools_linux_dump_syms_dump_syms-dwarf_line_to_module.o] Error 1
+make: *** [Makefile:7941: src/common/tools_linux_dump_syms_dump_syms-dwarf_range_list_handler.o] Error 1
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-memory_mapped_file.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-memory_mapped_file.Po
+make: *** [Makefile:7913: src/common/tools_linux_dump_syms_dump_syms-dwarf_cu_to_module.o] Error 1
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-safe_readlink.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-safe_readlink.Po
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elf_symbols_to_module.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elf_symbols_to_module.Po
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elfutils.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-elfutils.Po
+mv -f src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_to_module.Tpo src/common/.deps/tools_linux_dump_syms_dump_syms-stabs_to_module.Po
+In file included from ../../src/common/dwarf/dwarf2reader.h:56,
+                 from ../../src/common/dwarf/dwarf2diehandler.h:166,
+                 from ../../src/common/linux/dump_symbols.cc:65:
+../../src/common/dwarf/elf_reader.h:148:38: error: 'std::string_view' has not been declared
+  148 |   static bool SectionNamesMatch(std::string_view name,
+      |                                      ^~~~~~~~~~~
+../../src/common/dwarf/elf_reader.h:149:38: error: 'std::string_view' has not been declared
+  149 |                                 std::string_view sh_name);
+      |                                      ^~~~~~~~~~~
+mv -f src/common/linux/.deps/tools_linux_dump_syms_dump_syms-file_id.Tpo src/common/linux/.deps/tools_linux_dump_syms_dump_syms-file_id.Po
+mv -f src/common/.deps/tools_linux_dump_syms_dump_syms-module.Tpo src/common/.deps/tools_linux_dump_syms_dump_syms-module.Po
+make: *** [Makefile:8095: src/common/linux/tools_linux_dump_syms_dump_syms-dump_symbols.o] Error 1
+[1;31mFailed to build project breakpad at /home/user/TeaSpeak/Server/Root/libraries/breakpad/out/linux_amd64/breakpad. Status code: 2
+Failed to build
+Aborting build[0;39m
+Failed to build library breakpad. Status code: 1

@@ -1,0 +1,2 @@
+../build-helpers/libraries/build_breakpad.sh: line 7: $(pwd)/../build-helpers/libraries/functions.sh: No such file or directory
+Failed to include build helpers.
