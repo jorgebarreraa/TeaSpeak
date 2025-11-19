@@ -1,0 +1,16 @@
+# Build logs
+*.log
+
+# Build directories
+**/build/
+**/out/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
