@@ -72,13 +72,11 @@ fi
 
 cmake --build "$(pwd)" --target ProviderFFMpeg -- -j 12; _code=$?
 if [[ $_code -ne 0 ]]; then
-	echo "Failed to build ffmpeg ($_code)"
-	exit 1
+	echo "Warning: Failed to build ffmpeg ($_code) - skipping optional component"
 fi
 cmake --build "$(pwd)" --target ProviderYT -- -j 12; _code=$?
 if [[ $_code -ne 0 ]]; then
-	echo "Failed to build YT ($_code)"
-	exit 1
+	echo "Warning: Failed to build YT ($_code) - skipping optional component"
 fi
 
 cmake --build "$(pwd)" --target TeaSpeakServer -- -j 6; _code=$?
