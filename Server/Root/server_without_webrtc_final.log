@@ -1,0 +1,857 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+Disabling web support
+Build type: RelWithDebInfo
+> cmake .. -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DCMAKE_CXX_FLAGS="" -DBUILD_INCLUDE_FILE="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/config/tearoot-server.cmake" -DCMAKE_MODULE_PATH="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT="OFF" -DBUILD_TYPE=1 -DBUILD_TYPE_NAME=beta -Dmysql_ROOT_DIR="/home/user/TeaSpeak/Server/Root/TeaSpeak/build/../../../mysql-server/out"
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+Breakpad: /home/user/TeaSpeak/Server/Root/libraries/breakpad/out/linux_amd64/include
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (opus) does
+  not match the name of the calling package (Opus).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:65 (find_package_handle_standard_args)
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:69 (resolve_opus)
+  CMakeLists.txt:63 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+/home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//zstd/build/cmake//out/linux_amd64/lib/cmake/zstd/
+Use static libevent
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Libevent version: 1
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  shared/CMakeLists.txt:43 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+HAVE JSON!
+Building without MySQL Support
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Skipping librtc linkage - Web client support disabled
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  license/CMakeLists.txt:20 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done (0.5s)
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Generating done (1.0s)
+-- Build files have been written to: /home/user/TeaSpeak/Server/Root/TeaSpeak/build
+gmake: *** No rule to make target 'ProviderFFMpeg'.  Stop.
+Warning: Failed to build ffmpeg (2) - skipping optional component
+gmake: *** No rule to make target 'ProviderYT'.  Stop.
+Warning: Failed to build YT (2) - skipping optional component
+[  0%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/PermissionManager.cpp.o
+[  0%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/Properties.cpp.o
+[  0%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/BasicChannel.cpp.o
+[  3%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/PropertyDefinitions.cpp.o
+[  3%] Linking CXX static library libTeaSpeak.a
+[ 25%] Built target TeaSpeak
+[ 25%] Linking CXX shared library /home/user/TeaSpeak/Server/Root/TeaSpeak/MusicBot/libs/libTeaMusic.so
+/usr/bin/c++ -fPIC  -std=c++11 -fpermissive -Wall -Wno-sign-compare -Wno-reorder -static-libgcc -static-libstdc++ -O3 -DNDEBUG -O3 -O3 -shared -Wl,-soname,libTeaMusic.so -o /home/user/TeaSpeak/Server/Root/TeaSpeak/MusicBot/libs/libTeaMusic.so CMakeFiles/TeaMusic.dir/src/MusicPlayer.cpp.o  -Wl,-rpath,/home/user/TeaSpeak/Server/Root/libraries/jsoncpp/out/linux_amd64/lib:/home/user/TeaSpeak/Server/Root/libraries/tomcrypt/out/linux_amd64/lib:/home/user/TeaSpeak/Server/Root/libraries/CXXTerminal/out/linux_amd64/lib ../shared/libTeaSpeak.a /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64/lib/libevent_core.a /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64/lib/libevent_pthreads.a -ldl /home/user/TeaSpeak/Server/Root/libraries/Thread-Pool/out/linux_amd64/lib/libThreadPoolStatic.a /home/user/TeaSpeak/Server/Root/libraries/jsoncpp/out/linux_amd64/lib/libjsoncpp.so.1.9.7 /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl.a /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a /home/user/TeaSpeak/Server/Root/libraries/tomcrypt/out/linux_amd64/lib/libtomcrypt.a /home/user/TeaSpeak/Server/Root/libraries/tommath/out/linux_amd64/lib/libtommathStatic.a /home/user/TeaSpeak/Server/Root/libraries/CXXTerminal/out/linux_amd64/lib/libCXXTerminalStatic.a /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64/lib/libevent_core.a 
+[ 33%] Built target TeaSpeak-FileServer
+[ 37%] Built target TeaLicenseHelper
+[ 37%] Built target TeaMusic
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/main.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClient.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/ConnectedClient.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/server/PrecomputedPuzzles.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientCommandHandler.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientConnectionPacketHandler.cpp.o
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.cpp:9:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:8:10: fatal error: protocol/PacketStatistics.h: No such file or directory
+    8 | #include <protocol/PacketStatistics.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:135: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClient.cpp.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.cpp:12:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:8:10: fatal error: protocol/PacketStatistics.h: No such file or directory
+    8 | #include <protocol/PacketStatistics.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:107: server/CMakeFiles/TeaSpeakServer.dir/src/client/ConnectedClient.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnectionPacketHandler.cpp:5:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:8:10: fatal error: protocol/PacketStatistics.h: No such file or directory
+    8 | #include <protocol/PacketStatistics.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:163: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientConnectionPacketHandler.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientCommandHandler.cpp:9:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:8:10: fatal error: protocol/PacketStatistics.h: No such file or directory
+    8 | #include <protocol/PacketStatistics.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:149: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientCommandHandler.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:12:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'ts::PropertyWrapper ts::server::VirtualServer::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:198:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+  198 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/BasicChannel.h:8,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:8:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'const ts::PropertyWrapper ts::server::VirtualServer::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:199:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+  199 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'std::string ts::server::VirtualServer::getDisplayName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:241:66: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::VirtualServerProperties')
+  241 |                 std::string getDisplayName(){ return properties()[property::VIRTUALSERVER_NAME]; }
+      |                                                                  ^
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/lincense/TeamSpeakLicense.h:4,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:9,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:13:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/License.h: In function 'std::string license::teamspeak::type_name(LicenseType)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/License.h:22:20: warning: enumeration value 'TOKEN' not handled in switch [-Wswitch-enum]
+   22 |             switch (type) {
+      |                    ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'ts::PropertyWrapper ts::server::InstanceHandler::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:47:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   47 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'const ts::PropertyWrapper ts::server::InstanceHandler::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:48:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   48 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'ts::PropertyWrapper ts::server::InstanceHandler::getDefaultServerProperties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:90:139: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   90 |                 [[nodiscard]] inline PropertyWrapper getDefaultServerProperties() { return PropertyWrapper{this->default_server_properties}; }
+      |                                                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:4,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:6,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/InternalClient.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:16:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'ts::PlaylistId ts::music::Playlist::playlist_id()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:70: error: 'struct ts::PropertyWrapper' has no member named 'as_unchecked'
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                                                      ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:93: error: expected primary-expression before '>' token
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                                                                             ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:95: error: expected primary-expression before ')' token
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'ts::music::Playlist::Type::value ts::music::Playlist::playlist_type()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:72: error: 'struct ts::PropertyWrapper' has no member named 'as_unchecked'
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                                                        ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:96: error: expected primary-expression before '>' token
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                                                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:98: error: expected primary-expression before ')' token
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'virtual bool ts::music::Playlist::is_playlist_owner(ts::ClientDbId) const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:132:79: error: 'struct ts::PropertyWrapper' has no member named 'as_or'
+  132 |                             this->properties()[property::PLAYLIST_OWNER_DBID].as_or<ClientDbId>(0) == database_id; }
+      |                                                                               ^~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:132:95: error: expected primary-expression before '>' token
+  132 |                             this->properties()[property::PLAYLIST_OWNER_DBID].as_or<ClientDbId>(0) == database_id; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h: In member function 'ts::music::PlayablePlaylist::ReplayMode::value ts::music::PlayablePlaylist::replay_mode()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:116: error: 'struct ts::PropertyWrapper' has no member named 'as_unchecked'
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:146: error: expected primary-expression before '>' token
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:148: error: expected primary-expression before ')' token
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                                                                                                    ^
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:12:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'ts::PropertyWrapper ts::server::DataClient::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:36:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   36 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'const ts::PropertyWrapper ts::server::DataClient::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:37:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   37 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'const ts::PropertyWrapper&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   no known conversion for argument 1 from 'const std::shared_ptr<ts::Properties>' to 'ts::PropertyWrapper&&'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getDisplayName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:72:81: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   72 |                 virtual std::string getDisplayName() { return this->properties()[property::CLIENT_NICKNAME]; }
+      |                                                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getLoginName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:73:79: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   73 |                 virtual std::string getLoginName() { return this->properties()[property::CLIENT_LOGIN_NAME]; }
+      |                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual void ts::server::DataClient::setDisplayName(std::string)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:74:90: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   74 |                 virtual void setDisplayName(std::string displayName) { this->properties()[property::CLIENT_NICKNAME] = displayName; }
+      |                                                                                          ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::server::ClientType ts::server::DataClient::getExternalType()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:83:54: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   83 |                     uint8_t type = this->properties()[property::CLIENT_TYPE];
+      |                                                      ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::server::ClientType ts::server::DataClient::getType()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:88:54: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   88 |                     uint8_t type = this->properties()[property::CLIENT_TYPE_EXACT];
+      |                                                      ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getUid()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:92:73: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   92 |                 virtual std::string getUid() { return this->properties()[property::CLIENT_UNIQUE_IDENTIFIER]; }
+      |                                                                         ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::ClientDbId ts::server::DataClient::getClientDatabaseId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:94:85: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   94 |                 virtual ClientDbId getClientDatabaseId() { return this->properties()[property::CLIENT_DATABASE_ID]; }
+      |                                                                                     ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'std::string ts::server::ConnectedClient::getHardwareId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:93:65: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   93 |                 std::string getHardwareId(){ return properties()[property::CLIENT_HARDWARE_ID]; }
+      |                                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'virtual uint16_t ts::server::ConnectedClient::getClientId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:111:75: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+  111 |                 virtual uint16_t getClientId() { return this->properties()[property::CLIENT_ID]; }
+      |                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'virtual void ts::server::ConnectedClient::setClientId(uint16_t)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:112:71: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+  112 |                 virtual void setClientId(uint16_t clId) { properties()[property::CLIENT_ID] = clId; }
+      |                                                                       ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In function 'int pthread_create(pthread_t*, const pthread_attr_t*, void* (*)(void*), void*)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:587:26: warning: 'int pthread_yield()' is deprecated: pthread_yield is deprecated, use sched_yield instead [-Wdeprecated-declarations]
+  587 |             pthread_yield();
+      |             ~~~~~~~~~~~~~^~
+In file included from /usr/include/features.h:502,
+                 from /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:39,
+                 from /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h:679,
+                 from /usr/include/c++/13/bits/requires_hosted.h:31,
+                 from /usr/include/c++/13/iostream:38,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:4:
+/usr/include/pthread.h:479:12: note: declared here
+  479 | extern int __REDIRECT_NTH (pthread_yield, (void), sched_yield)
+      |            ^~~~~~~~~~~~~~
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:79: server/CMakeFiles/TeaSpeakServer.dir/main.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:713: server/CMakeFiles/TeaSpeakServer.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:720: server/CMakeFiles/TeaSpeakServer.dir/rule] Error 2
+gmake: *** [Makefile:403: TeaSpeakServer] Error 2
+Failed to build server (2)
