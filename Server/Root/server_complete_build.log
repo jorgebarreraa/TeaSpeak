@@ -1,0 +1,2055 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+Disabling web support
+Build type: RelWithDebInfo
+> cmake .. -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DCMAKE_CXX_FLAGS="" -DBUILD_INCLUDE_FILE="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/config/tearoot-server.cmake" -DCMAKE_MODULE_PATH="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT="OFF" -DBUILD_TYPE=1 -DBUILD_TYPE_NAME=beta -Dmysql_ROOT_DIR="/home/user/TeaSpeak/Server/Root/TeaSpeak/build/../../../mysql-server/out"
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+Breakpad: /home/user/TeaSpeak/Server/Root/libraries/breakpad/out/linux_amd64/include
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (opus) does
+  not match the name of the calling package (Opus).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:65 (find_package_handle_standard_args)
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:69 (resolve_opus)
+  CMakeLists.txt:63 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+/home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//zstd/build/cmake//out/linux_amd64/lib/cmake/zstd/
+Use static libevent
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Libevent version: 1
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  shared/CMakeLists.txt:43 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+HAVE JSON!
+Building without MySQL Support
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Skipping librtc linkage - Web client support disabled
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  license/CMakeLists.txt:20 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done (0.5s)
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:289 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:304 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:307 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:311 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:314 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:317 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:320 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:323 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:326 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:329 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Generating done (0.9s)
+-- Build files have been written to: /home/user/TeaSpeak/Server/Root/TeaSpeak/build
+gmake: *** No rule to make target 'ProviderFFMpeg'.  Stop.
+Warning: Failed to build ffmpeg (2) - skipping optional component
+gmake: *** No rule to make target 'ProviderYT'.  Stop.
+Warning: Failed to build YT (2) - skipping optional component
+[ 25%] Built target TeaSpeak
+[ 25%] Built target TeaMusic
+[ 33%] Built target TeaSpeak-FileServer
+[ 37%] Built target TeaLicenseHelper
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/main.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/ConnectedClient.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClient.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/server/PrecomputedPuzzles.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientCommandHandler.cpp.o
+[ 37%] Building CXX object server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientConnectionPacketHandler.cpp.o
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.cpp:9:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:3:10: fatal error: misc/spin_mutex.h: No such file or directory
+    3 | #include <misc/spin_mutex.h>
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:135: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClient.cpp.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnectionPacketHandler.cpp:5:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:3:10: fatal error: misc/spin_mutex.h: No such file or directory
+    3 | #include <misc/spin_mutex.h>
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:163: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientConnectionPacketHandler.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientCommandHandler.cpp:9:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:3:10: fatal error: misc/spin_mutex.h: No such file or directory
+    3 | #include <misc/spin_mutex.h>
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:149: server/CMakeFiles/TeaSpeakServer.dir/src/client/voice/VoiceClientCommandHandler.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClientConnection.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.h:15,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.cpp:12:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/voice/./PacketEncoder.h:3:10: fatal error: misc/spin_mutex.h: No such file or directory
+    3 | #include <misc/spin_mutex.h>
+      |          ^~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:107: server/CMakeFiles/TeaSpeakServer.dir/src/client/ConnectedClient.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:5:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:12:36: error: 'std::uint64_t' has not been declared
+   12 |         template <typename char_t, std::uint64_t buffer_size, std::uint64_t size, typename key_t>
+      |                                    ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:12:63: error: 'std::uint64_t' has not been declared
+   12 |         template <typename char_t, std::uint64_t buffer_size, std::uint64_t size, typename key_t>
+      |                                                               ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:13:16: error: no default argument for 'key_t'
+   13 |         struct message {
+      |                ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:15:43: error: 'size' was not declared in this scope
+   15 |             static constexpr auto _size = size;
+      |                                           ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:15:43: note: suggested alternatives:
+In file included from /usr/include/c++/13/string:53,
+                 from /usr/include/c++/13/bits/locale_classes.h:40,
+                 from /usr/include/c++/13/bits/ios_base.h:41,
+                 from /usr/include/c++/13/ios:44,
+                 from /usr/include/c++/13/ostream:40,
+                 from /usr/include/c++/13/iostream:41,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:4:
+/usr/include/c++/13/bits/range_access.h:274:5: note:   'std::size'
+  274 |     size(const _Tp (&)[_Nm]) noexcept
+      |     ^~~~
+In file included from /usr/include/c++/13/string_view:48,
+                 from /usr/include/c++/13/bits/basic_string.h:47,
+                 from /usr/include/c++/13/string:54:
+/usr/include/c++/13/bits/ranges_base.h:493:43: note:   'std::ranges::__cust::size'
+  493 |     inline constexpr __cust_access::_Size size{};
+      |                                           ^~~~
+/usr/include/c++/13/bits/ranges_base.h:309:10: note:   'std::ranges::__cust_access::size'
+  309 |     void size(const auto&) = delete;
+      |          ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:20:32: error: 'buffer_size' was not declared in this scope
+   20 |             std::array<char_t, buffer_size> buffer{};
+      |                                ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:20:43: error: template argument 2 is invalid
+   20 |             std::array<char_t, buffer_size> buffer{};
+      |                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:20:18: error: '<expression error>' in namespace 'std' does not name a type
+   20 |             std::array<char_t, buffer_size> buffer{};
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: In function 'constexpr auto str_obf::internal::time_seed()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:30:18: error: 'uint64_t' is not a member of 'std'; did you mean 'wint_t'?
+   30 |             std::uint64_t shifted = 0;
+      |                  ^~~~~~~~
+      |                  wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:34:17: error: 'shifted' was not declared in this scope
+   34 |                 shifted <<= 8U;
+      |                 ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:38:20: error: 'shifted' was not declared in this scope
+   38 |             return shifted;
+      |                    ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:29:24: warning: invalid return type 'auto' of 'constexpr' function 'constexpr auto str_obf::internal::time_seed()' [-Winvalid-constexpr]
+   29 |         constexpr auto time_seed() noexcept {
+      |                        ^~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:41:19: error: 'uint64_t' does not name a type
+   41 |         constexpr uint64_t string_hash(const char* str, int h = 0) noexcept {
+      |                   ^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:6:1: note: 'uint64_t' is defined in header '<cstdint>'; did you forget to '#include <cstdint>'?
+    5 | #include <array>
+  +++ |+#include <cstdint>
+    6 | #include <string_view>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:48:24: error: 'uint32_t' in namespace 'std' does not name a type; did you mean 'wint_t'?
+   48 |         constexpr std::uint32_t rng32_next(std::uint64_t& state, const std::uint32_t& inc) noexcept {
+      |                        ^~~~~~~~
+      |                        wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:62:24: error: 'uint64_t' in namespace 'std' does not name a type; did you mean 'wint_t'?
+   62 |         constexpr std::uint64_t recommand_message_buffer(std::uint64_t message_size) noexcept {
+      |                        ^~~~~~~~
+      |                        wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:71:48: error: 'std::uint64_t' has not been declared
+   71 |     constexpr inline void crypt(char_t* begin, std::uint64_t length, const key_t& key) noexcept {
+      |                                                ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:85:32: error: 'std::uint64_t' has not been declared
+   85 |     template <typename char_t, std::uint64_t message_size, typename key_t>
+      |                                ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:57: error: 'message_size' was not declared in this scope; did you mean 'std::errc::message_size'?
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                                         ^~~~~~~~~~~~
+      |                                                         std::errc::message_size
+In file included from /usr/include/c++/13/system_error:41,
+                 from /usr/include/c++/13/bits/ios_base.h:46:
+/usr/include/x86_64-linux-gnu/c++/13/bits/error_constants.h:82:7: note: 'std::errc::message_size' declared here
+   82 |       message_size =                            EMSGSIZE,
+      |       ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:69: error: no default argument for 'key_t'
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                                                     ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:34: error: expected primary-expression before 'const'
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                  ^~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:72: error: expected primary-expression before 'const'
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                                                        ^~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:88: warning: expression list treated as compound expression in initializer [-fpermissive]
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                                                                        ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:86:89: error: expected ';' before 'noexcept'
+   86 |     constexpr inline auto encode(const char_t(&message)[message_size], const key_t& key) noexcept {
+      |                                                                                         ^~~~~~~~~
+      |                                                                                         ;
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:112:32: error: 'std::uint64_t' has not been declared
+  112 |     template <typename char_t, std::uint64_t length>
+      |                                ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:61: error: 'length' was not declared in this scope
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                                                             ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: In function 'constexpr auto str_obf::str_length(...)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:88: error: 'length' was not declared in this scope
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                                                                                        ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:115:32: error: 'std::uint64_t' has not been declared
+  115 |     template <typename char_t, std::uint64_t buffer_size, std::uint64_t message_size, typename key_t>
+      |                                ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:115:59: error: 'std::uint64_t' has not been declared
+  115 |     template <typename char_t, std::uint64_t buffer_size, std::uint64_t message_size, typename key_t>
+      |                                                           ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:116:63: error: 'buffer_size' was not declared in this scope
+  116 |     inline std::string decode(const internal::message<char_t, buffer_size, message_size, key_t>& message) {
+      |                                                               ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:116:76: error: 'message_size' was not declared in this scope; did you mean 'std::errc::message_size'?
+  116 |     inline std::string decode(const internal::message<char_t, buffer_size, message_size, key_t>& message) {
+      |                                                                            ^~~~~~~~~~~~
+      |                                                                            std::errc::message_size
+/usr/include/x86_64-linux-gnu/c++/13/bits/error_constants.h:82:7: note: 'std::errc::message_size' declared here
+   82 |       message_size =                            EMSGSIZE,
+      |       ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:116:95: error: template argument 2 is invalid
+  116 |     inline std::string decode(const internal::message<char_t, buffer_size, message_size, key_t>& message) {
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:116:95: error: template argument 3 is invalid
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: In function 'std::string str_obf::decode(const int&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:118:23: error: 'message_size' was not declared in this scope; did you mean 'std::errc::message_size'?
+  118 |         result.resize(message_size);
+      |                       ^~~~~~~~~~~~
+      |                       std::errc::message_size
+/usr/include/x86_64-linux-gnu/c++/13/bits/error_constants.h:82:7: note: 'std::errc::message_size' declared here
+   82 |       message_size =                            EMSGSIZE,
+      |       ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:120:39: error: request for member 'buffer' in 'message', which is of non-class type 'const int'
+  120 |         memcpy(result.data(), message.buffer.begin(), message_size);
+      |                                       ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:121:52: error: request for member 'key' in 'message', which is of non-class type 'const int'
+  121 |         crypt(result.data(), message_size, message.key);
+      |                                                    ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:127:27: error: 'uint64_t' in namespace 'std' does not name a type; did you mean 'wint_t'?
+  127 |     constexpr inline std::uint64_t generate_key_length(std::uint64_t seed, std::uint64_t message_size) noexcept {
+      |                           ^~~~~~~~
+      |                           wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:146:15: error: 'uint64_t' has not been declared
+  146 |     template <uint64_t line_number, std::uint64_t message_size>
+      |               ^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:146:37: error: 'std::uint64_t' has not been declared
+  146 |     template <uint64_t line_number, std::uint64_t message_size>
+      |                                     ^~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h: In function 'constexpr auto str_obf::generate_key(const char*)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:148:14: error: 'uint64_t' is not a member of 'std'; did you mean 'wint_t'?
+  148 |         std::uint64_t rng_seed = internal::time_seed() ^ internal::string_hash(_str_seed, 0) ^ line_number;
+      |              ^~~~~~~~
+      |              wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:149:14: error: 'uint64_t' is not a member of 'std'; did you mean 'wint_t'?
+  149 |         std::uint64_t rng_base = rng_seed;
+      |              ^~~~~~~~
+      |              wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:151:24: error: 'uint64_t' in namespace 'std' does not name a type; did you mean 'wint_t'?
+  151 |         constexpr std::uint64_t key_length = generate_key_length(internal::time_seed() ^ (line_number << 37UL), message_size);
+      |                        ^~~~~~~~
+      |                        wint_t
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:152:20: error: 'uint8_t' was not declared in this scope
+  152 |         std::array<uint8_t, key_length> result{};
+      |                    ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:152:20: note: 'uint8_t' is defined in header '<cstdint>'; did you forget to '#include <cstdint>'?
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:152:29: error: 'key_length' was not declared in this scope; did you mean 'str_length'?
+  152 |         std::array<uint8_t, key_length> result{};
+      |                             ^~~~~~~~~~
+      |                             str_length
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:152:39: error: template argument 1 is invalid
+  152 |         std::array<uint8_t, key_length> result{};
+      |                                       ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:152:39: error: template argument 2 is invalid
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:153:24: warning: there are no arguments to 'begin' that depend on a template parameter, so a declaration of 'begin' must be available [-fpermissive]
+  153 |         for(auto& it : result)
+      |                        ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:153:24: warning: there are no arguments to 'end' that depend on a template parameter, so a declaration of 'end' must be available [-fpermissive]
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:154:29: error: 'rng32_next' is not a member of 'str_obf::internal'
+  154 |             it = (internal::rng32_next(rng_base, (uint32_t) rng_seed) >> 16UL) & 0xFFUL;
+      |                             ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:154:40: error: 'rng_base' was not declared in this scope
+  154 |             it = (internal::rng32_next(rng_base, (uint32_t) rng_seed) >> 16UL) & 0xFFUL;
+      |                                        ^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:154:51: error: 'uint32_t' was not declared in this scope
+  154 |             it = (internal::rng32_next(rng_base, (uint32_t) rng_seed) >> 16UL) & 0xFFUL;
+      |                                                   ^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:154:51: note: 'uint32_t' is defined in header '<cstdint>'; did you forget to '#include <cstdint>'?
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [10])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<122, <expression error> >(const char [76])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Configuration.h:122:86: note: in expansion of macro 'strobf'
+  122 |         __attribute__((always_inline)) inline std::string default_version() { return strobf("TeaSpeak ").string() + build::version()->string(true); }
+      |                                                                                      ^~~~~~
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/Group.h:9,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:11,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:12:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h:25:54: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+   25 |             void setProperties(const std::shared_ptr<PropertyManager> &ptr) override;
+      |                                                      ^~~~~~~~~~~~~~~
+      |                                                      PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h:25:69: error: template argument 1 is invalid
+   25 |             void setProperties(const std::shared_ptr<PropertyManager> &ptr) override;
+      |                                                                     ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h:25:43: error: '<expression error>' in namespace 'std' does not name a type
+   25 |             void setProperties(const std::shared_ptr<PropertyManager> &ptr) override;
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h:25:18: error: 'void ts::ServerChannel::setProperties(const int&)' marked 'override', but does not override
+   25 |             void setProperties(const std::shared_ptr<PropertyManager> &ptr) override;
+      |                  ^~~~~~~~~~~~~
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:8:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/BasicChannel.h:79:26: warning: 'virtual void ts::BasicChannel::setProperties(const std::shared_ptr<ts::Properties>&)' was hidden [-Woverloaded-virtual=]
+   79 |             virtual void setProperties(const std::shared_ptr<Properties>&);
+      |                          ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/channel/ServerChannel.h:25:18: note:   by 'void ts::ServerChannel::setProperties(const int&)'
+   25 |             void setProperties(const std::shared_ptr<PropertyManager> &ptr) override;
+      |                  ^~~~~~~~~~~~~
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:20:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:72:36: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+   72 |             static std::shared_ptr<PropertyManager> default_properties_client(std::shared_ptr<PropertyManager> /* properties */, ClientType /* type */);
+      |                                    ^~~~~~~~~~~~~~~
+      |                                    PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:72:51: error: template argument 1 is invalid
+   72 |             static std::shared_ptr<PropertyManager> default_properties_client(std::shared_ptr<PropertyManager> /* properties */, ClientType /* type */);
+      |                                                   ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:72:25: error: '<expression error>' in namespace 'std' does not name a type
+   72 |             static std::shared_ptr<PropertyManager> default_properties_client(std::shared_ptr<PropertyManager> /* properties */, ClientType /* type */);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:108:29: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  108 |             std::shared_ptr<PropertyManager> loadServerProperties(const std::shared_ptr<VirtualServer>&); //Read and write
+      |                             ^~~~~~~~~~~~~~~
+      |                             PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:108:44: error: template argument 1 is invalid
+  108 |             std::shared_ptr<PropertyManager> loadServerProperties(const std::shared_ptr<VirtualServer>&); //Read and write
+      |                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:108:18: error: '<expression error>' in namespace 'std' does not name a type
+  108 |             std::shared_ptr<PropertyManager> loadServerProperties(const std::shared_ptr<VirtualServer>&); //Read and write
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:109:29: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  109 |             std::shared_ptr<PropertyManager> loadPlaylistProperties(const std::shared_ptr<VirtualServer>&, PlaylistId); //Read and write
+      |                             ^~~~~~~~~~~~~~~
+      |                             PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:109:44: error: template argument 1 is invalid
+  109 |             std::shared_ptr<PropertyManager> loadPlaylistProperties(const std::shared_ptr<VirtualServer>&, PlaylistId); //Read and write
+      |                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:109:18: error: '<expression error>' in namespace 'std' does not name a type
+  109 |             std::shared_ptr<PropertyManager> loadPlaylistProperties(const std::shared_ptr<VirtualServer>&, PlaylistId); //Read and write
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:110:29: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  110 |             std::shared_ptr<PropertyManager> loadChannelProperties(const std::shared_ptr<VirtualServer>&, ChannelId); //Read and write
+      |                             ^~~~~~~~~~~~~~~
+      |                             PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:110:44: error: template argument 1 is invalid
+  110 |             std::shared_ptr<PropertyManager> loadChannelProperties(const std::shared_ptr<VirtualServer>&, ChannelId); //Read and write
+      |                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:110:18: error: '<expression error>' in namespace 'std' does not name a type
+  110 |             std::shared_ptr<PropertyManager> loadChannelProperties(const std::shared_ptr<VirtualServer>&, ChannelId); //Read and write
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:111:29: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  111 |             std::shared_ptr<PropertyManager> loadClientProperties(const std::shared_ptr<VirtualServer>&, ClientDbId, ClientType);
+      |                             ^~~~~~~~~~~~~~~
+      |                             PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:111:44: error: template argument 1 is invalid
+  111 |             std::shared_ptr<PropertyManager> loadClientProperties(const std::shared_ptr<VirtualServer>&, ClientDbId, ClientType);
+      |                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/DatabaseHelper.h:111:18: error: '<expression error>' in namespace 'std' does not name a type
+  111 |             std::shared_ptr<PropertyManager> loadClientProperties(const std::shared_ptr<VirtualServer>&, ClientDbId, ClientType);
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:329:17: error: 'task_id' does not name a type
+  329 |                 task_id tick_task_id{};
+      |                 ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:359:33: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  359 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                 ^~~~~~~~~~~~~~~
+      |                                 PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:359:48: error: template argument 1 is invalid
+  359 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:359:22: error: '<expression error>' in namespace 'std' does not name a type
+  359 |                 std::shared_ptr<PropertyManager> _properties;
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:377:17: error: 'multi_shot_task' does not name a type
+  377 |                 multi_shot_task task_notify_channel_group_list{};
+      |                 ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:378:17: error: 'multi_shot_task' does not name a type
+  378 |                 multi_shot_task task_notify_server_group_list{};
+      |                 ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'ts::PropertyWrapper ts::server::VirtualServer::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:197:84: error: 'class ts::server::VirtualServer' has no member named '_properties'; did you mean 'properties'?
+  197 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                    ^~~~~~~~~~~
+      |                                                                                    properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:197:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+  197 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/BasicChannel.h:8:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'const ts::PropertyWrapper ts::server::VirtualServer::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:198:96: error: 'const class ts::server::VirtualServer' has no member named '_properties'; did you mean 'properties'?
+  198 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                ^~~~~~~~~~~
+      |                                                                                                properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:198:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+  198 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'std::string ts::server::VirtualServer::getDisplayName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:240:66: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::VirtualServerProperties')
+  240 |                 std::string getDisplayName(){ return properties()[property::VIRTUALSERVER_NAME]; }
+      |                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'void ts::server::VirtualServer::enqueue_notify_channel_group_list()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:315:73: error: 'class ts::server::VirtualServer' has no member named 'task_notify_channel_group_list'; did you mean 'enqueue_notify_channel_group_list'?
+  315 |                 inline void enqueue_notify_channel_group_list() { this->task_notify_channel_group_list.enqueue(); }
+      |                                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                         enqueue_notify_channel_group_list
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h: In member function 'void ts::server::VirtualServer::enqueue_notify_server_group_list()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/VirtualServer.h:316:73: error: 'class ts::server::VirtualServer' has no member named 'task_notify_server_group_list'; did you mean 'enqueue_notify_server_group_list'?
+  316 |                 inline void enqueue_notify_server_group_list() {  this->task_notify_server_group_list.enqueue(); }
+      |                                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                         enqueue_notify_server_group_list
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/lincense/TeamSpeakLicense.h:4,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:9,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:13:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/License.h: In function 'std::string license::teamspeak::type_name(LicenseType)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/License.h:22:20: warning: enumeration value 'TOKEN' not handled in switch [-Wswitch-enum]
+   22 |             switch (type) {
+      |                    ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:102:17: error: 'task_id' does not name a type
+  102 |                 task_id tick_task_id{};
+      |                 ^~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:123:37: error: 'PropertyManager' is not a member of 'ts'; did you mean 'PropertyWrapper'?
+  123 |                 std::shared_ptr<ts::PropertyManager> _properties{};
+      |                                     ^~~~~~~~~~~~~~~
+      |                                     PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:123:52: error: template argument 1 is invalid
+  123 |                 std::shared_ptr<ts::PropertyManager> _properties{};
+      |                                                    ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:123:22: error: '<expression error>' in namespace 'std' does not name a type
+  123 |                 std::shared_ptr<ts::PropertyManager> _properties{};
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:129:37: error: 'PropertyManager' is not a member of 'ts'; did you mean 'PropertyWrapper'?
+  129 |                 std::shared_ptr<ts::PropertyManager> default_server_properties = nullptr;
+      |                                     ^~~~~~~~~~~~~~~
+      |                                     PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:129:52: error: template argument 1 is invalid
+  129 |                 std::shared_ptr<ts::PropertyManager> default_server_properties = nullptr;
+      |                                                    ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:129:22: error: '<expression error>' in namespace 'std' does not name a type
+  129 |                 std::shared_ptr<ts::PropertyManager> default_server_properties = nullptr;
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:141:33: error: 'task_executor' was not declared in this scope
+  141 |                 std::shared_ptr<task_executor> general_task_executor_{nullptr};
+      |                                 ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:141:46: error: template argument 1 is invalid
+  141 |                 std::shared_ptr<task_executor> general_task_executor_{nullptr};
+      |                                              ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:141:22: error: '<expression error>' in namespace 'std' does not name a type
+  141 |                 std::shared_ptr<task_executor> general_task_executor_{nullptr};
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'ts::PropertyWrapper ts::server::InstanceHandler::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:46:84: error: 'class ts::server::InstanceHandler' has no member named '_properties'; did you mean 'properties'?
+   46 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                    ^~~~~~~~~~~
+      |                                                                                    properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:46:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   46 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'const ts::PropertyWrapper ts::server::InstanceHandler::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:47:96: error: 'const class ts::server::InstanceHandler' has no member named '_properties'; did you mean 'properties'?
+   47 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                ^~~~~~~~~~~
+      |                                                                                                properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:47:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   47 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'const auto& ts::server::InstanceHandler::general_task_executor()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:82:88: error: 'class ts::server::InstanceHandler' has no member named 'general_task_executor_'; did you mean 'general_task_executor'?
+   82 |                 [[nodiscard]] inline const auto& general_task_executor(){ return this->general_task_executor_; }
+      |                                                                                        ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                        general_task_executor
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h: In member function 'ts::PropertyWrapper ts::server::InstanceHandler::getDefaultServerProperties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:89:114: error: 'class ts::server::InstanceHandler' has no member named 'default_server_properties'; did you mean 'getDefaultServerProperties'?
+   89 |                 [[nodiscard]] inline PropertyWrapper getDefaultServerProperties() { return PropertyWrapper{this->default_server_properties}; }
+      |                                                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                                  getDefaultServerProperties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/InstanceHandler.h:89:139: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   89 |                 [[nodiscard]] inline PropertyWrapper getDefaultServerProperties() { return PropertyWrapper{this->default_server_properties}; }
+      |                                                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:4,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:6,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/InternalClient.h:3,
+                 from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:16:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:93:97: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+   93 |                 Playlist(const std::shared_ptr<MusicBotManager>& /* manager */, std::shared_ptr<PropertyManager>  /* properties */, std::shared_ptr<permission::v2::PermissionManager> /* permissions */);
+      |                                                                                                 ^~~~~~~~~~~~~~~
+      |                                                                                                 PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:93:112: error: template argument 1 is invalid
+   93 |                 Playlist(const std::shared_ptr<MusicBotManager>& /* manager */, std::shared_ptr<PropertyManager>  /* properties */, std::shared_ptr<permission::v2::PermissionManager> /* permissions */);
+      |                                                                                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:93:131: error: expected identifier before ',' token
+   93 |                 Playlist(const std::shared_ptr<MusicBotManager>& /* manager */, std::shared_ptr<PropertyManager>  /* properties */, std::shared_ptr<permission::v2::PermissionManager> /* permissions */);
+      |                                                                                                                                   ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:106:24: error: 'PropertyManager' does not name a type; did you mean 'PropertyWrapper'?
+  106 |                 inline PropertyManager& properties() const { return *this->_properties; }
+      |                        ^~~~~~~~~~~~~~~
+      |                        PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:135:33: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  135 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                 ^~~~~~~~~~~~~~~
+      |                                 PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:135:48: error: template argument 1 is invalid
+  135 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:135:22: error: '<expression error>' in namespace 'std' does not name a type
+  135 |                 std::shared_ptr<PropertyManager> _properties;
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'ts::PlaylistId ts::music::Playlist::playlist_id()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:34: error: 'class ts::music::Playlist' has no member named 'properties'
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                  ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:93: error: expected primary-expression before '>' token
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                                                                             ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:109:95: error: expected primary-expression before ')' token
+  109 |                     return this->properties()[property::PLAYLIST_ID].as_unchecked<PlaylistId>();
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'ts::music::Playlist::Type::value ts::music::Playlist::playlist_type()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:34: error: 'class ts::music::Playlist' has no member named 'properties'
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                  ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:96: error: expected primary-expression before '>' token
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                                                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:113:98: error: expected primary-expression before ')' token
+  113 |                     return this->properties()[property::PLAYLIST_TYPE].as_unchecked<Type::value>();
+      |                                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'int32_t ts::music::Playlist::max_songs()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:117:34: error: 'class ts::music::Playlist' has no member named 'properties'
+  117 |                     return this->properties()[property::PLAYLIST_MAX_SONGS];
+      |                                  ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h: In member function 'virtual bool ts::music::Playlist::is_playlist_owner(ts::ClientDbId) const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:132:35: error: 'const class ts::music::Playlist' has no member named 'properties'
+  132 |                             this->properties()[property::PLAYLIST_OWNER_DBID].as_or<ClientDbId>(0) == database_id; }
+      |                                   ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h:132:95: error: expected primary-expression before '>' token
+  132 |                             this->properties()[property::PLAYLIST_OWNER_DBID].as_or<ClientDbId>(0) == database_id; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:27:111: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+   27 |                 PlayablePlaylist(const std::shared_ptr<MusicBotManager>& /* manager */, const std::shared_ptr<PropertyManager>& /* properties */, const std::shared_ptr<permission::v2::PermissionManager>& /* permissions */);
+      |                                                                                                               ^~~~~~~~~~~~~~~
+      |                                                                                                               PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:27:126: error: template argument 1 is invalid
+   27 |                 PlayablePlaylist(const std::shared_ptr<MusicBotManager>& /* manager */, const std::shared_ptr<PropertyManager>& /* properties */, const std::shared_ptr<permission::v2::PermissionManager>& /* permissions */);
+      |                                                                                                                              ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:27:100: error: '<expression error>' in namespace 'std' does not name a type
+   27 |                 PlayablePlaylist(const std::shared_ptr<MusicBotManager>& /* manager */, const std::shared_ptr<PropertyManager>& /* properties */, const std::shared_ptr<permission::v2::PermissionManager>& /* permissions */);
+      |                                                                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h: In member function 'ts::music::PlayablePlaylist::ReplayMode::value ts::music::PlayablePlaylist::replay_mode()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:71: error: 'class ts::music::PlayablePlaylist' has no member named 'properties'
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                       ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:146: error: expected primary-expression before '>' token
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:32:148: error: expected primary-expression before ')' token
+   32 |                 inline ReplayMode::value replay_mode() { return this->properties()[property::PLAYLIST_REPLAY_MODE].as_unchecked<ReplayMode::value>(); }
+      |                                                                                                                                                    ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h: In member function 'void ts::music::PlayablePlaylist::set_replay_mode(ReplayMode::value)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:33:77: error: 'class ts::music::PlayablePlaylist' has no member named 'properties'
+   33 |                 inline void set_replay_mode(ReplayMode::value mode) { this->properties()[property::PLAYLIST_REPLAY_MODE] = mode; }
+      |                                                                             ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h: In member function 'ts::SongId ts::music::PlayablePlaylist::currently_playing()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/music/PlayablePlaylist.h:35:66: error: 'class ts::music::PlayablePlaylist' has no member named 'properties'
+   35 |                 inline SongId currently_playing() { return this->properties()[property::PLAYLIST_CURRENT_SONG_ID]; }
+      |                                                                  ^~~~~~~~~~
+In file included from /home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:11:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:103:33: error: 'PropertyManager' was not declared in this scope; did you mean 'PropertyWrapper'?
+  103 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                 ^~~~~~~~~~~~~~~
+      |                                 PropertyWrapper
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:103:48: error: template argument 1 is invalid
+  103 |                 std::shared_ptr<PropertyManager> _properties;
+      |                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:103:22: error: '<expression error>' in namespace 'std' does not name a type
+  103 |                 std::shared_ptr<PropertyManager> _properties;
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'ts::PropertyWrapper ts::server::DataClient::properties()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:36:84: error: 'class ts::server::DataClient' has no member named '_properties'; did you mean 'properties'?
+   36 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                    ^~~~~~~~~~~
+      |                                                                                    properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:36:95: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   36 |                 inline PropertyWrapper properties() { return PropertyWrapper{this->_properties}; }
+      |                                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'const ts::PropertyWrapper ts::server::DataClient::properties() const':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:37:96: error: 'const class ts::server::DataClient' has no member named '_properties'; did you mean 'properties'?
+   37 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                ^~~~~~~~~~~
+      |                                                                                                properties
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:37:107: error: no matching function for call to 'ts::PropertyWrapper::PropertyWrapper(<brace-enclosed initializer list>)'
+   37 |                 inline const PropertyWrapper properties() const { return PropertyWrapper{this->_properties}; }
+      |                                                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::Properties*, ts::PropertyData*, std::shared_ptr<ts::PropertyBundle>)'
+  842 |             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
+      |             ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:842:13: note:   candidate expects 3 arguments, 1 provided
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(const ts::PropertyWrapper&)'
+  726 |     struct PropertyWrapper {
+      |            ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note: candidate: 'ts::PropertyWrapper::PropertyWrapper(ts::PropertyWrapper&&)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/Properties.h:726:12: note:   conversion of argument 1 would be ill-formed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getDisplayName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:72:81: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   72 |                 virtual std::string getDisplayName() { return this->properties()[property::CLIENT_NICKNAME]; }
+      |                                                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getLoginName()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:73:79: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   73 |                 virtual std::string getLoginName() { return this->properties()[property::CLIENT_LOGIN_NAME]; }
+      |                                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual void ts::server::DataClient::setDisplayName(std::string)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:74:90: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   74 |                 virtual void setDisplayName(std::string displayName) { this->properties()[property::CLIENT_NICKNAME] = displayName; }
+      |                                                                                          ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::server::ClientType ts::server::DataClient::getExternalType()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:83:54: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   83 |                     uint8_t type = this->properties()[property::CLIENT_TYPE];
+      |                                                      ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::server::ClientType ts::server::DataClient::getType()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:88:54: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   88 |                     uint8_t type = this->properties()[property::CLIENT_TYPE_EXACT];
+      |                                                      ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual std::string ts::server::DataClient::getUid()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:92:73: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   92 |                 virtual std::string getUid() { return this->properties()[property::CLIENT_UNIQUE_IDENTIFIER]; }
+      |                                                                         ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h: In member function 'virtual ts::ClientDbId ts::server::DataClient::getClientDatabaseId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/DataClient.h:94:85: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   94 |                 virtual ClientDbId getClientDatabaseId() { return this->properties()[property::CLIENT_DATABASE_ID]; }
+      |                                                                                     ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:88:17: error: 'ConnectionState' does not name a type; did you mean 'ConnectionInfoData'?
+   88 |                 ConnectionState connectionState(){ return this->state; }
+      |                 ^~~~~~~~~~~~~~~
+      |                 ConnectionInfoData
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:372:17: error: 'ConnectionState' does not name a type; did you mean 'ConnectionInfoData'?
+  372 |                 ConnectionState state{ConnectionState::UNKNWON};
+      |                 ^~~~~~~~~~~~~~~
+      |                 ConnectionInfoData
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:439:17: error: 'multi_shot_task' does not name a type
+  439 |                 multi_shot_task task_update_needed_permissions{};
+      |                 ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:440:17: error: 'multi_shot_task' does not name a type
+  440 |                 multi_shot_task task_update_channel_client_properties{};
+      |                 ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:441:17: error: 'multi_shot_task' does not name a type
+  441 |                 multi_shot_task task_update_displayed_groups{};
+      |                 ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'std::string ts::server::ConnectedClient::getHardwareId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:92:65: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+   92 |                 std::string getHardwareId(){ return properties()[property::CLIENT_HARDWARE_ID]; }
+      |                                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'virtual uint16_t ts::server::ConnectedClient::getClientId()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:110:75: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+  110 |                 virtual uint16_t getClientId() { return this->properties()[property::CLIENT_ID]; }
+      |                                                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'virtual void ts::server::ConnectedClient::setClientId(uint16_t)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:111:71: error: no match for 'operator[]' (operand types are 'ts::PropertyWrapper' and 'ts::property::ClientProperties')
+  111 |                 virtual void setClientId(uint16_t clId) { properties()[property::CLIENT_ID] = clId; }
+      |                                                                       ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h: In member function 'std::shared_lock<std::shared_mutex> ts::server::ConnectedClient::require_connected_state(bool)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:354:34: error: 'class ts::server::ConnectedClient' has no member named 'state'
+  354 |                         if(this->state != ConnectionState::CONNECTED)
+      |                                  ^~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h:354:43: error: 'ConnectionState' has not been declared
+  354 |                         if(this->state != ConnectionState::CONNECTED)
+      |                                           ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [62])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<402, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:402:42: note: in expansion of macro 'strobf'
+  402 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<403, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:403:42: note: in expansion of macro 'strobf'
+  403 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aThank you for buying the TeaSpeak-§lPremium-§aSoftware!  ").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [26])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<404, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:404:42: note: in expansion of macro 'strobf'
+  404 |         logMessageFmt(true, LOG_GENERAL, strobf("  §aLicense information:").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [29])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<405, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:405:42: note: in expansion of macro 'strobf'
+  405 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense owner  : §e").string() + ts::config::license_original->owner());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [29])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<406, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:406:42: note: in expansion of macro 'strobf'
+  406 |         logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense type   : §e").string() + license::LicenseTypeNames[ts::config::license_original->data.type]);
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [34])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<409, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:409:46: note: in expansion of macro 'strobf'
+  409 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §enever").string());
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [29])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<415, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:415:46: note: in expansion of macro 'strobf'
+  415 |             logMessageFmt(true, LOG_GENERAL, strobf("     §aLicense expires: §e").string() + string(timeBuffer));
+      |                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [26])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<417, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:53: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                     ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [7])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<417, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:142: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                              ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [6])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<417, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:417:169: note: in expansion of macro 'strobf'
+  417 |         logMessageFmt(true, LOG_GENERAL, string() + strobf("     §aLicense valid  : ").string() + (ts::config::license_original->isValid() ? strobf("§ayes").string() : strobf("§cno").string()));
+      |                                                                                                                                                                         ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In lambda function:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:49: error: missing template arguments before '(' token
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                 ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: error: no matching function for call to 'str_length(const char [62])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note: candidate: 'template<class char_t, <declaration error> > constexpr auto str_obf::str_length(...)'
+  113 |     constexpr inline auto str_length(const char_t(&message)[length]) noexcept { return length; }
+      |                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:113:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:109: note:   couldn't deduce template parameter 'char_t'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                                                          ~~~~~~~~~~~~~~~~~~~^~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: no matching function for call to 'generate_key<418, <expression error> >(const char [65])'
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note: candidate: 'template<<declaration error>, <declaration error> > constexpr auto str_obf::generate_key(const char*)'
+  147 |     constexpr inline auto generate_key(const char* _str_seed) noexcept {
+      |                           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:147:27: note:   template argument deduction/substitution failed:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:193:118: error: template argument 2 is invalid
+  193 | constexpr auto variable_name = ::str_obf::encode(string, str_obf::generate_key<__LINE__, str_obf::str_length(string)>(__FILE__ __TIME__))
+      |                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:199:12: note: in expansion of macro 'strobf_define'
+  199 |     static strobf_define(_, message); \
+      |            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:195:82: error: template argument 1 is invalid
+  195 | #define strobf_val(variable_name) (str_obf::decode_helper<decltype(variable_name)>{variable_name})
+      |                                                                                  ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/../shared/src/misc/strobf.h:200:12: note: in expansion of macro 'strobf_val'
+  200 |     return strobf_val(_); \
+      |            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:418:42: note: in expansion of macro 'strobf'
+  418 |         logMessageFmt(true, LOG_GENERAL, strobf("[]---------------------------------------------------------[]").string());
+      |                                          ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp: In function 'int pthread_create(pthread_t*, const pthread_attr_t*, void* (*)(void*), void*)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/server/main.cpp:587:26: warning: 'int pthread_yield()' is deprecated: pthread_yield is deprecated, use sched_yield instead [-Wdeprecated-declarations]
+  587 |             pthread_yield();
+      |             ~~~~~~~~~~~~~^~
+In file included from /usr/include/features.h:502,
+                 from /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:39,
+                 from /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h:679,
+                 from /usr/include/c++/13/bits/requires_hosted.h:31,
+                 from /usr/include/c++/13/iostream:38:
+/usr/include/pthread.h:479:12: note: declared here
+  479 | extern int __REDIRECT_NTH (pthread_yield, (void), sched_yield)
+      |            ^~~~~~~~~~~~~~
+gmake[3]: *** [server/CMakeFiles/TeaSpeakServer.dir/build.make:79: server/CMakeFiles/TeaSpeakServer.dir/main.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:713: server/CMakeFiles/TeaSpeakServer.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:720: server/CMakeFiles/TeaSpeakServer.dir/rule] Error 2
+gmake: *** [Makefile:403: TeaSpeakServer] Error 2
+Failed to build server (2)

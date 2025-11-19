@@ -1,0 +1,4 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+./build_glib.sh: line 26: meson: command not found
+Failed to setup meson build

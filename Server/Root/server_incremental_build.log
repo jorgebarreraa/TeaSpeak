@@ -1,0 +1,1044 @@
+This is an automated jenkins build. Initializing variables.
+Initializing optimized session.
+Disabling web support
+Build type: RelWithDebInfo
+> cmake .. -DCMAKE_BUILD_TYPE="RelWithDebInfo" -DCMAKE_CXX_FLAGS="" -DBUILD_INCLUDE_FILE="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/config/tearoot-server.cmake" -DCMAKE_MODULE_PATH="/home/user/TeaSpeak/Server/Root/build-helpers//cmake/" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT="OFF" -DBUILD_TYPE=1 -DBUILD_TYPE_NAME=beta -Dmysql_ROOT_DIR="/home/user/TeaSpeak/Server/Root/TeaSpeak/build/../../../mysql-server/out"
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+Breakpad: /home/user/TeaSpeak/Server/Root/libraries/breakpad/out/linux_amd64/include
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (opus) does
+  not match the name of the calling package (Opus).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:65 (find_package_handle_standard_args)
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindOpus.cmake:69 (resolve_opus)
+  CMakeLists.txt:63 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+/home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//zstd/build/cmake//out/linux_amd64/lib/cmake/zstd/
+Use static libevent
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Libevent version: 1
+Tommath root dir: /home/user/TeaSpeak/Server/Root/TeaSpeak/../libraries//tommath//out/linux_amd64
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+CMake Warning (dev) at /usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (ed25519)
+  does not match the name of the calling package (Ed25519).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /home/user/TeaSpeak/Server/Root/build-helpers/cmake/FindEd25519.cmake:44 (find_package_handle_standard_args)
+  shared/CMakeLists.txt:43 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+HAVE JSON!
+
+Building without MySQL Support
+-- Found libevent 2.2.1 in /home/user/TeaSpeak/Server/Root/libraries/event/out/linux_amd64
+Skipping librtc linkage - Web client support disabled
+-- Configuring done (0.3s)
+CMake Warning (dev) at shared/CMakeLists.txt:281 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:288 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:299 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:303 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:306 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:309 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:312 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:315 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:318 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:321 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:281 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:288 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:299 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:303 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:306 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:309 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:312 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:315 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:318 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:321 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:281 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:288 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:299 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:303 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:306 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:309 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:312 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:315 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:318 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:321 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:281 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:288 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:299 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:303 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:306 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:309 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:312 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:315 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:318 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:321 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:281 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:288 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:296 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:299 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:303 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:306 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:309 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:312 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:315 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:318 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at shared/CMakeLists.txt:321 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at server/CMakeLists.txt:241 (target_link_libraries):
+  The library that is being linked to, yaml-cpp, is marked as being
+  deprecated by the owner.  The message provided by the developer is:
+
+  The target yaml-cpp is deprecated and will be removed in version 0.10.0.
+  Use the yaml-cpp::yaml-cpp target instead.
+
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Generating done (0.7s)
+-- Build files have been written to: /home/user/TeaSpeak/Server/Root/TeaSpeak/build
+gmake: *** No rule to make target 'ProviderFFMpeg'.  Stop.
+Warning: Failed to build ffmpeg (2) - skipping optional component
+gmake: *** No rule to make target 'ProviderYT'.  Stop.
+Warning: Failed to build YT (2) - skipping optional component
+[  3%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/protocol/PacketLossCalculator.cpp.o
+[  3%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/sql/sqlite/SqliteSQL.cpp.o
+[  3%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/sql/mysql/MySQL.cpp.o
+[  3%] Building CXX object shared/CMakeFiles/TeaSpeak.dir/src/ssl/SSLManager.cpp.o
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In destructor 'sql::mysql::Connection::~Connection()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:172:9: error: 'mysql_close' was not declared in this scope; did you mean 'sem_close'?
+  172 |         mysql_close(this->handle);
+      |         ^~~~~~~~~~~
+      |         sem_close
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In member function 'virtual sql::result sql::mysql::MySQLManager::connect(const std::string&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:211:30: error: 'mysql_init' was not declared in this scope; did you mean 'sem_init'?
+  211 |         connection->handle = mysql_init(nullptr);
+      |                              ^~~~~~~~~~
+      |                              sem_init
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:217:47: error: 'MYSQL_OPT_RECONNECT' was not declared in this scope
+  217 |             mysql_options(connection->handle, MYSQL_OPT_RECONNECT, &reconnect);
+      |                                               ^~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:217:13: error: 'mysql_options' was not declared in this scope
+  217 |             mysql_options(connection->handle, MYSQL_OPT_RECONNECT, &reconnect);
+      |             ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:219:43: error: 'MYSQL_SET_CHARSET_NAME' was not declared in this scope
+  219 |         mysql_options(connection->handle, MYSQL_SET_CHARSET_NAME, "utf8");
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:219:9: error: 'mysql_options' was not declared in this scope
+  219 |         mysql_options(connection->handle, MYSQL_SET_CHARSET_NAME, "utf8");
+      |         ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:220:43: error: 'MYSQL_INIT_COMMAND' was not declared in this scope
+  220 |         mysql_options(connection->handle, MYSQL_INIT_COMMAND, "SET NAMES utf8");
+      |                                           ^~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:222:23: error: 'mysql_real_connect' was not declared in this scope
+  222 |         auto result = mysql_real_connect(connection->handle, host.c_str(), username.c_str(), password.c_str(), database.c_str(), port, nullptr, 0); //CLIENT_MULTI_RESULTS | CLIENT_MULTI_STATEMENTS
+      |                       ^~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:224:100: error: 'mysql_error' was not declared in this scope
+  224 |             return {-1, "failed to connect to server with connection " + to_string(index) + ": " + mysql_error(connection->handle)};
+      |                                                                                                    ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:224:131: error: could not convert '{-1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  224 |             return {-1, "failed to connect to server with connection " + to_string(index) + ": " + mysql_error(connection->handle)};
+      |                                                                                                                                   ^
+      |                                                                                                                                   |
+      |                                                                                                                                   <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:249:5: error: 'MYSQL_STMT' does not name a type
+  249 |     MYSQL_STMT* stmt;
+      |     ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In destructor 'StatementGuard::~StatementGuard()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:252:32: error: 'struct StatementGuard' has no member named 'stmt'
+  252 |         mysql_stmt_close(this->stmt);
+      |                                ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:252:9: error: 'mysql_stmt_close' was not declared in this scope; did you mean 'sqlite3_close'?
+  252 |         mysql_stmt_close(this->stmt);
+      |         ^~~~~~~~~~~~~~~~
+      |         sqlite3_close
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:257:5: error: 'MYSQL_RES' does not name a type
+  257 |     MYSQL_RES* result;
+      |     ^~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In destructor 'ResultGuard::~ResultGuard()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:260:33: error: 'struct ResultGuard' has no member named 'result'
+  260 |         mysql_free_result(this->result);
+      |                                 ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:260:9: error: 'mysql_free_result' was not declared in this scope
+  260 |         mysql_free_result(this->result);
+      |         ^~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In function 'bool sql::mysql::create_bind(BindMemory*&, const std::vector<variable>&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:338:44: error: 'MYSQL_BIND' was not declared in this scope
+  338 |             size_t required_bytes = sizeof(MYSQL_BIND) * variables.size();
+      |                                            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:384:45: error: expected primary-expression before ')' token
+  384 |                 auto bind_ptr = (MYSQL_BIND*) memory;
+      |                                             ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:393:53: error: 'enum_field_types' has not been declared
+  393 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_NULL;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:396:53: error: 'enum_field_types' has not been declared
+  396 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_TINY;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:401:53: error: 'enum_field_types' has not been declared
+  401 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_LONG;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:406:53: error: 'enum_field_types' has not been declared
+  406 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_LONGLONG;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:411:53: error: 'enum_field_types' has not been declared
+  411 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_DOUBLE;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:416:53: error: 'enum_field_types' has not been declared
+  416 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_FLOAT;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:425:53: error: 'enum_field_types' has not been declared
+  425 |                             bind_ptr->buffer_type = enum_field_types::MYSQL_TYPE_STRING;
+      |                                                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:455:33: error: 'MYSQL_FIELD' does not name a type
+  455 |             bool(*create)(const MYSQL_FIELD& /* field */, MYSQL_BIND& /* bind */, char*& /* primitive ptr */) = nullptr;
+      |                                 ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:455:59: error: 'MYSQL_BIND' has not been declared
+  455 |             bool(*create)(const MYSQL_FIELD& /* field */, MYSQL_BIND& /* bind */, char*& /* primitive ptr */) = nullptr;
+      |                                                           ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:457:34: error: 'MYSQL_BIND' has not been declared
+  457 |             bool(*get_as_string)(MYSQL_BIND& /* bind */, std::string& /* result */) = nullptr;
+      |                                  ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:462:19: error: 'MYSQL_BIND' was not declared in this scope
+  462 |         bool m2ps(MYSQL_BIND& bind, string& str) {
+      |                   ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:462:43: error: expected primary-expression before '&' token
+  462 |         bool m2ps(MYSQL_BIND& bind, string& str) {
+      |                                           ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:462:45: error: 'str' was not declared in this scope; did you mean 'stx'?
+  462 |         bool m2ps(MYSQL_BIND& bind, string& str) {
+      |                                             ^~~
+      |                                             stx
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:462:48: warning: expression list treated as compound expression in initializer [-fpermissive]
+  462 |         bool m2ps(MYSQL_BIND& bind, string& str) {
+      |                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:462:49: error: expected ';' before '{' token
+  462 |         bool m2ps(MYSQL_BIND& bind, string& str) {
+      |                                                 ^~
+      |                                                 ;
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:474:39: error: 'MYSQL_FIELD' does not name a type
+  474 |         bool _do_bind_primitive(const MYSQL_FIELD&, MYSQL_BIND& bind, char*& primitive_ptr) {
+      |                                       ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:474:53: error: 'MYSQL_BIND' has not been declared
+  474 |         bool _do_bind_primitive(const MYSQL_FIELD&, MYSQL_BIND& bind, char*& primitive_ptr) {
+      |                                                     ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In function 'bool sql::mysql::_do_bind_primitive(const int&, int&, char*&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:475:18: error: request for member 'buffer' in 'bind', which is of non-class type 'int'
+  475 |             bind.buffer = (void*) primitive_ptr;
+      |                  ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:476:18: error: request for member 'buffer_length' in 'bind', which is of non-class type 'int'
+  476 |             bind.buffer_length = size;
+      |                  ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:477:18: error: request for member 'buffer_type' in 'bind', which is of non-class type 'int'
+  477 |             bind.buffer_type = (enum_field_types) type;
+      |                  ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:477:33: error: 'enum_field_types' was not declared in this scope
+  477 |             bind.buffer_type = (enum_field_types) type;
+      |                                 ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:492:57: error: 'enum_field_types' was not declared in this scope
+  492 |         const ResultBindDescriptor* get_bind_descriptor(enum_field_types type) {
+      |                                                         ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In destructor 'sql::mysql::ResultBind::~ResultBind()':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:556:70: error: 'MYSQL_BIND' was not declared in this scope
+  556 |                     auto memory_ptr = (char*) this->memory + (sizeof(MYSQL_BIND) * field_count);
+      |                                                                      ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In member function 'bool sql::mysql::ResultBind::get_as_string(size_t, std::string&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:573:36: error: 'MYSQL_BIND' was not declared in this scope
+  573 |                 auto& bind_ptr = *(MYSQL_BIND*) ((char*) this->memory + sizeof(MYSQL_BIND) * column);
+      |                                    ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:573:47: error: expected primary-expression before ')' token
+  573 |                 auto& bind_ptr = *(MYSQL_BIND*) ((char*) this->memory + sizeof(MYSQL_BIND) * column);
+      |                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In member function 'bool sql::mysql::ResultBind::get_as_string(std::string*)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:580:34: error: 'MYSQL_BIND' was not declared in this scope
+  580 |                 auto bind_ptr = (MYSQL_BIND*) this->memory;
+      |                                  ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:580:45: error: expected primary-expression before ')' token
+  580 |                 auto bind_ptr = (MYSQL_BIND*) this->memory;
+      |                                             ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: At global scope:
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:590:53: error: 'MYSQL_FIELD' has not been declared
+  590 |         bool create_result_bind(size_t field_count, MYSQL_FIELD* fields, ResultBind& result) {
+      |                                                     ^~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In function 'bool sql::mysql::create_result_bind(size_t, int*, ResultBind&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:591:44: error: 'MYSQL_BIND' was not declared in this scope
+  591 |             size_t required_bytes = sizeof(MYSQL_BIND) * field_count;
+      |                                            ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:600:79: error: request for member 'type' in '*(fields + ((sizetype)(index * 4)))', which is of non-class type 'int'
+  600 |                 result.descriptors[index] = get_bind_descriptor(fields[index].type);
+      |                                                                               ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:600:83: error: 'sql::mysql::get_bind_descriptor' cannot be used as a function
+  600 |                 result.descriptors[index] = get_bind_descriptor(fields[index].type);
+      |                                                                                   ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:618:41: error: expected primary-expression before ')' token
+  618 |             auto bind_ptr = (MYSQL_BIND*) result.memory;
+      |                                         ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:621:55: error: request for member 'type' in '*(fields + ((sizetype)(index * 4)))', which is of non-class type 'int'
+  621 |                 bind_ptr->buffer_type = fields[index].type;
+      |                                                       ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In member function 'virtual sql::result sql::mysql::MySQLManager::executeCommand(std::shared_ptr<sql::CommandData>)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:710:92: error: designated initializers cannot be used with a non-aggregate type 'sql::mysql::ResultBind'
+  710 |     ResultBind bind_result_data{.field_count = 0, .memory = nullptr, .descriptors = nullptr};
+      |                                                                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:710:92: error: no matching function for call to 'sql::mysql::ResultBind::ResultBind(<brace-enclosed initializer list>)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:715:31: error: 'mysql_stmt_init' was not declared in this scope
+  715 |     StatementGuard stmt_guard{mysql_stmt_init(connection->connection->handle)};
+      |                               ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:716:20: error: 'struct StatementGuard' has no member named 'stmt'
+  716 |     if(!stmt_guard.stmt)
+      |                    ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:719:38: error: 'struct StatementGuard' has no member named 'stmt'
+  719 |     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
+      |                                      ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:719:8: error: 'mysql_stmt_prepare' was not declared in this scope; did you mean 'sqlite3_prepare'?
+  719 |     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
+      |        ^~~~~~~~~~~~~~~~~~
+      |        sqlite3_prepare
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:720:49: error: 'struct StatementGuard' has no member named 'stmt'
+  720 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                                                 ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:720:21: error: 'mysql_stmt_errno' was not declared in this scope
+  720 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:724:108: error: 'struct StatementGuard' has no member named 'stmt'
+  724 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                            ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:724:80: error: 'mysql_stmt_error' was not declared in this scope
+  724 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:724:114: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  724 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                  ^
+      |                                                                                                                  |
+      |                                                                                                                  <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:728:62: error: 'struct StatementGuard' has no member named 'stmt'
+  728 |     auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
+      |                                                              ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:728:28: error: 'mysql_stmt_param_count' was not declared in this scope
+  728 |     auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:730:193: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  730 |         return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
+      |                                                                                                                                                                                                 ^
+      |                                                                                                                                                                                                 |
+      |                                                                                                                                                                                                 <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:733:45: error: 'struct StatementGuard' has no member named 'stmt'
+  733 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                             ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:733:52: error: 'MYSQL_BIND' was not declared in this scope
+  733 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                                    ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:733:63: error: expected primary-expression before ')' token
+  733 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:733:12: error: 'mysql_stmt_bind_param' was not declared in this scope
+  733 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |            ^~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:734:123: error: 'struct StatementGuard' has no member named 'stmt'
+  734 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                           ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:734:95: error: 'mysql_stmt_error' was not declared in this scope
+  734 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                               ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:734:129: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  734 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                 ^
+      |                                                                                                                                 |
+      |                                                                                                                                 <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:736:208: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  736 |         return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given (bind nullptr)."};
+      |                                                                                                                                                                                                                ^
+      |                                                                                                                                                                                                                |
+      |                                                                                                                                                                                                                <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:739:38: error: 'struct StatementGuard' has no member named 'stmt'
+  739 |     if(mysql_stmt_execute(stmt_guard.stmt)) {
+      |                                      ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:739:8: error: 'mysql_stmt_execute' was not declared in this scope
+  739 |     if(mysql_stmt_execute(stmt_guard.stmt)) {
+      |        ^~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:740:49: error: 'struct StatementGuard' has no member named 'stmt'
+  740 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                                                 ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:740:21: error: 'mysql_stmt_errno' was not declared in this scope
+  740 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:744:114: error: 'struct StatementGuard' has no member named 'stmt'
+  744 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                  ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:744:86: error: 'mysql_stmt_error' was not declared in this scope
+  744 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                      ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:744:120: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  744 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                        ^
+      |                                                                                                                        |
+      |                                                                                                                        <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp: In member function 'virtual sql::result sql::mysql::MySQLManager::queryCommand(std::shared_ptr<sql::CommandData>, const sql::QueryCallback&)':
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:764:92: error: designated initializers cannot be used with a non-aggregate type 'sql::mysql::ResultBind'
+  764 |     ResultBind bind_result_data{.field_count = 0, .memory = nullptr, .descriptors = nullptr};
+      |                                                                                            ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:764:92: error: no matching function for call to 'sql::mysql::ResultBind::ResultBind(<brace-enclosed initializer list>)'
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:769:31: error: 'mysql_stmt_init' was not declared in this scope
+  769 |     StatementGuard stmt_guard{mysql_stmt_init(connection->connection->handle)};
+      |                               ^~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:770:20: error: 'struct StatementGuard' has no member named 'stmt'
+  770 |     if(!stmt_guard.stmt)
+      |                    ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:773:38: error: 'struct StatementGuard' has no member named 'stmt'
+  773 |     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
+      |                                      ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:773:8: error: 'mysql_stmt_prepare' was not declared in this scope; did you mean 'sqlite3_prepare'?
+  773 |     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
+      |        ^~~~~~~~~~~~~~~~~~
+      |        sqlite3_prepare
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:774:49: error: 'struct StatementGuard' has no member named 'stmt'
+  774 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                                                 ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:774:21: error: 'mysql_stmt_errno' was not declared in this scope
+  774 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:778:108: error: 'struct StatementGuard' has no member named 'stmt'
+  778 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                            ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:778:80: error: 'mysql_stmt_error' was not declared in this scope
+  778 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:778:114: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  778 |         return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                  ^
+      |                                                                                                                  |
+      |                                                                                                                  <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:783:66: error: 'struct StatementGuard' has no member named 'stmt'
+  783 |         auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
+      |                                                                  ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:783:32: error: 'mysql_stmt_param_count' was not declared in this scope
+  783 |         auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
+      |                                ^~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:785:197: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  785 |             return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
+      |                                                                                                                                                                                                     ^
+      |                                                                                                                                                                                                     |
+      |                                                                                                                                                                                                     <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:789:45: error: 'struct StatementGuard' has no member named 'stmt'
+  789 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                             ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:789:52: error: 'MYSQL_BIND' was not declared in this scope
+  789 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                                    ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:789:63: error: expected primary-expression before ')' token
+  789 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |                                                               ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:789:12: error: 'mysql_stmt_bind_param' was not declared in this scope
+  789 |         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
+      |            ^~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:790:123: error: 'struct StatementGuard' has no member named 'stmt'
+  790 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                           ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:790:95: error: 'mysql_stmt_error' was not declared in this scope
+  790 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                               ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:790:129: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  790 |             return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                 ^
+      |                                                                                                                                 |
+      |                                                                                                                                 <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:793:38: error: 'struct StatementGuard' has no member named 'stmt'
+  793 |     if(mysql_stmt_execute(stmt_guard.stmt)) {
+      |                                      ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:793:8: error: 'mysql_stmt_execute' was not declared in this scope
+  793 |     if(mysql_stmt_execute(stmt_guard.stmt)) {
+      |        ^~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:794:49: error: 'struct StatementGuard' has no member named 'stmt'
+  794 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                                                 ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:794:21: error: 'mysql_stmt_errno' was not declared in this scope
+  794 |         auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                     ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:798:114: error: 'struct StatementGuard' has no member named 'stmt'
+  798 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                  ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:798:86: error: 'mysql_stmt_error' was not declared in this scope
+  798 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                      ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:798:120: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  798 |         return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                        ^
+      |                                                                                                                        |
+      |                                                                                                                        <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:804:68: error: 'struct StatementGuard' has no member named 'stmt'
+  804 |     ResultGuard result_guard{mysql_stmt_result_metadata(stmt_guard.stmt)};
+      |                                                                    ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:804:30: error: 'mysql_stmt_result_metadata' was not declared in this scope
+  804 |     ResultGuard result_guard{mysql_stmt_result_metadata(stmt_guard.stmt)};
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:805:22: error: 'struct ResultGuard' has no member named 'result'
+  805 |     if(!result_guard.result)
+      |                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:806:112: error: 'struct StatementGuard' has no member named 'stmt'
+  806 |         return {ptr->sql_command, -1, "failed to query result metadata: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:806:84: error: 'mysql_stmt_error' was not declared in this scope
+  806 |         return {ptr->sql_command, -1, "failed to query result metadata: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                    ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:806:118: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  806 |         return {ptr->sql_command, -1, "failed to query result metadata: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                      ^
+      |                                                                                                                      |
+      |                                                                                                                      <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:809:54: error: 'struct ResultGuard' has no member named 'result'
+  809 |     auto field_count = mysql_num_fields(result_guard.result);
+      |                                                      ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:809:24: error: 'mysql_num_fields' was not declared in this scope
+  809 |     auto field_count = mysql_num_fields(result_guard.result);
+      |                        ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:814:59: error: 'struct ResultGuard' has no member named 'result'
+  814 |         auto field_meta = mysql_fetch_fields(result_guard.result);
+      |                                                           ^~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:814:27: error: 'mysql_fetch_fields' was not declared in this scope
+  814 |         auto field_meta = mysql_fetch_fields(result_guard.result);
+      |                           ^~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:821:46: error: 'struct StatementGuard' has no member named 'stmt'
+  821 |         if(mysql_stmt_bind_result(stmt_guard.stmt, (MYSQL_BIND*) bind_result_data.memory))
+      |                                              ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:821:53: error: 'MYSQL_BIND' was not declared in this scope
+  821 |         if(mysql_stmt_bind_result(stmt_guard.stmt, (MYSQL_BIND*) bind_result_data.memory))
+      |                                                     ^~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:821:64: error: expected primary-expression before ')' token
+  821 |         if(mysql_stmt_bind_result(stmt_guard.stmt, (MYSQL_BIND*) bind_result_data.memory))
+      |                                                                ^
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:821:12: error: 'mysql_stmt_bind_result' was not declared in this scope
+  821 |         if(mysql_stmt_bind_result(stmt_guard.stmt, (MYSQL_BIND*) bind_result_data.memory))
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:822:128: error: 'struct StatementGuard' has no member named 'stmt'
+  822 |             return {ptr->sql_command, -1, "failed to bind response buffer to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:822:100: error: 'mysql_stmt_error' was not declared in this scope
+  822 |             return {ptr->sql_command, -1, "failed to bind response buffer to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                    ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:822:134: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  822 |             return {ptr->sql_command, -1, "failed to bind response buffer to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                      ^
+      |                                                                                                                                      |
+      |                                                                                                                                      <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:832:53: error: 'struct StatementGuard' has no member named 'stmt'
+  832 |     while(!(stmt_code = mysql_stmt_fetch(stmt_guard.stmt))) {
+      |                                                     ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:832:25: error: 'mysql_stmt_fetch' was not declared in this scope
+  832 |     while(!(stmt_code = mysql_stmt_fetch(stmt_guard.stmt))) {
+      |                         ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:845:53: error: 'struct StatementGuard' has no member named 'stmt'
+  845 |             auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                                                     ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:845:25: error: 'mysql_stmt_errno' was not declared in this scope
+  845 |             auto errc = mysql_stmt_errno(stmt_guard.stmt);
+      |                         ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:849:139: error: 'struct StatementGuard' has no member named 'stmt'
+  849 |             return {ptr->sql_command, -1, "failed to fetch response row " + to_string(row_id) + ": " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                           ^~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:849:111: error: 'mysql_stmt_error' was not declared in this scope
+  849 |             return {ptr->sql_command, -1, "failed to fetch response row " + to_string(row_id) + ": " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                               ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:849:145: error: could not convert '{((std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>*)(& ptr))->std::__shared_ptr_access<sql::mysql::MySQLCommand, __gnu_cxx::_S_atomic, false, false>::operator->()->sql::mysql::MySQLCommand::<anonymous>.sql::CommandData::sql_command, -1, <expression error>}' from '<brace-enclosed initializer list>' to 'sql::result'
+  849 |             return {ptr->sql_command, -1, "failed to fetch response row " + to_string(row_id) + ": " + string(mysql_stmt_error(stmt_guard.stmt))};
+      |                                                                                                                                                 ^
+      |                                                                                                                                                 |
+      |                                                                                                                                                 <brace-enclosed initializer list>
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:850:32: error: 'MYSQL_NO_DATA' was not declared in this scope
+  850 |         } else if(stmt_code == MYSQL_NO_DATA)
+      |                                ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/TeaSpeak/shared/src/sql/mysql/MySQL.cpp:852:30: error: 'MYSQL_DATA_TRUNCATED' was not declared in this scope
+  852 |         else if(stmt_code == MYSQL_DATA_TRUNCATED)
+      |                              ^~~~~~~~~~~~~~~~~~~~
+gmake[3]: *** [shared/CMakeFiles/TeaSpeak.dir/build.make:622: shared/CMakeFiles/TeaSpeak.dir/src/sql/mysql/MySQL.cpp.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/Makefile2:220: shared/CMakeFiles/TeaSpeak.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:720: server/CMakeFiles/TeaSpeakServer.dir/rule] Error 2
+gmake: *** [Makefile:403: TeaSpeakServer] Error 2
+Failed to build server (2)

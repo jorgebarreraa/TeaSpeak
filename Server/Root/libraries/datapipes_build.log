@@ -1,0 +1,590 @@
+Testing library build status at DataPipes (/home/user/TeaSpeak/Server/Root/libraries/DataPipes)
+Build check file is missing. Rebuilding!
+WebRTC flags: -DBUILD_WEBRTC=ON -DGLIB_PREBUILD_INCLUDES="/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/include;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/include/glib-2.0/;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/glib-2.0/include/" -DGLIB_PREBUILD_LIBRARIES="/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgio-2.0.so;z;resolv;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgmodule-2.0.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgobject-2.0.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libffi.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libglib-2.0.so;pcre" -DLIBNICE_PREBUILD_PATH="../libnice/linux_amd64"
+Creating build directory /home/user/TeaSpeak/Server/Root/libraries/DataPipes/_build/linux_amd64/
+Executing cmake command:
+> cmake /home/user/TeaSpeak/Server/Root/libraries/DataPipes   -DBUILD_EXAMPLES="OFF" -DCMAKE_CXX_FLAGS="-fPIC -static-libgcc -static-libstdc++" -DCMAKE_BUILD_TYPE="" -DCrypto_ROOT_DIR="/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/" -DBUILD_SHARED="1" -DCMAKE_C_FLAGS="-fPIC" -DCRYPTO_TYPE="openssl" -DLIBNICE_PREBUILD_PATH="../libnice/linux_amd64" -DGLIB_PREBUILD_LIBRARIES="/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgio-2.0.so;z;resolv;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgmodule-2.0.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libgobject-2.0.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libffi.so;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/libglib-2.0.so;pcre" -DCMAKE_INSTALL_PREFIX="/home/user/TeaSpeak/Server/Root/libraries/DataPipes/out/linux_amd64/" -DBUILD_STATIC="1" -DBUILD_WEBRTC="ON" -DGLIB_PREBUILD_INCLUDES="/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/include;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/include/glib-2.0/;/home/user/TeaSpeak/Server/Root/libraries/glibc/linux_amd64/lib/x86_64-linux-gnu/glib-2.0/include/" 
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Crypto: /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl.so;/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto.so  
+Using OpenSSL
+We're not on windows
+-- Configuring done (1.0s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BUILD_WEBRTC
+    CMAKE_C_FLAGS
+    GLIB_PREBUILD_INCLUDES
+    GLIB_PREBUILD_LIBRARIES
+    LIBNICE_PREBUILD_PATH
+
+
+-- Build files have been written to: /home/user/TeaSpeak/Server/Root/libraries/DataPipes/_build/linux_amd64
+Executing build command:
+> make -j16
+[ 10%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/pipeline.cpp.o
+[ 10%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/pipeline.cpp.o
+[ 15%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/allocator.cpp.o
+[ 25%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/buffer.cpp.o
+[ 25%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/buffer.cpp.o
+[ 35%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/http/http.cpp.o
+[ 35%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/allocator.cpp.o
+[ 40%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/http/http.cpp.o
+[ 55%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/tls.cpp.o
+[ 55%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/ws.cpp.o
+[ 55%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/ws.cpp.o
+[ 60%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/ssl/ssl.cpp.o
+[ 65%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/tls.cpp.o
+[ 70%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/ssl/ssl_bio.cpp.o
+[ 75%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/ssl/ssl.cpp.o
+[ 80%] Building CXX object CMakeFiles/DataPipes-Core-Static.dir/src/allocator_paged.cpp.o
+[ 85%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/ssl/ssl_bio.cpp.o
+[ 90%] Building CXX object CMakeFiles/DataPipes-Core-Shared.dir/src/allocator_paged.cpp.o
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:5:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: At global scope:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:191:73: error: return type 'std::string' {aka 'class std::__cxx11::basic_string<char>'} is incomplete
+  191 |                         [[nodiscard]] inline std::string string() const { return std::string(this->data_ptr<const char>(), this->length()); }
+      |                                                                         ^
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'void pipes::buffer_view::string() const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:191:138: error: invalid use of incomplete type 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+  191 |                         [[nodiscard]] inline std::string string() const { return std::string(this->data_ptr<const char>(), this->length()); }
+      |                                                                                                                                          ^
+In file included from /usr/include/c++/13/iosfwd:41,
+                 from /usr/include/c++/13/bits/shared_ptr.h:52,
+                 from /usr/include/c++/13/memory:80,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:6:
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:5:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: At global scope:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:191:73: error: return type 'std::string' {aka 'class std::__cxx11::basic_string<char>'} is incomplete
+  191 |                         [[nodiscard]] inline std::string string() const { return std::string(this->data_ptr<const char>(), this->length()); }
+      |                                                                         ^
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'void pipes::buffer_view::string() const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:191:138: error: invalid use of incomplete type 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+  191 |                         [[nodiscard]] inline std::string string() const { return std::string(this->data_ptr<const char>(), this->length()); }
+      |                                                                                                                                          ^
+In file included from /usr/include/c++/13/iosfwd:41,
+                 from /usr/include/c++/13/bits/shared_ptr.h:52,
+                 from /usr/include/c++/13/memory:80,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:6:
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'bool pipes::buffer::append(const std::string&)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:273:31: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  273 |         if(this->capacity() < message.length() + current_length)
+      |                               ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:274:30: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  274 |                 this->resize(message.length() + this->length());
+      |                              ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:276:59: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  276 |         memcpy((char*) this->data_ptr() + current_length, message.data(), message.length());
+      |                                                           ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:276:75: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  276 |         memcpy((char*) this->data_ptr() + current_length, message.data(), message.length());
+      |                                                                           ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::write(const pipes::buffer_view&, ssize_t, ssize_t, ssize_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:286:24: error: 'out_of_range' is not a member of 'std'
+  286 |             throw std::out_of_range("Source is out of buffer range!");
+      |                        ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:8:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    7 | #include <cassert>
+  +++ |+#include <stdexcept>
+    8 | 
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::write(void*, size_t, ssize_t, ssize_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:296:24: error: 'out_of_range' is not a member of 'std'
+  296 |             throw std::out_of_range("Destination is out of buffer range!");
+      |                        ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:296:24: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::find(const std::string&)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:303:12: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  303 |         if(str.empty()) return 0;
+      |            ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:306:18: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  306 |         if(len < str.length()) return -1;
+      |                  ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:307:16: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  307 |         len -= str.length();
+      |                ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:310:29: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  310 |         const char* c_str = str.data();
+      |                             ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:316:43: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  316 |                         while(++str_idx < str.length())
+      |                                           ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:319:39: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  319 |                         if(str_idx == str.length()) return index;
+      |                                       ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'bool pipes::buffer::append(const std::string&)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:273:31: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  273 |         if(this->capacity() < message.length() + current_length)
+      |                               ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:274:30: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  274 |                 this->resize(message.length() + this->length());
+      |                              ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:276:59: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  276 |         memcpy((char*) this->data_ptr() + current_length, message.data(), message.length());
+      |                                                           ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:276:75: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  276 |         memcpy((char*) this->data_ptr() + current_length, message.data(), message.length());
+      |                                                                           ^~~~~~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::write(const pipes::buffer_view&, ssize_t, ssize_t, ssize_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:286:24: error: 'out_of_range' is not a member of 'std'
+  286 |             throw std::out_of_range("Source is out of buffer range!");
+      |                        ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:8:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    7 | #include <cassert>
+  +++ |+#include <stdexcept>
+    8 | 
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::write(void*, size_t, ssize_t, ssize_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:296:24: error: 'out_of_range' is not a member of 'std'
+  296 |             throw std::out_of_range("Destination is out of buffer range!");
+      |                        ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:296:24: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp: In member function 'ssize_t pipes::buffer::find(const std::string&)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:303:12: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  303 |         if(str.empty()) return 0;
+      |            ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:306:18: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  306 |         if(len < str.length()) return -1;
+      |                  ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:307:16: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  307 |         len -= str.length();
+      |                ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:310:29: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  310 |         const char* c_str = str.data();
+      |                             ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:316:43: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  316 |                         while(++str_idx < str.length())
+      |                                           ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/buffer.cpp:319:39: error: invalid use of incomplete type 'const std::string' {aka 'const class std::__cxx11::basic_string<char>'}
+  319 |                         if(str_idx == str.length()) return index;
+      |                                       ^~~
+/usr/include/c++/13/bits/stringfwd.h:72:11: note: declaration of 'std::string' {aka 'class std::__cxx11::basic_string<char>'}
+   72 |     class basic_string;
+      |           ^~~~~~~~~~~~
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:90: CMakeFiles/DataPipes-Core-Static.dir/src/buffer.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:90: CMakeFiles/DataPipes-Core-Shared.dir/src/buffer.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/pipeline.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ws.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ws.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/pipeline.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ws.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ws.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/tls.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:4:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/tls.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:4:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:76: CMakeFiles/DataPipes-Core-Shared.dir/src/pipeline.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:76: CMakeFiles/DataPipes-Core-Static.dir/src/pipeline.cpp.o] Error 1
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp: In static member function 'static long int pipes::SSL::bio_ctrl(BIO*, int, long int, void*)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp:49:10: warning: unused variable 'handle' [-Wunused-variable]
+   49 |     auto handle = static_cast<SSL*>(BIO_get_data(self));
+      |          ^~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In constructor 'pipes::TLSCertificate::TLSCertificate(const std::string&, const std::string&, bool)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:136:33: error: 'invalid_argument' is not a member of 'std'
+  136 |         if(!bio_key) throw std::invalid_argument("Could no open key file: " + ssl_err_as_string());
+      |                                 ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:10:1: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    9 | #include <openssl/err.h>
+  +++ |+#include <stdexcept>
+   10 | #include <openssl/ssl.h>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:138:41: error: 'invalid_argument' is not a member of 'std'
+  138 |         if(!bio_certificate) throw std::invalid_argument("Could no open key file: " + ssl_err_as_string());
+      |                                         ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:138:41: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:150:28: error: 'invalid_argument' is not a member of 'std'
+  150 |                 throw std::invalid_argument("Could not read cert_pem (" + ssl_err_as_string() + ")");
+      |                            ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:150:28: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In constructor 'pipes::TLSCertificate::TLSCertificate(const std::string&, const std::string&, bool)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:136:33: error: 'invalid_argument' is not a member of 'std'
+  136 |         if(!bio_key) throw std::invalid_argument("Could no open key file: " + ssl_err_as_string());
+      |                                 ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:10:1: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    9 | #include <openssl/err.h>
+  +++ |+#include <stdexcept>
+   10 | #include <openssl/ssl.h>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:138:41: error: 'invalid_argument' is not a member of 'std'
+  138 |         if(!bio_certificate) throw std::invalid_argument("Could no open key file: " + ssl_err_as_string());
+      |                                         ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:138:41: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:155:28: error: 'invalid_argument' is not a member of 'std'
+  155 |                 throw std::invalid_argument("Could not read pkey_pem (" + ssl_err_as_string() + ")");
+      |                            ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:155:28: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In member function 'void pipes::TLSCertificate::generate_fingerprint()':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:169:28: error: 'runtime_error' is not a member of 'std'
+  169 |                 throw std::runtime_error("GenerateFingerprint(): X509_digest error");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:169:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:150:28: error: 'invalid_argument' is not a member of 'std'
+  150 |                 throw std::invalid_argument("Could not read cert_pem (" + ssl_err_as_string() + ")");
+      |                            ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:150:28: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:173:28: error: 'runtime_error' is not a member of 'std'
+  173 |                 throw std::runtime_error("GenerateFingerprint(): fingerprint size too large for buffer!");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:173:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:155:28: error: 'invalid_argument' is not a member of 'std'
+  155 |                 throw std::invalid_argument("Could not read pkey_pem (" + ssl_err_as_string() + ")");
+      |                            ^~~~~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:155:28: note: 'std::invalid_argument' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In member function 'void pipes::TLSCertificate::generate_fingerprint()':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:169:28: error: 'runtime_error' is not a member of 'std'
+  169 |                 throw std::runtime_error("GenerateFingerprint(): X509_digest error");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:169:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:173:28: error: 'runtime_error' is not a member of 'std'
+  173 |                 throw std::runtime_error("GenerateFingerprint(): fingerprint size too large for buffer!");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:173:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In static member function 'static std::unique_ptr<pipes::TLSCertificate> pipes::TLSCertificate::generate(const std::string&, int)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:246:28: error: 'runtime_error' is not a member of 'std'
+  246 |                 throw std::runtime_error("GenerateCertificate: !pkey || !rsa || !exponent");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:246:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:250:28: error: 'runtime_error' is not a member of 'std'
+  250 |                 throw std::runtime_error("GenerateCertificate: Error generating key");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:250:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:255:28: error: 'runtime_error' is not a member of 'std'
+  255 |                 throw std::runtime_error("GenerateCertificate: Error in GenerateX509");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:255:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp: In static member function 'static std::unique_ptr<pipes::TLSCertificate> pipes::TLSCertificate::generate(const std::string&, int)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:246:28: error: 'runtime_error' is not a member of 'std'
+  246 |                 throw std::runtime_error("GenerateCertificate: !pkey || !rsa || !exponent");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:246:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:250:28: error: 'runtime_error' is not a member of 'std'
+  250 |                 throw std::runtime_error("GenerateCertificate: Error generating key");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:250:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:255:28: error: 'runtime_error' is not a member of 'std'
+  255 |                 throw std::runtime_error("GenerateCertificate: Error in GenerateX509");
+      |                            ^~~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/tls.cpp:255:28: note: 'std::runtime_error' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:174: CMakeFiles/DataPipes-Core-Static.dir/src/ssl/ssl_bio.cpp.o] Error 1
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:132: CMakeFiles/DataPipes-Core-Static.dir/src/ws.cpp.o] Error 1
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:132: CMakeFiles/DataPipes-Core-Shared.dir/src/ws.cpp.o] Error 1
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:146: CMakeFiles/DataPipes-Core-Shared.dir/src/tls.cpp.o] Error 1
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:146: CMakeFiles/DataPipes-Core-Static.dir/src/tls.cpp.o] Error 1
+In file included from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/./pipeline.h:4,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/ssl.h:3,
+                 from /home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp:1:
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:166:32: error: 'out_of_range' is not a member of 'std'
+  166 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:9:1: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+    8 | #include <cassert>
+  +++ |+#include <stdexcept>
+    9 | #include <exception>
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'const T& pipes::buffer_view::at(size_t) const':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: error: 'out_of_range' is not a member of 'std'
+  176 |                                         throw std::out_of_range(buffer);
+      |                                                    ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:176:52: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h: In member function 'T& pipes::buffer::at(size_t)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: error: 'out_of_range' is not a member of 'std'
+  296 |                     throw std::out_of_range(buffer);
+      |                                ^~~~~~~~~~~~
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/include/pipes/././buffer.h:296:32: note: 'std::out_of_range' is defined in header '<stdexcept>'; did you forget to '#include <stdexcept>'?
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:160: CMakeFiles/DataPipes-Core-Shared.dir/src/ssl/ssl.cpp.o] Error 1
+make[2]: *** [CMakeFiles/DataPipes-Core-Static.dir/build.make:160: CMakeFiles/DataPipes-Core-Static.dir/src/ssl/ssl.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:85: CMakeFiles/DataPipes-Core-Static.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp: In static member function 'static long int pipes::SSL::bio_ctrl(BIO*, int, long int, void*)':
+/home/user/TeaSpeak/Server/Root/libraries/DataPipes/src/ssl/ssl_bio.cpp:49:10: warning: unused variable 'handle' [-Wunused-variable]
+   49 |     auto handle = static_cast<SSL*>(BIO_get_data(self));
+      |          ^~~~~~
+make[2]: *** [CMakeFiles/DataPipes-Core-Shared.dir/build.make:174: CMakeFiles/DataPipes-Core-Shared.dir/src/ssl/ssl_bio.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:111: CMakeFiles/DataPipes-Core-Shared.dir/all] Error 2
+make: *** [Makefile:136: all] Error 2
+Failed to build project! Status code: 0
+[1;31mFailed to build project DataPipes at /home/user/TeaSpeak/Server/Root/libraries/DataPipes/_build/linux_amd64/DataPipes. Status code: 1
+Failed to build DataPipes!
+Aborting build[0;39m
