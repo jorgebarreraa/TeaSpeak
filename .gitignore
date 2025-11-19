@@ -14,3 +14,4 @@
 .vscode/
 .idea/
 *.iml
+Server/Root/precompiled_libs/
