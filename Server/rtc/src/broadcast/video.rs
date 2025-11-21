@@ -1,17 +1,16 @@
 use std::sync::{Arc, Mutex, Weak};
 use std::task::{Context, Poll, Waker};
 use std::time::{Instant, Duration};
-use tokio::sync::mpsc::{ self, UnboundedReceiver, UnboundedSender };
+use tokio::sync::mpsc;
 
-use futures::{FutureExt, StreamExt};
+use futures::FutureExt;
 use unchecked_unwrap::UncheckedUnwrap;
 
 use crate::broadcast::ClientBroadcaster;
 use crate::channel::{ClientVideoSource, VideoSourceEvent};
 use crate::client::{Client, ClientData, ClientVideoSender, ClientVideoSenderEvent, VideoStopReason};
 use crate::MediaType;
-use crate::threads::{enter_tasks, execute_task};
-use crate::exports::GLOBAL_DATA;
+use crate::threads::execute_task;
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug, Copy, Clone)]
 pub enum VideoBroadcastMode {
@@ -267,7 +266,7 @@ impl ClientVideoBroadcaster {
         self.sender.retain_mut(|sender| {
             while let Poll::Ready(event) = sender.poll_event(cx) {
                 if event.is_none() {
-                    removed_senders.push((sender.owner_id(), sender.owner_data()));
+                    removed_senders.push((sender.owner_id(), sender.owner_data().clone()));
                     return false; // Remover este sender
                 }
 
@@ -397,7 +396,7 @@ impl ClientBroadcaster for ClientVideoBroadcaster {
         while i < self.sender.len() {
             if self.sender[i].owner_id() == client_id {
                 let removed = self.sender.remove(i);
-                removed_clients.push((removed.owner_id(), removed.owner_data()));
+                removed_clients.push((removed.owner_id(), removed.owner_data().clone()));
             } else {
                 i += 1;
             }

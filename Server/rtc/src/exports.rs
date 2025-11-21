@@ -16,7 +16,7 @@ use std::sync::Arc;
 use crate::log::global_logger;
 use slog::slog_crit;
 use std::process::abort;
-use crate::broadcast::{BroadcastStartResult, VideoBroadcastMode, VideoBroadcastConfigureError, VideoBroadcastOptions};
+use crate::broadcast::{BroadcastStartResult, VideoBroadcastMode, VideoBroadcastOptions};
 use crate::channel::VideoBroadcastJoinResult;
 
 const NATIVE_CALLBACKS_VERSION: u32 = 7;

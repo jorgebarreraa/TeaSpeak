@@ -1,6 +1,3 @@
-#![feature(btree_drain_filter)]
-#![feature(drain_filter)]
-#![feature(box_syntax)]
 #![feature(backtrace)]
 /* Used for the panic handler breakpoint */
 #![feature(core_intrinsics)]
