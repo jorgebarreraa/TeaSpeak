@@ -97,7 +97,7 @@ namespace logger {
 #else
             const auto& mapping = level_mapping;
 #endif
-            size_t level = msg.level.value;
+            size_t level = static_cast<size_t>(msg.level);
             if(level >= mapping.size())
                 level = mapping.size() - 1;
 
