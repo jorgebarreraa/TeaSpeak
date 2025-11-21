@@ -80,39 +80,99 @@ if(LIBEVENT_CONFIG_DIR)
 
     message(STATUS "Detected libevent version: ${Libevent_VERSION}")
 
-    # Create namespace aliases for the targets
+    # Create namespace targets by copying properties from existing IMPORTED targets
     # The LibeventTargets.cmake defines: event_core_static, event_pthreads_static, etc.
     # We need to create: libevent::core, libevent::pthreads
+    # Cannot use ALIAS because imported targets are not globally visible
 
     if(LIBEVENT_STATIC_LINK)
         # Use static libraries
         if(TARGET event_core_static AND NOT TARGET libevent::core)
-            add_library(libevent::core ALIAS event_core_static)
-            message(STATUS "Created alias libevent::core -> event_core_static")
+            get_target_property(_LOCATION event_core_static IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_core_static IMPORTED_LOCATION)
+            endif()
+            add_library(libevent::core STATIC IMPORTED)
+            set_target_properties(libevent::core PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+            )
+            message(STATUS "Created libevent::core from ${_LOCATION}")
         endif()
 
         if(TARGET event_pthreads_static AND NOT TARGET libevent::pthreads)
-            add_library(libevent::pthreads ALIAS event_pthreads_static)
-            message(STATUS "Created alias libevent::pthreads -> event_pthreads_static")
+            get_target_property(_LOCATION event_pthreads_static IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_pthreads_static IMPORTED_LOCATION)
+            endif()
+            add_library(libevent::pthreads STATIC IMPORTED)
+            set_target_properties(libevent::pthreads PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                INTERFACE_LINK_LIBRARIES "libevent::core;pthread"
+            )
+            message(STATUS "Created libevent::pthreads from ${_LOCATION}")
         endif()
 
         if(TARGET event_extra_static AND NOT TARGET libevent::extra)
-            add_library(libevent::extra ALIAS event_extra_static)
+            get_target_property(_LOCATION event_extra_static IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_extra_static IMPORTED_LOCATION)
+            endif()
+            add_library(libevent::extra STATIC IMPORTED)
+            set_target_properties(libevent::extra PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                INTERFACE_LINK_LIBRARIES "libevent::core"
+            )
         endif()
     else()
         # Use shared libraries
         if(TARGET event_core_shared AND NOT TARGET libevent::core)
-            add_library(libevent::core ALIAS event_core_shared)
-            message(STATUS "Created alias libevent::core -> event_core_shared")
+            get_target_property(_LOCATION event_core_shared IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_core_shared IMPORTED_LOCATION)
+            endif()
+            get_target_property(_SONAME event_core_shared IMPORTED_SONAME_RELEASE)
+            add_library(libevent::core SHARED IMPORTED)
+            set_target_properties(libevent::core PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                IMPORTED_SONAME "${_SONAME}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                INTERFACE_LINK_LIBRARIES "pthread"
+            )
+            message(STATUS "Created libevent::core from ${_LOCATION}")
         endif()
 
         if(TARGET event_pthreads_shared AND NOT TARGET libevent::pthreads)
-            add_library(libevent::pthreads ALIAS event_pthreads_shared)
-            message(STATUS "Created alias libevent::pthreads -> event_pthreads_shared")
+            get_target_property(_LOCATION event_pthreads_shared IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_pthreads_shared IMPORTED_LOCATION)
+            endif()
+            get_target_property(_SONAME event_pthreads_shared IMPORTED_SONAME_RELEASE)
+            add_library(libevent::pthreads SHARED IMPORTED)
+            set_target_properties(libevent::pthreads PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                IMPORTED_SONAME "${_SONAME}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                INTERFACE_LINK_LIBRARIES "libevent::core;pthread"
+            )
+            message(STATUS "Created libevent::pthreads from ${_LOCATION}")
         endif()
 
         if(TARGET event_extra_shared AND NOT TARGET libevent::extra)
-            add_library(libevent::extra ALIAS event_extra_shared)
+            get_target_property(_LOCATION event_extra_shared IMPORTED_LOCATION_RELEASE)
+            if(NOT _LOCATION)
+                get_target_property(_LOCATION event_extra_shared IMPORTED_LOCATION)
+            endif()
+            get_target_property(_SONAME event_extra_shared IMPORTED_SONAME_RELEASE)
+            add_library(libevent::extra SHARED IMPORTED)
+            set_target_properties(libevent::extra PROPERTIES
+                IMPORTED_LOCATION "${_LOCATION}"
+                IMPORTED_SONAME "${_SONAME}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                INTERFACE_LINK_LIBRARIES "libevent::core"
+            )
         endif()
     endif()
 
