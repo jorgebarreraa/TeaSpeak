@@ -22,27 +22,41 @@ include(FindPackageHandleStandardArgs)
 
 # Function to find libevent
 function(find_libevent)
-    set(LIBEVENT_SEARCH_PATHS
+    # Get OS type and arch from environment if not set
+    if(NOT BUILD_OS_TYPE)
+        set(BUILD_OS_TYPE $ENV{build_os_type})
+    endif()
+    if(NOT BUILD_OS_ARCH)
+        set(BUILD_OS_ARCH $ENV{build_os_arch})
+    endif()
+
+    # First, try to find in project libraries (NO system paths)
+    set(LIBEVENT_PROJECT_PATHS
         ${LIBRARY_PATH}/event/_build/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}
         ${LIBRARY_PATH}/event/out/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}
         ${LIBRARY_PATH}/event/build
-        /usr/local
-        /usr
     )
 
-    # Find the root directory
+    message(STATUS "BUILD_OS_TYPE=${BUILD_OS_TYPE}, BUILD_OS_ARCH=${BUILD_OS_ARCH}")
+    message(STATUS "Searching for libevent in project paths: ${LIBEVENT_PROJECT_PATHS}")
+
+    # Find the root directory in project FIRST
     find_path(Libevent_ROOT_DIR
         NAMES include/event2/event.h
-        PATHS ${LIBEVENT_SEARCH_PATHS}
+        PATHS ${LIBEVENT_PROJECT_PATHS}
         NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
-    # Also search system paths if not found
+    # Only if not found in project, search system paths
     if(NOT Libevent_ROOT_DIR)
+        message(STATUS "Libevent not found in project, searching system paths")
         find_path(Libevent_ROOT_DIR
             NAMES include/event2/event.h
             PATHS /usr/local /usr
         )
+    else()
+        message(STATUS "Found libevent root: ${Libevent_ROOT_DIR}")
     endif()
 
     # Find include directory
@@ -50,6 +64,7 @@ function(find_libevent)
         NAMES event2/event.h
         PATHS ${Libevent_ROOT_DIR}/include
         NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     if(NOT LIBEVENT_INCLUDE_DIRS)
@@ -61,16 +76,20 @@ function(find_libevent)
 
     # Determine library suffix based on static link preference
     if(LIBEVENT_STATIC_LINK)
-        set(LIB_SUFFIX ".a")
+        set(LIB_NAMES libevent_core.a event_core)
+        set(LIB_NAMES_PTHREADS libevent_pthreads.a event_pthreads)
+        message(STATUS "Searching for STATIC libevent libraries")
     else()
-        set(LIB_SUFFIX ".so")
+        set(LIB_NAMES event_core libevent_core.so)
+        set(LIB_NAMES_PTHREADS event_pthreads libevent_pthreads.so)
     endif()
 
-    # Find core library
+    # Find core library - project paths ONLY first
     find_library(LIBEVENT_CORE_LIBRARY
-        NAMES libevent_core${LIB_SUFFIX} event_core
+        NAMES ${LIB_NAMES}
         PATHS ${Libevent_ROOT_DIR}/lib ${Libevent_ROOT_DIR}/.libs
         NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     if(NOT LIBEVENT_CORE_LIBRARY)
@@ -80,11 +99,12 @@ function(find_libevent)
         )
     endif()
 
-    # Find pthreads library
+    # Find pthreads library - project paths ONLY first
     find_library(LIBEVENT_PTHREADS_LIBRARY
-        NAMES libevent_pthreads${LIB_SUFFIX} event_pthreads
+        NAMES ${LIB_NAMES_PTHREADS}
         PATHS ${Libevent_ROOT_DIR}/lib ${Libevent_ROOT_DIR}/.libs
         NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     if(NOT LIBEVENT_PTHREADS_LIBRARY)
@@ -95,16 +115,35 @@ function(find_libevent)
     endif()
 
     # Try to determine version
-    if(LIBEVENT_INCLUDE_DIRS)
+    if(LIBEVENT_INCLUDE_DIRS AND EXISTS "${LIBEVENT_INCLUDE_DIRS}/event2/event-config.h")
         file(READ "${LIBEVENT_INCLUDE_DIRS}/event2/event-config.h" EVENT_CONFIG_H)
-        string(REGEX MATCH "#define _EVENT_VERSION \"([0-9]+\\.[0-9]+\\.[0-9]+)" _ ${EVENT_CONFIG_H})
-        set(Libevent_VERSION ${CMAKE_MATCH_1})
 
-        # Extract major.minor for version check
-        string(REGEX MATCH "([0-9]+)\\.([0-9]+)" _ ${Libevent_VERSION})
-        set(Libevent_VERSION_MAJOR ${CMAKE_MATCH_1})
-        set(Libevent_VERSION_MINOR ${CMAKE_MATCH_2})
-        set(Libevent_FOUND_VERSION "${Libevent_VERSION_MAJOR}.${Libevent_VERSION_MINOR}")
+        # Try different version patterns
+        if(EVENT_CONFIG_H MATCHES "#define _EVENT_VERSION \"([0-9]+\\.[0-9]+\\.[0-9]+)")
+            set(Libevent_VERSION ${CMAKE_MATCH_1})
+        elseif(EVENT_CONFIG_H MATCHES "#define EVENT__VERSION \"([0-9]+\\.[0-9]+\\.[0-9]+)")
+            set(Libevent_VERSION ${CMAKE_MATCH_1})
+        elseif(EVENT_CONFIG_H MATCHES "EVENT__NUMERIC_VERSION 0x([0-9a-f]+)")
+            # Parse numeric version (e.g., 0x02020100 = 2.2.1)
+            set(NUMERIC_VERSION ${CMAKE_MATCH_1})
+            math(EXPR VERSION_MAJOR "0x${NUMERIC_VERSION} / 0x1000000")
+            math(EXPR VERSION_MINOR "(0x${NUMERIC_VERSION} / 0x10000) % 0x100")
+            math(EXPR VERSION_PATCH "(0x${NUMERIC_VERSION} / 0x100) % 0x100")
+            set(Libevent_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+        endif()
+
+        if(Libevent_VERSION)
+            # Extract major.minor for version check
+            string(REGEX MATCH "([0-9]+)\\.([0-9]+)" _ "${Libevent_VERSION}")
+            set(Libevent_VERSION_MAJOR ${CMAKE_MATCH_1})
+            set(Libevent_VERSION_MINOR ${CMAKE_MATCH_2})
+            set(Libevent_FOUND_VERSION "${Libevent_VERSION_MAJOR}.${Libevent_VERSION_MINOR}")
+            message(STATUS "Detected libevent version: ${Libevent_VERSION}")
+        else()
+            # If we can't determine version but found the library, assume it's compatible
+            message(WARNING "Could not determine libevent version from headers, assuming 2.2+")
+            set(Libevent_FOUND_VERSION "2.2")
+        endif()
     endif()
 
     # Create imported target for libevent::core
