@@ -282,7 +282,7 @@ impl ClientVideoBroadcaster {
         });
 
         for (owner_id, owner_data) in removed_senders {
-            self.source.notify_client_leave(owner_id, owner_data);
+            self.source.notify_client_leave(owner_id, &owner_data);
         }
 
         if request_pli {
@@ -408,7 +408,7 @@ impl ClientBroadcaster for ClientVideoBroadcaster {
 
         /* removed_clients should only be 1 */
         for (owner_id, owner_data) in removed_clients {
-            self.source.notify_client_leave(owner_id, owner_data);
+            self.source.notify_client_leave(owner_id, &owner_data);
         }
         return true;
     }
