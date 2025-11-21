@@ -80,14 +80,14 @@ impl ClientAudioBroadcaster {
     }
 
     fn poll_senders(&mut self, cx: &mut Context) {
-        self.sender.drain_filter(|sender| {
+        self.sender.retain_mut(|sender| {
             while let Poll::Ready(event) = sender.poll_event(cx) {
                 if event.is_none() {
-                    return true;
+                    return false; // Remover este sender
                 }
             }
 
-            false
+            true // Mantener este sender
         });
 
         self.sender_waker = Some(cx.waker().clone());
@@ -170,6 +170,8 @@ impl ClientBroadcaster for ClientAudioBroadcaster {
     }
 
     fn remove_client(&mut self, client_id: u32) -> bool {
-        self.sender.drain_filter(|e| e.owner_id() == client_id).count() > 0
+        let initial_len = self.sender.len();
+        self.sender.retain(|e| e.owner_id() != client_id);
+        self.sender.len() < initial_len
     }
 }
