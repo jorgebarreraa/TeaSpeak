@@ -3,6 +3,7 @@
 //
 
 #include "./Properties.h"
+#include <cassert>
 
 using namespace ts;
 
