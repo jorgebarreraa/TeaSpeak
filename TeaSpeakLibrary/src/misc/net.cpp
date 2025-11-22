@@ -69,7 +69,7 @@ net::binding_result net::address_available(const sockaddr_storage& address, bind
 
     fcntl(file_descriptor, F_SETFD, FD_CLOEXEC); /* just to ensure */
     setsockopt(file_descriptor, SOL_SOCKET, SO_REUSEADDR, &disable, sizeof(int));
-    setsockopt(file_descriptor, SOL_SOCKET, SO_REUSEPORT, &disable, sizeof(int));
+    //setsockopt(file_descriptor, SOL_SOCKET, SO_REUSEPORT, &disable, sizeof(int));
     if(type == binding_type::UDP && address.ss_family == AF_INET6)
         setsockopt(file_descriptor, IPPROTO_IPV6, IPV6_V6ONLY, &enable, sizeof(int));
 

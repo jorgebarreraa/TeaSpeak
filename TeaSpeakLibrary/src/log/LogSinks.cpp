@@ -2,8 +2,6 @@
 #include "LogSinks.h"
 #include <ctime>
 #include <array>
-#include <spdlog/details/os.h>
-#include <spdlog/formatter.h>
 
 using namespace std;
 using namespace spdlog;
@@ -15,23 +13,28 @@ namespace logger {
 
         std::string_view message{formatted.data(), formatted.size()};
 
-        #ifdef HAVE_CXX_TERMINAL
+#ifdef HAVE_CXX_TERMINAL
         if (terminal::active()) {
             //Split the string at new lines
-            size_t index{0}, found{0};
+            size_t index{0}, found;
             do {
                 found = message.find('\n', index);
                 const auto length = (found == -1 ? message.length() : found) - index;
                 const auto line = message.substr(index, length);
 
                 index = found;
-                if(length == 0) continue;
+                if(length == 0) {
+                    continue;
+                }
 
                 terminal::instance()->writeMessage(std::string{line});
             } while(++index);
-        } else
-            #endif
-            cout << message;
+        } else {
+            cout << message << std::flush;
+        }
+#else
+        cout << message << std::flush;
+#endif
     }
 
     void TerminalSink::flush_() {
@@ -98,8 +101,9 @@ namespace logger {
             const auto& mapping = level_mapping;
 #endif
             size_t level = msg.level.value;
-            if(level >= mapping.size())
+            if(level >= mapping.size()) {
                 level = mapping.size() - 1;
+            }
 
             append(mapping[level]);
         }
@@ -122,10 +126,11 @@ namespace logger {
             index = found;
 
             append(spdlog::details::os::default_eol);
-            if(++index)
+            if(++index) {
                 dest.append(prefix_begin, prefix_end);
-            else
+            } else {
                 break;
+            }
         }
     }
 

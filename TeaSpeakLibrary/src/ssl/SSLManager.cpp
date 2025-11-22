@@ -393,8 +393,9 @@ std::shared_ptr<SSLKeyPair> SSLManager::loadSSL(const std::string &key_data, std
 
         if(!fs::exists(key_path)) {
             try {
-                if(key_path.has_parent_path())
+                if(key_path.has_parent_path()) {
                     fs::create_directories(key_path.parent_path());
+                }
             } catch (fs::filesystem_error& error) {
                 logError(LOG_GENERAL, "Could not create key directory: " + string(error.what()));
             }
@@ -407,15 +408,19 @@ std::shared_ptr<SSLKeyPair> SSLManager::loadSSL(const std::string &key_data, std
         if(!key_bio) SSL_ERROR("Could not load key: ");
     }
 
-    if(readPublic)
+    if(readPublic) {
         key = shared_ptr<EVP_PKEY>(PEM_read_bio_PUBKEY(key_bio.get(), nullptr, nullptr, nullptr), ::EVP_PKEY_free);
-    else
+    } else {
         key = shared_ptr<EVP_PKEY>(PEM_read_bio_PrivateKey(key_bio.get(), nullptr, nullptr, nullptr), ::EVP_PKEY_free);
+    }
+
     result->contains_private = !readPublic;
     if(!key) {
         if(readPublic) {
             SSL_ERROR("Could not read key!");
-        } else return this->loadSSL(key_data, error, rawData, true);
+        } else {
+            return this->loadSSL(key_data, error, rawData, true);
+        }
     }
 
     result->key = key;

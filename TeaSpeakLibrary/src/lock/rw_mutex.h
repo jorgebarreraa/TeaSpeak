@@ -27,218 +27,191 @@ namespace ts {
         constexpr static auto write_preferred{write_preferred_};
     };
 
+    struct mutex_action_validator {
+        public:
+            inline void try_exclusive_lock_acquire();
+            inline void try_shared_lock_acquire();
 
-    namespace impl {
-        struct mutex_action_validator {
-            public:
-                inline void try_exclusive_lock_acquire();
-                inline void try_shared_lock_acquire();
-
-                inline void exclusive_lock_acquire();
-                inline void shared_lock_acquire();
+            inline void exclusive_lock_acquire();
+            inline void shared_lock_acquire();
 
 
-                inline void try_exclusive_lock_release();
-                inline void try_shared_lock_release();
+            inline void try_exclusive_lock_release();
+            inline void try_shared_lock_release();
 
-                inline void exclusive_lock_release();
-                inline void shared_lock_release();
-
-
-                inline void try_shared_lock_upgrade();
-                inline void try_exclusive_lock_downgrade();
-
-                inline void shared_lock_upgrade();
-                inline void exclusive_lock_downgrade();
-
-            private:
-                std::thread::id exclusive_lock{};
-                bool exclusive_lock_upgraded{false};
-                std::vector<std::thread::id> shared_lockers{};
-        };
-
-        struct dummy_action_validator {
-            inline void try_exclusive_lock_acquire() {}
-            inline void try_shared_lock_acquire() {}
-
-            inline void exclusive_lock_acquire() {}
-            inline void shared_lock_acquire() {}
+            inline void exclusive_lock_release();
+            inline void shared_lock_release();
 
 
-            inline void try_exclusive_lock_release() {}
-            inline void try_shared_lock_release() {}
+            inline void try_shared_lock_upgrade();
+            inline void try_exclusive_lock_downgrade();
 
-            inline void exclusive_lock_release() {}
-            inline void shared_lock_release() {}
+            inline void shared_lock_upgrade();
+            inline void exclusive_lock_downgrade();
+
+        private:
+            std::thread::id exclusive_lock{};
+            bool exclusive_lock_upgraded{false};
+            std::vector<std::thread::id> shared_lockers{};
+    };
+
+    struct dummy_action_validator {
+        inline void try_exclusive_lock_acquire() {}
+        inline void try_shared_lock_acquire() {}
+
+        inline void exclusive_lock_acquire() {}
+        inline void shared_lock_acquire() {}
 
 
-            inline void try_shared_lock_upgrade() {}
-            inline void try_exclusive_lock_downgrade() {}
+        inline void try_exclusive_lock_release() {}
+        inline void try_shared_lock_release() {}
 
-            inline void shared_lock_upgrade() {}
-            inline void exclusive_lock_downgrade() {}
-        };
+        inline void exclusive_lock_release() {}
+        inline void shared_lock_release() {}
 
-        template <typename options_t, typename action_validator_t>
-        class rw_mutex_impl {
-            public:
-                rw_mutex_impl() = default;
-                ~rw_mutex_impl();
 
-                template <bool flag>
-                rw_mutex_impl(const rw_mutex_impl<options_t, action_validator_t>&) = delete;
+        inline void try_shared_lock_upgrade() {}
+        inline void try_exclusive_lock_downgrade() {}
 
-                template <bool flag>
-                rw_mutex_impl&operator=(const rw_mutex_impl<options_t, action_validator_t>&) = delete;
+        inline void shared_lock_upgrade() {}
+        inline void exclusive_lock_downgrade() {}
+    };
 
-                /**
-                 * Acquire the write lock
-                 */
-                inline void lock();
+    template <typename options_t, typename action_validator_t>
+    class rw_mutex_impl {
+        public:
+            rw_mutex_impl() = default;
+            ~rw_mutex_impl();
 
-                /**
-                 * Acquire the write lock with a timeout
-                 */
-                [[nodiscard]] inline std::cv_status lock_until(const std::chrono::system_clock::time_point& timeout);
+            template <bool flag>
+            rw_mutex_impl(const rw_mutex_impl<options_t, action_validator_t>&) = delete;
 
-                /**
-                 * Acquire the write lock with a timeout
-                 */
-                template <typename duration_t>
-                [[nodiscard]] inline std::cv_status lock_for(const duration_t& duration) {
-                    auto now = std::chrono::system_clock::now();
-                    now += duration;
-                    return this->lock_until(now);
-                }
+            template <bool flag>
+            rw_mutex_impl&operator=(const rw_mutex_impl<options_t, action_validator_t>&) = delete;
 
-                /**
-                 * Acquire the read lock
-                 */
-                inline void lock_shared();
+            /**
+             * Acquire the write lock
+             */
+            inline void lock();
 
-                /**
-                 * Acquire the read lock with a timeout
-                 */
-                [[nodiscard]] inline std::cv_status lock_shared_until(const std::chrono::system_clock::time_point& timeout);
+            /**
+             * Acquire the write lock with a timeout
+             */
+            [[nodiscard]] inline std::cv_status lock_until(const std::chrono::system_clock::time_point& timeout);
 
-                /**
-                 * Acquire the read lock with a timeout
-                 */
-                template <typename duration_t>
-                [[nodiscard]] inline std::cv_status lock_shared_for(const duration_t& duration) {
-                    auto now = std::chrono::system_clock::now();
-                    now += duration;
-                    return this->lock_shared_until(now);
-                }
+            /**
+             * Acquire the write lock with a timeout
+             */
+            template <typename duration_t>
+            [[nodiscard]] inline std::cv_status lock_for(const duration_t& duration) {
+                auto now = std::chrono::system_clock::now();
+                now += duration;
+                return this->lock_until(now);
+            }
 
-                /**
-                 * Release the write lock
-                 */
-                inline void unlock();
+            /**
+             * Acquire the read lock
+             */
+            inline void lock_shared();
 
-                /**
-                 * Release the read lock
-                 */
-                inline void unlock_shared();
+            /**
+             * Acquire the read lock with a timeout
+             */
+            [[nodiscard]] inline std::cv_status lock_shared_until(const std::chrono::system_clock::time_point& timeout);
 
-                 /**
-                  * Upgrade from a shared lock to an exclusive lock.
-                  * Could fail due to the following reasons:
-                  *  would_deadlock: Another thread already tried to upgrade the lock and we're not supposed to release the shared lock
-                  *  resource_error: Another thread already claimed the write lock while we're waiting
-                  *
-                  *  Note: This will cause a deadlock if the lock has been locked shared twice
-                  */
-                 [[nodiscard]] inline rw_action_result upgrade_lock();
+            /**
+             * Acquire the read lock with a timeout
+             */
+            template <typename duration_t>
+            [[nodiscard]] inline std::cv_status lock_shared_for(const duration_t& duration) {
+                auto now = std::chrono::system_clock::now();
+                now += duration;
+                return this->lock_shared_until(now);
+            }
 
-                 /**
-                  * Upgrade from a shared lock to an exclusive lock.
-                  * Could fail due to the following reasons:
-                  *  would_deadlock: Another thread already tried to upgrade the lock and we're not supposed to release the shared lock
-                  *  resource_error: Another thread already claimed the write lock while we're waiting
-                  *  timeout: If the action could not be performed within the given time frame
-                  *  Note: This will cause a deadlock if the lock has been locked shared twice
-                  */
-                [[nodiscard]] inline rw_action_result upgrade_lock_until(const std::chrono::system_clock::time_point& timeout);
+            /**
+             * Release the write lock
+             */
+            inline void unlock();
 
-                /**
-                 *  Upgrade from a shared lock to an exclusive lock with an timeout.
-                 *  For return codes see upgrade_lock_until.
-                 */
-                template <typename duration_t>
-                [[nodiscard]] inline rw_action_result upgrade_lock_for(const duration_t& duration) {
-                    auto now = std::chrono::system_clock::now();
-                    now += duration;
-                    return this->upgrade_lock_until(now);
-                }
+            /**
+             * Release the read lock
+             */
+            inline void unlock_shared();
 
-                 /**
-                  * Downgrade from an exclusive lock to a shared lock.
-                  * No other thread could lock the lock exclusive until unlock_shared() has been called.
-                  */
-                 inline void downgrade_lock();
-            private:
-                action_validator_t action_validator_{};
+             /**
+              * Upgrade from a shared lock to an exclusive lock.
+              * Could fail due to the following reasons:
+              *  would_deadlock: Another thread already tried to upgrade the lock and we're not supposed to release the shared lock
+              *  resource_error: Another thread already claimed the write lock while we're waiting
+              *
+              *  Note: This will cause a deadlock if the lock has been locked shared twice
+              */
+             [[nodiscard]] inline rw_action_result upgrade_lock();
 
-                std::mutex status_lock_{};
-                std::condition_variable upgrade_update_{};
-                std::condition_variable write_update_{};
-                std::condition_variable read_update_{};
+             /**
+              * Upgrade from a shared lock to an exclusive lock.
+              * Could fail due to the following reasons:
+              *  would_deadlock: Another thread already tried to upgrade the lock and we're not supposed to release the shared lock
+              *  resource_error: Another thread already claimed the write lock while we're waiting
+              *  timeout: If the action could not be performed within the given time frame
+              *  Note: This will cause a deadlock if the lock has been locked shared twice
+              */
+            [[nodiscard]] inline rw_action_result upgrade_lock_until(const std::chrono::system_clock::time_point& timeout);
 
-                bool write_locked{false};
-                bool upgrade_pending{false}, write_lock_upgraded{false};
-                uint32_t write_lock_pending{0};
-                uint32_t read_lock_pending{0};
-                uint32_t read_lock_count{0};
-        };
-    }
+            /**
+             *  Upgrade from a shared lock to an exclusive lock with an timeout.
+             *  For return codes see upgrade_lock_until.
+             */
+            template <typename duration_t>
+            [[nodiscard]] inline rw_action_result upgrade_lock_for(const duration_t& duration) {
+                auto now = std::chrono::system_clock::now();
+                now += duration;
+                return this->upgrade_lock_until(now);
+            }
 
-    typedef impl::rw_mutex_impl<rw_mutex_options<true>, impl::mutex_action_validator> rw_safe_mutex;
-    typedef impl::rw_mutex_impl<rw_mutex_options<true>, impl::mutex_action_validator> rw_unsafe_mutex;
+             /**
+              * Downgrade from an exclusive lock to a shared lock.
+              * No other thread could lock the lock exclusive until unlock_shared() has been called.
+              */
+             inline void downgrade_lock();
+        private:
+            action_validator_t action_validator_{};
+
+            std::mutex status_lock_{};
+            std::condition_variable upgrade_update_{};
+            std::condition_variable write_update_{};
+            std::condition_variable read_update_{};
+
+            bool write_locked{false};
+            bool upgrade_pending{false}, write_lock_upgraded{false};
+            uint32_t write_lock_pending{0};
+            uint32_t read_lock_pending{0};
+            uint32_t read_lock_count{0};
+    };
+
+    typedef rw_mutex_impl<rw_mutex_options<true>, mutex_action_validator> rw_safe_mutex;
+    typedef rw_mutex_impl<rw_mutex_options<true>, mutex_action_validator> rw_unsafe_mutex;
     typedef rw_safe_mutex rw_mutex;
-
-    struct rw_lock_defered_t {};
-    struct rw_lock_shared_t {};
-    struct rw_lock_exclusive_t {};
-
-    constexpr rw_lock_defered_t rw_lock_defered{};
-    constexpr rw_lock_shared_t rw_lock_shared{};
-    constexpr rw_lock_exclusive_t rw_lock_exclusive{};
 
     template <typename lock_t>
     struct rwshared_lock {
         public:
-            explicit rwshared_lock() {
-                this->lock_type_ = unlocked;
-                this->lock_ = nullptr;
-            }
-            explicit rwshared_lock(lock_t& lock) : rwshared_lock{lock, rw_lock_shared} {}
-
-            explicit rwshared_lock(lock_t& lock, const rw_lock_defered_t&) : lock_{&lock} {
-                this->lock_type_ = unlocked;
-            }
-
-            explicit rwshared_lock(lock_t& lock, const rw_lock_shared_t&) : lock_{&lock} {
-                this->lock_->lock_shared();
+            explicit rwshared_lock(lock_t& lock) : lock_{lock} {
+                this->lock_.lock_shared();
                 this->lock_type_ = locked_shared;
-            }
-
-            explicit rwshared_lock(lock_t& lock, const rw_lock_exclusive_t&) : lock_{&lock} {
-                this->lock_->lock();
-                this->lock_type_ = locked_exclusive;
             }
 
             ~rwshared_lock() {
                 if(this->lock_type_ == locked_shared) {
-                    this->lock_->unlock_shared();
+                    this->lock_.unlock_shared();
                 } else if(this->lock_type_ == locked_exclusive) {
-                    this->lock_->unlock();
+                    this->lock_.unlock();
                 }
             }
 
             rwshared_lock(const rwshared_lock&) = delete;
             rwshared_lock&operator=(const rwshared_lock&) = delete;
-            rwshared_lock&operator=(rwshared_lock&&) noexcept = default;
 
             /* state testers */
             [[nodiscard]] inline bool exclusive_locked() const {
@@ -252,13 +225,13 @@ namespace ts {
             /* basic lock functions */
             inline void lock_shared() {
                 rw_mutex_assert(this->lock_type_ == unlocked);
-                this->lock_->lock_shared();
+                this->lock_.lock_shared();
                 this->lock_type_ = locked_shared;
             }
 
             [[nodiscard]] inline std::cv_status lock_shared_until(const std::chrono::system_clock::time_point& timeout) {
                 rw_mutex_assert(this->lock_type_ == unlocked);
-                if(auto error = this->lock_->lock_shared_until(timeout); error == std::cv_status::timeout)
+                if(auto error = this->lock_.lock_shared_until(timeout); error == std::cv_status::timeout)
                     return error;
                 this->lock_type_ = locked_shared;
                 return std::cv_status::no_timeout;
@@ -266,19 +239,19 @@ namespace ts {
 
             inline void unlock_shared() {
                 rw_mutex_assert(this->lock_type_ == locked_shared);
-                this->lock_->unlock_shared();
+                this->lock_.unlock_shared();
                 this->lock_type_ = unlocked;
             }
 
             inline void lock_exclusive() {
                 rw_mutex_assert(this->lock_type_ == unlocked);
-                this->lock_->lock();
+                this->lock_.lock();
                 this->lock_type_ = locked_exclusive;
             }
 
             [[nodiscard]] inline std::cv_status lock_exclusive_until(const std::chrono::system_clock::time_point& timeout) {
                 rw_mutex_assert(this->lock_type_ == unlocked);
-                if(auto error = this->lock_->lock_until(timeout); error == std::cv_status::timeout)
+                if(auto error = this->lock_.lock_until(timeout); error == std::cv_status::timeout)
                     return error;
                 this->lock_type_ = locked_exclusive;
                 return std::cv_status::no_timeout;
@@ -286,14 +259,14 @@ namespace ts {
 
             inline void unlock_exclusive() {
                 rw_mutex_assert(this->lock_type_ == locked_exclusive);
-                this->lock_->unlock();
+                this->lock_.unlock();
                 this->lock_type_ = unlocked;
             }
 
             /* upgrade/downgrade functions */
             [[nodiscard]] inline rw_action_result upgrade_lock() {
                 rw_mutex_assert(this->lock_type_ == locked_shared);
-                auto err = this->lock_->upgrade_lock();
+                auto err = this->lock_.upgrade_lock();
                 if(err != rw_action_result::success) return err;
 
                 this->lock_type_ = locked_exclusive;
@@ -302,7 +275,7 @@ namespace ts {
 
             [[nodiscard]] inline rw_action_result upgrade_lock_until(const std::chrono::system_clock::time_point& timeout) {
                 rw_mutex_assert(this->lock_type_ == locked_shared);
-                auto err = this->lock_->upgrade_lock_until(timeout);
+                auto err = this->lock_.upgrade_lock_until(timeout);
                 if(err != rw_action_result::success) return err;
 
                 this->lock_type_ = locked_exclusive;
@@ -311,7 +284,7 @@ namespace ts {
 
             inline void downgrade_lock() {
                 rw_mutex_assert(this->lock_type_ == locked_exclusive);
-                this->lock_->downgrade_lock();
+                this->lock_.downgrade_lock();
                 this->lock_type_ = locked_shared;
             }
 
@@ -353,8 +326,6 @@ namespace ts {
                 else if(this->lock_type_ == locked_exclusive)
                     this->unlock_exclusive();
             }
-
-            [[nodiscard]] inline auto mutex() { return this->lock_; }
         private:
             enum {
                 unlocked,
@@ -362,7 +333,7 @@ namespace ts {
                 locked_exclusive
             } lock_type_;
 
-            lock_t* lock_;
+            lock_t& lock_;
     };
 }
 
@@ -376,9 +347,9 @@ namespace ts {
 
     template <typename options_t, typename action_validator_t>
 #ifndef DEBUG_RW_MUTEX
-    impl::rw_mutex_impl<options_t, action_validator_t>::~rw_mutex_impl() = default;
+    rw_mutex_impl<options_t, action_validator_t>::~rw_mutex_impl() = default;
 #else
-    impl::rw_mutex_impl<options_t, action_validator_t>::~rw_mutex_impl() {
+    rw_mutex_impl<options_t, action_validator_t>::~rw_mutex_impl() {
         rw_mutex_assert(!this->write_locked);
         rw_mutex_assert(!this->upgrade_pending);
         rw_mutex_assert(this->write_lock_pending == 0);
@@ -388,7 +359,7 @@ namespace ts {
 #endif
 
     template <typename options_t, typename action_validator_t>
-    void impl::rw_mutex_impl<options_t, action_validator_t>::lock() {
+    void rw_mutex_impl<options_t, action_validator_t>::lock() {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_exclusive_lock_acquire();
 
@@ -414,7 +385,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    std::cv_status impl::rw_mutex_impl<options_t, action_validator_t>::lock_until(const std::chrono::system_clock::time_point& timeout) {
+    std::cv_status rw_mutex_impl<options_t, action_validator_t>::lock_until(const std::chrono::system_clock::time_point& timeout) {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_exclusive_lock_acquire();
         this->write_lock_pending++;
@@ -447,7 +418,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    void impl::rw_mutex_impl<options_t, action_validator_t>::lock_shared() {
+    void rw_mutex_impl<options_t, action_validator_t>::lock_shared() {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_shared_lock_acquire();
         this->read_lock_pending++;
@@ -460,7 +431,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    std::cv_status impl::rw_mutex_impl<options_t, action_validator_t>::lock_shared_until(const std::chrono::system_clock::time_point& timeout) {
+    std::cv_status rw_mutex_impl<options_t, action_validator_t>::lock_shared_until(const std::chrono::system_clock::time_point& timeout) {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_shared_lock_acquire();
         this->read_lock_pending++;
@@ -477,7 +448,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    void impl::rw_mutex_impl<options_t, action_validator_t>::unlock() {
+    void rw_mutex_impl<options_t, action_validator_t>::unlock() {
         std::lock_guard slock{this->status_lock_};
         this->action_validator_.try_exclusive_lock_release();
         rw_mutex_assert(this->write_locked);
@@ -506,7 +477,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    void impl::rw_mutex_impl<options_t, action_validator_t>::unlock_shared() {
+    void rw_mutex_impl<options_t, action_validator_t>::unlock_shared() {
         std::lock_guard slock{this->status_lock_};
         this->action_validator_.try_shared_lock_release();
         rw_mutex_assert(!this->write_locked);
@@ -530,7 +501,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    rw_action_result impl::rw_mutex_impl<options_t, action_validator_t>::upgrade_lock() {
+    rw_action_result rw_mutex_impl<options_t, action_validator_t>::upgrade_lock() {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_shared_lock_upgrade();
         rw_mutex_assert(!this->write_locked);
@@ -559,7 +530,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    rw_action_result impl::rw_mutex_impl<options_t, action_validator_t>::upgrade_lock_until(const std::chrono::system_clock::time_point& timeout) {
+    rw_action_result rw_mutex_impl<options_t, action_validator_t>::upgrade_lock_until(const std::chrono::system_clock::time_point& timeout) {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_shared_lock_upgrade();
         rw_mutex_assert(!this->write_locked);
@@ -591,7 +562,7 @@ namespace ts {
     }
 
     template <typename options_t, typename action_validator_t>
-    void impl::rw_mutex_impl<options_t, action_validator_t>::downgrade_lock() {
+    void rw_mutex_impl<options_t, action_validator_t>::downgrade_lock() {
         std::unique_lock slock{this->status_lock_};
         this->action_validator_.try_exclusive_lock_downgrade();
         rw_mutex_assert(this->write_locked);
@@ -610,16 +581,16 @@ namespace ts {
 
     /* action validator */
     /* shared lock part */
-    void impl::mutex_action_validator::try_shared_lock_acquire() {
+    void mutex_action_validator::try_shared_lock_acquire() {
         if(this->exclusive_lock == std::this_thread::get_id())
             throw std::logic_error{"mutex has been locked in exclusive lock by current thread"};
     }
 
-    void impl::mutex_action_validator::shared_lock_acquire() {
+    void mutex_action_validator::shared_lock_acquire() {
         this->shared_lockers.push_back(std::this_thread::get_id());
     }
 
-    void impl::mutex_action_validator::try_shared_lock_upgrade() {
+    void mutex_action_validator::try_shared_lock_upgrade() {
         if(this->exclusive_lock == std::this_thread::get_id())
             throw std::logic_error{"mutex has been upgraded by current thread"};
 
@@ -634,12 +605,12 @@ namespace ts {
             throw std::logic_error{"upgrade not possible because shared mutex is locked more than once by current thread"};
     }
 
-    void impl::mutex_action_validator::shared_lock_upgrade() {
+    void mutex_action_validator::shared_lock_upgrade() {
         this->exclusive_lock_upgraded = true;
         this->exclusive_lock = std::this_thread::get_id();
     }
 
-    void impl::mutex_action_validator::try_shared_lock_release() {
+    void mutex_action_validator::try_shared_lock_release() {
         if(this->exclusive_lock == std::this_thread::get_id())
             throw std::logic_error{this->exclusive_lock_upgraded ? "mutex has been upgraded" : "mutex has been locked in exclusive mode, not in shared mode"};
 
@@ -648,29 +619,29 @@ namespace ts {
             throw std::logic_error{"mutex not locked by current thread"};
     }
 
-    void impl::mutex_action_validator::shared_lock_release() {
+    void mutex_action_validator::shared_lock_release() {
         auto it = std::find(this->shared_lockers.begin(), this->shared_lockers.end(), std::this_thread::get_id());
         rw_mutex_assert(it != this->shared_lockers.end()); /* this should never happen (try_shared_lock_release has been called before) */
         this->shared_lockers.erase(it);
     }
 
     /* exclusive lock part */
-    void impl::mutex_action_validator::try_exclusive_lock_acquire() {
+    void mutex_action_validator::try_exclusive_lock_acquire() {
         if(this->exclusive_lock == std::this_thread::get_id())
             throw std::logic_error{"mutex has been exclusive locked by current thread"};
     }
 
-    void impl::mutex_action_validator::exclusive_lock_acquire() {
+    void mutex_action_validator::exclusive_lock_acquire() {
         this->exclusive_lock = std::this_thread::get_id();
         this->exclusive_lock_upgraded = false;
     }
 
-    void impl::mutex_action_validator::try_exclusive_lock_downgrade() {
+    void mutex_action_validator::try_exclusive_lock_downgrade() {
         if(this->exclusive_lock != std::this_thread::get_id())
             throw std::logic_error{"mutex hasn't been locked in exclusive mode by this thread"};
     }
 
-    void impl::mutex_action_validator::exclusive_lock_downgrade() {
+    void mutex_action_validator::exclusive_lock_downgrade() {
         if(!this->exclusive_lock_upgraded) {
             this->shared_lockers.push_back(std::this_thread::get_id());
         } else {
@@ -682,12 +653,12 @@ namespace ts {
         this->exclusive_lock = std::thread::id{};
     }
 
-    void impl::mutex_action_validator::try_exclusive_lock_release() {
+    void mutex_action_validator::try_exclusive_lock_release() {
         if(this->exclusive_lock != std::this_thread::get_id())
             throw std::logic_error{"mutex hasn't been locked in exclusive mode by this thread"};
     }
 
-    void impl::mutex_action_validator::exclusive_lock_release() {
+    void mutex_action_validator::exclusive_lock_release() {
         if(this->exclusive_lock_upgraded) {
             auto it = std::find(this->shared_lockers.begin(), this->shared_lockers.end(), std::this_thread::get_id());
             assert(it != this->shared_lockers.end());

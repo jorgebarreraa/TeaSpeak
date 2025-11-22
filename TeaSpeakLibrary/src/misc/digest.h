@@ -39,18 +39,22 @@
     #include <openssl/sha.h>
 
     #define DECLARE_DIGEST(name, method, digestLength)                                      \
-    inline std::string name(const std::string& input) {                                     \
+    inline std::string name(const std::string_view& input) {                                \
         u_char buffer[digestLength];                                                        \
         method((u_char*) input.data(), input.length(), buffer);                             \
-        return std::string((const char*) buffer, (size_t) digestLength);                             \
+        return std::string{(const char*) buffer, (size_t) digestLength};                    \
+    }                                                                                       \
+                                                                                            \
+    inline std::string name(const std::string& input) {                                     \
+        return name(std::string_view{input});                                               \
     }                                                                                       \
                                                                                             \
     inline std::string name(const char* input, ssize_t length = -1) {                       \
         if(length == -1) length = strlen(input);                                            \
-        return name(std::string(input, (size_t) length));                                            \
+        return name(std::string_view{input, (size_t) length});                              \
     }                                                                                       \
-                                                                                        \
-    inline void name(const char* input, size_t length, uint8_t* result) {   \
+                                                                                            \
+    inline void name(const char* input, size_t length, uint8_t* result) {                   \
         method((u_char*) input, length, result);                                            \
     }
 #endif

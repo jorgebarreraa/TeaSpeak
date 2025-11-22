@@ -78,39 +78,37 @@ namespace ts {
     }
     */
 
-    Command Command::parse(const pipes::buffer_view &buffer, bool expect_type, bool drop_non_utf8) {
-        string_view data{buffer.data_ptr<const char>(), buffer.length()};
-
+    Command Command::parse(const std::string_view& command_data, bool expect_type, bool drop_non_utf8) {
         Command result;
 
         size_t current_index = std::string::npos, end_index;
         if(expect_type) {
-            current_index = data.find(' ', 0);
+            current_index = command_data.find(' ', 0);
             if(current_index == std::string::npos){
-                result._command = std::string(data);
+                result._command = std::string{command_data};
                 return result;
             } else {
-                result._command = std::string(data.substr(0, current_index));
+                result._command = std::string{command_data.substr(0, current_index)};
             }
         }
 
         size_t bulk_index = 0;
         while(++current_index > 0 || (current_index == 0 && !expect_type && (expect_type = true))) {
-            end_index = data.find_first_of(" |", current_index);
+            end_index = command_data.find_first_of(" |", current_index);
 
-            if(end_index != current_index && current_index < data.length()) { /* else we've found another space or a pipe */
-                if(data[current_index] == '-') {
-                    string trigger(data.substr(current_index + 1, end_index - current_index - 1));
+            if(end_index != current_index && current_index < command_data.length()) { /* else we've found another space or a pipe */
+                if(command_data[current_index] == '-') {
+                    string trigger(command_data.substr(current_index + 1, end_index - current_index - 1));
                     result.paramethers.push_back(trigger);
                 } else {
-                    auto index_assign = data.find_first_of('=', current_index);
+                    auto index_assign = command_data.find_first_of('=', current_index);
                     string key, value;
                     if(index_assign == string::npos || index_assign > end_index) {
-                        key = data.substr(current_index, end_index - current_index);
+                        key = command_data.substr(current_index, end_index - current_index);
                     } else {
-                        key = data.substr(current_index, index_assign - current_index);
+                        key = command_data.substr(current_index, index_assign - current_index);
                         try {
-                            value = query::unescape(string(data.substr(index_assign + 1, end_index - index_assign - 1)), true);
+                            value = query::unescape(string(command_data.substr(index_assign + 1, end_index - index_assign - 1)), true);
                         } catch(const std::invalid_argument& ex) {
                             (void) ex;
 
@@ -134,7 +132,7 @@ namespace ts {
                 }
             }
 
-            if(end_index < data.length() && data[end_index] == '|')
+            if(end_index < command_data.length() && command_data[end_index] == '|')
                 bulk_index++;
             current_index = end_index;
         }
@@ -195,27 +193,6 @@ namespace ts {
         if(str.length() > 1) if(str[0] == ' ') str = str.substr(1);
         return str;
     }
-
-#ifdef HAVE_JSON
-    Json::Value Command::buildJson() const {
-        Json::Value result;
-        result["command"] = this->_command;
-
-        int index = 0;
-        for(auto it = this->bulks.begin(); it != this->bulks.end(); it++){
-            Json::Value& node = result["data"][index++];
-            for(const auto& elm : it->parms)
-                node[elm.key()] = elm.value();
-        }
-
-        Json::Value& triggers = result["triggers"];
-        index = 0;
-        for(const auto& parm : this->paramethers)
-            triggers[index++] = parm;
-
-        return result;
-    }
-#endif
 
     std::deque<std::string> Command::parms() { return this->paramethers; }
     bool Command::hasParm(std::string parm) { return std::find(this->paramethers.begin(), this->paramethers.end(), parm) != this->paramethers.end(); }

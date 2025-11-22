@@ -10,14 +10,15 @@ namespace base64 {
     * @param inputSize The size of the input to decode
     * @return A Base64-encoded version of the encoded string
     */
-    extern std::string encode(const char* input, const unsigned long inputSize);
+    extern std::string encode(const char* input, size_t inputSize);
 
     /**
     * Encodes a given string in Base64
     * @param input The input string to Base64-encode
     * @return A Base64-encoded version of the encoded string
     */
-    inline std::string encode(const std::string& input) { return encode(input.c_str(), (unsigned long) input.size()); }
+    inline std::string encode(const std::string& input) { return encode(input.data(), input.size()); }
+    inline std::string encode(const std::string_view& input) { return encode(input.data(), input.size()); }
 
 
     /**
@@ -32,7 +33,8 @@ namespace base64 {
     * @param input The input string to decode
     * @return A string (binary) that represents the Base64-decoded data of the input
     */
-    inline std::string decode(const std::string& input) { return decode(input.c_str(), input.size()); }
+    inline std::string decode(const std::string& input) { return decode(input.data(), input.size()); }
+    inline std::string decode(const std::string_view& input) { return decode(input.data(), input.size()); }
 
     //A–Z, a–z, 0–9, + und /
     inline bool validate(const std::string& input) {

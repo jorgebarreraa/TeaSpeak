@@ -9,7 +9,11 @@
 #define TRACK_OBJECT_ALLOCATION
 #include "memtracker.h"
 
-#define NO_IMPL //For fast disable (e.g. when you dont want to recompile the whole source)
+#ifdef NDEBUG
+    #define NO_IMPL //For fast disable (e.g. when you dont want to recompile the whole source)
+#else
+    #define NO_IMPL
+#endif
 
 #ifndef __GLIBC__
     #define _GLIBCXX_NOEXCEPT
@@ -65,6 +69,8 @@ namespace memtrack {
                  : strcmp (name, __arg.name) < 0; }
 
         inline std::string as_mangled() {
+            if(!this->mangled.empty())
+                return this->mangled;
 #ifndef WIN32
             int status;
             std::unique_ptr<char[], void (*)(void*)> result(abi::__cxa_demangle(name, nullptr, nullptr, &status), std::free);
@@ -82,12 +88,12 @@ namespace memtrack {
     class entry {
         public:
             /* std::string name; */
-            size_t type;
+            size_t type{};
             void* address = nullptr;
 
-            entry() {}
+            entry() = default;
             entry(size_t type, void* address) : type(type), address(address) {}
-            ~entry() {}
+            ~entry() = default;
     };
 
     template <int N>
@@ -178,7 +184,7 @@ namespace memtrack {
         auto _value = (size_t) type_index.value;
         for (auto &brick : bricks)
             if(brick->remove(_value, address)) return;
-        logError(lstream << "[MEMORY] Got deallocated notify, but never the allocated! (Address: " << address << " Name: " << name << ")");
+        logError(LOG_GENERAL, "[MEMORY] Got deallocated notify, but never the allocated! (Address: {} Name: {})", address, name);
 #endif
     }
 
@@ -201,25 +207,25 @@ namespace memtrack {
                 mapping[type.second.value] = type.first.as_mangled();
         }
 
-        logMessage("Allocated object types: " + to_string(objects.size()));
+        logMessage(LOG_GENERAL, "Allocated object types: " + to_string(objects.size()));
             for(const auto& entry : objects) {
-                logMessage("  " + mapping[entry.first] + ": " + to_string(entry.second.size()));
+                logMessage(LOG_GENERAL, "  " + mapping[entry.first] + ": " + to_string(entry.second.size()));
                 if (entry.second.size() < 50) {
                     stringstream ss;
                     for (int index = 0; index < entry.second.size(); index++) {
                         if (index % 16 == 0) {
                             if (index + 1 >= entry.second.size()) break;
                             if (index != 0)
-                                logMessage(ss.str());
+                                logMessage(LOG_GENERAL, ss.str());
                             ss = stringstream();
                             ss << "    ";
                         }
                         ss << entry.second[index] << "  ";
                     }
                     if (!ss.str().empty())
-                        logMessage(ss.str());
+                        logMessage(LOG_GENERAL, ss.str());
                 } else {
-                    logMessage("<snipped>");
+                    logMessage(LOG_GENERAL, "<snipped>");
                 }
             }
 #endif

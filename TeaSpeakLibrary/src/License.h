@@ -34,6 +34,8 @@ namespace license {
                     return "MyTsIdSign";
                 case LicenseType::EPHEMERAL:
                     return "Ephemeral";
+                case LicenseType::TOKEN:
+                    return "Token";
                 default:
                     return "Unknown";
             }

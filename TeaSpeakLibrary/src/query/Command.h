@@ -1,7 +1,6 @@
 #pragma once
 
 #ifdef byte
-    #define byte asdd
     #ifndef WIN32
         #warning The byte macro is already defined! Undefining it!
     #endif
@@ -14,25 +13,23 @@
 #include <list>
 #include <deque>
 #include <memory>
+#include <optional>
 #include <pipes/buffer.h>
 #include "../Variable.h"
 
-#ifdef HAVE_JSON
-    #include <json/json.h>
-#endif
-
 namespace ts {
-#define PARM_TYPE(type, fromString, toString) \
-    BaseCommandParm(std::string key, type value) : BaseCommandParm(std::pair<std::string, std::string>(key, "")) {\
-        toString; \
-    } \
-BaseCommandParm& operator=(type value){ \
-    toString; \
-    return *this; \
-} \
- \
-operator type(){ \
-    fromString; \
+#define PARM_TYPE(type, fromString, toString)                                                                           \
+BaseCommandParm(std::string key, type value) : BaseCommandParm(std::pair<std::string, std::string>(key, "")) {          \
+    toString;                                                                                                           \
+}                                                                                                                       \
+                                                                                                                        \
+BaseCommandParm& operator=(type value){                                                                                 \
+    toString;                                                                                                           \
+    return *this;                                                                                                       \
+}                                                                                                                       \
+                                                                                                                        \
+operator type() {                                                                                                       \
+    fromString;                                                                                                         \
 }
 
     class Command;
@@ -46,7 +43,6 @@ operator type(){ \
             friend class ValueList;
         public:
             ParameterBulk(const ParameterBulk& ref) : parms(ref.parms) {}
-
 
             variable operator[](size_t index){
                 if(parms.size() > index) return parms[index];
@@ -101,17 +97,34 @@ operator type(){ \
             ValueList(const ValueList& ref) : key(ref.key), bulkList(ref.bulkList) {}
 
             variable operator[](int index){
-                while(index >= bulkList.size()) bulkList.push_back(ParameterBulk());
+                while(index >= bulkList.size()) {
+                    bulkList.push_back(ParameterBulk{});
+                }
+
                 return bulkList[index][key];
             }
 
             variable first() const {
-                int index = 0;
-                while(index < bulkList.size() && !bulkList[index].has(key)) index++;
-                if(index < bulkList.size()) return bulkList[index][key];
+                auto value = this->optional_first();
+                if(value.has_value()) {
+                    return std::move(*value);
+                }
 
                 return variable{this->key, "", VariableType::VARTYPE_NULL};
                 throw std::invalid_argument("could not find key [" + key + "]");
+            }
+
+            std::optional<variable> optional_first() const {
+                int index = 0;
+                while(index < bulkList.size() && !bulkList[index].has(key)) {
+                    index++;
+                }
+
+                if(index < bulkList.size()) {
+                    return std::make_optional(bulkList[index][key]);
+                }
+
+                return std::nullopt;
             }
 
             size_t size(){
@@ -139,6 +152,15 @@ operator type(){ \
 
             std::string string() const { return as<std::string>(); }
 
+            std::optional<std::string> optional_string() const {
+                auto value = this->optional_first();
+                if(value.has_value()) {
+                    return std::make_optional(value->string());
+                }
+
+                return std::nullopt;
+            }
+
             friend std::ostream& operator<<(std::ostream&, const ValueList&);
         private:
             ValueList(std::string key, std::deque<ParameterBulk>& bulkList) : key{std::move(key)}, bulkList(bulkList) {}
@@ -161,7 +183,7 @@ operator type(){ \
 
     class Command {
         public:
-            static Command parse(const pipes::buffer_view& buffer, bool expect_command = true, bool drop_non_utf8 = false);
+            static Command parse(const std::string_view& command_data, bool expect_command = true, bool drop_non_utf8 = false);
 
             explicit Command(const std::string& command);
             explicit Command(const std::string& command, std::initializer_list<variable>);
@@ -174,10 +196,6 @@ operator type(){ \
             [[nodiscard]] std::string getCommand() const { return _command; }
 
             [[nodiscard]] std::string build(bool escaped = true) const;
-
-#ifdef HAVE_JSON
-            Json::Value buildJson() const;
-#endif
 
             const ParameterBulk& operator[](size_t index) const {
                 if(bulks.size() <= index) throw std::invalid_argument("got out of length");

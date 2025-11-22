@@ -102,5 +102,3 @@ LOG_METHOD(logTrace);
 LOG_METHOD(debugMessage);
 
 #undef LOG_METHOD
-void hexDump(void* addr, int length, int numLength = 16, int columnLength = 8);
-void hexDump(void* addr, int length, int numLength, int columnLength, void (*)(std::string));

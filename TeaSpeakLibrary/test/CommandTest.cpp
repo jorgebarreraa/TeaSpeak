@@ -61,7 +61,7 @@ command_result test3() {
 void eval_test(command_result x) {
     if(x.is_detailed()) {
         cout << "Detailed!" << endl;
-        x.release_details();
+        x.release_data();
     } else {
         auto a = x.permission_id();
         auto b = x.error_code();

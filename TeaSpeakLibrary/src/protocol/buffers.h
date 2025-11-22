@@ -1,19 +1,15 @@
 #pragma once
 
+#include <list>
 #include <chrono>
 #include <memory>
-#include <list>
 #include <cstring>
-#include <ThreadPool/Mutex.h>
 #include <sstream>
-#include "Packet.h"
-#include "../misc/queue.h"
 #include <cassert>
 #include <utility>
 
-#ifndef NO_LOG
-    #include <log/LogUtils.h>
-#endif
+#include "./Packet.h"
+#include "../misc/queue.h"
 
 namespace ts::buffer {
     struct RawBuffer {
@@ -72,6 +68,8 @@ namespace ts::buffer {
                     return 1024;
                 case Bytes_1536:
                     return 1536;
+                case unset:
+                case max:
                 default:
                     return 0;
             }

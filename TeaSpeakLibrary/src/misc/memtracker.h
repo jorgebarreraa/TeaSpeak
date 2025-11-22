@@ -5,7 +5,7 @@
 
 namespace memtrack {
 #define TRACK_OBJECT_ALLOCATION
-#ifdef TRACK_OBJECT_ALLOCATION
+#if defined(FEATURE_MEMTRACK) && defined(TRACK_OBJECT_ALLOCATION)
     extern void allocated(const char* name, void* address);
     extern void freed(const char* name, void* address);
     template <typename T>

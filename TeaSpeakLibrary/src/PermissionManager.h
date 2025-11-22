@@ -12,10 +12,9 @@
 #include <shared_mutex>
 #include <cassert>
 #include <cstring> /* for memset */
-#include "./misc/spin_lock.h"
+#include "misc/spin_mutex.h"
 #include "Definitions.h"
 #include "Variable.h"
-#include "spdlog/fmt/ostr.h" // must be included
 
 #define permNotGranted (-2)
 #define PERM_ID_GRANT ((ts::permission::PermissionType) (1U << 15U))
@@ -49,7 +48,6 @@ namespace ts {
             b_serverinstance_binding_list,
             b_serverinstance_permission_list,
             b_serverinstance_permission_find,
-            //b_serverinstance_allow_teaspeak_plugin,
 
             /* global::vs_management */
             b_virtualserver_create,
@@ -75,7 +73,6 @@ namespace ts {
 
             /* virtual_server::information */
             b_virtualserver_select,
-            b_virtualserver_select_godmode,
             b_virtualserver_info_view,
             b_virtualserver_connectioninfo_view,
             b_virtualserver_channel_list,
@@ -91,10 +88,11 @@ namespace ts {
             /* virtual_server::administration */
             b_virtualserver_start,
             b_virtualserver_stop,
-            b_virtualserver_token_list,
-            b_virtualserver_token_add,
+            b_virtualserver_token_list_all,
+            i_virtualserver_token_limit,
+            b_virtualserver_token_edit_all,
             b_virtualserver_token_use,
-            b_virtualserver_token_delete,
+            b_virtualserver_token_delete_all,
             b_virtualserver_log_view,
             b_virtualserver_log_add,
             b_virtualserver_join_ignore_password,
@@ -134,7 +132,6 @@ namespace ts {
             b_virtualserver_modify_log_settings,
             b_virtualserver_modify_min_client_version,
             b_virtualserver_modify_icon_id,
-            b_virtualserver_modify_weblist,
             b_virtualserver_modify_country_code,
             b_virtualserver_modify_codec_encryption_mode,
             b_virtualserver_modify_temporary_passwords,
@@ -158,14 +155,9 @@ namespace ts {
             b_channel_create_permanent,
             b_channel_create_semi_permanent,
             b_channel_create_temporary,
-            b_channel_create_private,
             b_channel_create_with_topic,
             b_channel_create_with_description,
             b_channel_create_with_password,
-            b_channel_create_modify_with_codec_speex8,
-            b_channel_create_modify_with_codec_speex16,
-            b_channel_create_modify_with_codec_speex32,
-            b_channel_create_modify_with_codec_celtmono48,
             b_channel_create_modify_with_codec_opusvoice,
             b_channel_create_modify_with_codec_opusmusic,
             i_channel_create_modify_with_codec_maxquality,
@@ -179,7 +171,10 @@ namespace ts {
             i_channel_create_modify_with_temp_delete_delay,
             i_channel_create_modify_conversation_history_length,
             b_channel_create_modify_conversation_history_unlimited,
-            b_channel_create_modify_conversation_private,
+            b_channel_create_modify_conversation_mode_private,
+            b_channel_create_modify_conversation_mode_public,
+            b_channel_create_modify_conversation_mode_none,
+            b_channel_create_modify_sidebar_mode,
 
             /* channel::modify */
             b_channel_modify_parent,
@@ -424,9 +419,16 @@ namespace ts {
             i_client_needed_talk_power,
             i_client_poke_power,
             i_client_needed_poke_power,
+            i_client_poke_max_clients,
             b_client_set_flag_talker,
             i_client_whisper_power,
             i_client_needed_whisper_power,
+            b_video_screen,
+            b_video_camera,
+            i_video_max_kbps,
+            i_video_max_streams,
+            i_video_max_screen_streams,
+            i_video_max_camera_streams,
 
             /* client::modify */
             b_client_modify_description,
@@ -466,6 +468,8 @@ namespace ts {
             i_ft_needed_directory_create_power,
             i_ft_quota_mb_download_per_client,
             i_ft_quota_mb_upload_per_client,
+            i_ft_max_bandwidth_download,
+            i_ft_max_bandwidth_upload,
 
             permission_id_max
         };
@@ -490,7 +494,7 @@ namespace ts {
 
             channel = i_channel_needed_permission_modify_power,
             channel_info = b_virtualserver_channel_permission_list,
-            channel_create = b_channel_create_modify_conversation_private,
+            channel_create = b_channel_create_modify_conversation_mode_none,
             channel_modify = b_channel_modify_temp_delete_delay,
             channel_delete = i_channel_needed_delete_power,
             channel_access = b_channel_ignore_description_view_power,
@@ -513,7 +517,7 @@ namespace ts {
             client_admin = i_client_ban_max_bantime,
             client_basic = i_client_needed_whisper_power,
             client_modify = b_client_query_delete_own,
-            ft = i_ft_quota_mb_upload_per_client,
+            ft = i_ft_max_bandwidth_upload,
             group_end
         };
 
@@ -552,6 +556,8 @@ namespace ts {
 
             bool clientSupported = true;
 
+            [[nodiscard]] inline bool is_invalid() const { return this->type == permission::undefined || this->type == permission::unknown; }
+
             // PermissionTypeEntry(PermissionTypeEntry&& ref) : type(ref.type), group(ref.group), name(ref.name), description(ref.description), clientSupported(ref.clientSupported) {}
             //PermissionTypeEntry(const PermissionTypeEntry& ref) : type(ref.type), group(ref.group), name(ref.name), description(ref.description), clientSupported(ref.clientSupported) {}
             PermissionTypeEntry(PermissionTypeEntry&& ref) = delete;
@@ -563,7 +569,7 @@ namespace ts {
                                                                                                                                                         name(std::move(name)),
                                                                                                                                                         description(std::move(description)),
                                                                                                                                                         clientSupported(clientSupported) {
-                this->grant_name = std::string() + (this->name[0] == 'i' ? "i" : "i") + "_needed_modify_power_" + this->name.substr(2);
+                this->grant_name = "i_needed_modify_power_" + this->name.substr(2);
             }
         };
 
@@ -752,7 +758,7 @@ namespace ts {
                 bool flag_value_update: 1;
                 bool flag_grant_update: 1;
 
-                ts_always_inline bool permission_set() {
+                [[nodiscard]] ts_always_inline bool permission_set() const {
                     return this->value_set || this->grant_set;
                 }
             };
@@ -818,6 +824,28 @@ namespace ts {
 
                 [[nodiscard]] constexpr bool has_power() const { return this->has_value && (this->value > 0 || this->value == -1); }
                 [[nodiscard]] constexpr bool has_infinite_power() const { return this->has_value && this->value == -1; }
+                constexpr bool clear_flag_on_zero() {
+                    if(this->has_value && this->value == 0) {
+                        this->has_value = false;
+                        return true;
+                    }
+                    return false;
+                }
+
+                /**
+                 * Set the permission value to zero if the permission hasn't been set.
+                 * This could be used to check if a client could do an action on another client
+                 * but the client requires at least some power.
+                 * @return
+                 */
+                constexpr auto& zero_if_unset() {
+                    if(!this->has_value) {
+                        this->has_value = true;
+                        this->value = 0;
+                    }
+
+                    return *this;
+                }
 
                 inline bool operator==(const PermissionFlaggedValue& other) const { return other.value == this->value && other.has_value == this->has_value; }
                 inline bool operator!=(const PermissionFlaggedValue& other) const { return !(*this == other); }
@@ -825,9 +853,10 @@ namespace ts {
             static constexpr PermissionFlaggedValue empty_permission_flagged_value{0, false};
 
 
-            static constexpr bool permission_granted(const PermissionFlaggedValue& required, const PermissionFlaggedValue& given, bool requires_given = true) {
+            static constexpr bool permission_granted(const PermissionFlaggedValue& required, const PermissionFlaggedValue& given) {
                 if(!required.has_value) {
-                    return !requires_given || given.has_power();
+                    /* The target permission hasn't been set so just check if we've not negated the target */
+                    return !given.has_value || given.value >= 0;
                 } else if(!given.has_power()) {
                     return false;
                 } else if(given.has_infinite_power()) {
@@ -838,8 +867,8 @@ namespace ts {
                     return given.value >= required.value;
                 }
             }
-            static constexpr bool permission_granted(const PermissionValue& required, const PermissionFlaggedValue& given, bool requires_given = true) {
-                return permission_granted({required, true}, given, requires_given);
+            static constexpr bool permission_granted(const PermissionValue& required, const PermissionFlaggedValue& given) {
+                return permission_granted({required, true}, given);
             }
 
             class PermissionManager {
@@ -858,24 +887,24 @@ namespace ts {
 
                     /* general getters/setters */
                     const PermissionFlags permission_flags(const PermissionType&); /* we return a "copy" because the actual permission could be deleted while we're analyzing the flags */
-                    ts_always_inline const PermissionFlags permission_flags(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_flags(permission_info->type); }
+                    ts_always_inline PermissionFlags permission_flags(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_flags(permission_info->type); }
 
                     const PermissionValues permission_values(const PermissionType&);
-                    ts_always_inline const PermissionValues permission_values(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_values(permission_info->type); }
+                    ts_always_inline PermissionValues permission_values(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_values(permission_info->type); }
 
                     const PermissionFlaggedValue permission_value_flagged(const PermissionType&);
-                    ts_always_inline const PermissionFlaggedValue permission_value_flagged(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_value_flagged(permission_info->type); }
+                    ts_always_inline PermissionFlaggedValue permission_value_flagged(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_value_flagged(permission_info->type); }
 
                     const PermissionFlaggedValue permission_granted_flagged(const PermissionType&);
-                    ts_always_inline const PermissionFlaggedValue permission_granted_flagged(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_granted_flagged(permission_info->type); }
+                    ts_always_inline PermissionFlaggedValue permission_granted_flagged(const std::shared_ptr<PermissionTypeEntry>& permission_info) { return this->permission_granted_flagged(permission_info->type); }
 
                     /* only worth looking up if channel_specific is set */
                     const PermissionContainer channel_permission(const PermissionType& /* permission */, ChannelId /* channel id */);
-                    ts_always_inline const PermissionContainer channel_permission(const std::shared_ptr<PermissionTypeEntry>& permission_info, ChannelId channel_id) { return this->channel_permission(permission_info->type, channel_id); }
+                    ts_always_inline PermissionContainer channel_permission(const std::shared_ptr<PermissionTypeEntry>& permission_info, ChannelId channel_id) { return this->channel_permission(permission_info->type, channel_id); }
 
                     /* modifiers */
-                    void set_permission(const PermissionType& /* permission */, const PermissionValues& /* values */, const PermissionUpdateType& /* update value */, const PermissionUpdateType& /* update grant */, int /* flag skip */ = -1, int /* flag negate */ = -1);
-                    void set_channel_permission(const PermissionType& /* permission */, ChannelId /* channel id */, const PermissionValues& /* values */, const PermissionUpdateType& /* update value */, const PermissionUpdateType& /* update grant */, int /* flag skip */ = -1, int /* flag negate */ = -1);
+                    PermissionContainer set_permission(const PermissionType& /* permission */, const PermissionValues& /* values */, const PermissionUpdateType& /* update value */, const PermissionUpdateType& /* update grant */, int /* flag skip */ = -1, int /* flag negate */ = -1);
+                    PermissionContainer set_channel_permission(const PermissionType& /* permission */, ChannelId /* channel id */, const PermissionValues& /* values */, const PermissionUpdateType& /* update value */, const PermissionUpdateType& /* update grant */, int /* flag skip */ = -1, int /* flag negate */ = -1);
 
                     /* bulk info */
                     const std::vector<std::tuple<PermissionType, const PermissionContainer>> permissions();
@@ -893,7 +922,7 @@ namespace ts {
                     bool requires_db_save = false;
                     ts_always_inline void trigger_db_update() { this->requires_db_save = true; }
 
-                    spin_lock block_use_count_lock{};
+                    spin_mutex block_use_count_lock{};
                     int16_t block_use_count[BULK_COUNT];
                     PermissionContainerBulk<PERMISSIONS_BULK_ENTRY_COUNT>* block_containers[BULK_COUNT];
 

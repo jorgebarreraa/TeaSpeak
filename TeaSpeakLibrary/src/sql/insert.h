@@ -14,7 +14,7 @@ namespace sql {
             [[nodiscard]] static std::string generate(size_t index) {
                 assert(index > 0);
                 std::string result{};
-                result.resize(std::max(index >> 4U, 1UL));
+                result.resize(std::max(index >> 4U, (size_t) 1U));
                 for(auto it = result.begin(); index > 0; index >>= 4U)
                     *(it++) = number_map[index & 0xFU];
                 return result;
@@ -49,6 +49,7 @@ namespace sql {
                 else
                     result += "OR IGNORE ";
             }
+            result += "INTO ";
 
             result += this->table_name + " (";
             //"INSERT INTO " + this->table_name + " ("
@@ -94,7 +95,7 @@ namespace sql {
 
             ExecuteResult result{};
 
-            const auto chunk_size = std::min(2UL, this->entries.size());
+            const auto chunk_size = std::min((size_t) 2U, this->entries.size());
             sql::model chunk_base{sql, this->generate_query(chunk_size, sql->getType(), ignore_fails)};
             sql::model entry_model{sql, this->generate_query(1, sql->getType(), ignore_fails)};
 

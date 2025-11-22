@@ -8,9 +8,10 @@
 #include <utility>
 #include <ThreadPool/ThreadPool.h>
 #include <ThreadPool/Future.h>
-#include "../Variable.h"
 #include <misc/memtracker.h>
 #include <misc/lambda.h>
+
+#include "../Variable.h"
 
 #define ALLOW_STACK_ALLOCATION
 #define LOG_SQL_CMD [](const sql::result &res){ if(!res) logCritical(LOG_GENERAL, "Failed to execute sql command: " + std::to_string(res.code()) + "/" + res.msg() + " (" __FILE__ + ":" + std::to_string(__LINE__) + ")"); }
@@ -32,26 +33,25 @@ namespace sql {
     class result {
         public:
             static result success;
-            result() : result(success) { }
-            result(std::string query, int code, std::string msg) : _code(code), _msg(std::move(msg)), _sql(std::move(query)) { }
-            result(int code, const std::string &msg) : _code(code), _msg(std::move(msg)) { }
-            result(const result& ref) : _code(ref._code), _msg(ref._msg), _sql(ref._sql) { }
-            result(result&& ref) : _code(ref._code), _msg(std::move(ref._msg)), _sql(std::move(ref._sql)) { }
-            virtual ~result() { };
 
-            int code() const { return _code; }
-            std::string msg() const { return _msg; }
-            std::string sql() const { return _sql; }
+            result() : result{success} { }
+            result(int code, std::string msg)
+                    : code_{code}, msg_{std::move(msg)}, sql_{""}, last_insert_rowid_{-1} { }
+            result(std::string query, int code, int64_t last_insert_rowid, std::string msg)
+                : code_{code}, msg_{std::move(msg)}, sql_{std::move(query)}, last_insert_rowid_{last_insert_rowid} { }
+
+            result(const result&)            = default;
+            result(result&&)                 = default;
+            result& operator=(const result&) = default;
+            result& operator=(result&&)      = default;
+
+            int code() const { return this->code_; }
+            std::string msg() const { return this->msg_; }
+            std::string sql() const { return this->sql_; }
+            int64_t last_insert_rowid() const { return this->last_insert_rowid_; };
 
             //Returns true on success
-            operator bool() const { return _code == 0; }
-
-            result&operator=(const result& other) {
-                this->_code = other._code;
-                this->_msg = other._msg;
-                this->_sql = other._sql;
-                return *this;
-            }
+            operator bool() const { return code_ == 0; }
 
             std::string fmtStr() const {
                 std::stringstream s;
@@ -59,9 +59,10 @@ namespace sql {
                 return s.str();
             }
         private:
-            int _code = 0;
-            std::string _msg{};
-            std::string _sql{};
+            int code_{0};
+            int64_t last_insert_rowid_{0};
+            std::string msg_{};
+            std::string sql_{};
     };
 
     enum SqlType {
@@ -262,25 +263,27 @@ namespace sql {
                 friend class ::sql::command;
                 friend class ::sql::model;
             public:
+                explicit command_base(std::nullptr_t) : _data{nullptr} {}
+
                 command_base(SqlManager* handle, const std::string &sql, std::initializer_list<variable> values) {
                     assert(handle);
                     assert(!sql.empty());
                     this->_data = handle->allocateCommandData();
                     this->_data->handle = handle;
                     this->_data->sql_command = sql;
-                    this->__data = this->_data.get();
-                    for(const auto& val : values) this->value(val);
+                    for(const auto& val : values)
+                        this->value(val);
                  }
 
                 template<typename... Ts>
-                command_base(SqlManager* handle, std::string sql, Ts&&... vars) : command_base(handle, sql, {}) { values(vars...); }
+                command_base(SqlManager* handle, const std::string& sql, Ts&&... vars) : command_base(handle, sql, {}) { values(vars...); }
 
-                command_base(const command_base<SelfType>& ref) : _data(ref._data), __data(ref._data.get())  {}
-                command_base(command_base<SelfType>&& ref) noexcept : _data(ref._data), __data(ref._data.get()) { }
+                command_base(const command_base<SelfType>& ref) : _data(ref._data)  {}
+                command_base(command_base<SelfType>&& ref) noexcept : _data(ref._data) { }
 
                 virtual ~command_base() = default;
 
-                virtual SelfType& value(const variable& val) {
+                SelfType& value(const variable& val) {
                     this->_data->variables.push_back(val);
                     return *(SelfType*) this;
                 }
@@ -303,10 +306,20 @@ namespace sql {
 
                 std::string sqlCommand(){ return _data->sql_command; }
                 SqlManager* handle(){ return _data->handle; }
+
+                command_base& operator=(const command_base& other) {
+                    this->_data = other._data;
+                    return *this;
+                }
+
+                command_base& operator=(command_base&& other) {
+                    this->_data = std::move(other._data);
+                    return *this;
+                }
+
             protected:
-                explicit command_base(const std::shared_ptr<CommandData>& data) : _data(data), __data(data.get()) {}
+                explicit command_base(std::shared_ptr<CommandData> data) : _data(std::move(data)) {}
                 std::shared_ptr<CommandData> _data;
-                CommandData* __data = nullptr;
         };
     }
 
@@ -317,13 +330,13 @@ namespace sql {
             template<typename... Ts>
             model(SqlManager* handle, const std::string &sql, Ts... vars) : model(handle, sql, {}) { values(vars...); }
 
-            model(const model& v) : command_base(v) {};
-            model(model&& v) noexcept : command_base(v){};
-            ~model() override {};
+            explicit model(std::nullptr_t) : command_base{nullptr} {};
+            //model(const model& v) : command_base{v} {};
+            //model(model&& v) noexcept  : command_base{std::forward<model>(v)} {};
+            ~model() override = default;
 
             sql::command command();
             sql::model copy();
-
         private:
             explicit model(const std::shared_ptr<CommandData>&);
     };

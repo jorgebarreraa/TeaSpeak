@@ -102,40 +102,57 @@ std::string query::unescape(std::string in, bool throw_error) {
                 in.replace(index, 1, "", 0); //Cut the character out
                 index--;
             } else if(current >= 194 && current <= 223) {
-                if(in.length() - index <= 1)
+                if(in.length() - index <= 1) {
                     in.replace(index, in.length() - index, "", 0);
-                else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191) index += 1; //Valid
-                else {
-                    if(throw_error) throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                } else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191) {
+                    index += 1; //Valid
+                } else {
+                    if(throw_error) {
+                        throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                    }
+
                     in.replace(index, 2, "", 0); //Cut the two characters out
                     index--;
                 }
             } else if(current >= 224 && current <= 239) {
-                if(in.length() - index <= 2)
+                if(in.length() - index <= 2) {
                     in.replace(index, in.length() - index, "", 0);
-                else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191 &&
-                        (uint8_t) in[index + 2] >= 128 && (uint8_t) in[index + 2] <= 191) index += 2; //Valid
-                else {
-                    if(throw_error) throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                } else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191 &&
+                        (uint8_t) in[index + 2] >= 128 && (uint8_t) in[index + 2] <= 191) {
+                    index += 2; //Valid
+                } else {
+                    if(throw_error) {
+                        throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                    }
+
                     in.replace(index, 3, "", 0); //Cut the three characters out
                     index--;
                 }
             } else if(current >= 240 && current <= 244) {
-                if(in.length() - index <= 3)
+                if(in.length() - index <= 3) {
                     in.replace(index, in.length() - index, "", 0);
-                else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191 &&
+                } else if((uint8_t) in[index + 1] >= 128 && (uint8_t) in[index + 1] <= 191 &&
                         (uint8_t) in[index + 2] >= 128 && (uint8_t) in[index + 2] <= 191 &&
-                        (uint8_t) in[index + 3] >= 128 && (uint8_t) in[index + 3] <= 191) index += 3; //Valid
-                else {
-                    if(throw_error) throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                        (uint8_t) in[index + 3] >= 128 && (uint8_t) in[index + 3] <= 191) {
+                    index += 3; //Valid
+                } else {
+                    if(throw_error) {
+                        throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                    }
+
                     in.replace(index, 4, "", 0); //Cut the three characters out
                     index--;
                 }
             } else {
-                if(throw_error) throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                if(throw_error) {
+                    throw invalid_argument("Invalid UTF-8 character at index " + to_string(index));
+                }
+
                 in.replace(index, 1, "", 0); //Cut the character out
                 index--;
             }
+        } else if(current < 0x0A) {
+            in.replace(index, 1, " ", 1);
         }
         index++;
     }

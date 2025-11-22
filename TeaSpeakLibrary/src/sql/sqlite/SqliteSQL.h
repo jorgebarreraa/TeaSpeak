@@ -21,7 +21,7 @@ namespace sql {
             protected:
                 std::shared_ptr<CommandData> copyCommandData(std::shared_ptr<CommandData> ptr) override;
                 std::shared_ptr<CommandData> allocateCommandData() override;
-                result executeCommand(std::shared_ptr<CommandData> ptr) override;
+                result executeCommand(std::shared_ptr<CommandData> command_data) override;
                 result queryCommand(std::shared_ptr<CommandData> ptr, const QueryCallback&fn) override;
 
             private:

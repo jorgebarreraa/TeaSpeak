@@ -8,7 +8,7 @@ using namespace std;
 using namespace std::chrono;
 
 namespace sql {
-    result result::success = result("", 0, "success");
+    result result::success = result("", 0, -1, "success");
     sql::command model::command() { return ::sql::command(*this); }
     sql::model model::copy() { return sql::model(this->_data); }
     model::model(const std::shared_ptr<CommandData>& data) : command_base(data->handle->copyCommandData(data)) {}
@@ -33,7 +33,6 @@ namespace sql {
             command copy = cmd;
             result res;
             while((res = copy.execute()).code() == SQLITE_BUSY){
-                cerr << "Execute busy!" << endl;
                 usleep(1000);
             }
             fut.executionSucceed(res);

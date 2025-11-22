@@ -2,22 +2,22 @@
 
 using namespace ts::protocol;
 
-generation_estimator::generation_estimator() {
+GenerationEstimator::GenerationEstimator() {
     this->reset();
 }
 
-void generation_estimator::reset() {
+void GenerationEstimator::reset() {
     this->last_generation = 0;
     this->last_packet_id = 0;
 }
 
-uint16_t generation_estimator::visit_packet(uint16_t packet_id) {
-    if(this->last_packet_id >= generation_estimator::overflow_area_begin) {
+uint16_t GenerationEstimator::visit_packet(uint16_t packet_id) {
+    if(this->last_packet_id >= GenerationEstimator::overflow_area_begin) {
         if(packet_id > this->last_packet_id) {
             /* normal behaviour */
             this->last_packet_id = packet_id;
             return this->last_generation;
-        } else if(packet_id < generation_estimator::overflow_area_end) {
+        } else if(packet_id < GenerationEstimator::overflow_area_end) {
             /* we're within a new generation */
             this->last_packet_id = packet_id;
             return ++this->last_generation;
@@ -25,16 +25,21 @@ uint16_t generation_estimator::visit_packet(uint16_t packet_id) {
             /* old packet */
             return this->last_generation;
         }
-    } else if(this->last_packet_id <= generation_estimator::overflow_area_end) {
-        if(packet_id >= generation_estimator::overflow_area_begin) /* old packet */
+    } else if(this->last_packet_id <= GenerationEstimator::overflow_area_end) {
+        if(packet_id >= GenerationEstimator::overflow_area_begin) {/* old packet */
             return this->last_generation - 1;
-        if(packet_id > this->last_packet_id)
+        }
+
+        if(packet_id > this->last_packet_id) {
             this->last_packet_id = packet_id;
+        }
+
         return this->last_generation;
     } else {
         /* only update on newer packet id */
-        if(packet_id > this->last_packet_id)
+        if(packet_id > this->last_packet_id) {
             this->last_packet_id = packet_id;
+        }
         return this->last_generation;
     }
 }

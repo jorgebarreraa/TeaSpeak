@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <iostream>
 #include <mutex>
-#include <sstream>
 #include <misc/base64.h>
 #include "query/Command.h"
 #include "misc/digest.h"
@@ -14,66 +13,82 @@ using namespace std::chrono;
 using namespace ts;
 
 BasicChannel::BasicChannel(ChannelId parentId, ChannelId channelId) {
-    this->setProperties(make_shared<Properties>());
+    {
+        auto properties = std::make_shared<PropertyManager>();
+        properties->register_property_type<property::ChannelProperties>();
+        this->setProperties(properties);
+    }
 
-    this->_properties->register_property_type<property::ChannelProperties>();
     this->properties()[property::CHANNEL_ID] = channelId;
     this->properties()[property::CHANNEL_PID] = parentId;
 }
 
 void BasicChannel::setPermissionManager(const std::shared_ptr<permission::v2::PermissionManager>& manager) {
     this->_permissions = manager;
-    this->update_properties_from_permissions();
+
+    bool flag_view_update;
+    this->update_properties_from_permissions(flag_view_update);
 }
 
-void BasicChannel::setProperties(const std::shared_ptr<ts::Properties>& props) {
+void BasicChannel::setProperties(const std::shared_ptr<ts::PropertyManager>& props) {
     if(this->_properties) {
         (*props)[property::CHANNEL_ID] = this->channelId();
         (*props)[property::CHANNEL_PID] = this->properties()[property::CHANNEL_PID].value();
     }
     this->_properties = props;
 
-    this->properties().registerNotifyHandler([&](Property& prop){
-        if(prop.type() == property::CHANNEL_FLAG_DEFAULT)
+    this->properties()->registerNotifyHandler([&](Property& prop){
+        if(prop.type() == property::CHANNEL_FLAG_DEFAULT) {
             this->properties()[property::CHANNEL_FLAG_PASSWORD] = false;
-        else if(prop.type() == property::CHANNEL_ID)
+        } else if(prop.type() == property::CHANNEL_ID) {
             this->_channel_id = prop;
-        else if(prop.type() == property::CHANNEL_ORDER)
+        } else if(prop.type() == property::CHANNEL_ORDER) {
             this->_channel_order = prop;
+        }
     });
 
     //Update cached variables
-    if(props->has(property::CHANNEL_ORDER)) this->_channel_order = this->properties()[property::CHANNEL_ORDER];
-    else this->_channel_order = 0;
+    this->_channel_order = this->properties()[property::CHANNEL_ORDER];
     this->_channel_id = this->channelId();
 }
 
-std::vector<property::ChannelProperties> BasicChannel::update_properties_from_permissions() {
+std::vector<property::ChannelProperties> BasicChannel::update_properties_from_permissions(bool& need_view_update) {
     std::vector<property::ChannelProperties> result;
     result.reserve(2);
 
     auto permission_manager = this->permissions(); /* keeps the manager until we've finished our calculations */
     /* update the icon id */
     {
-        IconId target_icon_id = 0;
-        auto& permission_icon_flags = permission_manager->permission_flags(permission::i_icon_id);
-        if(permission_icon_flags.value_set)
-            target_icon_id = (IconId) permission_manager->permission_values(permission::i_icon_id).value;
-        if(this->properties()[property::CHANNEL_ICON_ID] != target_icon_id) {
+        IconId target_icon_id{0};
+        auto fvalue = permission_manager->permission_value_flagged(permission::i_icon_id);
+        if(fvalue.has_value)
+            target_icon_id = (IconId) fvalue.value;
+        if(this->properties()[property::CHANNEL_ICON_ID].as_or(0) != target_icon_id) {
             this->properties()[property::CHANNEL_ICON_ID] = target_icon_id;
             result.push_back(property::CHANNEL_ICON_ID);
         }
     }
+
     /* update the channel talk power */
     {
         permission::PermissionValue talk_power{0};
-        auto& permission_tp_flags = permission_manager->permission_flags(permission::i_client_needed_talk_power);
-        if(permission_tp_flags.value_set)
-            talk_power = permission_manager->permission_values(permission::i_client_needed_talk_power).value;
-        if(this->properties()[property::CHANNEL_NEEDED_TALK_POWER] != talk_power) {
+        auto fvalue = permission_manager->permission_value_flagged(permission::i_client_needed_talk_power);
+        if(fvalue.has_value)
+            talk_power = fvalue.value;
+        if(this->properties()[property::CHANNEL_NEEDED_TALK_POWER].as_or(0) != talk_power) {
             this->properties()[property::CHANNEL_NEEDED_TALK_POWER] = talk_power;
             result.push_back(property::CHANNEL_NEEDED_TALK_POWER);
         }
+    }
+
+    /* needed view power */
+    {
+        auto fvalue = permission_manager->permission_value_flagged(permission::i_channel_needed_view_power);
+        if(this->last_view_power.has_value != fvalue.has_value)
+            need_view_update = true;
+        else
+            need_view_update = fvalue.value != this->last_view_power.value;
+        this->last_view_power = fvalue;
     }
 
     return result;
@@ -96,9 +111,13 @@ BasicChannel::BasicChannel(std::shared_ptr<BasicChannel> parent, ChannelId chann
 BasicChannel::~BasicChannel() { }
 
 ChannelType::ChannelType BasicChannel::channelType() {
-    if (this->properties()[property::CHANNEL_FLAG_PERMANENT].as<bool>()) return ChannelType::ChannelType::permanent;
-    else if (this->properties()[property::CHANNEL_FLAG_SEMI_PERMANENT].as<bool>()) return ChannelType::ChannelType::semipermanent;
-    else return ChannelType::ChannelType::temporary;
+    if(this->properties()[property::CHANNEL_FLAG_PERMANENT].as_or<bool>(true)) {
+        return ChannelType::ChannelType::permanent;
+    } else if (this->properties()[property::CHANNEL_FLAG_SEMI_PERMANENT].as_or<bool>(false)) {
+        return ChannelType::ChannelType::semipermanent;
+    } else {
+        return ChannelType::ChannelType::temporary;
+    }
 }
 
 void BasicChannel::setChannelType(ChannelType::ChannelType type) {
@@ -106,23 +125,52 @@ void BasicChannel::setChannelType(ChannelType::ChannelType type) {
     properties()[property::CHANNEL_FLAG_SEMI_PERMANENT] = type == ChannelType::semipermanent;
 }
 
-bool BasicChannel::passwordMatch(std::string password, bool hashed) {
-    if (!this->properties()[property::CHANNEL_FLAG_PASSWORD].as<bool>() || this->properties()[property::CHANNEL_PASSWORD].value().empty()) return true;
-    if (password.empty()) return false;
+void BasicChannel::updateChannelType(std::vector<property::ChannelProperties> &properties, ChannelType::ChannelType type) {
+    if(this->properties()[property::CHANNEL_FLAG_PERMANENT].update_value(type == ChannelType::permanent)) {
+        properties.push_back(property::CHANNEL_FLAG_PERMANENT);
+    }
 
-    if(this->properties()[property::CHANNEL_PASSWORD].as<string>() == password)
-        return true;
-
-    password = base64::encode(digest::sha1(password));
-    return this->properties()[property::CHANNEL_PASSWORD].as<string>() == password;
+    if(this->properties()[property::CHANNEL_FLAG_SEMI_PERMANENT].update_value(type == ChannelType::semipermanent)) {
+        properties.push_back(property::CHANNEL_FLAG_SEMI_PERMANENT);
+    }
 }
 
-int64_t BasicChannel::emptySince() {
-    if (!properties().hasProperty(property::CHANNEL_LAST_LEFT))
-        return 0;
+bool BasicChannel::verify_password(const std::optional<std::string> &password, bool password_hashed) {
+    if(!this->properties()[property::CHANNEL_FLAG_PASSWORD].as_or<bool>(false)) {
+        return true;
+    }
 
-    time_point<system_clock> lastLeft = time_point<system_clock>() + milliseconds(properties()[property::CHANNEL_LAST_LEFT].as<uint64_t>());
-    return (int64_t) duration_cast<seconds>(system_clock::now() - lastLeft).count();
+    auto channel_password = this->properties()[property::CHANNEL_PASSWORD].value();
+    if(channel_password.empty()) {
+        return true;
+    }
+
+    if(!password.has_value()) {
+        return false;
+    }
+
+    if(password_hashed) {
+        return *password == channel_password;
+    }
+
+    /* We might have supplied the raw password */
+    return base64::encode(digest::sha1(*password)) == channel_password;
+}
+
+uint64_t BasicChannel::empty_seconds() {
+    using std::chrono::system_clock;
+    using std::chrono::milliseconds;
+    using std::chrono::seconds;
+    using std::chrono::floor;
+
+    auto last_channel_leave = system_clock::time_point{} + milliseconds{properties()[property::CHANNEL_LAST_LEFT].as_or<uint64_t>(0)};
+    auto current_timestamp = system_clock::now();
+    if(current_timestamp < last_channel_leave) {
+        /* clock seems to have gone backwards */
+        return 0;
+    }
+
+    return (uint64_t) floor<seconds>(current_timestamp - last_channel_leave).count();
 }
 
 void BasicChannel::setLinkedHandle(const std::weak_ptr<TreeView::LinkedTreeEntry> &ptr) {
@@ -179,9 +227,11 @@ std::shared_ptr<BasicChannel> BasicChannelTree::findChannel(ChannelId channelId,
 
 
 std::shared_ptr<BasicChannel> BasicChannelTree::findChannel(const std::string &name, const shared_ptr<BasicChannel> &layer) {
-    for (auto elm : this->channels())
-        if (elm->name() == name && elm->parent() == layer)
+    for (auto elm : this->channels()) {
+        if (elm->name() == name && elm->parent() == layer) {
             return elm;
+        }
+    }
     return nullptr;
 }
 
@@ -257,16 +307,24 @@ deque<std::shared_ptr<ts::BasicChannel>> BasicChannelTree::delete_channel_root(c
 }
 
 bool BasicChannelTree::setDefaultChannel(const shared_ptr<BasicChannel> &ch) {
-    if (!ch) return false;
-    for (const auto &elm : this->channels())
-        elm->properties()[property::CHANNEL_FLAG_DEFAULT] = false;
+    if (!ch) {
+        return false;
+    }
+
+    for (const auto &elm : this->channels()) {
+        elm->properties()[property::CHANNEL_FLAG_DEFAULT].update_value(false);
+    }
+
     ch->properties()[property::CHANNEL_FLAG_DEFAULT] = true;
     return true;
 }
 
 std::shared_ptr<BasicChannel> BasicChannelTree::getDefaultChannel() {
-    for (auto elm : this->channels())
-        if (elm->properties()[property::CHANNEL_FLAG_DEFAULT].as<bool>()) return elm;
+    for (auto elm : this->channels()) {
+        if (elm->properties()[property::CHANNEL_FLAG_DEFAULT].as_or<bool>(false)) {
+            return elm;
+        }
+    }
     return nullptr;
 }
 

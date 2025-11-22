@@ -80,7 +80,7 @@ void UnorderedPacketLossCalculator::reset_offsets() {
 
 void CommandPacketLossCalculator::packet_send(uint32_t packet_id) {
     if(packet_id > this->packet_history_offset) {
-        assert(packet_id - 1 == this->packet_history_offset); /* the method will only be called with an incrementing packet id */
+        assert(packet_id - 1 == this->packet_history_offset || this->packet_history_offset == 0); /* the method will only be called with an incrementing packet id */
         /* newly send packet */
         auto lost = std::exchange(this->packet_ack_counts[packet_id % CommandPacketLossCalculator::packet_ack_counts_length], 1);
         this->lost_packets_ += lost;

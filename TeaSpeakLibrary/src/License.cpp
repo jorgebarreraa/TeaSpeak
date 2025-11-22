@@ -1,6 +1,4 @@
-#include <log/LogUtils.h>
 #include <cstring>
-#include <misc/base64.h>
 #include "misc/endianness.h"
 #include <misc/digest.h>
 #define FIXEDINT_H_INCLUDED
@@ -10,7 +8,6 @@
 #include <iomanip>
 #include "License.h"
 
-using namespace ts;
 using namespace license::teamspeak;
 using namespace std;
 using namespace std::chrono;
@@ -70,7 +67,7 @@ LicensePublicKey license::teamspeak::Anonymous::root_key = {
 };
 size_t license::teamspeak::Anonymous::root_index = 1;
 
-shared_ptr<LicenseChain> license::teamspeak::Anonymous::chain = []() -> shared_ptr<LicenseChain> {
+std::shared_ptr<LicenseChain> default_anonymous_chain() {
     string error;
     auto str = istringstream(string((const char*) default_chain, sizeof(default_chain)));
     auto chain = LicenseChain::parse(str, error);
@@ -80,7 +77,9 @@ shared_ptr<LicenseChain> license::teamspeak::Anonymous::chain = []() -> shared_p
     }
 
     return chain;
-}();
+}
+
+shared_ptr<LicenseChain> license::teamspeak::Anonymous::chain{default_anonymous_chain()};
 
 #define IOERROR(message) \
 do {\
@@ -263,7 +262,7 @@ void LicenseChain::print() {
 
     auto key = this->generatePublicKey();
     cout << "Public key: " << endl;
-    hexDump((char*) key.data(), (int) key.length(), (int) key.length(), (int) key.length(), [](string message) { cout << message << endl; });
+    //hexDump((char*) key.data(), (int) key.length(), (int) key.length(), (int) key.length(), [](string message) { cout << message << endl; });
 }
 
 std::string LicenseChain::exportChain() {
@@ -309,7 +308,7 @@ std::shared_ptr<LicenseEntry> LicenseChain::addServerEntry(ServerLicenseType typ
 }
 
 void LicenseChain::addEphemeralEntry() {
-    auto entry = make_shared<EphemeralLicenseEntry>();
+    auto entry = std::make_shared<EphemeralLicenseEntry>();
     _ed25519_create_keypair(entry->key.publicKeyData, entry->key.privateKeyData);
     entry->key.privateKey = true;
     entry->_begin = system_clock::now() - hours(6);
@@ -328,9 +327,9 @@ inline string importHash(const std::string& hash) {
     memset(buffer, 0, 64);
 
     memcpy(buffer, (void*) hash.data(), 32);
-    buffer[0]  &= 0xF8;
-    buffer[31] &= 0x3F;
-    buffer[31] |= 0x40;
+    buffer[0]  &= (uint8_t) 0xF8;
+    buffer[31] &= (uint8_t) 0x3F;
+    buffer[31] |= (uint8_t) 0x40;
     sc_reduce(buffer);
     return string((char*) buffer, 32);
 }

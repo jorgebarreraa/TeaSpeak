@@ -3,9 +3,9 @@
 #include <cstdint>
 
 namespace ts::protocol {
-    class generation_estimator {
+    class GenerationEstimator {
         public:
-            generation_estimator();
+            GenerationEstimator();
 
             void reset();
             [[nodiscard]] uint16_t visit_packet(uint16_t /* packet id */);

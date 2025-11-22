@@ -1,13 +1,14 @@
 //#define NO_OPEN_SSL /* because we're lazy and dont want to build this lib extra for the TeaClient */
 #define FIXEDINT_H_INCLUDED /* else it will be included by ge */
-
-#include "misc/endianness.h"
-#include <ed25519/ed25519.h>
+#include <cstdint>
 #include <ed25519/ge.h>
-#include <log/LogUtils.h>
-#include "misc/memtracker.h"
-#include "misc/digest.h"
-#include "CryptHandler.h"
+#include <ed25519/ed25519.h>
+#include <mutex>
+
+#include "./CryptHandler.h"
+#include "../misc/endianness.h"
+#include "../misc/memtracker.h"
+#include "../misc/digest.h"
 #include "../misc/sassert.h"
 
 using namespace std;
@@ -18,6 +19,9 @@ using namespace ts::protocol;
 
 CryptHandler::CryptHandler() {
     memtrack::allocated<CryptHandler>(this);
+    this->cipher_code = find_cipher("rijndael");
+    assert(this->cipher_code >= 0);
+    this->reset();
 }
 
 CryptHandler::~CryptHandler() {
@@ -25,23 +29,26 @@ CryptHandler::~CryptHandler() {
 }
 
 void CryptHandler::reset() {
-    this->useDefaultChipherKeyNonce = true;
+    this->encryption_initialized_ = true;
     this->iv_struct_length = 0;
     memset(this->iv_struct, 0, sizeof(this->iv_struct));
     memcpy(this->current_mac, CryptHandler::default_mac, sizeof(CryptHandler::default_mac));
 
-    for(auto& cache : this->cache_key_client)
+    for(auto& cache : this->cache_key_client) {
         cache.generation = 0xFFEF;
-    for(auto& cache : this->cache_key_server)
+    }
+
+    for(auto& cache : this->cache_key_server) {
         cache.generation = 0xFFEF;
+    }
 }
 
 #define SHARED_KEY_BUFFER_LENGTH (256)
-bool CryptHandler::setupSharedSecret(const std::string& alpha, const std::string& beta, ecc_key *publicKey, ecc_key *ownKey, std::string &error) {
+bool CryptHandler::setupSharedSecret(const std::string& alpha, const std::string& beta, ecc_key *remote_public_key, ecc_key *own_private_key, std::string &error) {
     size_t buffer_length = SHARED_KEY_BUFFER_LENGTH;
     uint8_t buffer[SHARED_KEY_BUFFER_LENGTH];
     int err;
-    if((err = ecc_shared_secret(ownKey, publicKey, buffer, (unsigned long*) &buffer_length)) != CRYPT_OK){
+    if((err = ecc_shared_secret(own_private_key, remote_public_key, buffer, (unsigned long*) &buffer_length)) != CRYPT_OK){
         error = "Could not calculate shared secret. Message: " + string(error_to_string(err));
         return false;
     }
@@ -63,7 +70,7 @@ bool CryptHandler::setupSharedSecret(const std::string& alpha, const std::string
     }
 
     {
-        lock_guard lock(this->cache_key_lock);
+        std::lock_guard lock(this->cache_key_lock);
         memcpy(this->iv_struct, iv_buffer, SHA_DIGEST_LENGTH);
         this->iv_struct_length = SHA_DIGEST_LENGTH;
 
@@ -71,13 +78,13 @@ bool CryptHandler::setupSharedSecret(const std::string& alpha, const std::string
         digest::sha1((const char*) iv_buffer, SHA_DIGEST_LENGTH, mac_buffer);
         memcpy(this->current_mac, mac_buffer, 8);
 
-        this->useDefaultChipherKeyNonce = false;
+        this->encryption_initialized_ = false;
     }
 
     return true;
 }
 
-inline void _fe_neg(fe h, const fe f) {
+void fe_neg_(fe h, const fe f) {
     int32_t f0 = f[0];
     int32_t f1 = f[1];
     int32_t f2 = f[2];
@@ -117,8 +124,8 @@ inline void keyMul(uint8_t(& target_buffer)[32], const uint8_t* publicKey /* com
 
     ge_frombytes_negate_vartime(&keyA, publicKey);
     if(negate) {
-        _fe_neg(*(fe*) &keyA.X, *(const fe*) &keyA.X); /* undo negate */
-        _fe_neg(*(fe*) &keyA.T, *(const fe*) &keyA.T); /* undo negate */
+        fe_neg_(*(fe*) &keyA.X, *(const fe*) &keyA.X); /* undo negate */
+        fe_neg_(*(fe*) &keyA.T, *(const fe*) &keyA.T); /* undo negate */
     }
     ge_scalarmult_vartime(&result, privateKey, &keyA);
 
@@ -148,7 +155,7 @@ bool CryptHandler::setupSharedSecretNew(const std::string &alpha, const std::str
         uint8_t mac_buffer[SHA_DIGEST_LENGTH];
         digest::sha1((char*) this->iv_struct, 64, mac_buffer);
         memcpy(this->current_mac, mac_buffer, 8);
-        this->useDefaultChipherKeyNonce = false;
+        this->encryption_initialized_ = false;
     }
 
     return true;
@@ -165,7 +172,9 @@ bool CryptHandler::generate_key_nonce(
 ) {
     auto& key_cache_array = to_server ? this->cache_key_client : this->cache_key_server;
     if(type < 0 || type >= key_cache_array.max_size()) {
+#if 0
         logError(0, "Tried to generate a crypt key with invalid type ({})!", type);
+#endif
         return false;
     }
 
@@ -174,7 +183,7 @@ bool CryptHandler::generate_key_nonce(
         auto& key_cache = key_cache_array[type];
         if(key_cache.generation != generation) {
             const size_t buffer_length = 6 + this->iv_struct_length;
-            sassert(buffer_length < GENERATE_BUFFER_LENGTH);
+            assert(buffer_length < GENERATE_BUFFER_LENGTH);
 
             char buffer[GENERATE_BUFFER_LENGTH];
             memset(buffer, 0, buffer_length);
@@ -184,22 +193,23 @@ bool CryptHandler::generate_key_nonce(
             }  else {
                 buffer[0] = 0x30;
             }
-            buffer[1] = (char) (type & 0xF);
+
+            buffer[1] = (char) (type & 0xFU);
 
             le2be32(generation, buffer, 2);
             memcpy(&buffer[6], this->iv_struct, this->iv_struct_length);
-            digest::sha256(buffer, buffer_length, key_cache.key_nonce);
+            digest::sha256(buffer, buffer_length, key_cache.key_nonce.value);
 
             key_cache.generation = generation;
         }
 
-        memcpy(key.data(), key_cache.key, 16);
-        memcpy(nonce.data(), key_cache.nonce, 16);
+        memcpy(key.data(), key_cache.key_nonce.key, 16);
+        memcpy(nonce.data(), key_cache.key_nonce.nonce, 16);
     }
 
     //Xor the key
-    key[0] ^= (uint8_t) ((packet_id >> 8) & 0xFFU);
-    key[1] ^=(packet_id & 0xFFU);
+    key[0] ^= (uint8_t) (packet_id >> 8U);
+    key[1] ^= (uint8_t) packet_id;
 
     return true;
 }
@@ -210,8 +220,9 @@ bool CryptHandler::verify_encryption(const pipes::buffer_view &packet, uint16_t 
 
     key_t key{};
     nonce_t nonce{};
-    if(!generate_key_nonce(true, (protocol::PacketType) (packet[12] & 0xF), packet_id, generation, key, nonce))
+    if(!generate_key_nonce(true, (protocol::PacketType) ((uint8_t) packet[12] & 0xFU), packet_id, generation, key, nonce)) {
         return false;
+    }
 
     auto mac = packet.view(0, 8);
     auto header = packet.view(8, 5);
@@ -219,14 +230,13 @@ bool CryptHandler::verify_encryption(const pipes::buffer_view &packet, uint16_t 
 
     auto length = data.length();
 
-    /* static shareable void buffer */
-    const static unsigned long void_target_length = 2048;
-    static uint8_t void_target_buffer[2048];
-    if(void_target_length < length)
+    const static unsigned long void_target_length{2048};
+    uint8_t void_target_buffer[2048];
+    if(void_target_length < length) {
         return false;
+    }
 
-    //TODO: Cache find_cipher
-    err = eax_decrypt_verify_memory(find_cipher("rijndael"),
+    err = eax_decrypt_verify_memory(this->cipher_code,
                                     (uint8_t *) key.data(), /* the key */
                                     (size_t)    key.size(), /* key is 16 bytes */
                                     (uint8_t *) nonce.data(), /* the nonce */
@@ -244,18 +254,16 @@ bool CryptHandler::verify_encryption(const pipes::buffer_view &packet, uint16_t 
     return err == CRYPT_OK && success;
 }
 
-#define tmp_buffer_size (2048)
-bool CryptHandler::decrypt(const void *header, size_t header_length, void *payload, size_t payload_length, const void *mac, const key_t &key, const nonce_t &nonce, std::string &error) {
-    if(tmp_buffer_size < payload_length) {
-        error = "buffer too large";
+bool CryptHandler::decrypt(const void *header, size_t header_length, void *payload, size_t payload_length, const void *mac, const key_t &key, const nonce_t &nonce, std::string &error) const {
+    const static unsigned long kTempBufferLength{2048};
+    uint8_t tmp_buffer[kTempBufferLength];
+    if(kTempBufferLength < payload_length) {
+        error = "packet too large";
         return false;
     }
 
-    uint8_t tmp_buffer[tmp_buffer_size];
     int success;
-
-    //TODO: Cache cipher
-    auto err = eax_decrypt_verify_memory(find_cipher("rijndael"),
+    auto err = eax_decrypt_verify_memory(this->cipher_code,
                                     (const uint8_t *) key.data(), /* the key */
                                     (unsigned long)    key.size(), /* key is 16 bytes */
                                     (const uint8_t *) nonce.data(), /* the nonce */
@@ -288,17 +296,11 @@ bool CryptHandler::encrypt(
         void *payload, size_t payload_length,
         void *mac,
         const key_t &key, const nonce_t &nonce, std::string &error) {
-    if(tmp_buffer_size < payload_length) {
-        error = "buffer too large";
-        return false;
-    }
-
-    uint8_t tmp_buffer[tmp_buffer_size];
     size_t tag_length{8};
     uint8_t tag_buffer[16];
 
     static_assert(sizeof(unsigned long) <= sizeof(tag_length));
-    auto err = eax_encrypt_authenticate_memory(find_cipher("rijndael"),
+    auto err = eax_encrypt_authenticate_memory(this->cipher_code,
                                           (uint8_t *) key.data(), /* the key */
                                           (unsigned long)    key.size(), /* key is 16 bytes */
                                           (uint8_t *) nonce.data(), /* the nonce */
@@ -307,7 +309,7 @@ bool CryptHandler::encrypt(
                                           (unsigned long) header_length, /* header length */
                                           (uint8_t *) payload, /* The plain text */
                                           (unsigned long) payload_length, /* Plain text length */
-                                          (uint8_t *) tmp_buffer, /* The result buffer */
+                                          (uint8_t *) payload, /* The result buffer */
                                           (uint8_t *) tag_buffer,
                                           (unsigned long *)  &tag_length
     );
@@ -319,6 +321,5 @@ bool CryptHandler::encrypt(
     }
 
     memcpy(mac, tag_buffer, 8);
-    memcpy(payload, tmp_buffer, payload_length);
     return true;
 }

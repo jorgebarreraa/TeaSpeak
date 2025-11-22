@@ -18,25 +18,10 @@
 
 // 1.5.0 final
 
-#ifndef QLZ_COMPRESSION_LEVEL
-// 1 gives fastest compression speed. 3 gives fastest decompression speed and best
-// compression ratio.
-#define QLZ_COMPRESSION_LEVEL 3
-//#define QLZ_COMPRESSION_LEVEL 2
-//#define QLZ_COMPRESSION_LEVEL 3
-#endif
-
-#ifndef QLZ_STREAMING_BUFFER
-// If > 0, zero out both states prior to first call to qlz_compress() or qlz_decompress()
-// and decompress packets in the same order as they were compressed
+/* Fixed definitions for TeaSpeak. */
+#define QLZ_COMPRESSION_LEVEL 1
 #define QLZ_STREAMING_BUFFER 0
-//#define QLZ_STREAMING_BUFFER 100000
-//#define QLZ_STREAMING_BUFFER 1000000
-
-// Guarantees that decompression of corrupted data cannot crash. Decreases decompression
-// speed 10-20%. Compression speed not affected.
-//#define QLZ_MEMORY_SAFE
-#endif
+#define QLZ_MEMORY_SAFE
 
 #define QLZ_VERSION_MAJOR 1
 #define QLZ_VERSION_MINOR 5
@@ -67,85 +52,73 @@ typedef unsigned short int ui16;
 
 // Detect if pointer size is 64-bit. It's not fatal if some 64-bit target is not detected because this is only for adding an optional 64-bit optimization.
 #if defined _LP64 || defined __LP64__ || defined __64BIT__ || _ADDR64 || defined _WIN64 || defined __arch64__ || __WORDSIZE == 64 || (defined __sparc && defined __sparcv9) || defined __x86_64 || defined __amd64 || defined __x86_64__ || defined _M_X64 || defined _M_IA64 || defined __ia64 || defined __IA64__
-#define QLZ_PTR_64
+	#define QLZ_PTR_64
 #endif
 
 // hash entry
-typedef struct {
+typedef struct
+{
 #if QLZ_COMPRESSION_LEVEL == 1
-    ui32 cache;
+	ui32 cache;
 #if defined QLZ_PTR_64 && QLZ_STREAMING_BUFFER == 0
-    unsigned int offset;
+	unsigned int offset;
 #else
-    const unsigned char *offset;
+	const unsigned char *offset;
 #endif
 #else
-    const unsigned char *offset[QLZ_POINTERS];
+	const unsigned char *offset[QLZ_POINTERS];
 #endif
 
 } qlz_hash_compress;
 
-typedef struct {
+typedef struct
+{
 #if QLZ_COMPRESSION_LEVEL == 1
-    const unsigned char *offset;
+	const unsigned char *offset;
 #else
-    const unsigned char *offset[QLZ_POINTERS];
+	const unsigned char *offset[QLZ_POINTERS];
 #endif
 } qlz_hash_decompress;
 
 
 // states
-typedef struct {
-#if QLZ_STREAMING_BUFFER > 0
-    unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
-#endif
-    size_t stream_counter;
-    qlz_hash_compress hash[QLZ_HASH_VALUES];
-    unsigned char hash_counter[QLZ_HASH_VALUES];
+typedef struct
+{
+	#if QLZ_STREAMING_BUFFER > 0
+		unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
+	#endif
+	size_t stream_counter;
+	qlz_hash_compress hash[QLZ_HASH_VALUES];
+	unsigned char hash_counter[QLZ_HASH_VALUES];
 } qlz_state_compress;
 
 
 #if QLZ_COMPRESSION_LEVEL == 1 || QLZ_COMPRESSION_LEVEL == 2
-typedef struct {
+	typedef struct
+	{
 #if QLZ_STREAMING_BUFFER > 0
-    unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
+		unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
 #endif
-    qlz_hash_decompress hash[QLZ_HASH_VALUES];
-    unsigned char hash_counter[QLZ_HASH_VALUES];
-    size_t stream_counter;
-} qlz_state_decompress;
+		qlz_hash_decompress hash[QLZ_HASH_VALUES];
+		unsigned char hash_counter[QLZ_HASH_VALUES];
+		size_t stream_counter;
+	} qlz_state_decompress;
 #elif QLZ_COMPRESSION_LEVEL == 3
-typedef struct
-    {
+	typedef struct
+	{
 #if QLZ_STREAMING_BUFFER > 0
-        unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
+		unsigned char stream_buffer[QLZ_STREAMING_BUFFER];
 #endif
 #if QLZ_COMPRESSION_LEVEL <= 2
-        qlz_hash_decompress hash[QLZ_HASH_VALUES];
+		qlz_hash_decompress hash[QLZ_HASH_VALUES];
 #endif
-        size_t stream_counter;
-    } qlz_state_decompress;
+		size_t stream_counter;
+	} qlz_state_decompress;
 #endif
 
 
 #if defined (__cplusplus)
 extern "C" {
-#endif
-
-#if QLZ_COMPRESSION_LEVEL == 1
-    #define qlz_size_decompressed qlz_size_decompressed_level1
-    #define qlz_size_compressed qlz_size_compressed_level1
-    #define qlz_compress qlz_compress_level1
-    #define qlz_decompress qlz_decompress_level1
-    #define qlz_get_setting qlz_get_setting_level1
-#elif QLZ_COMPRESSION_LEVEL == 2
-    #define DEFINE_QLZ_FN(type, name, ...) type name##_level2(#__VA_ARGS__);
-#elif QLZ_COMPRESSION_LEVEL == 3
-    #define qlz_size_decompressed qlz_size_decompressed_level3
-    #define qlz_size_compressed qlz_size_compressed_level3
-    #define qlz_compress qlz_compress_level3
-    #define qlz_decompress qlz_decompress_level3
-    #define qlz_get_setting qlz_get_setting_level3
 #endif
 
 // Public functions of QuickLZ

@@ -1,11 +1,7 @@
 #include <thread>
-#include <utility>
-#include <vector>
-#include <condition_variable>
 #include <cassert>
 #include <algorithm>
-#include "./log/LogUtils.h"
-#include "./misc/sassert.h"
+#include <condition_variable>
 #include "./EventLoop.h"
 
 using namespace std;
@@ -161,14 +157,13 @@ void EventExecutor::_reassign_thread_names(std::unique_lock<std::mutex> &lock) {
 
 void EventExecutor::_executor(ts::event::EventExecutor *loop) {
     while(true) {
-        sassert(std::addressof(loop->lock) != nullptr);
-
-        unique_lock lock(loop->lock);
+        unique_lock lock{loop->lock};
         loop->condition.wait(lock, [&] {
             return loop->should_shutdown || loop->should_adjust || loop->head != nullptr;
         });
-        if(loop->should_shutdown)
+        if(loop->should_shutdown) {
             break;
+        }
 
         if(loop->should_adjust) {
             const auto current_threads = loop->_threads.size();
@@ -201,10 +196,10 @@ void EventExecutor::_executor(ts::event::EventExecutor *loop) {
         auto linked_entry = loop->head;
         loop->head = linked_entry->next;
         if(loop->head) {
-            sassert(linked_entry == loop->head->previous);
+            assert(linked_entry == loop->head->previous);
             loop->head->previous = nullptr;
         } else {
-            sassert(linked_entry == loop->tail);
+            assert(linked_entry == loop->tail);
             loop->tail = nullptr;
         }
 
@@ -215,7 +210,7 @@ void EventExecutor::_executor(ts::event::EventExecutor *loop) {
             continue;
         }
 
-        sassert(event_handler->_event_ptr == linked_entry);
+        assert(event_handler->_event_ptr == linked_entry);
         event_handler->_event_ptr = nullptr;
         lock.unlock();
 

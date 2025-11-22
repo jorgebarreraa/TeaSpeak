@@ -131,7 +131,7 @@ DEFINE_VARIABLE_TRANSFORM_TYPE(type, ntype)
 DEFINE_VARIABLE_TRANSFORM(class, VARTYPE_INT, std::to_string((size_type) in), static_cast<class>(in.as<size_type>()));
 
 DEFINE_VARIABLE_TRANSFORM(std::string, VARTYPE_TEXT, in, in.value());
-DEFINE_VARIABLE_TRANSFORM(std::string_view, VARTYPE_TEXT, std::string{in}, std::string_view{in});
+DEFINE_VARIABLE_TRANSFORM(std::string_view, VARTYPE_TEXT, std::string{in}, std::string_view{in.value()});
 DEFINE_VARIABLE_TRANSFORM(char*, VARTYPE_TEXT, std::string((const char*) in), (char*) in.value().c_str());
 DEFINE_VARIABLE_TRANSFORM(const char*, VARTYPE_TEXT, std::string((const char*) in), in.value().c_str());
 

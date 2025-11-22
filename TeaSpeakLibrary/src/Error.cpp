@@ -2,11 +2,17 @@
 // Created by wolverindev on 17.10.17.
 //
 
+#include "./query/command3.h"
 #include "Error.h"
 
 using namespace ts;
 
-const std::vector<ErrorType> ts::avariableErrors = {
+#define str(x) #x
+
+#define define_error_description(type, description) \
+{ error::type, str(type), description }
+
+const std::vector<ErrorType> ts::availableErrors = {
         {0x0000, "ok"                                   , "ok"                                                         },
         {0x0001, "undefined"                            , "undefined error"                                            },
         {0x0002, "not_implemented"                      , "not implemented"                                            },
@@ -58,6 +64,8 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x0310, "channel_is_deleted"                   , "target channel is deleted"                                  },
         {0x0311, "channel_name_invalid"                 , "channel name is invalid"                                    },
         {0x0312, "channel_limit_reached"                , "the virtualserver channel limit has been reached"           },
+        define_error_description(channel_family_not_visible, "the channel family isn't visible by default"),
+        define_error_description(channel_default_require_visible, "the channel family contains the default channel"),
 
         {0x0400, "server_invalid_id"                    , "invalid serverID"                                           },
         {0x0401, "server_running"                       , "server is running"                                          },
@@ -95,6 +103,8 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x0605, "parameter_invalid_size"               , "invalid parameter size"                                     },
         {0x0606, "parameter_missing"                    , "missing required parameter"                                 },
         {0x0607, "parameter_checksum"                   , "invalid checksum"                                           },
+        define_error_description(parameter_constraint_violation, "parameter does not fits its constraint"),
+        /* example: all name= parameter in a bulk must start with /icon_ */
 
         {0x0700, "vs_critical"                          , "virtual server got a critical error"                        },
         {0x0701, "connection_lost"                      , "Connection lost"                                            },
@@ -109,7 +119,6 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x070A, "serverlibrary_not_initialised"        , "server library not initialized"                             },
         {0x070B, "whisper_too_many_targets"             , "too many whisper targets"                                   },
         {0x070C, "whisper_no_targets"                   , "no whisper targets found"                                   },
-
         {0x0800, "file_invalid_name"                    , "invalid file name"                                          },
         {0x0801, "file_invalid_permissions"             , "invalid file permissions"                                   },
         {0x0802, "file_already_exists"                  , "file already exists"                                        },
@@ -134,7 +143,11 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x0815, "file_transfer_client_quota_exceeded"  , "file transfer client quota exceeded"                        },
         {0x0816, "file_transfer_reset"                  , "file transfer reset"                                        },
         {0x0817, "file_transfer_limit_reached"          , "file transfer limit reached"                                },
+        define_error_description(file_api_timeout, "the file API call has been timed out"),
+        define_error_description(file_virtual_server_not_registered, "the file server does not know our virtual server"),
 
+        define_error_description(file_server_transfer_limit_reached, "the file server reached his max concurrent transfers limit"),
+        define_error_description(file_client_transfer_limit_reached, "you reached your max concurrent transfers limit"),
 
         {0x0A08, "server_insufficeient_permissions"     , "insufficient client permissions"                            },
 
@@ -143,7 +156,9 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x0D01, "server_connect_banned"                , "connection failed, you are banned"                          },
         {0x0D03, "ban_flooding"                         , "flood ban"                                                  },
 
-        {0x0F00, "token_invalid_id"                     , "invalid privilege key"                                      },
+        define_error_description(token_invalid_id, "token unknown"),
+        define_error_description(token_expired, "token has been expired"),
+        define_error_description(token_use_limit_exceeded, "token has reached its use limit"),
 
         {0x1000, "web_handshake_invalid"                , "Invalid handshake"                                          },
         {0x1001, "web_handshake_unsupported"            , "Handshake intention unsupported"                            },
@@ -167,6 +182,9 @@ const std::vector<ErrorType> ts::avariableErrors = {
         {0x2200, "conversation_invalid_id"              , "invalid conversation id"                                    },
         {0x2201, "conversation_more_data"               , "there are more messages to send"                            },
         {0x2202, "conversation_is_private"              , "the target conversation is private"                         },
+        {0x2203, "conversation_not_exists"              , "the target conversation does not exists"                    },
+
+        {0x2300, "rtc_missing_target_channel"           , "the target channel does not exists"                         },
 
         {0x1200, "query_not_exists"                     , "query account does not exists"                              },
         {0x1201, "query_already_exists"                 , "query account already exists"                               },
@@ -175,33 +193,86 @@ const std::vector<ErrorType> ts::avariableErrors = {
 
         {0x1300, "group_invalid_id"                     , "Invalid group id"                                           },
         {0x1301, "group_name_inuse"                     , "Group name is already in use"                               },
-        {0x1302, "group_not_assigned_over_this_server"  , "the group hasn't been assigned over this server"            },
+        define_error_description(group_not_assigned_over_this_server, "the group hasn't been assigned over this server"),
+        define_error_description(group_not_empty, "the target group isn't empty"),
 
         {0xE000, "resource_limit_reached"               , "resource limit reached"                                     },
 
+        define_error_description(broadcast_invalid_id, "the broadcast does not exists"),
+        define_error_description(broadcast_invalid_type, "the broadcast type is invalid"),
+        define_error_description(broadcast_invalid_client, "the broadcasting client does not exists"),
+
         {0xFFFF, "custom_error"                         , "costume"                                                    },
 };
-ErrorType ErrorType::Success = avariableErrors[0];
+ErrorType ErrorType::Success = availableErrors[0];
 ErrorType ErrorType::Costume = findError("custom_error");
 ErrorType ErrorType::VSError = findError("vs_critical");
 ErrorType ErrorType::DBEmpty = findError("database_empty_result");
 
 ErrorType ts::findError(uint16_t errorId){
-    for(auto elm : avariableErrors)
+    for(auto elm : availableErrors)
         if(elm.errorId == errorId) return elm;
     return ErrorType{errorId, "undefined", "undefined"};
 }
 
 ErrorType ts::findError(std::string key){
-    for(auto elm : avariableErrors)
+    for(auto elm : availableErrors)
         if(elm.name == key) return elm;
     return ErrorType{1, key, "undefined"};
 }
 
-CommandResult CommandResult::Success = {avariableErrors[0], ""};
-CommandResult CommandResult::NotImplemented = {avariableErrors[2], ""};
+inline void write_command_result_error(ts::command_builder_bulk bulk, const command_result& result, const std::string_view& id_key) {
+    bulk.put_unchecked(id_key, (uint32_t) result.error_code());
+    bulk.put_unchecked("msg", findError(result.error_code()).message);
+    if(result.is_permission_error())
+        bulk.put_unchecked("failed_permid", (uint32_t) result.permission_id());
+}
 
-CommandResultPermissionError::CommandResultPermissionError(permission::PermissionType error, const std::string &extraMsg) : CommandResult(findError(0x0A08), "") {
-    this->extraProperties["failed_permid"] = std::to_string((int16_t) error);
-    this->_type = PERM_ERROR;
+inline void write_command_result_detailed(ts::command_builder_bulk bulk, const command_result& result, const std::string_view& id_key) {
+    auto details = result.details();
+    bulk.put_unchecked(id_key, (uint32_t) details->error_id);
+    bulk.put_unchecked("msg", findError(details->error_id).message);
+
+    for(const auto& extra : details->extra_properties)
+        bulk.put(extra.first, extra.second);
+}
+
+void command_result::build_error_response(ts::command_builder &builder, const std::string_view &idKey) const {
+    switch(this->type()) {
+        case command_result_type::error:
+            write_command_result_error(builder.bulk(0), *this, idKey);
+            break;
+        case command_result_type::detailed:
+            write_command_result_detailed(builder.bulk(0), *this, idKey);
+            break;
+
+        case command_result_type::bulked: {
+            auto bulks = this->bulks();
+            builder.reserve_bulks(bulks->size());
+            for(size_t index{0}; index < bulks->size(); index++) {
+                auto& entry = bulks->at(index);
+                switch (entry.type()) {
+                    case command_result_type::error:
+                        write_command_result_error(builder.bulk(index), entry, idKey);
+                        break;
+                    case command_result_type::detailed:
+                        write_command_result_detailed(builder.bulk(index), entry, idKey);
+                        break;
+                    case command_result_type::bulked:
+                        assert(false);
+                        break;
+                }
+            }
+
+            if(bulks->empty()) {
+                assert(false);
+                builder.put_unchecked(0, idKey, (uint32_t) error::ok);
+                builder.put_unchecked(0, "msg", findError(error::ok).message);
+            }
+            break;
+        }
+        default:
+            assert(false);
+            break;
+    }
 }

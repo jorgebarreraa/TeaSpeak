@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <assert.h>
 #include "TreeView.h"
 
 using namespace ts;

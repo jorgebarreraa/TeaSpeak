@@ -129,17 +129,25 @@ namespace ts {
                 }
 
                 inline bool insert_index(size_type index, E&& entry) {
+                    return insert_index2(index, std::forward<E>(entry)) == 0;
+                }
+
+                /**
+                * @param index
+                * @return -2 duplicated entry | -1 underflow | 0 success | 1 overflow
+                */
+                inline int insert_index2(size_type index, E&& entry) {
                     size_t relative_index = 0;
                     if(!this->calculate_index(index, relative_index))
-                        return false;
+                        return index < this->current_index() ? -1 : 1;
 
                     auto& slot = this->index(relative_index);
                     if(slot.flag_set)
-                        return false;
+                        return -2;
 
                     slot.entry = std::forward<E>(entry);
                     slot.flag_set = true;
-                    return true;
+                    return 0;
                 }
 
                 inline size_t capacity() { return this->_capacity; }
@@ -208,6 +216,12 @@ namespace ts {
             public:
                 std::recursive_timed_mutex buffer_lock;
                 std::recursive_timed_mutex execute_lock;
+        };
+
+        template <typename E, uint32_t SIZE = 32, typename PTR_TYPE = std::shared_ptr<E>>
+        class FullPacketRingBuffer : public RingBuffer<PTR_TYPE, SIZE, uint32_t> {
+            public:
+                std::mutex buffer_lock;
         };
     }
 }

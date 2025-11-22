@@ -13,7 +13,7 @@ std::string base64::decode(const char* input, size_t size) {
     return ret;
 }
 
-std::string base64::encode(const char* input, const unsigned long inputSize) {
+std::string base64::encode(const char* input, size_t inputSize) {
     auto outlen = static_cast<unsigned long>(inputSize + (inputSize / 3.0) + 16);
     auto outbuf = new unsigned char[outlen]; //Reserve output memory
     if(base64_encode((unsigned char*) input, inputSize, outbuf, &outlen) != CRYPT_OK){

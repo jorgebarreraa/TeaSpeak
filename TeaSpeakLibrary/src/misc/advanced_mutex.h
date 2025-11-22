@@ -279,25 +279,33 @@ namespace std {
     };
      */
 
+    /**
+     * Test if a `std::shared_mutex` is unique locked by trying to lock it in shared mode.
+     * @tparam T
+     * @param mutex
+     * @return
+     */
     template <typename T>
     inline bool mutex_locked(T& mutex) {
+        /* std::shared_mutex can be recursively unique locked?? */
         return true;
         try {
-            unique_lock<T> lock_try(mutex, try_to_lock); /* should throw EDEADLK */
+            std::unique_lock<T> lock_try(mutex, try_to_lock); /* should throw EDEADLK */
             return false;
         } catch(const std::system_error& ex) {
             return ex.code() == errc::resource_deadlock_would_occur;
         }
     }
 
+    /**
+     * Test if a `std::shared_mutex` is shared (or unique) locked by try locking it in unique mode
+     * @tparam T
+     * @param mutex
+     * @return
+     */
     template <typename T>
     inline bool mutex_shared_locked(T& mutex) {
         return true;
-        try {
-            shared_lock<T> lock_try(mutex, try_to_lock); /* should throw EDEADLK */
-            return false;
-        } catch(const std::system_error& ex) {
-            return ex.code() == errc::resource_deadlock_would_occur;
-        }
+        //return mutex_locked(mutex);
     }
 }

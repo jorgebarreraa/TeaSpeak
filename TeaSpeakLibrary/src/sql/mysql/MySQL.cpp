@@ -26,8 +26,9 @@ MySQLManager::~MySQLManager() {}
 #define MYSQL_PREFIX "mysql://"
 inline result parse_url(const string& url, std::map<std::string, std::string>& connect_map) {
     string target_url;
-    if(url.find(MYSQL_PREFIX) != 0)
-        return {ERROR_MYSQL_INVLID_URL, "Missing mysql:// at begin"};
+    if(url.find(MYSQL_PREFIX) != 0) {
+        return {"", ERROR_MYSQL_INVLID_URL, -1, "Missing mysql:// at begin"};
+    }
 
     auto index_parms = url.find('?');
     if(index_parms == string::npos) {
@@ -184,7 +185,7 @@ result MySQLManager::connect(const std::string &url) {
 
     if(!parse_mysql_data(url, error, host, port, database, properties)) {
         error = "URL parsing failed: " + error;
-        return {ERROR_MYSQL_INVLID_URL, error};
+        return {"", ERROR_MYSQL_INVLID_URL, -1, error};
     }
 
     size_t connections = 4;
@@ -192,17 +193,17 @@ result MySQLManager::connect(const std::string &url) {
         try {
             connections = stol(properties["connections"]);
         } catch(std::exception& ex) {
-            return {ERROR_MYSQL_INVLID_PROPERTIES, "could not parse connection count"};
+            return {"", ERROR_MYSQL_INVLID_PROPERTIES, -1, "could not parse connection count"};
         }
     }
 
     string username, password;
     if(properties.count("userName") > 0) username = properties["userName"];
     if(properties.count("username") > 0) username = properties["username"];
-    if(username.empty()) return {ERROR_MYSQL_INVLID_PROPERTIES, "missing username property"};
+    if(username.empty()) return {"", ERROR_MYSQL_INVLID_PROPERTIES, -1, "missing username property"};
 
     if(properties.count("password") > 0) password = properties["password"];
-    if(password.empty()) return {ERROR_MYSQL_INVLID_PROPERTIES, "missing password property"};
+    if(password.empty()) return {"", ERROR_MYSQL_INVLID_PROPERTIES, -1, "missing password property"};
 
     //debugMessage(LOG_GENERAL, R"([MYSQL] Starting {} connections to {}:{} with database "{}" as user "{}")", connections, host, port, database, username);
 
@@ -210,10 +211,10 @@ result MySQLManager::connect(const std::string &url) {
         auto connection = make_shared<Connection>();
         connection->handle = mysql_init(nullptr);
         if(!connection->handle)
-            return {-1, "failed to allocate connection " + to_string(index)};
+            return {"", -1, -1, "failed to allocate connection " + to_string(index)};
 
         {
-            bool reconnect{true};
+            uint32_t reconnect{true};
             mysql_options(connection->handle, MYSQL_OPT_RECONNECT, &reconnect);
         }
         mysql_options(connection->handle, MYSQL_SET_CHARSET_NAME, "utf8");
@@ -221,7 +222,7 @@ result MySQLManager::connect(const std::string &url) {
 
         auto result = mysql_real_connect(connection->handle, host.c_str(), username.c_str(), password.c_str(), database.c_str(), port, nullptr, 0); //CLIENT_MULTI_RESULTS | CLIENT_MULTI_STATEMENTS
         if(!result)
-            return {-1, "failed to connect to server with connection " + to_string(index) + ": " + mysql_error(connection->handle)};
+            return {"", -1, -1, "failed to connect to server with connection " + to_string(index) + ": " + mysql_error(connection->handle)};
 
         connection->used = false;
         this->connections.push_back(connection);
@@ -230,12 +231,12 @@ result MySQLManager::connect(const std::string &url) {
 }
 
 bool MySQLManager::connected() {
-    lock_guard<mutex> lock(this->connections_lock);
+    lock_guard<mutex> lock(this->connections_mutex);
     return !this->connections.empty();
 }
 
 result MySQLManager::disconnect() {
-    lock_guard<mutex> lock(this->connections_lock);
+    lock_guard<mutex> lock(this->connections_mutex);
     this->disconnecting = true;
 
     this->connections.clear();
@@ -634,14 +635,14 @@ AcquiredConnection::~AcquiredConnection() {
     }
 
     {
-        lock_guard lock(this->owner->connections_lock);
+        lock_guard lock(this->owner->connections_mutex);
         this->owner->connections_condition.notify_one();
     }
 }
 std::unique_ptr<AcquiredConnection> MySQLManager::next_connection() {
     unique_ptr<AcquiredConnection> result;
     {
-        unique_lock connections_lock(this->connections_lock);
+        unique_lock connections_lock(this->connections_mutex);
 
         while(!result) {
             size_t available_connections = 0;
@@ -676,118 +677,136 @@ std::unique_ptr<AcquiredConnection> MySQLManager::next_connection() {
 }
 
 void MySQLManager::connection_closed(const std::shared_ptr<sql::mysql::Connection> &connection) {
-    bool call_disconnect = false;
+    bool call_disconnect;
     {
-        unique_lock connections_lock(this->connections_lock);
-        auto index = find(this->connections.begin(), this->connections.end(), connection);
-        if(index == this->connections.end()) return;
+        unique_lock connections_lock{this->connections_mutex};
+        auto index = std::find(this->connections.begin(), this->connections.end(), connection);
+        if(index == this->connections.end()) {
+            return;
+        }
 
         this->connections.erase(index);
         call_disconnect = this->connections.empty();
     }
 
     auto dl = this->listener_disconnected;
-    if(call_disconnect && dl)
+    if(call_disconnect && dl) {
         dl(this->disconnecting);
+    }
 }
 
-result MySQLManager::executeCommand(std::shared_ptr<CommandData> _ptr) {
-    auto ptr = static_pointer_cast<MySQLCommand>(_ptr);
-    if(!ptr) { return {-1, "invalid command handle"}; }
+result MySQLManager::executeCommand(std::shared_ptr<CommandData> command_data) {
+    auto mysql_data = static_pointer_cast<MySQLCommand>(command_data);
+    if(!mysql_data) {
+        return {"", -1, -1, "invalid command handle"};
+    }
 
-    std::lock_guard<threads::Mutex> lock(ptr->lock);
-    auto command = ptr->sql_command;
+    std::lock_guard<threads::Mutex> lock(mysql_data->lock);
+    auto command = mysql_data->sql_command;
 
-    auto variables = ptr->variables;
+    auto variables = mysql_data->variables;
     vector<variable> mapped_variables;
-    if(!sql::mysql::evaluate_sql_query(command, variables, mapped_variables))
-        return {ptr->sql_command, -1, "Could not map sqlite vars to mysql!"};
+    if(!sql::mysql::evaluate_sql_query(command, variables, mapped_variables)) {
+        return {mysql_data->sql_command, -1, -1, "Could not map sqlite vars to mysql!"};
+    }
 
     FreeGuard<BindMemory> bind_parameter_memory{nullptr};
-    if(!sql::mysql::create_bind(bind_parameter_memory.ptr, mapped_variables))
-        return {ptr->sql_command, -1, "Failed to allocate bind memory!"};
+    if(!sql::mysql::create_bind(bind_parameter_memory.ptr, mapped_variables)) {
+        return {mysql_data->sql_command, -1, -1, "Failed to allocate bind memory!"};
+    }
 
-    ResultBind bind_result_data{.field_count = 0, .memory = nullptr, .descriptors = nullptr};
+    ResultBind bind_result_data{0, nullptr, nullptr};
 
     auto connection = this->next_connection();
-    if(!connection) return {ptr->sql_command, -1, "Could not get a valid connection!"};
+    if(!connection) {
+        return {mysql_data->sql_command, -1, -1, "Could not get a valid connection!"};
+    }
 
     StatementGuard stmt_guard{mysql_stmt_init(connection->connection->handle)};
-    if(!stmt_guard.stmt)
-        return {ptr->sql_command, -1, "failed to allocate statement"};
+    if(!stmt_guard.stmt) {
+        return {mysql_data->sql_command, -1, -1, "failed to allocate statement"};
+    }
 
     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
         auto errc = mysql_stmt_errno(stmt_guard.stmt);
-        if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR)
+        if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR) {
             this->connection_closed(connection->connection);
+        }
 
-        return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        return {mysql_data->sql_command, -1, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
     }
 
     /* validate all parameters */
     auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
-    if(parameter_count != mapped_variables.size())
-        return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
+    if(parameter_count != mapped_variables.size()) {
+        return {mysql_data->sql_command, -1, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
+    }
 
     if(bind_parameter_memory.ptr) {
-        if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
-            return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
-    } else if(parameter_count > 0)
-        return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given (bind nullptr)."};
+        if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr)) {
+            return {mysql_data->sql_command, -1, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        }
+    } else if(parameter_count > 0) {
+        return {mysql_data->sql_command, -1, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given (bind nullptr)."};
+    }
 
 
     if(mysql_stmt_execute(stmt_guard.stmt)) {
         auto errc = mysql_stmt_errno(stmt_guard.stmt);
-        if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR)
+        if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR) {
             this->connection_closed(connection->connection);
+        }
 
-        return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        return {mysql_data->sql_command, -1, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
     }
 
-    return result::success;
+    auto insert_row_id = mysql_stmt_insert_id(stmt_guard.stmt);
+    return {mysql_data->sql_command, 0, (int64_t) insert_row_id, "success"};
 }
 
-result MySQLManager::queryCommand(shared_ptr<CommandData> _ptr, const QueryCallback &fn) {
-    auto ptr = static_pointer_cast<MySQLCommand>(_ptr);
-    if(!ptr) { return {-1, "invalid command handle"}; }
+result MySQLManager::queryCommand(shared_ptr<CommandData> command_data, const QueryCallback &fn) {
+    auto mysql_data = static_pointer_cast<MySQLCommand>(command_data);
+    if(!mysql_data) {
+        return {"", -1, -1, "invalid command handle"};
+    }
 
-    std::lock_guard<threads::Mutex> lock(ptr->lock);
-    auto command = ptr->sql_command;
+    std::lock_guard<threads::Mutex> lock(mysql_data->lock);
+    auto command = mysql_data->sql_command;
 
-    auto variables = ptr->variables;
+    auto variables = mysql_data->variables;
     vector<variable> mapped_variables;
-    if(!sql::mysql::evaluate_sql_query(command, variables, mapped_variables)) return {ptr->sql_command, -1, "Could not map sqlite vars to mysql!"};
+    if(!sql::mysql::evaluate_sql_query(command, variables, mapped_variables)) return {mysql_data->sql_command, -1, -1, "Could not map sqlite vars to mysql!"};
 
     FreeGuard<BindMemory> bind_parameter_memory{nullptr};
-    if(!sql::mysql::create_bind(bind_parameter_memory.ptr, mapped_variables)) return {ptr->sql_command, -1, "Failed to allocate bind memory!"};
+    if(!sql::mysql::create_bind(bind_parameter_memory.ptr, mapped_variables)) return {mysql_data->sql_command, -1, -1, "Failed to allocate bind memory!"};
 
-    ResultBind bind_result_data{.field_count = 0, .memory = nullptr, .descriptors = nullptr};
+    ResultBind bind_result_data{0, nullptr, nullptr};
 
     auto connection = this->next_connection();
-    if(!connection) return {ptr->sql_command, -1, "Could not get a valid connection!"};
+    if(!connection) return {mysql_data->sql_command, -1, -1, "Could not get a valid connection!"};
 
     StatementGuard stmt_guard{mysql_stmt_init(connection->connection->handle)};
     if(!stmt_guard.stmt)
-        return {ptr->sql_command, -1, "failed to allocate statement"};
+        return {mysql_data->sql_command, -1, -1, "failed to allocate statement"};
 
     if(mysql_stmt_prepare(stmt_guard.stmt, command.c_str(), command.length())) {
         auto errc = mysql_stmt_errno(stmt_guard.stmt);
         if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR)
             this->connection_closed(connection->connection);
 
-        return {ptr->sql_command, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        return {mysql_data->sql_command, -1, -1, "failed to prepare statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
     }
 
     /* validate all parameters */
     {
         auto parameter_count = mysql_stmt_param_count(stmt_guard.stmt);
         if(parameter_count != mapped_variables.size())
-            return {ptr->sql_command, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
+            return {mysql_data->sql_command, -1, -1, "invalid parameter count. Statement contains " + to_string(parameter_count) + " parameters but only " + to_string(mapped_variables.size()) + " are given."};
     }
 
     if(bind_parameter_memory.ptr) {
         if(mysql_stmt_bind_param(stmt_guard.stmt, (MYSQL_BIND*) bind_parameter_memory.ptr))
-            return {ptr->sql_command, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+            return {mysql_data->sql_command, -1, -1, "failed to bind parameters to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
     }
 
     if(mysql_stmt_execute(stmt_guard.stmt)) {
@@ -795,7 +814,7 @@ result MySQLManager::queryCommand(shared_ptr<CommandData> _ptr, const QueryCallb
         if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR)
             this->connection_closed(connection->connection);
 
-        return {ptr->sql_command, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        return {mysql_data->sql_command, -1, -1, "failed to execute query statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
     }
 
     //if(mysql_stmt_store_result(stmt_guard.stmt))
@@ -803,7 +822,7 @@ result MySQLManager::queryCommand(shared_ptr<CommandData> _ptr, const QueryCallb
 
     ResultGuard result_guard{mysql_stmt_result_metadata(stmt_guard.stmt)};
     if(!result_guard.result)
-        return {ptr->sql_command, -1, "failed to query result metadata: " + string(mysql_stmt_error(stmt_guard.stmt))};
+        return {mysql_data->sql_command, -1, -1, "failed to query result metadata: " + string(mysql_stmt_error(stmt_guard.stmt))};
 
 
     auto field_count = mysql_num_fields(result_guard.result);
@@ -813,13 +832,13 @@ result MySQLManager::queryCommand(shared_ptr<CommandData> _ptr, const QueryCallb
     {
         auto field_meta = mysql_fetch_fields(result_guard.result);
         if(!field_meta && field_count > 0)
-            return {ptr->sql_command, -1, "failed to fetch field meta"};
+            return {mysql_data->sql_command, -1, -1, "failed to fetch field meta"};
 
         if(!sql::mysql::create_result_bind(field_count, field_meta, bind_result_data))
-            return {ptr->sql_command, -1, "failed to allocate result buffer"};
+            return {mysql_data->sql_command, -1, -1, "failed to allocate result buffer"};
 
         if(mysql_stmt_bind_result(stmt_guard.stmt, (MYSQL_BIND*) bind_result_data.memory))
-            return {ptr->sql_command, -1, "failed to bind response buffer to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
+            return {mysql_data->sql_command, -1, -1, "failed to bind response buffer to statement: " + string(mysql_stmt_error(stmt_guard.stmt))};
 
         for(size_t index = 0; index < field_count; index++) {
             field_names.ptr[index] = field_meta[index].name; // field_meta cant be null because it has been checked above
@@ -846,11 +865,11 @@ result MySQLManager::queryCommand(shared_ptr<CommandData> _ptr, const QueryCallb
             if(errc == CR_SERVER_GONE_ERROR || errc == CR_SERVER_LOST || errc == CR_CONNECTION_ERROR)
                 this->connection_closed(connection->connection);
 
-            return {ptr->sql_command, -1, "failed to fetch response row " + to_string(row_id) + ": " + string(mysql_stmt_error(stmt_guard.stmt))};
+            return {mysql_data->sql_command, -1, -1, "failed to fetch response row " + to_string(row_id) + ": " + string(mysql_stmt_error(stmt_guard.stmt))};
         } else if(stmt_code == MYSQL_NO_DATA)
             ;
         else if(stmt_code == MYSQL_DATA_TRUNCATED)
-            return {ptr->sql_command, -1, "response data has been truncated"};
+            return {mysql_data->sql_command, -1, -1, "response data has been truncated"};
     }
     return result::success;
 }

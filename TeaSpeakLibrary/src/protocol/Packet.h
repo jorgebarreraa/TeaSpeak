@@ -4,405 +4,353 @@
 #include <string>
 #include <map>
 #include <utility>
-#include <ThreadPool/Future.h>
+#include <array>
 #include <pipes/buffer.h>
 #include "../query/Command.h"
 
-namespace ts {
-    namespace protocol {
-        enum PacketType : uint8_t {
-            VOICE = 0x00,
-            VOICE_WHISPER = 0x01,
-            COMMAND = 0x02,
-            COMMAND_LOW = 0x03,
-            PING = 0x04,
-            PONG = 0x05,
-            ACK = 0x06,
-            ACK_LOW = 0x07,
-            INIT1 = 0x08,
+namespace ts::protocol {
+    enum PacketType : uint8_t {
+        VOICE            = 0x00,
+        VOICE_WHISPER    = 0x01,
+        COMMAND          = 0x02,
+        COMMAND_LOW      = 0x03,
+        PING             = 0x04,
+        PONG             = 0x05,
+        ACK              = 0x06,
+        ACK_LOW          = 0x07,
+        INIT1            = 0x08,
+    };
 
-            PACKET_MAX = INIT1,
-            UNDEFINED = 0xFF
-        };
+    class PacketIdManager {
+        public:
+            PacketIdManager() = default;
+            ~PacketIdManager() = default;
+            PacketIdManager(const PacketIdManager& ref) = delete;
+            PacketIdManager(PacketIdManager&& ref) = delete;
 
-        struct PacketTypeProperties {
-            std::string name;
-            PacketType type;
-            int max_length;
-            bool requireAcknowledge;
-        };
-
-        class PacketTypeInfo {
-            public:
-                static PacketTypeInfo Voice;
-                static PacketTypeInfo VoiceWhisper;
-                static PacketTypeInfo Command;
-                static PacketTypeInfo CommandLow;
-                static PacketTypeInfo Ping;
-                static PacketTypeInfo Pong;
-                static PacketTypeInfo Ack;
-                static PacketTypeInfo AckLow;
-                static PacketTypeInfo Init1;
-                static PacketTypeInfo Undefined;
-
-                static PacketTypeInfo fromid(int id);
-
-                std::string name() const { return data->name; }
-                PacketType type() const { return data->type; }
-
-                bool requireAcknowledge(){ return data->requireAcknowledge; }
-
-                bool operator==(const PacketTypeInfo& other) const {
-                    return other.data->type == this->data->type;
-                }
-
-                bool operator!=(const PacketTypeInfo& other){
-                    return other.data->type != this->data->type;
-                }
-
-                int max_length() const { return data->max_length; }
-                inline bool fragmentable() { return *this == PacketTypeInfo::Command || *this == PacketTypeInfo::CommandLow; }
-                inline bool compressable() { return *this == PacketTypeInfo::Command || *this == PacketTypeInfo::CommandLow; }
-
-                PacketTypeInfo(const PacketTypeInfo&);
-                PacketTypeInfo(PacketTypeInfo&& remote) : data(remote.data) {}
-
-                ~PacketTypeInfo();
-            private:
-                static std::map<int, PacketTypeInfo> types;
-                PacketTypeInfo(const std::string&, PacketType, bool, int) noexcept;
-                PacketTypeProperties* data;
-                bool owns_data = false;
-        };
-
-        struct PacketIdManagerData {
-            PacketIdManagerData(){
-                memset(this->packetCounter, 0, sizeof(uint32_t) * 16);
+            [[nodiscard]] uint16_t nextPacketId(const PacketType &type) {
+                return (uint16_t) (this->packet_counter[(uint8_t) type & 0xFU]++);
             }
-            uint32_t packetCounter[16]{};
-        };
 
-        class PacketIdManager {
-            public:
-                PacketIdManager() : data(new PacketIdManagerData){}
-                ~PacketIdManager() = default;
-                PacketIdManager(const PacketIdManager& ref) = default;
-                PacketIdManager(PacketIdManager&& ref) = default;
+            [[nodiscard]] uint16_t currentPacketId(const PacketType &type) {
+                return (uint16_t) (this->packet_counter[(uint8_t) type & 0xFU]);
+            }
 
-                uint16_t nextPacketId(const PacketTypeInfo &type){
-                    return static_cast<uint16_t>(data->packetCounter[type.type()]++ & 0xFFFFU);
-                }
+            [[nodiscard]] uint16_t generationId(const PacketType &type) {
+                return (uint16_t) (this->packet_counter[(uint8_t) type & 0xFU] >> 16U);
+            }
 
-                uint16_t currentPacketId(const PacketTypeInfo &type){
-                    return static_cast<uint16_t>(data->packetCounter[type.type()] & 0xFFFFU);
-                }
+            [[nodiscard]] uint32_t generate_full_id(const PacketType& type) {
+                return this->packet_counter[type]++;
+            }
 
-                uint16_t generationId(const PacketTypeInfo &type){
-                    return static_cast<uint16_t>((data->packetCounter[type.type()] >> 16U) & 0xFFFFU);
-                }
+            void reset() {
+                memset(&this->packet_counter[0], 0, sizeof(uint32_t) * 16);
+            }
 
-                void reset() {
-                    memset(&data->packetCounter[0], 0, sizeof(uint32_t) * 16);
-                }
-            private:
-                std::shared_ptr<PacketIdManagerData> data;
-        };
+        private:
+            std::array<uint32_t, 16> packet_counter{};
+    };
 
-        namespace PacketFlag {
-            enum PacketFlag : uint8_t {
-                None = 0x00,
-                Fragmented = 0x10,  //If packet type voice then its toggle the CELT Mono
-                NewProtocol = 0x20,
-                Compressed = 0x40,  //If packet type voice than its the header
-                Unencrypted = 0x80
-            };
-            typedef uint8_t PacketFlags;
+    enum struct PacketFlag {
+        None = 0x00,
+        Fragmented = 0x10,  //If packet type voice then its toggle the CELT Mono
+        NewProtocol = 0x20,
+        Compressed = 0x40,  //If packet type voice than its the header
+        Unencrypted = 0x80
+    };
+    typedef uint8_t PacketFlags;
 
-            std::string to_string(PacketFlag flag);
+    constexpr const char* packet_flag_to_string(const PacketFlag& flag) {
+        switch(flag){
+            case PacketFlag::Fragmented:
+                return "Fragmented";
+
+            case PacketFlag::NewProtocol:
+                return "NewProtocol";
+
+            case PacketFlag::Compressed:
+                return "Compressed";
+
+            case PacketFlag::Unencrypted:
+                return "Unencrypted";
+
+            case PacketFlag::None:
+            default:
+                return "None";
         }
+    }
 
-        #define MAC_SIZE 8
-        #define SERVER_HEADER_SIZE 3
-        #define CLIENT_HEADER_SIZE 5
+    #define MAC_SIZE 8
+    #define SERVER_HEADER_SIZE 3
+    #define CLIENT_HEADER_SIZE 5
 
-        class BasicPacket {
-            public:
-                explicit BasicPacket(size_t header_length, size_t data_length);
-                virtual ~BasicPacket();
+    class PacketParser {
+        public:
+            PacketParser(const PacketParser&) = delete;
+            explicit PacketParser(pipes::buffer_view buffer) : _buffer{std::move(buffer)} {}
 
-                BasicPacket(const BasicPacket&) = delete;
-                BasicPacket(BasicPacket&&) = delete;
+            [[nodiscard]] inline const void* data_ptr() const { return this->_buffer.data_ptr(); }
+            [[nodiscard]] inline void* mutable_data_ptr() { return (void*) this->_buffer.data_ptr(); }
 
-                virtual uint16_t packetId() const = 0;
-                virtual uint16_t generationId() const = 0;
-                virtual PacketTypeInfo type() const = 0;
+            [[nodiscard]] inline pipes::buffer_view buffer() const { return this->_buffer; }
+            [[nodiscard]] inline pipes::buffer_view mac() const { return this->_buffer.view(0, 8); }
+            [[nodiscard]] virtual pipes::buffer_view header() const = 0;
+            [[nodiscard]] virtual pipes::buffer_view payload() const = 0;
+            [[nodiscard]] virtual void* payload_ptr_mut() = 0;
+            [[nodiscard]] virtual size_t payload_length() const = 0;
 
-                /* packet flag info */
-                inline bool has_flag(PacketFlag::PacketFlag flag) const { return this->_flags_type_byte() & flag; }
-                inline uint8_t flag_mask() const { return this->_flags_type_byte(); };
-                [[nodiscard]] std::string flags() const;
+            [[nodiscard]] inline uint32_t full_packet_id() const { return this->packet_id() | (uint32_t) ((uint32_t) this->estimated_generation() << 16U); }
+            [[nodiscard]] virtual uint16_t packet_id() const = 0;
+            [[nodiscard]] virtual uint8_t type() const = 0;
+            [[nodiscard]] virtual uint8_t flags() const = 0;
 
-                /* manipulate flags */
-                inline void set_flags(PacketFlag::PacketFlags flags) {
-                    uint8_t& byte = this->_flags_type_byte();
-                    byte &= 0xF; /* clear all flags */
-                    byte |= (flags & 0xF0);
+            [[nodiscard]] inline bool has_flag(const PacketFlag& flag) const { return this->flags() & (uint8_t) flag; }
+            [[nodiscard]] inline bool is_encrypted() const {
+                return !this->decrypted && !this->has_flag(PacketFlag::Unencrypted);
+            }
+
+            [[nodiscard]] inline bool is_compressed() const {
+                return !this->uncompressed && this->has_flag(PacketFlag::Compressed);
+            }
+
+            [[nodiscard]] inline bool is_fragmented() const {
+                return !this->defragmented && this->has_flag(PacketFlag::Fragmented);
+            }
+
+            [[nodiscard]] uint16_t estimated_generation() const { return this->generation; }
+            void set_estimated_generation(uint16_t gen) { this->generation = gen; }
+
+            inline void set_decrypted() { this->decrypted = true; }
+            inline void set_uncompressed() { this->uncompressed = true; }
+            inline void set_defragmented() { this->defragmented = true; }
+
+        protected:
+            uint16_t generation{};
+            bool decrypted{false}, uncompressed{false}, defragmented{false};
+            pipes::buffer_view _buffer{};
+    };
+
+    class ClientPacketParser : public PacketParser {
+        public:
+            constexpr static auto kHeaderOffset = 8;
+            constexpr static auto kHeaderLength = CLIENT_HEADER_SIZE;
+
+            constexpr static auto kPayloadOffset = kHeaderOffset + CLIENT_HEADER_SIZE;
+            explicit ClientPacketParser(pipes::buffer_view buffer) : PacketParser{std::move(buffer)} {}
+            ClientPacketParser(const ClientPacketParser&) = delete;
+
+            [[nodiscard]] inline bool valid() const {
+                if(this->_buffer.length() < kPayloadOffset) return false;
+                return this->type() <= 8;
+            }
+            [[nodiscard]] inline pipes::buffer_view header() const override { return this->_buffer.view(kHeaderOffset, kHeaderLength); }
+            [[nodiscard]] inline pipes::buffer_view payload() const override { return this->_buffer.view(kPayloadOffset); }
+            [[nodiscard]] inline void* payload_ptr_mut() override { return (char*) this->mutable_data_ptr() + kPayloadOffset; };
+            [[nodiscard]] inline size_t payload_length() const override { return this->_buffer.length() - kPayloadOffset; }
+
+            [[nodiscard]] uint16_t client_id() const;
+            [[nodiscard]] uint16_t packet_id() const override;
+            [[nodiscard]] uint8_t type() const override;
+            [[nodiscard]] uint8_t flags() const override;
+    };
+
+    class ServerPacketParser : public PacketParser {
+        public:
+            constexpr static auto kHeaderOffset = 8;
+            constexpr static auto kHeaderLength = SERVER_HEADER_SIZE;
+
+            constexpr static auto kPayloadOffset = kHeaderOffset + SERVER_HEADER_SIZE;
+
+            explicit ServerPacketParser(pipes::buffer_view buffer) : PacketParser{std::move(buffer)} {}
+            ServerPacketParser(const ServerPacketParser&) = delete;
+
+            [[nodiscard]] inline bool valid() const {
+                if(this->_buffer.length() < kPayloadOffset) return false;
+                return this->type() <= 8;
+            }
+
+            [[nodiscard]] inline pipes::buffer_view header() const override { return this->_buffer.view(kHeaderOffset, kHeaderLength); }
+            [[nodiscard]] inline pipes::buffer_view payload() const override { return this->_buffer.view(kPayloadOffset); }
+            [[nodiscard]] inline void* payload_ptr_mut() override { return (char*) this->mutable_data_ptr() + kPayloadOffset; };
+            [[nodiscard]] inline size_t payload_length() const override { return this->_buffer.length() - kPayloadOffset; }
+
+            [[nodiscard]] uint16_t packet_id() const override;
+            [[nodiscard]] uint8_t type() const override;
+            [[nodiscard]] uint8_t flags() const override;
+    };
+
+    struct OutgoingPacket {
+        public:
+            OutgoingPacket() = default;
+            virtual ~OutgoingPacket() = default;
+
+            /* general info */
+            std::atomic<uint16_t> ref_count{0};
+            size_t payload_size;
+            uint16_t generation;
+
+            inline auto ref() {
+                auto count = ++ref_count;
+                assert(count > 1);
+                return count;
+            }
+
+            inline void unref() {
+                if(--this->ref_count == 0) {
+                    this->free_object();
                 }
-                inline void enable_flag(PacketFlag::PacketFlag flag){ this->toggle_flag(flag, true); }
-                inline void toggle_flag(PacketFlag::PacketFlag flag, bool state) {
-                    if(state)
-                        this->_flags_type_byte() |= flag;
-                    else
-                        this->_flags_type_byte() &= (uint8_t) ~flag;
-                }
+            }
 
-                virtual void applyPacketId(PacketIdManager &);
-                virtual void applyPacketId(uint16_t, uint16_t);
+            /* some helper methods */
+            inline void set_packet_id(uint16_t id) {
+                auto packet_id_bytes = this->packet_id_bytes();
+                packet_id_bytes[0] = id >> 8U;
+                packet_id_bytes[1] = id & 0xFFU;
+            }
 
-                void setListener(std::unique_ptr<threads::Future<bool>> listener){
-                    if(!this->type().requireAcknowledge())
-                        throw std::logic_error("Packet type does not support a acknowledge listener!");
-                    this->listener = std::move(listener);
-                }
-                inline std::unique_ptr<threads::Future<bool>>& getListener() { return this->listener; }
+            [[nodiscard]] inline uint16_t packet_id() const {
+                auto packet_id_bytes = this->packet_id_bytes();
+                return (uint16_t) (packet_id_bytes[0] << 8U) | packet_id_bytes[1];
+            }
 
-                inline size_t length() const { return this->_buffer.length(); }
-                inline const pipes::buffer_view mac() const { return this->_buffer.view(0, MAC_SIZE); }
-                inline pipes::buffer mac() { return this->_buffer.range(0, MAC_SIZE); }
-                inline size_t mac_length() const { return MAC_SIZE; }
+            [[nodiscard]] inline auto packet_type() const {
+                auto type_and_flags = this->type_and_flags();
+                return (PacketType) (type_and_flags & 0xFU);
+            }
 
-                inline const pipes::buffer_view header() const { return this->_buffer.view(MAC_SIZE, this->_header_length); }
-                inline pipes::buffer header() { return this->_buffer.range(MAC_SIZE, this->_header_length); }
-                inline size_t header_length() const { return this->_header_length; }
+            /**
+             * @returns a pointer to the beginning of the packet including the packet header
+             */
+            [[nodiscard]] virtual const void* packet_data() const = 0;
 
-                inline size_t data_length() const { return this->_buffer.length() - (MAC_SIZE + this->_header_length); }
-                inline const pipes::buffer_view data() const { return this->_buffer.view(MAC_SIZE + this->_header_length); }
-                inline pipes::buffer data() { return this->_buffer.range(MAC_SIZE + this->_header_length); }
+            /**
+             * @returns the full packet length including the packet header
+             */
+            [[nodiscard]] virtual size_t packet_length() const = 0;
+            [[nodiscard]] virtual uint8_t type_and_flags() const = 0;
 
-                void append_data(const std::vector<pipes::buffer> &data);
+            [[nodiscard]] virtual OutgoingPacket* next_in_queue() const = 0;
+            virtual void set_next_in_queue(OutgoingPacket*) = 0;
+        protected:
+            [[nodiscard]] virtual const uint8_t* packet_id_bytes() const = 0;
+            [[nodiscard]] virtual uint8_t* packet_id_bytes() = 0;
+            virtual void free_object() = 0;
+    };
 
-                inline void data(const pipes::buffer_view &data){
-                    this->_buffer.resize(MAC_SIZE + this->_header_length + data.length());
-                    memcpy((char*) this->_buffer.data_ptr() + MAC_SIZE + this->_header_length, data.data_ptr(), data.length());
-                }
+    struct OutgoingClientPacket : public OutgoingPacket {
+        public:
+            OutgoingClientPacket() = default;
+            ~OutgoingClientPacket() override = default;
 
-                inline void mac(const pipes::buffer_view  &_new){
-                    assert(_new.length() >= MAC_SIZE);
-                    memcpy(this->_buffer.data_ptr(), _new.data_ptr(), MAC_SIZE);
-                }
+            OutgoingClientPacket* next; /* used within the write/process queue */
 
-                [[nodiscard]] inline bool isEncrypted() const { return this->memory_state.encrypted; }
-                inline void setEncrypted(bool flag){ this->memory_state.encrypted = flag; }
+            /* actual packet data */
+            uint8_t mac[8];
+            uint8_t packet_id_bytes_[2];
+            uint8_t client_id_bytes[2];
+            uint8_t type_and_flags_;
+            uint8_t payload[1]; /* variable size */
 
-                [[nodiscard]] inline bool isCompressed() const { return this->memory_state.compressed; }
-                inline void setCompressed(bool flag){ this->memory_state.compressed = flag; }
+            [[nodiscard]] inline const void* packet_data() const override {
+                return this->mac;
+            }
 
-                [[nodiscard]] inline bool isFragmentEntry() const { return this->memory_state.fragment_entry; }
-                inline void setFragmentedEntry(bool flag){ this->memory_state.fragment_entry = flag; }
+            [[nodiscard]] inline size_t packet_length() const override {
+                return this->payload_size + (8 + 2 + 2 + 1);
+            }
 
-                Command asCommand();
+            [[nodiscard]] inline uint8_t type_and_flags() const override {
+                return this->type_and_flags_;
+            }
 
-                //Has the size of a byte
-                union {
-#ifdef WIN32
-                    __pragma(pack(push, 1))
-#endif
-                    struct {
-                        bool encrypted: 1;
-                        bool compressed: 1;
-                        bool fragment_entry: 1;
+            [[nodiscard]] inline OutgoingPacket* next_in_queue() const override {
+                return this->next;
+            }
 
-                        bool id_branded: 1;
-                    }
-#ifdef WIN32
-                    __pragma(pack(pop));
-#else
-                    __attribute__((packed));
-#endif
+            inline void set_next_in_queue(OutgoingPacket* packet) override {
+                this->next = dynamic_cast<OutgoingClientPacket*>(packet);
+                assert(!packet || this->next);
+            }
+        protected:
+            [[nodiscard]] inline const uint8_t* packet_id_bytes() const override {
+                return this->packet_id_bytes_;
+            }
 
-                    uint8_t flags = 0;
-                } memory_state;
+            [[nodiscard]] inline uint8_t* packet_id_bytes() override {
+                return this->packet_id_bytes_;
+            }
 
-                pipes::buffer buffer() { return this->_buffer; }
-                void buffer(pipes::buffer buffer) {
-                    assert(buffer.length() >= this->_header_length + MAC_SIZE);
-                    this->_buffer = std::move(buffer);
-                }
-            protected:
-                BasicPacket() = default;
+            void free_object() override;
+    };
 
-                virtual const uint8_t& _flags_type_byte() const = 0;
-                virtual uint8_t& _flags_type_byte() = 0;
+    struct OutgoingServerPacket : public OutgoingPacket {
+        public:
+            virtual ~OutgoingServerPacket() = default;
 
-                virtual void setPacketId(uint16_t, uint16_t) = 0;
-                uint8_t _header_length;
-                pipes::buffer _buffer;
+            OutgoingServerPacket* next; /* used within the write/process queue */
 
-                uint16_t genId = 0;
-                std::unique_ptr<threads::Future<bool>> listener;
-        };
+            /* actual packet data */
+            uint8_t mac[8];
+            uint8_t packet_id_bytes_[2];
+            uint8_t type_and_flags_;
+            uint8_t payload[1]; /* variable size */
 
+            [[nodiscard]] inline uint8_t type_and_flags() const override {
+                return this->type_and_flags_;
+            }
 
-        /**
-         * Packet from the client
-         */
-        class ClientPacket : public BasicPacket {
-                friend std::unique_ptr<ClientPacket> std::make_unique<ClientPacket>();
-            public:
-                static constexpr size_t META_MAC_SIZE = 8;
-                static constexpr size_t META_HEADER_SIZE = CLIENT_HEADER_SIZE;
-                static constexpr size_t META_SIZE = META_MAC_SIZE + META_HEADER_SIZE;
+            [[nodiscard]] inline const void* packet_data() const override {
+                return this->mac;
+            }
 
-                [[nodiscard]] static std::unique_ptr<ClientPacket> from_buffer(const pipes::buffer_view& buffer);
+            [[nodiscard]] inline size_t packet_length() const override {
+                return this->payload_size + (8 + 2 + 1);
+            }
 
-                ClientPacket(const PacketTypeInfo& type, const pipes::buffer_view& data);
-                ClientPacket(const PacketTypeInfo& type, uint8_t flag_mask, const pipes::buffer_view& data);
-                ~ClientPacket() override;
-                ClientPacket(const ClientPacket&) = delete;
-                ClientPacket(ClientPacket&&) = delete;
+            [[nodiscard]] inline OutgoingPacket* next_in_queue() const override {
+                return this->next;
+            }
 
-                uint16_t clientId() const;
-                void clientId(uint16_t);
+            inline void set_next_in_queue(OutgoingPacket* packet) override {
+                this->next = dynamic_cast<OutgoingServerPacket*>(packet);
+                assert(!packet || this->next);
+            }
+        protected:
+            [[nodiscard]] inline const uint8_t* packet_id_bytes() const override {
+                return this->packet_id_bytes_;
+            }
 
-                uint16_t packetId() const override;
+            [[nodiscard]] inline uint8_t* packet_id_bytes() override {
+                return this->packet_id_bytes_;
+            }
 
-                uint16_t generationId() const override;
-                void generationId(uint16_t generation) { this->genId = generation; }
+            void free_object() override;
+    };
 
-                PacketTypeInfo type() const override;
-                void type(const PacketTypeInfo&);
+    /* This will allocate a new outgoing packet. To delete just unref the packet! */
+    OutgoingServerPacket* allocate_outgoing_server_packet(size_t /* payload size */);
+    OutgoingClientPacket* allocate_outgoing_client_packet(size_t /* payload size */);
 
-            private:
-                ClientPacket() = default;
+    inline PacketFlags& operator|=(PacketFlags& flags, const PacketFlag& flag) {
+        flags |= (uint8_t) flag;
+        return flags;
+    }
 
-                const uint8_t &_flags_type_byte() const override {
-                    return this->header().data_ptr<uint8_t>()[4];
-                }
+    inline PacketFlags operator|(PacketFlags flags, const PacketFlag& flag) {
+        return flags |= flag;
+    }
 
-                uint8_t &_flags_type_byte() override {
-                    return this->header().data_ptr<uint8_t>()[4];
-                }
+    inline PacketFlags& operator&=(PacketFlags& flags, const PacketFlag& flag) {
+        flags &= (uint8_t) flag;
+        return flags;
+    }
 
-                void setPacketId(uint16_t, uint16_t) override;
-        };
+    inline PacketFlags operator&(PacketFlags flags, const PacketFlag& flag) {
+        return flags &= flag;
+    }
 
-        class PacketParser {
-            public:
-                PacketParser(const PacketParser&) = delete;
-                explicit PacketParser(pipes::buffer_view buffer) : _buffer{std::move(buffer)} {}
-
-                [[nodiscard]] inline const void* data_ptr() const { return this->_buffer.data_ptr(); }
-                [[nodiscard]] inline void* mutable_data_ptr() { return (void*) this->_buffer.data_ptr(); }
-
-                [[nodiscard]] inline pipes::buffer_view buffer() const { return this->_buffer; }
-                [[nodiscard]] inline pipes::buffer_view mac() const { return this->_buffer.view(0, 8); }
-                [[nodiscard]] virtual pipes::buffer_view payload() const = 0;
-                [[nodiscard]] virtual size_t payload_length() const = 0;
-
-                [[nodiscard]] inline uint32_t full_packet_id() const { return this->packet_id() | (this->estimated_generation() << 16U); }
-                [[nodiscard]] virtual uint16_t packet_id() const = 0;
-                [[nodiscard]] virtual uint8_t type() const = 0;
-                [[nodiscard]] virtual uint8_t flags() const = 0;
-
-                [[nodiscard]] bool is_encrypted() const;
-                [[nodiscard]] bool is_compressed() const;
-                [[nodiscard]] bool is_fragmented() const;
-
-                [[nodiscard]] uint16_t estimated_generation() const { return this->generation; }
-                void set_estimated_generation(uint16_t gen) { this->generation = gen; }
-
-                inline void set_decrypted() { this->decrypted = true; }
-                inline void set_uncompressed() { this->uncompressed = true; }
-                inline void set_defragmented() { this->defragmented = true; }
-
-            protected:
-                uint16_t generation{};
-                bool decrypted{false}, uncompressed{false}, defragmented{false};
-                pipes::buffer_view _buffer{};
-        };
-
-        class ClientPacketParser : public PacketParser {
-            public:
-                constexpr static auto kHeaderOffset = 8;
-                constexpr static auto kHeaderLength = CLIENT_HEADER_SIZE;
-
-                constexpr static auto kPayloadOffset = kHeaderOffset + CLIENT_HEADER_SIZE;
-                explicit ClientPacketParser(pipes::buffer_view buffer) : PacketParser{std::move(buffer)} {}
-                ClientPacketParser(const ClientPacketParser&) = delete;
-
-                [[nodiscard]] inline bool valid() const {
-                    if(this->_buffer.length() < kPayloadOffset) return false;
-                    return this->type() <= 8;
-                }
-
-                [[nodiscard]] inline pipes::buffer_view payload() const override { return this->_buffer.view(kPayloadOffset); }
-                [[nodiscard]] inline size_t payload_length() const override { return this->_buffer.length() - kPayloadOffset; }
-
-                [[nodiscard]] uint16_t client_id() const;
-                [[nodiscard]] uint16_t packet_id() const override;
-                [[nodiscard]] uint8_t type() const override;
-                [[nodiscard]] uint8_t flags() const override;
-        };
-
-        /**
-         * Packet from the server
-         */
-        class ServerPacket : public BasicPacket {
-                friend std::unique_ptr<ServerPacket> std::make_unique<ServerPacket>();
-            public:
-                static constexpr size_t META_MAC_SIZE = 8;
-                static constexpr size_t META_HEADER_SIZE = SERVER_HEADER_SIZE;
-                static constexpr size_t META_SIZE = META_MAC_SIZE + META_HEADER_SIZE;
-
-                [[nodiscard]] static std::unique_ptr<ServerPacket> from_buffer(const pipes::buffer_view& buffer);
-
-                ServerPacket(uint8_t flagMask, const pipes::buffer_view& data);
-                ServerPacket(const PacketTypeInfo& type, const pipes::buffer_view& data);
-                ServerPacket(PacketTypeInfo type, size_t /* data length */);
-                ~ServerPacket() override;
-
-                ServerPacket(const ServerPacket&) = delete;
-                ServerPacket(ServerPacket&&) = delete;
-
-                [[nodiscard]] uint16_t packetId() const override;
-                [[nodiscard]] uint16_t generationId() const override;
-                void generationId(uint16_t generation) { this->genId = generation; }
-                [[nodiscard]] PacketTypeInfo type() const override;
-
-            private:
-                ServerPacket() = default;
-
-                [[nodiscard]] const uint8_t &_flags_type_byte() const override {
-                    return this->header().data_ptr<uint8_t>()[2];
-                }
-
-                uint8_t &_flags_type_byte() override {
-                    return this->header().data_ptr<uint8_t>()[2];
-                }
-
-                void setPacketId(uint16_t, uint16_t) override;
-        };
-
-        class ServerPacketParser : public PacketParser {
-            public:
-                constexpr static auto kHeaderOffset = 8;
-                constexpr static auto kHeaderLength = SERVER_HEADER_SIZE;
-
-                constexpr static auto kPayloadOffset = kHeaderOffset + SERVER_HEADER_SIZE;
-                explicit ServerPacketParser(pipes::buffer_view buffer) : PacketParser{std::move(buffer)} {}
-                ServerPacketParser(const ServerPacketParser&) = delete;
-
-                [[nodiscard]] inline bool valid() const {
-                    if(this->_buffer.length() < kPayloadOffset) return false;
-                    return this->type() <= 8;
-                }
-
-                [[nodiscard]] inline pipes::buffer_view payload() const override { return this->_buffer.view(kPayloadOffset); }
-                [[nodiscard]] inline size_t payload_length() const override { return this->_buffer.length() - kPayloadOffset; }
-
-                [[nodiscard]] uint16_t packet_id() const override;
-                [[nodiscard]] uint8_t type() const override;
-                [[nodiscard]] uint8_t flags() const override;
-        };
+    inline PacketFlags operator|(const PacketFlag& flag_a, const PacketFlag& flag_b) {
+        return (uint8_t) flag_a | (uint8_t) flag_b;
     }
 }

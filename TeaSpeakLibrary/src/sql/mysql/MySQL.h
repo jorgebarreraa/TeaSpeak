@@ -6,7 +6,7 @@
 #include <condition_variable>
 #include "sql/SqlQuery.h"
 
-#include "../../misc/spin_lock.h"
+#include "misc/spin_mutex.h"
 
 #if defined(HAVE_MYSQL_MYSQL_H)
     #include <mysql/mysql.h>
@@ -31,7 +31,7 @@ namespace sql::mysql {
     struct Connection {
         MYSQL* handle = nullptr;
 
-        spin_lock used_lock;
+        spin_mutex used_lock;
         bool used = false;
 
         ~Connection();
@@ -65,17 +65,17 @@ namespace sql::mysql {
         protected:
             std::shared_ptr<CommandData> copyCommandData(std::shared_ptr<CommandData> ptr) override;
             std::shared_ptr<CommandData> allocateCommandData() override;
-            result executeCommand(std::shared_ptr<CommandData> ptr) override;
-            result queryCommand(std::shared_ptr<CommandData> ptr, const QueryCallback &fn) override;
+            result executeCommand(std::shared_ptr<CommandData> command_data) override;
+            result queryCommand(std::shared_ptr<CommandData> command_data, const QueryCallback &fn) override;
 
         public:
             std::unique_ptr<AcquiredConnection> next_connection();
             void connection_closed(const std::shared_ptr<Connection>& /* connection */);
 
-            std::mutex connections_lock;
+            std::mutex connections_mutex;
             std::condition_variable connections_condition;
             std::deque<std::shared_ptr<Connection>> connections;
 
-            bool disconnecting = false;
+            bool disconnecting{false};
     };
 }

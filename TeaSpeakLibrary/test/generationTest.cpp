@@ -34,7 +34,7 @@ test_vector_t swap_elements(test_vector_t vector, int per, int max_distance) {
 }
 
 bool test_vector(const std::string_view& name, const test_vector_t& vector) {
-    generation_estimator gen{};
+    GenerationEstimator gen{};
 
     size_t last_value{0}, last_gen{0}, index{0};
     for(auto [id, exp] : vector) {
@@ -50,7 +50,7 @@ bool test_vector(const std::string_view& name, const test_vector_t& vector) {
 }
 
 template <size_t N>
-bool test_vector(generation_estimator& generator, const std::array<uint16_t, N>& packet_ids, const std::array<uint16_t, N>& expected) {
+bool test_vector(GenerationEstimator& generator, const std::array<uint16_t, N>& packet_ids, const std::array<uint16_t, N>& expected) {
     for(size_t index = 0; index < N; index++) {
         auto result = generator.visit_packet(packet_ids[index]);
         if(result != expected[index]) {
@@ -67,7 +67,7 @@ bool test_vector(generation_estimator& generator, const std::array<uint16_t, N>&
 }
 
 int main() {
-    generation_estimator gen{};
+    GenerationEstimator gen{};
 
     {
         test_vector("00 loss", generate_test_vector(0x30000, 0));

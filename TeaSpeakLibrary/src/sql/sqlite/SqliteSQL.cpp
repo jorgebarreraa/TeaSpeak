@@ -17,7 +17,7 @@ result SqliteManager::connect(const std::string &string) {
 
     auto result = sqlite3_open(url.c_str(), &this->database);
     if(!this->database)
-        return {"connect", -1, "could not open database. Code: " + to_string(result)};
+        return {"connect", -1, -1, "could not open database. Code: " + to_string(result)};
     return result::success;
 }
 
@@ -26,15 +26,17 @@ bool SqliteManager::connected() {
 }
 
 result SqliteManager::disconnect() {
-    if(!this->database)
-        return {"disconnect", -1, "database not open"};
+    if(!this->database) {
+        return {"disconnect", -1, -1, "database not open"};
+    }
+
     this->pool->threads()->wait_for();
     auto result = sqlite3_close(this->database);
     if(result == 0) {
         this->database = nullptr;
         return result::success;
     };
-    return {"disconnect", -1, "Failed to close database. Code: " + to_string(result)};
+    return {"disconnect", -1, -1, "Failed to close database. Code: " + to_string(result)};
 }
 
 std::shared_ptr<CommandData> SqliteManager::allocateCommandData() {
@@ -88,8 +90,7 @@ std::shared_ptr<sqlite3_stmt> SqliteManager::allocateStatement(const std::string
         return nullptr;
 
     return std::shared_ptr<sqlite3_stmt>(stmt, [](void* _ptr) {
-        auto _stmt = static_cast<sqlite3_stmt*>(_ptr);
-        if(_stmt) sqlite3_finalize(_stmt);
+        sqlite3_finalize(static_cast<sqlite3_stmt*>(_ptr));
     });
 }
 
@@ -104,8 +105,9 @@ result SqliteManager::queryCommand(std::shared_ptr<CommandData> _ptr, const Quer
         sqlite3_reset(stmt.get());
     } else {
         ptr->stmt = this->allocateStatement(ptr->sql_command);
-        if(!ptr->stmt)
-            return {_ptr->sql_command,1, sqlite3_errmsg(ptr->sqlHandle<SqliteManager>()->database)};
+        if(!ptr->stmt) {
+            return {_ptr->sql_command, 1, -1, sqlite3_errmsg(ptr->sqlHandle<SqliteManager>()->database)};
+        }
         stmt = ptr->stmt;
     }
 
@@ -135,35 +137,42 @@ result SqliteManager::queryCommand(std::shared_ptr<CommandData> _ptr, const Quer
         }
     }
 
-    if(result != SQLITE_DONE && !userQuit) return {_ptr->sql_command,result, sqlite3_errstr(result)};
-    return {_ptr->sql_command,0, "success"};
+    if(result != SQLITE_DONE && !userQuit) {
+        return {_ptr->sql_command, result, -1, sqlite3_errstr(result)};
+    }
+    return {_ptr->sql_command,0, 0, "success"};
 }
 
-result SqliteManager::executeCommand(std::shared_ptr<CommandData> _ptr) {
-    auto ptr = static_pointer_cast<SqliteCommand>(_ptr);
-    std::lock_guard<threads::Mutex> lock(ptr->lock);
+result SqliteManager::executeCommand(std::shared_ptr<CommandData> command_data) {
+    auto sql_command = static_pointer_cast<SqliteCommand>(command_data);
+    std::lock_guard<threads::Mutex> lock(sql_command->lock);
 
-    result res;
-    sqlite3_stmt* stmt;
-    if(ptr->stmt){
-        stmt = ptr->stmt.get();
+    result res{};
+    sqlite3_stmt* stmt{};
+    if(sql_command->stmt){
+        stmt = sql_command->stmt.get();
         sqlite3_reset(stmt);
     } else {
-        ptr->stmt = this->allocateStatement(ptr->sql_command);
-        if(!ptr->stmt)
-            return {_ptr->sql_command,1, sqlite3_errmsg(ptr->sqlHandle<SqliteManager>()->database)};
-        stmt = ptr->stmt.get();
+        sql_command->stmt = this->allocateStatement(sql_command->sql_command);
+        if(!sql_command->stmt) {
+            return {sql_command->sql_command, 1, -1, sqlite3_errmsg(sql_command->sqlHandle<SqliteManager>()->database)};
+        }
+        stmt = sql_command->stmt.get();
     }
 
-    int varIndex = 0;
-    for(const auto& var : ptr->variables)
-        bindVariable(stmt, varIndex, var);
+    int variable_index{0};
+    for(const auto& var : sql_command->variables) {
+        bindVariable(stmt, variable_index, var);
+    }
 
     int result = sqlite3_step(stmt);
 
-    //logCritical(0, "Changes: {} SQL: {}", sqlite3_changes(this->database), ptr->sql_command);
-    if(result == SQLITE_DONE)
-        return {_ptr->sql_command,0, "success"};
-    if(result == SQLITE_ROW) return {_ptr->sql_command,-1, "query has a result"};
-    return {_ptr->sql_command, 1, sqlite3_errstr(result)};
+    if(result == SQLITE_DONE) {
+        auto last_row = sqlite3_last_insert_rowid(this->database);
+        return {sql_command->sql_command, 0, last_row, "success"};
+    } else if(result == SQLITE_ROW) {
+        return {sql_command->sql_command, -1, -1, "query has a result"};
+    } else {
+        return {sql_command->sql_command, 1, -1, sqlite3_errstr(result)};
+    }
 }

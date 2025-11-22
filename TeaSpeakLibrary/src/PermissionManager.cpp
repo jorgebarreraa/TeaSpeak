@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <cstring>
 #include "misc/memtracker.h"
-#include "BasicChannel.h"
-#include "log/LogUtils.h"
+#include "./PermissionManager.h"
+#include "./BasicChannel.h"
 
 using namespace std;
 using namespace ts;
@@ -32,7 +32,6 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::b_serverinstance_modify_querygroup, PermissionGroup::global_settings, "b_serverinstance_modify_querygroup", "Edit global ServerQuery groups"),
         make_shared<PermissionTypeEntry>(PermissionType::b_serverinstance_modify_templates, PermissionGroup::global_settings, "b_serverinstance_modify_templates", "Edit global template groups"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_select, PermissionGroup::vs_info, "b_virtualserver_select", "Select a virtual server"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_select_godmode, PermissionGroup::vs_info, "b_virtualserver_select_godmode", "Select a virtual server but be invisible"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_info_view, PermissionGroup::vs_info, "b_virtualserver_info_view", "Retrieve virtual server information"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_connectioninfo_view, PermissionGroup::vs_info, "b_virtualserver_connectioninfo_view", "Retrieve virtual server connection information"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_channel_list, PermissionGroup::vs_info, "b_virtualserver_channel_list", "List channels on a virtual server"),
@@ -46,10 +45,11 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_custom_search, PermissionGroup::vs_info, "b_virtualserver_custom_search", "Find custom fields"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_start, PermissionGroup::vs_admin, "b_virtualserver_start", "Start own virtual server"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_stop, PermissionGroup::vs_admin, "b_virtualserver_stop", "Stop own virtual server"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_list, PermissionGroup::vs_admin, "b_virtualserver_token_list", "List privilege keys available"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_add, PermissionGroup::vs_admin, "b_virtualserver_token_add", "Create new privilege keys"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_list_all, PermissionGroup::vs_admin, "b_virtualserver_token_list_all", "Allows the client to list all tokens and not only his own"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_edit_all, PermissionGroup::vs_admin, "b_virtualserver_token_edit_all", "Edit all generated tokens"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_virtualserver_token_limit, PermissionGroup::vs_admin, "i_virtualserver_token_limit", "Max number of pending tokens a client could have"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_use, PermissionGroup::vs_admin, "b_virtualserver_token_use", "Use a privilege keys to gain access to groups"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_delete, PermissionGroup::vs_admin, "b_virtualserver_token_delete", "Delete a privilege key"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_token_delete_all, PermissionGroup::vs_admin, "b_virtualserver_token_delete_all", "Allows the client to delete all tokens and not only the owned ones"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_log_view, PermissionGroup::vs_admin, "b_virtualserver_log_view", "Retrieve virtual server log"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_log_add, PermissionGroup::vs_admin, "b_virtualserver_log_add", "Write to virtual server log"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_join_ignore_password, PermissionGroup::vs_admin, "b_virtualserver_join_ignore_password", "Join virtual server ignoring its password"),
@@ -86,7 +86,6 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_log_settings, PermissionGroup::vs_settings, "b_virtualserver_modify_log_settings", "Modify log settings"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_min_client_version, PermissionGroup::vs_settings, "b_virtualserver_modify_min_client_version", "Modify min client version"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_icon_id, PermissionGroup::vs_settings, "b_virtualserver_modify_icon_id", "Modify server icon"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_weblist, PermissionGroup::vs_settings, "b_virtualserver_modify_weblist", "Modify web server list reporting settings"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_country_code, PermissionGroup::vs_settings, "b_virtualserver_modify_country_code", "Modify servers country code property"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_codec_encryption_mode, PermissionGroup::vs_settings, "b_virtualserver_modify_codec_encryption_mode", "Modify codec encryption mode"),
         make_shared<PermissionTypeEntry>(PermissionType::b_virtualserver_modify_temporary_passwords, PermissionGroup::vs_settings, "b_virtualserver_modify_temporary_passwords", "Modify temporary serverpasswords"),
@@ -104,14 +103,9 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_permanent, PermissionGroup::channel_create, "b_channel_create_permanent", "Create permanent channels"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_semi_permanent, PermissionGroup::channel_create, "b_channel_create_semi_permanent", "Create semi-permanent channels"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_temporary, PermissionGroup::channel_create, "b_channel_create_temporary", "Create temporary channels"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_private, PermissionGroup::channel_create, "b_channel_create_private", "Create private channel"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_with_topic, PermissionGroup::channel_create, "b_channel_create_with_topic", "Create channels with a topic"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_with_description, PermissionGroup::channel_create, "b_channel_create_with_description", "Create channels with a description"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_with_password, PermissionGroup::channel_create, "b_channel_create_with_password", "Create password protected channels"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_speex8, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_speex8", "Create channels using Speex Narrowband (8 kHz) codecs"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_speex16, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_speex16", "Create channels using Speex Wideband (16 kHz) codecs"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_speex32, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_speex32", "Create channels using Speex Ultra-Wideband (32 kHz) codecs"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_celtmono48, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_celtmono48", "Create channels using the CELT Mono (48 kHz) codec"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_opusvoice, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_opusvoice", "Create channels using OPUS (voice) codec"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_with_codec_opusmusic, PermissionGroup::channel_create, "b_channel_create_modify_with_codec_opusmusic", "Create channels using OPUS (music) codec"),
         make_shared<PermissionTypeEntry>(PermissionType::i_channel_create_modify_with_codec_maxquality, PermissionGroup::channel_create, "i_channel_create_modify_with_codec_maxquality", "Create channels with custom codec quality"),
@@ -125,7 +119,11 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::i_channel_create_modify_with_temp_delete_delay, PermissionGroup::channel_create, "i_channel_create_modify_with_temp_delete_delay", "Max delete delay for temporary channels"),
         make_shared<PermissionTypeEntry>(PermissionType::i_channel_create_modify_conversation_history_length, PermissionGroup::channel_create, "i_channel_create_modify_conversation_history_length", "Upper limmit for the setting of the max conversation history limit"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_conversation_history_unlimited, PermissionGroup::channel_create, "b_channel_create_modify_conversation_history_unlimited", "Allows the user to set the channel conversation history to unlimited"),
-        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_conversation_private, PermissionGroup::channel_create, "b_channel_create_modify_conversation_private", "Allows the user to set the channel conversation to private"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_conversation_mode_public, PermissionGroup::channel_create, "b_channel_create_modify_conversation_mode_public", "Allows the user to set the channel conversation mode to public"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_conversation_mode_private, PermissionGroup::channel_create, "b_channel_create_modify_conversation_mode_private", "Allows the user to set the channel conversation mode to private"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_conversation_mode_none, PermissionGroup::channel_create, "b_channel_create_modify_conversation_mode_none", "Allows the user to set the channel conversation mode to none"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_channel_create_modify_sidebar_mode, PermissionGroup::channel_create, "b_channel_create_modify_sidebar_mode", "Allows the user to change the channels sidebar apperiance"),
+
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_modify_parent, PermissionGroup::channel_modify, "b_channel_modify_parent", "Move channels"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_modify_make_default, PermissionGroup::channel_modify, "b_channel_modify_make_default", "Make channel default"),
         make_shared<PermissionTypeEntry>(PermissionType::b_channel_modify_make_permanent, PermissionGroup::channel_modify, "b_channel_modify_make_permanent", "Make channel permanent"),
@@ -321,9 +319,18 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::i_client_needed_talk_power, PermissionGroup::client_basic, "i_client_needed_talk_power", "Needed client talk power"),
         make_shared<PermissionTypeEntry>(PermissionType::i_client_poke_power, PermissionGroup::client_basic, "i_client_poke_power", "Client poke power"),
         make_shared<PermissionTypeEntry>(PermissionType::i_client_needed_poke_power, PermissionGroup::client_basic, "i_client_needed_poke_power", "Needed client poke power"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_client_poke_max_clients, PermissionGroup::client_basic, "i_client_poke_max_clients", "Max amount of clients which could be poked at once"),
         make_shared<PermissionTypeEntry>(PermissionType::b_client_set_flag_talker, PermissionGroup::client_basic, "b_client_set_flag_talker", "Set the talker flag for clients and allow them to speak"),
         make_shared<PermissionTypeEntry>(PermissionType::i_client_whisper_power, PermissionGroup::client_basic, "i_client_whisper_power", "Client whisper power"),
         make_shared<PermissionTypeEntry>(PermissionType::i_client_needed_whisper_power, PermissionGroup::client_basic, "i_client_needed_whisper_power", "Client needed whisper power"),
+
+        make_shared<PermissionTypeEntry>(PermissionType::b_video_screen, PermissionGroup::client_basic, "b_video_screen", "Client can show his screen"),
+        make_shared<PermissionTypeEntry>(PermissionType::b_video_camera, PermissionGroup::client_basic, "b_video_camera", "Client can show his video camera"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_video_max_kbps, PermissionGroup::client_basic, "i_video_max_kbps", "The maximal bandwidth used by the client to transmit video"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_video_max_streams, PermissionGroup::client_basic, "i_video_max_streams", "The maximal number of streams a client can simultaneously receive"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_video_max_screen_streams, PermissionGroup::client_basic, "i_video_max_screen_streams", "The maximal number of video streams a client can simultaneously receive"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_video_max_camera_streams, PermissionGroup::client_basic, "i_video_max_camera_streams", "The maximal number of camera streams a client can simultaneously receive"),
+
         make_shared<PermissionTypeEntry>(PermissionType::b_client_modify_description, PermissionGroup::client_modify, "b_client_modify_description", "Edit a clients description"),
         make_shared<PermissionTypeEntry>(PermissionType::b_client_modify_own_description, PermissionGroup::client_modify, "b_client_modify_own_description", "Allow client to edit own description"),
         make_shared<PermissionTypeEntry>(PermissionType::b_client_modify_dbproperties, PermissionGroup::client_modify, "b_client_modify_dbproperties", "Edit a clients properties in the sql"),
@@ -396,7 +403,10 @@ deque<std::shared_ptr<PermissionTypeEntry>> ts::permission::availablePermissions
         make_shared<PermissionTypeEntry>(PermissionType::i_ft_directory_create_power, PermissionGroup::ft, "i_ft_directory_create_power", "Create directory power"),
         make_shared<PermissionTypeEntry>(PermissionType::i_ft_needed_directory_create_power, PermissionGroup::ft, "i_ft_needed_directory_create_power", "Needed create directory power"),
         make_shared<PermissionTypeEntry>(PermissionType::i_ft_quota_mb_download_per_client, PermissionGroup::ft, "i_ft_quota_mb_download_per_client", "Download quota per client in MByte"),
-        make_shared<PermissionTypeEntry>(PermissionType::i_ft_quota_mb_upload_per_client, PermissionGroup::ft, "i_ft_quota_mb_upload_per_client", "Upload quota per client in MByte")
+        make_shared<PermissionTypeEntry>(PermissionType::i_ft_quota_mb_upload_per_client, PermissionGroup::ft, "i_ft_quota_mb_upload_per_client", "Upload quota per client in MByte"),
+
+        make_shared<PermissionTypeEntry>(PermissionType::i_ft_max_bandwidth_download, PermissionGroup::ft, "i_ft_max_bandwidth_download", "Maximal download bandwidth allowed for the client"),
+        make_shared<PermissionTypeEntry>(PermissionType::i_ft_max_bandwidth_upload, PermissionGroup::ft, "i_ft_max_bandwidth_upload", "Maximal download bandwidth allowed for the client")
 };
 
 deque<PermissionType> ts::permission::neededPermissions = {
@@ -473,7 +483,10 @@ i_group_modify_power,
         b_virtualserver_modify_default_messages,
         i_channel_create_modify_conversation_history_length,
         b_channel_create_modify_conversation_history_unlimited,
-        b_channel_create_modify_conversation_private,
+        b_channel_create_modify_conversation_mode_public,
+        b_channel_create_modify_conversation_mode_private,
+        b_channel_create_modify_conversation_mode_none,
+        b_channel_create_modify_sidebar_mode,
         b_channel_modify_name,
         b_channel_modify_password,
         b_channel_modify_topic,
@@ -499,10 +512,6 @@ i_group_modify_power,
         b_channel_create_with_maxfamilyclients,
         b_channel_create_with_sortorder,
         b_channel_create_with_default,
-        b_channel_create_modify_with_codec_speex8,
-        b_channel_create_modify_with_codec_speex16,
-        b_channel_create_modify_with_codec_speex32,
-        b_channel_create_modify_with_codec_celtmono48,
         b_channel_create_modify_with_codec_opusvoice,
         b_channel_create_modify_with_codec_opusmusic,
         i_channel_create_modify_with_codec_maxquality,
@@ -517,10 +526,17 @@ i_group_modify_power,
         b_channel_delete_flag_force,
         b_client_set_flag_talker,
         b_channel_create_with_needed_talk_power,
-        b_virtualserver_token_list,
-        b_virtualserver_token_add,
+        b_virtualserver_token_list_all,
+        i_virtualserver_token_limit,
         b_virtualserver_token_use,
-        b_virtualserver_token_delete,
+        b_virtualserver_token_delete_all,
+
+        b_video_screen,
+        b_video_camera,
+        i_video_max_kbps,
+        i_video_max_streams,
+        i_video_max_screen_streams,
+        i_video_max_camera_streams,
 
         /* ban functions */
         b_client_ban_create,
@@ -564,7 +580,6 @@ i_group_modify_power,
         b_client_permissionoverview_own,
         i_ft_quota_mb_upload_per_client,
         i_ft_quota_mb_download_per_client,
-        b_virtualserver_modify_weblist,
         b_virtualserver_modify_country_code,
         b_virtualserver_channelgroup_delete,
         b_virtualserver_servergroup_delete,
@@ -577,7 +592,6 @@ i_group_modify_power,
         b_client_request_talker,
         b_client_avatar_delete_other,
         b_channel_create_modify_with_force_password,
-        b_channel_create_private,
         b_channel_join_ignore_maxclients,
         b_virtualserver_modify_channel_temp_delete_delay_default,
         i_channel_create_modify_with_temp_delete_delay,
@@ -875,7 +889,6 @@ teamspeak::MapType build_mapping(){
                                          {"", {"b_virtualserver_modify_default_messages"}},
 
                                          {"b_client_ban_list", {"b_client_ban_list", "b_client_ban_trigger_list"}},
-                                         {"b_virtualserver_select", {"b_virtualserver_select", "b_virtualserver_select_godmode"}},
                                          {"b_virtualserver_modify_default_servergroup", {"b_virtualserver_modify_default_servergroup", "b_virtualserver_modify_default_musicgroup"}},
 
                                          {"b_client_ban_create", {"b_client_ban_create", "b_client_ban_name", "b_client_ban_ip", "b_client_ban_hwid"}}
@@ -963,6 +976,9 @@ inline std::deque<std::string> map_entry(std::string key, teamspeak::GroupType t
             auto mapped_general = mmget(map_table, teamspeak::GroupType::GENERAL, "i_" + key);
             result.insert(result.end(), mapped_general.begin(), mapped_general.end());
         }
+
+        if(result.empty())
+            result.push_back("x_" + key);
 
         for(auto& entry : result)
             entry = "i_needed_modify_power_" + entry.substr(2);
@@ -1069,7 +1085,6 @@ deque<update::UpdateEntry> update::migrate = {
         AQB("b_virtualserver_modify_default_messages")
         AQB("b_virtualserver_modify_default_musicgroup")
         AQB("b_channel_ignore_join_power")
-        AQB("b_virtualserver_select_godmode")
         AQB("b_client_ban_trigger_list")
 };
 
@@ -1201,14 +1216,41 @@ const v2::PermissionContainer v2::PermissionManager::channel_permission(const Pe
     return empty_channel_permission;
 }
 
-void v2::PermissionManager::set_permission(const PermissionType &permission, const v2::PermissionValues &values, const v2::PermissionUpdateType &action_value, const v2::PermissionUpdateType &action_grant, int flag_skip, int flag_negate) {
+inline v2::PermissionContainer duplicate_permission_container(const v2::PermissionContainer& original) {
+    v2::PermissionContainer result{};
+    result.flags = original.flags;
+    result.values.grant = original.values.grant;
+    result.values.value = original.values.value;
+    return result;
+}
+
+static v2::PermissionContainer kEmptyPermissionContainer{
+        .flags = v2::PermissionFlags{
+                .database_reference = false,
+                .channel_specific = false,
+
+                .value_set = false,
+                .grant_set = false,
+
+                .skip = false,
+                .negate = false,
+
+                .flag_value_update = false,
+                .flag_grant_update = false
+        },
+        .values = v2::PermissionValues{0, 0}
+};
+
+v2::PermissionContainer v2::PermissionManager::set_permission(const PermissionType &permission, const v2::PermissionValues &values, const v2::PermissionUpdateType &action_value, const v2::PermissionUpdateType &action_grant, int flag_skip, int flag_negate) {
     if(permission < 0 || permission >= PermissionType::permission_id_max)
-        return;
+        return kEmptyPermissionContainer;
 
     const auto block = this->calculate_block(permission);
     this->ref_allocate_block(block);
 
     auto& data = this->block_containers[block]->permissions[this->calculate_block_index(permission)];
+    auto old_state = duplicate_permission_container(data);
+
     if(action_value == v2::PermissionUpdateType::set_value) {
         data.flags.value_set = true;
         data.flags.flag_value_update = true;
@@ -1241,11 +1283,13 @@ void v2::PermissionManager::set_permission(const PermissionType &permission, con
 
     this->unref_block(block);
     this->trigger_db_update();
+
+    return old_state;
 }
 
-void v2::PermissionManager::set_channel_permission(const PermissionType &permission, ChannelId channel_id, const v2::PermissionValues &values, const v2::PermissionUpdateType &action_value, const v2::PermissionUpdateType &action_grant, int flag_skip, int flag_negate) {
+v2::PermissionContainer v2::PermissionManager::set_channel_permission(const PermissionType &permission, ChannelId channel_id, const v2::PermissionValues &values, const v2::PermissionUpdateType &action_value, const v2::PermissionUpdateType &action_grant, int flag_skip, int flag_negate) {
     if(permission < 0 || permission >= PermissionType::permission_id_max)
-        return;
+        return kEmptyPermissionContainer;
 
     unique_lock channel_perm_lock(this->channel_list_lock);
     ChannelPermissionContainer* permission_container = nullptr;
@@ -1255,13 +1299,13 @@ void v2::PermissionManager::set_channel_permission(const PermissionType &permiss
             break;
         }
 
-    /* register a new permission if we have no permission already*/
-    if(!permission_container || !permission_container->flags.permission_set()) { /* if the permission isn't set then we have to register it again */
-        if(action_value != v2::PermissionUpdateType::set_value && action_grant == v2::PermissionUpdateType::set_value) {
-            return; /* we were never willing to set this permission */
+    /* register a new permission if we have no permission already */
+    if(!permission_container) { /* if the permission isn't set then we have to register it again */
+        if(action_value != v2::PermissionUpdateType::set_value && action_grant != v2::PermissionUpdateType::set_value) {
+            return kEmptyPermissionContainer; /* we were never willing to set this permission */
         }
 
-        if(!permission_container) {
+        {
             auto container = make_unique<ChannelPermissionContainer>();
             container->permission = permission;
             container->channel_id = channel_id;
@@ -1270,13 +1314,16 @@ void v2::PermissionManager::set_channel_permission(const PermissionType &permiss
         }
 
         /* now set the channel flag for that permission */
-        const auto block = this->calculate_block(permission);
-        this->ref_allocate_block(block);
+        {
+            const auto block = this->calculate_block(permission);
+            this->ref_allocate_block(block);
 
-        auto& data = this->block_containers[block]->permissions[this->calculate_block_index(permission)];
-        data.flags.channel_specific = true;
-        this->unref_block(block);
+            auto& data = this->block_containers[block]->permissions[this->calculate_block_index(permission)];
+            data.flags.channel_specific = true;
+            this->unref_block(block);
+        }
     }
+    auto old_state = duplicate_permission_container(*permission_container);
 
     if(action_value == v2::PermissionUpdateType::set_value) {
         permission_container->flags.value_set = true;
@@ -1317,6 +1364,7 @@ void v2::PermissionManager::set_channel_permission(const PermissionType &permiss
         }
     }
     this->trigger_db_update();
+    return old_state;
 }
 
 const std::vector<std::tuple<PermissionType, const v2::PermissionContainer>> v2::PermissionManager::permissions() {
@@ -1390,9 +1438,11 @@ const std::vector<v2::PermissionDBUpdateEntry> v2::PermissionManager::flush_db_u
     {
         lock_guard use_lock(this->block_use_count_lock);
         size_t block_count = 0;
-        for (auto &block_container : block_containers)
-            if (block_container)
+        for (auto &block_container : block_containers) {
+            if (block_container) {
                 block_count++;
+            }
+        }
         result.reserve(block_count * PERMISSIONS_BULK_ENTRY_COUNT);
 
         for(size_t block_index = 0; block_index < BULK_COUNT; block_index++) {

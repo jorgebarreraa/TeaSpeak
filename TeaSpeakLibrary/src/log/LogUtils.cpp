@@ -1,6 +1,5 @@
 #include "LogUtils.h"
 #include "LogSinks.h"
-#include <iomanip>
 #include <fstream>
 #include <map>
 #ifdef WIN32
@@ -16,10 +15,6 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
-
-#ifdef HAVE_CXX_TERMINAL
-    #include <CXXTerminal/Terminal.h>
-#endif
 
 using namespace std;
 using namespace std::chrono;
@@ -97,10 +92,12 @@ namespace logger {
         if(!::logger::currentConfig())
             return default_logger();
 
-        size_t group = 0;
-        if(::logger::currentConfig()->vs_group_size > 0 && serverId > 0)
+        size_t group{0};
+        if(::logger::currentConfig()->vs_group_size > 0 && serverId > 0) {
             group = serverId / ::logger::currentConfig()->vs_group_size;
-        else group = -1;
+        } else {
+            group = -1;
+        }
 
         if(loggers.count(group) == 0) {
             lock_guard lock(loggerLock);
@@ -110,30 +107,25 @@ namespace logger {
                 logger(0)->debug("Creating new grouped logger for group {}", group);
 
             vector<spdlog::sink_ptr> sinks;
-            string path;
-            if(logConfig->logfileLevel != spdlog::level::off) {
-                path = generate_log_file(group);
+            auto path = generate_log_file(group);
 
-                auto logFile = fs::u8path(path);
-                if(!logFile.parent_path().empty())
-                    fs::create_directories(logFile.parent_path());
+            auto logFile = fs::u8path(path);
+            if(!logFile.parent_path().empty())
+                fs::create_directories(logFile.parent_path());
 
-                try {
-                    auto sink = make_shared<spdlog::sinks::rotating_file_sink_mt>(logFile.string(), 1024 * 1024 * 50, 12);
-                    sink->set_formatter(std::make_unique<LogFormatter>(::logger::currentConfig()->file_colored));
-                    sinks.push_back(sink);
-                } catch(std::exception& ex) {
-                    if(group != 0 && group != -1)
-                        logger(0)->critical("Failed to create file for new log group: {}", ex.what());
-                    else
+            try {
+                auto sink = make_shared<spdlog::sinks::rotating_file_sink_mt>(logFile.string(), 1024 * 1024 * 50, 12);
+                sink->set_formatter(std::make_unique<LogFormatter>(::logger::currentConfig()->file_colored));
+                sinks.push_back(sink);
+            } catch(std::exception& ex) {
+                if(group != 0 && group != -1)
+                    logger(0)->critical("Failed to create file for new log group: {}", ex.what());
+                else
 #ifdef HAVE_CXX_TERMINAL
-                        terminal::instance()->writeMessage("§4[CRITICAL] §eFailed to create main log file: " + string{ex.what()}, false);
+                    terminal::instance()->writeMessage("§4[CRITICAL] §eFailed to create main log file: " + string{ex.what()}, false);
 #else
-                        std::cout << "[CRITICAL] Failed to create main log file: " << ex.what() << "\n";
+                    std::cout << "[CRITICAL] Failed to create main log file: " << ex.what() << "\n";
 #endif
-                }
-            } else {
-                path = "/dev/null (" + to_string(group) + ")";
             }
             sinks.push_back(terminalSink);
 
@@ -143,6 +135,7 @@ namespace logger {
             std::shared_ptr<spdlog::logger> logger;
             if(!logConfig->sync) {
                 logger = std::make_shared<spdlog::async_logger>("Logger (" + path + ")", sinks.begin(), sinks.end(), logging_threads, async_overflow_policy::block);
+                logger->flush_on(level::debug);
             } else {
                 logger = std::make_shared<spdlog::logger>("Logger (" + path + ")", sinks.begin(), sinks.end());
                 logger->flush_on(level::trace);
@@ -247,66 +240,4 @@ namespace logger {
         logConfig = nullptr;
         terminalSink = nullptr;
     }
-}
-
-void hexDump(void *addr, int len, int pad,int columnLength, void (*print)(string));
-void hexDump(void *addr, int len, int pad,int columnLength) {
-    hexDump(addr, len, pad, columnLength, [](string str){ logMessage(0, "\n{}", str); });
-}
-
-void hexDump(void *addr, int len, int pad,int columnLength, void (*print)(string)) {
-    int i;
-    uint8_t* buff = new uint8_t[pad+1];
-    unsigned char* pc = (unsigned char*)addr;
-
-    if (len <= 0) {
-        return;
-    }
-
-    stringstream line;
-    line << uppercase << hex << setfill('0');
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % pad) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0) {
-                line << buff;
-                print(line.str());
-                line = stringstream{};
-                line << hex;
-            };
-
-            // Output the offset.
-            line << setw(4) << i << "    ";
-        }
-        if(i % columnLength == 0 && i % pad != 0){
-            line << "| ";
-        }
-
-        // Now the hex code for the specific character.
-        line << setw(2) << (int) pc[i] << " ";
-
-        // And store a printable ASCII character for later.
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-            buff[i % pad] = '.';
-        else
-            buff[i % pad] = pc[i];
-        buff[(i % pad) + 1] = '\0';
-    }
-
-    // Pad out last line if not exactly 16 characters.
-    while ((i % pad) != 0) {
-        line << "   ";
-        i++;
-    }
-
-    line << buff;
-    delete[] buff;
-
-    print(line.str());
-    line = stringstream{};
-    line << "Length: " << dec << len << " Addr: " << addr;
-    print(line.str());
 }

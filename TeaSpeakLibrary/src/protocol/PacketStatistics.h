@@ -1,57 +1,68 @@
 #pragma once
 
-#include <cstdint>
-#include <atomic>
-#include <chrono>
+#include "../misc/spin_mutex.h"
+#include "./PacketLossCalculator.h"
+#include "./Packet.h"
 
-namespace ts {
-    namespace protocol {
-        /**
-         * Packet statistics tracking for voice connections
-         */
-        struct PacketStatistics {
-            std::atomic<uint64_t> packets_sent{0};
-            std::atomic<uint64_t> packets_received{0};
-            std::atomic<uint64_t> bytes_sent{0};
-            std::atomic<uint64_t> bytes_received{0};
+namespace ts::protocol {
+    class PacketStatistics {
+        public:
+            struct PacketLossReport {
+                uint32_t lost_voice{0};
+                uint32_t lost_control{0};
+                uint32_t lost_keep_alive{0};
 
-            std::atomic<uint64_t> packets_lost{0};
-            std::atomic<uint64_t> packets_out_of_order{0};
+                uint32_t received_voice{0};
+                uint32_t received_control{0};
+                uint32_t received_keep_alive{0};
 
-            std::chrono::system_clock::time_point last_packet_time;
+                [[nodiscard]] inline float voice_loss() const {
+                    const auto total_packets = this->received_voice + this->lost_voice;
+                    if(total_packets == 0) return 0;
+                    return this->lost_voice / (float) total_packets;
+                }
+                [[nodiscard]] inline float control_loss() const {
+                    const auto total_packets = this->received_control + this->lost_control;
+                    //if(total_packets == 0) return 0; /* not possible so remove this to speed it up */
+                    return this->lost_control / (float) total_packets;
+                }
+                [[nodiscard]] inline float keep_alive_loss() const {
+                    const auto total_packets = this->received_keep_alive + this->lost_keep_alive;
+                    if(total_packets == 0) return 0;
+                    return this->lost_keep_alive / (float) total_packets;
+                }
 
-            PacketStatistics() = default;
-            ~PacketStatistics() = default;
+                [[nodiscard]] inline float total_loss() const {
+                    const auto total_lost = this->lost_voice + this->lost_control + this->lost_keep_alive;
+                    const auto total_received = this->received_control + this->received_voice + this->received_keep_alive;
+                    //if(total_received + total_lost == 0) return 0; /* not possible to speed this up */
+                    return total_lost / (float) (total_lost + total_received);
+                }
+            };
 
-            void reset() {
-                packets_sent.store(0);
-                packets_received.store(0);
-                bytes_sent.store(0);
-                bytes_received.store(0);
-                packets_lost.store(0);
-                packets_out_of_order.store(0);
-                last_packet_time = std::chrono::system_clock::now();
-            }
+            [[nodiscard]] PacketLossReport loss_report() const;
+            [[nodiscard]] float current_packet_loss() const;
 
-            void record_sent_packet(size_t size) {
-                packets_sent.fetch_add(1);
-                bytes_sent.fetch_add(size);
-                last_packet_time = std::chrono::system_clock::now();
-            }
+            void send_command(protocol::PacketType /* type */, uint32_t /* packet id */);
+            void received_acknowledge(protocol::PacketType /* type */, uint32_t /* packet id */);
 
-            void record_received_packet(size_t size) {
-                packets_received.fetch_add(1);
-                bytes_received.fetch_add(size);
-                last_packet_time = std::chrono::system_clock::now();
-            }
+            void received_packet(protocol::PacketType /* type */, uint32_t /* packet id */);
+            void tick();
+            void reset();
+            void reset_offsets();
+        private:
+            std::chrono::system_clock::time_point last_short{};
 
-            void record_lost_packet() {
-                packets_lost.fetch_add(1);
-            }
+            spin_mutex data_mutex{};
+            protocol::UnorderedPacketLossCalculator calculator_voice_whisper{};
+            protocol::UnorderedPacketLossCalculator calculator_voice{};
 
-            void record_out_of_order_packet() {
-                packets_out_of_order.fetch_add(1);
-            }
-        };
-    }
+            protocol::UnorderedPacketLossCalculator calculator_ack_low{};
+            protocol::UnorderedPacketLossCalculator calculator_ack{};
+
+            protocol::UnorderedPacketLossCalculator calculator_ping{};
+
+            protocol::CommandPacketLossCalculator calculator_command{};
+            protocol::CommandPacketLossCalculator calculator_command_low{};
+    };
 }

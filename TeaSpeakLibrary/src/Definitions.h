@@ -11,7 +11,6 @@ namespace ts {
     typedef int32_t OptionalServerId;
     constexpr auto EmptyServerId = (OptionalServerId) -1;
 
-    typedef uint16_t VirtualServerId;
     typedef uint64_t ClientDbId;
     typedef uint16_t ClientId;
     typedef std::string ClientUid;
@@ -95,19 +94,30 @@ namespace ts {
             CLIENT_WEB,
             CLIENT_MUSIC,
             CLIENT_TEASPEAK,
-            MAX,
-
-            UNKNOWN = 0xFF
+            MAX
         };
 
-        enum ClientState {
+        enum ConnectionState {
             UNKNWON,
-
-            INITIALIZING,
+            INIT_LOW,    //Web -> WS Handschake
+            INIT_HIGH,   //Web -> Auth
             CONNECTED,
+            DISCONNECTING,
             DISCONNECTED
         };
     }
+
+    enum ChannelConversationMode : uint8_t {
+        CHANNELCONVERSATIONMODE_PUBLIC = 0,
+        CHANNELCONVERSATIONMODE_PRIVATE = 1,
+        CHANNELCONVERSATIONMODE_NONE = 2
+    };
+
+    enum ChannelSidebarMode : uint8_t {
+        CHANNELSIDEBARMODE_CONVERSATION = 0,
+        CHANNELSIDEBARMODE_DESCRIPTION = 1,
+        CHANNELSIDEBARMODE_FILE_TRANSFER = 2
+    };
 
     enum QueryEventGroup : int {
         QEVENTGROUP_MIN                 = 0,
@@ -162,12 +172,14 @@ namespace ts {
     DEFINE_CONVERTER_ENUM(a, b);            \
     DEFINE_VARIABLE_TRANSFORM_ENUM(a, b);
 
-DEFINE_TRANSFORMS(ts::server::ClientState, uint8_t);
+DEFINE_TRANSFORMS(ts::server::ConnectionState, uint8_t);
 DEFINE_TRANSFORMS(ts::server::ClientType, uint8_t);
 DEFINE_TRANSFORMS(ts::LicenseType, uint8_t);
 DEFINE_TRANSFORMS(ts::PluginTargetMode, uint8_t);
 DEFINE_TRANSFORMS(ts::ViewReasonId, uint8_t);
 DEFINE_TRANSFORMS(ts::ChatMessageMode, uint8_t);
+DEFINE_TRANSFORMS(ts::ChannelConversationMode, uint8_t);
+DEFINE_TRANSFORMS(ts::ChannelSidebarMode, uint8_t);
 
 #ifdef WIN32
 #define ts_always_inline __forceinline

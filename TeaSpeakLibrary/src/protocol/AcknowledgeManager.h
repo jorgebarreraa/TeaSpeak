@@ -1,59 +1,56 @@
 #pragma once
 
 #include <memory>
-#include <protocol/Packet.h>
+#include <chrono>
+#include <functional>
+#include <mutex>
+#include "./Packet.h"
+#include "./RtoCalculator.h"
 
-#define DEBUG_ACKNOWLEDGE
 namespace ts::connection {
-    class VoiceClientConnection;
     class AcknowledgeManager {
         public:
             struct Entry {
-                uint16_t packet_id{0};
-                uint16_t generation_id{0};
-
+                uint32_t packet_full_id{0};
                 uint8_t packet_type{0xFF};
+
                 uint8_t resend_count{0};
                 bool acknowledged : 1;
                 uint8_t send_count : 7;
 
-
-                pipes::buffer buffer;
                 std::chrono::system_clock::time_point first_send;
                 std::chrono::system_clock::time_point next_resend;
-                std::unique_ptr<threads::Future<bool>> acknowledge_listener;
+                std::unique_ptr<std::function<void(bool)>> acknowledge_listener;
+
+                void* packet_ptr;
             };
+
+            typedef void(*callback_resend_failed_t)(void* /* user data */, const std::shared_ptr<Entry>& /* entry */);
 
             AcknowledgeManager();
             virtual ~AcknowledgeManager();
 
-            size_t awaiting_acknowledge();
+            [[nodiscard]] size_t awaiting_acknowledge();
             void reset();
 
-            void process_packet(ts::protocol::BasicPacket& /* packet */);
-            bool process_acknowledge(uint8_t packet_type, uint16_t /* packet id */, std::string& /* error */);
+            void process_packet(uint8_t /* packet type */, uint32_t /* full packet id */, void* /* packet ptr */, std::unique_ptr<std::function<void(bool)>> /* ack listener */);
+            bool process_acknowledge(uint8_t /* packet type */, uint16_t /* packet id */, std::string& /* error */);
 
-            ssize_t execute_resend(
+            void execute_resend(
                     const std::chrono::system_clock::time_point& /* now */,
                     std::chrono::system_clock::time_point& /* next resend */,
-                    std::deque<std::shared_ptr<Entry>>& /* buffers to resend */,
-                    std::string& /* error */
+                    std::deque<std::shared_ptr<Entry>>& /* buffers to resend */
             );
 
-            [[nodiscard]] inline auto current_rto() const { return this->rto; }
-            [[nodiscard]] inline auto current_srtt() const { return this->srtt; }
-            [[nodiscard]] inline auto current_rttvar() const { return this->rttvar; }
+            [[nodiscard]] inline const auto& rto_calculator() const { return this->rto_calculator_; }
+
+            void(*destroy_packet)(void* /* packet */){nullptr};
+
+            void* callback_data{nullptr};
+            callback_resend_failed_t callback_resend_failed{[](auto, auto){}}; /* must be valid all the time */
         private:
             std::mutex entry_lock;
             std::deque<std::shared_ptr<Entry>> entries;
-
-            float rto{1000};
-            float srtt{-1};
-            float rttvar{};
-
-            constexpr static auto alpha{.125f};
-            constexpr static auto beta{.25f};
-
-            void update_rto(size_t /* response time */);
+            protocol::RtoCalculator rto_calculator_{};
     };
 }
