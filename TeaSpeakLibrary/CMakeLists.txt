@@ -139,6 +139,7 @@ set(SOURCE_FILES
         src/protocol/ringbuffer.cpp
         src/protocol/AcknowledgeManager.cpp
         src/protocol/PacketLossCalculator.cpp
+        src/protocol/PingHandler.cpp
 )
 
 set(HEADER_FILES

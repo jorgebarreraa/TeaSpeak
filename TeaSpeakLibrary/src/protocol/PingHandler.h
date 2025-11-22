@@ -2,101 +2,45 @@
 
 #include <cstdint>
 #include <chrono>
-#include <atomic>
 
-namespace ts {
-    namespace server {
-        namespace server {
-            namespace udp {
-                /**
-                 * Handles ping/pong protocol for connection health monitoring
-                 */
-                class PingHandler {
-                    public:
-                        // Callback types
-                        typedef void(*callback_send_ping_t)(void* /* user data */, uint16_t& /* ping id */);
-                        typedef void(*callback_send_recovery_t)(void* /* user data */);
-                        typedef void(*callback_timeout_t)(void* /* user data */);
+namespace ts::server::server::udp {
+    class PingHandler {
+        public:
+            typedef void(*callback_time_outed_t)(void* /* cb data */);
+            typedef void(*callback_send_ping_t)(void* /* cb data */, uint16_t& /* ping id */);
+            typedef void(*callback_send_recovery_command_t)(void* /* cb data */);
 
-                        PingHandler() = default;
-                        ~PingHandler() = default;
+            void reset();
 
-                        /**
-                         * Reset the ping handler state
-                         */
-                        void reset() {
-                            this->last_ping_id_ = 0;
-                            this->last_pong_received_ = std::chrono::system_clock::now();
-                            this->last_command_ack_ = std::chrono::system_clock::now();
-                            this->pending_ping_ = false;
-                        }
+            void tick(const std::chrono::system_clock::time_point&);
+            void received_pong(uint16_t /* ping id */);
+            void received_command_acknowledged();
 
-                        /**
-                         * Called when a pong packet is received
-                         * @param ping_id The ping ID from the pong packet
-                         */
-                        void received_pong(uint16_t ping_id) {
-                            if(ping_id == this->last_ping_id_) {
-                                this->last_pong_received_ = std::chrono::system_clock::now();
-                                this->pending_ping_ = false;
-                            }
-                        }
+            [[nodiscard]] inline std::chrono::milliseconds current_ping() const { return this->current_ping_; }
+            [[nodiscard]] inline std::chrono::system_clock::time_point last_ping_response() const { return this->last_response_; }
+            [[nodiscard]] inline std::chrono::system_clock::time_point last_command_acknowledged() const { return this->last_command_acknowledge_; }
 
-                        /**
-                         * Called when a command acknowledgment is received
-                         * Used to track connection activity
-                         */
-                        void received_command_acknowledged() {
-                            this->last_command_ack_ = std::chrono::system_clock::now();
-                        }
+            void* callback_argument{nullptr};
+            callback_send_ping_t callback_send_ping{nullptr};
+            callback_send_recovery_command_t callback_send_recovery_command{nullptr};
+            callback_time_outed_t callback_time_outed{nullptr};
+        private:
+            constexpr static std::chrono::milliseconds kPingRequestInterval{1000};
+            constexpr static std::chrono::milliseconds kPingTimeout{15 * 1000};
 
-                        /**
-                         * Process ping timeout checking and send pings as needed
-                         * Should be called periodically
-                         */
-                        void process_ping_timeout(const std::chrono::system_clock::time_point& now) {
-                            // Check if we need to send a ping
-                            auto time_since_pong = now - this->last_pong_received_;
-                            auto time_since_ack = now - this->last_command_ack_;
+            constexpr static std::chrono::milliseconds kRecoveryRequestInterval{1000};
+            constexpr static std::chrono::milliseconds kRecoveryTimeout{15 * 1000};
 
-                            // If no activity for 10 seconds, send ping
-                            if(!this->pending_ping_ &&
-                               time_since_pong > std::chrono::seconds(10) &&
-                               time_since_ack > std::chrono::seconds(10)) {
-                                if(this->callback_send_ping) {
-                                    this->callback_send_ping(this->callback_argument, this->last_ping_id_);
-                                    this->pending_ping_ = true;
-                                }
-                            }
+            std::chrono::milliseconds current_ping_{0};
 
-                            // If ping is pending for too long, try recovery
-                            if(this->pending_ping_ && time_since_pong > std::chrono::seconds(30)) {
-                                if(this->callback_send_recovery_command) {
-                                    this->callback_send_recovery_command(this->callback_argument);
-                                }
+            uint16_t last_ping_id{0};
+            std::chrono::system_clock::time_point last_response_{};
+            std::chrono::system_clock::time_point last_request_{};
 
-                                // If still no response after 60 seconds, timeout
-                                if(time_since_pong > std::chrono::seconds(60)) {
-                                    if(this->callback_time_outed) {
-                                        this->callback_time_outed(this->callback_argument);
-                                    }
-                                }
-                            }
-                        }
+            std::chrono::system_clock::time_point last_command_acknowledge_{};
+            std::chrono::system_clock::time_point last_recovery_command_send{};
 
-                        // Callback pointers (must be set by user)
-                        void* callback_argument{nullptr};
-                        callback_send_ping_t callback_send_ping{nullptr};
-                        callback_send_recovery_t callback_send_recovery_command{nullptr};
-                        callback_timeout_t callback_time_outed{nullptr};
-
-                    private:
-                        uint16_t last_ping_id_{0};
-                        std::chrono::system_clock::time_point last_pong_received_{std::chrono::system_clock::now()};
-                        std::chrono::system_clock::time_point last_command_ack_{std::chrono::system_clock::now()};
-                        bool pending_ping_{false};
-                };
-            }
-        }
-    }
+            void send_ping_request();
+            void send_recovery_request();
+    };
 }
