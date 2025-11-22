@@ -23,6 +23,10 @@ find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 protobuf_generate_cpp(PROTO_SRCS TeaLicenseHelper_PROTOCOL_HEADERS shared/packets/LicenseRequest.proto shared/packets/LicenseManager.proto)
 
+#Ed25519
+find_package(Ed25519 REQUIRED)
+include_directories(${ed25519_INCLUDE_DIR})
+
 #The actual shared library
 add_library(TeaLicenseHelper STATIC ${LICENCE_SOURCE_FILES} ${PROTO_SRCS})
 target_link_libraries(TeaLicenseHelper PUBLIC

@@ -617,6 +617,26 @@ export
 export  MAKE_OPTIONS
 MAKE_OPTIONS=="-j2"
 "-j2"
+Error: "The source directory does not appear to contain CMakeLists.txt"
+Este error ocurre cuando el script de build no encuentra la estructura de directorios esperada.
+
+Solución - Crear enlaces simbólicos:
+bash
+cd /home/user/TeaSpeak/Server/Root
+# Crear enlace al código fuente del servidor
+ln -s ../Server TeaSpeak
+# Crear enlace a la librería rtclib
+cd TeaSpeak && ln -s ../rtc rtclib
+
+Verificación:
+bash
+ls -la TeaSpeak/CMakeLists.txt         # Debe existir
+ls -la TeaSpeak/rtclib/generate_shared_library.sh  # Debe existir
+
+Nota: Estos enlaces simbólicos permiten que el script build_teaspeak.sh encuentre:
+- Server/Root/TeaSpeak/ → apunta a Server/Server/ (código fuente)
+- Server/Server/rtclib/ → apunta a Server/rtc/ (librería WebRTC)
+
 COMPILACIÓN RÁPIDA (SCRIPT TODO-EN-UNO)
 bash
 #!/bin/bash

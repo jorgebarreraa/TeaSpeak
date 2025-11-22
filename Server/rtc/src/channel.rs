@@ -9,7 +9,7 @@ use tokio::time::{Interval, Duration};
 use std::time::{Instant};
 use futures::{StreamExt};
 use std::ops::DerefMut;
-use crate::broadcast::{VideoBroadcastMode, BroadcastStartResult, ClientBroadcaster, execute_broadcast, ClientAudioBroadcaster, ClientVideoBroadcaster, AudioBroadcastMode, VideoBroadcastConfigureError, VideoBroadcastOptions};
+use crate::broadcast::{VideoBroadcastMode, BroadcastStartResult, ClientBroadcaster, execute_broadcast, ClientAudioBroadcaster, ClientVideoBroadcaster, AudioBroadcastMode, VideoBroadcastOptions};
 use unchecked_unwrap::UncheckedUnwrap;
 use std::os::raw::c_void;
 use crate::exports::BroadcastInfo;

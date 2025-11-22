@@ -26,7 +26,6 @@ use crate::client::{
 use crate::{MediaType};
 use crate::channel::{ClientAudioSource, ClientVideoSource};
 use crate::log::client_logger;
-use retain_mut::RetainMut;
 use std::ops::DerefMut;
 
 pub struct RTCConnection {

@@ -1,17 +1,16 @@
 use std::sync::{Arc, Mutex, Weak};
 use std::task::{Context, Poll, Waker};
 use std::time::{Instant, Duration};
-use tokio::sync::mpsc::{ self, UnboundedReceiver, UnboundedSender };
+use tokio::sync::mpsc;
 
-use futures::{FutureExt, StreamExt};
+use futures::FutureExt;
 use unchecked_unwrap::UncheckedUnwrap;
 
 use crate::broadcast::ClientBroadcaster;
 use crate::channel::{ClientVideoSource, VideoSourceEvent};
 use crate::client::{Client, ClientData, ClientVideoSender, ClientVideoSenderEvent, VideoStopReason};
 use crate::MediaType;
-use crate::threads::{enter_tasks, execute_task};
-use crate::exports::GLOBAL_DATA;
+use crate::threads::execute_task;
 
 #[derive(Ord, PartialOrd, Eq, PartialEq, Debug, Copy, Clone)]
 pub enum VideoBroadcastMode {
@@ -261,10 +260,14 @@ impl ClientVideoBroadcaster {
         let mut request_pli = false;
 
         let logger = self.logger.clone();
-        let sender = self.sender.drain_filter(|sender| {
+
+        // Reemplazar drain_filter con retain_mut
+        let mut removed_senders = Vec::new();
+        self.sender.retain_mut(|sender| {
             while let Poll::Ready(event) = sender.poll_event(cx) {
                 if event.is_none() {
-                    return true;
+                    removed_senders.push((sender.owner_id(), sender.owner_data().clone()));
+                    return false; // Remover este sender
                 }
 
                 match unsafe { event.unchecked_unwrap() } {
@@ -275,11 +278,11 @@ impl ClientVideoBroadcaster {
                 }
             }
 
-            false
-        }).collect::<Vec<_>>();
+            true // Mantener este sender
+        });
 
-        for sender in sender {
-            self.source.notify_client_leave(sender.owner_id(), sender.owner_data());
+        for (owner_id, owner_data) in removed_senders {
+            self.source.notify_client_leave(owner_id, &owner_data);
         }
 
         if request_pli {
@@ -387,14 +390,25 @@ impl ClientBroadcaster for ClientVideoBroadcaster {
     }
 
     fn remove_client(&mut self, client_id: u32) -> bool {
-        let removed_clients = self.sender.drain_filter(|e| e.owner_id() == client_id).collect::<Vec<_>>();
+        // Reemplazar drain_filter con un enfoque manual
+        let mut removed_clients = Vec::new();
+        let mut i = 0;
+        while i < self.sender.len() {
+            if self.sender[i].owner_id() == client_id {
+                let removed = self.sender.remove(i);
+                removed_clients.push((removed.owner_id(), removed.owner_data().clone()));
+            } else {
+                i += 1;
+            }
+        }
+
         if removed_clients.is_empty() {
             return false;
         }
 
         /* removed_clients should only be 1 */
-        for client in removed_clients {
-            self.source.notify_client_leave(client.owner_id(), client.owner_data());
+        for (owner_id, owner_data) in removed_clients {
+            self.source.notify_client_leave(owner_id, &owner_data);
         }
         return true;
     }

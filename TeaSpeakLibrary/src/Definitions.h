@@ -107,6 +107,15 @@ namespace ts {
             CONNECTED,
             DISCONNECTED
         };
+
+        enum ConnectionState {
+            UNKNWON,
+            INIT_LOW,
+            INIT_HIGH,
+            CONNECTED,
+            DISCONNECTING,
+            DISCONNECTED
+        };
     }
 
     enum QueryEventGroup : int {
@@ -164,6 +173,7 @@ namespace ts {
 
 DEFINE_TRANSFORMS(ts::server::ClientState, uint8_t);
 DEFINE_TRANSFORMS(ts::server::ClientType, uint8_t);
+DEFINE_TRANSFORMS(ts::server::ConnectionState, uint8_t);
 DEFINE_TRANSFORMS(ts::LicenseType, uint8_t);
 DEFINE_TRANSFORMS(ts::PluginTargetMode, uint8_t);
 DEFINE_TRANSFORMS(ts::ViewReasonId, uint8_t);

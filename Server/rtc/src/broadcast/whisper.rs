@@ -65,9 +65,18 @@ impl WhisperSession {
     /// Returns a list of not containing clients which should be added to the session.
     /// Every client id which is not contained in the new list will be removed from the session.
     pub fn update_target_clients(&mut self, client_ids: &[u32]) -> Vec<u32> {
-        let dropped_clients = self.targets.drain_filter(|client_id| {
-            !client_ids.contains(client_id)
-        }).collect::<Vec<_>>();
+        let dropped_clients: Vec<_> = {
+            let mut removed = Vec::new();
+            let mut i = 0;
+            while i < self.targets.len() {
+                if !client_ids.contains(&self.targets[i]) {
+                    removed.push(self.targets.remove(i));
+                } else {
+                    i += 1;
+                }
+            }
+            removed
+        };
 
         {
             let mut broadcast = self.broadcast.lock().unwrap();

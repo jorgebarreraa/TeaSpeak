@@ -124,10 +124,10 @@ impl NativeConnection {
         let (audio_sender, _) = mpsc::unbounded_channel();
         let (audio_whisper_sender, _) = mpsc::unbounded_channel();
 
-        box NativeConnection{
+        Box::new(NativeConnection{
             audio_events_sender: Arc::new(RwLock::new(audio_sender)),
             audio_whisper_events_sender: Arc::new(RwLock::new(audio_whisper_sender)),
-        }
+        })
     }
 
     pub fn create_audio_sender(&mut self, own_client_id: u32, own_client_data: ClientData, sender_type: MediaType, _source_client_id: u32, source_client_data: &ClientData) -> Box<dyn ClientAudioSender> {
@@ -151,7 +151,7 @@ impl NativeConnection {
          * Sending a second stop signal, just to ensure that the client resets his locally tracked sequence.
          */
         sender.send_stop(AudioStopReason::InternalEnding);
-        box sender
+        Box::new(sender)
     }
 
     pub fn create_audio_source_supplier(&self, stream_id: u32) -> NativeAudioSourceSupplier {
