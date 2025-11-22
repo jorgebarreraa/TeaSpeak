@@ -176,7 +176,7 @@ namespace logger {
         return level >= min_level;
     }
 
-    void log(logger::forceable level, int server_id, const std::string_view& buffer) {
+    void log(spdlog::level::forceable level, int server_id, const std::string_view& buffer) {
         auto logger = ::logger::logger(server_id);
 
         auto message_format = "§8{0:>5} | §r{1}";
@@ -207,7 +207,7 @@ namespace logger {
         }
 
         try {
-            logger->log(level.level, message_format, server_id, buffer);
+            logger->log(level, message_format, server_id, buffer);
         } catch (const std::exception &ex) {
             //TODO better?
             std::cerr << "An exception has raised while logging a message (" << ex.what() << "): " << buffer << "\n";

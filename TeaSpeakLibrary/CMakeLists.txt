@@ -95,8 +95,6 @@ set(SOURCE_FILES
         src/misc/digest.cpp
         src/misc/base64.cpp
         src/misc/net.cpp
-        src/misc/task_executor.cpp
-        src/misc/threads.cpp
 
         src/lock/rw_mutex.cpp
 
@@ -154,8 +152,6 @@ set(HEADER_FILES
         src/misc/advanced_mutex.h
         src/misc/memtracker.h
         src/misc/strobf.h
-        src/misc/task_executor.h
-        src/misc/threads.h
 
         src/log/translation.h
         src/log/LogUtils.h

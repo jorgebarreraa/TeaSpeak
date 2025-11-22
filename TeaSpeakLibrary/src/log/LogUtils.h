@@ -24,14 +24,6 @@
 #undef log
 #endif
 namespace logger {
-    // Custom wrapper for log level with forced flag
-    struct forceable {
-        spdlog::level::level_enum level;
-        bool forced;
-
-        forceable(spdlog::level::level_enum lvl, bool force) : level(lvl), forced(force) {}
-    };
-
     struct LoggerConfig {
         spdlog::level::level_enum logfileLevel = spdlog::level::info;
         spdlog::level::level_enum terminalLevel = spdlog::level::info;
@@ -48,7 +40,7 @@ namespace logger {
     extern void uninstall();
 
     extern bool should_log(spdlog::level::level_enum /* level */); //TODO: inline?
-    extern void log(forceable /* level */, int /* server id */, const std::string_view& /* buffer */);
+    extern void log(spdlog::level::forceable /* level */, int /* server id */, const std::string_view& /* buffer */);
 
     extern void updateLogLevels();
     extern void flush();
@@ -67,7 +59,7 @@ namespace logger {
                 fmt_message = "failed to format message '" + std::string{message} + "': " + ex.what();
             }
 
-            ::logger::log(::logger::forceable{level, forced}, serverId, fmt_message);
+            ::logger::log(spdlog::level::forceable{level, forced}, serverId, fmt_message);
         }
     }
 }

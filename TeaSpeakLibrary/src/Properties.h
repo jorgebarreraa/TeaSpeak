@@ -917,9 +917,6 @@ namespace ts {
             size_t properties_count{0};
             std::vector<std::shared_ptr<PropertyBundle>> properties;
     };
-
-    // PropertyManager is an alias for Properties
-    using PropertyManager = Properties;
 };
 
 //DEFINE_TRANSFORMS(ts::property::PropertyType, uint8_t);
