@@ -100,7 +100,7 @@ namespace ts {
             UNKNOWN = 0xFF
         };
 
-        enum ClientState {
+        enum class ClientState : uint8_t {
             UNKNWON,
 
             INITIALIZING,
@@ -108,7 +108,7 @@ namespace ts {
             DISCONNECTED
         };
 
-        enum ConnectionState {
+        enum class ConnectionState : uint8_t {
             UNKNWON,
             INIT_LOW,
             INIT_HIGH,
