@@ -65,6 +65,16 @@ if(ed25519_INCLUDE_DIR AND ed25519_LIBRARIES_STATIC)
     message(STATUS "Found Ed25519:")
     message(STATUS "  Include: ${ed25519_INCLUDE_DIR}")
     message(STATUS "  Library: ${ed25519_LIBRARIES_STATIC}")
+
+    # Create namespace target for ed25519
+    if(NOT TARGET ed25519::static)
+        add_library(ed25519::static STATIC IMPORTED GLOBAL)
+        set_target_properties(ed25519::static PROPERTIES
+            IMPORTED_LOCATION "${ed25519_LIBRARIES_STATIC}"
+            INTERFACE_INCLUDE_DIRECTORIES "${ed25519_INCLUDE_DIR}"
+        )
+        message(STATUS "Created target ed25519::static")
+    endif()
 endif()
 
 find_package_handle_standard_args(Ed25519
