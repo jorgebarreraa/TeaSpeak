@@ -841,11 +841,48 @@ namespace ts {
 
             PropertyWrapper(Properties* /* handle */, PropertyData* /* ptr */, std::shared_ptr<PropertyBundle>  /* bundle */);
 
+            // Proxy constructor for properties() method - wraps entire Properties collection
+            explicit PropertyWrapper(const std::shared_ptr<Properties>& properties_ptr)
+                : handle(nullptr), data_ptr(nullptr), properties_proxy(properties_ptr) {}
+
             [[nodiscard]] inline Properties* get_handle() { return this->handle; }
+
+            // Proxy operator[] - delegates to wrapped Properties when in proxy mode
+            template <typename T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+            PropertyWrapper operator[](T type) {
+                if(this->properties_proxy) {
+                    return (*this->properties_proxy)[type];
+                }
+                // Should not happen - return invalid wrapper
+                return PropertyWrapper(nullptr, nullptr, nullptr);
+            }
+
+            // as_unchecked - same as as<T>() but different name for compatibility
+            template <typename T>
+            [[nodiscard]] T as_unchecked() const {
+                return this->as<T>();
+            }
+
+            // as_or - like as_save() but with custom default value
+            template <typename T>
+            [[nodiscard]] T as_or(const T& default_value) const {
+                try {
+                    std::lock_guard lock(this->data_ptr->value_lock);
+                    if(this->data_ptr->casted_value.type() == typeid(T))
+                        return std::any_cast<T>(this->data_ptr->casted_value);
+
+                    this->data_ptr->casted_value = ts::converter<T>::from_string_view(this->data_ptr->value);
+                    return std::any_cast<T>(this->data_ptr->casted_value);
+                } catch(std::exception&) {
+                    return default_value;
+                }
+            }
+
         private:
             Properties* handle = nullptr;
             PropertyData* data_ptr = nullptr;
             std::shared_ptr<PropertyBundle> bundle_lock;
+            std::shared_ptr<Properties> properties_proxy;  // Used when acting as proxy to Properties collection
     };
     typedef PropertyWrapper Property;
     typedef std::function<void(PropertyWrapper&)> PropertyNotifyFn;
