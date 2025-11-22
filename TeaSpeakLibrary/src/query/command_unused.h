@@ -1,8 +1,0 @@
-//
-// Created by wolverindev on 25.01.20.
-//
-
-#ifndef TEASPEAK_PARENT_COMMAND_UNUSED_H
-#define TEASPEAK_PARENT_COMMAND_UNUSED_H
-
-#endif //TEASPEAK_PARENT_COMMAND_UNUSED_H
