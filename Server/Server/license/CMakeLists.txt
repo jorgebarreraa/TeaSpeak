@@ -135,4 +135,17 @@ add_executable(LicenseCLI
 		manager/ServerConnectionHandler.cpp
 )
 
-target_link_libraries(LicenseCLI TeaLicenseHelper)
+target_link_libraries(LicenseCLI
+		TeaLicenseHelper
+		threadpool::static
+		TeaSpeak
+		DataPipes::core::static
+		openssl::ssl::static
+		openssl::crypto::static
+		libevent::core
+		libevent::pthreads
+		pthread
+		dl
+		rt
+		stdc++fs
+)
