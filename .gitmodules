@@ -1,0 +1,9 @@
+[submodule "Server/Root/libraries/jsoncpp"]
+	path = Server/Root/libraries/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "Server/Root/libraries/Thread-Pool"]
+	path = Server/Root/libraries/Thread-Pool
+	url = https://git.did.science/WolverinDEV/ThreadPool.git
+[submodule "Server/Root/build-helpers"]
+	path = Server/Root/build-helpers
+	url = https://github.com/WolverinDEV/build-helpers.git
