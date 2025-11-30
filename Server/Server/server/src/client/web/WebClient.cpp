@@ -162,8 +162,8 @@ void WebClient::sendCommand(const ts::Command &command, bool low) {
     auto command_payload = command.build();
     if(this->allow_raw_commands) {
         Json::Value value{};
-        value["type"] = "command-raw";
-        value["payload"] = std::move(command_payload);
+        value[Json::StaticString("type")] = "command-raw";
+        value[Json::StaticString("payload")] = std::move(command_payload);
         this->sendJson(value);
     } else {
         /* TODO: Fully remove this mode. */
@@ -173,16 +173,17 @@ void WebClient::sendCommand(const ts::Command &command, bool low) {
         std::string value{};
 
         Json::Value json_command{};
-        json_command["type"] = "command";
-        json_command["command"] = std::string{parser.identifier()};
+        json_command[Json::StaticString("type")] = "command";
+        json_command[Json::StaticString("command")] = std::string{parser.identifier()};
 
         int bulk_index{0};
         for(auto& bulk : parser.bulks()) {
-            auto& json_bulk = json_command["data"][bulk_index++];
+            auto& json_bulk = json_command[Json::StaticString("data")][bulk_index++];
 
             size_t index{0};
             while(bulk.next_entry(index, key, value)) {
-                json_bulk[std::string{key}] = std::move(value);
+                const std::string key_str(key);
+                json_bulk[Json::StaticString(key_str.c_str())] = std::move(value);
             }
         }
 
@@ -193,8 +194,8 @@ void WebClient::sendCommand(const ts::Command &command, bool low) {
 void WebClient::sendCommand(const ts::command_builder &command, bool low) {
     if(this->allow_raw_commands) {
         Json::Value value{};
-        value["type"] = "command-raw";
-        value["payload"] = command.build();
+        value[Json::StaticString("type")] = "command-raw";
+        value[Json::StaticString("payload")] = command.build();
         this->sendJson(value);
     } else {
         auto data = command.build();
@@ -314,8 +315,8 @@ void WebClient::tick_server(const std::chrono::system_clock::time_point& point) 
             this->js_ping.last_request = point;
 
             Json::Value jsonCandidate;
-            jsonCandidate["type"] = "ping";
-            jsonCandidate["payload"] = to_string(this->js_ping.current_id);
+            jsonCandidate[Json::StaticString("type")] = "ping";
+            jsonCandidate[Json::StaticString("payload")] = to_string(this->js_ping.current_id);
 
             this->sendJson(jsonCandidate);
         }
@@ -479,30 +480,30 @@ void WebClient::handleMessage(const pipes::buffer_view &message) {
     logTrace(this->server->getServerId(), "[{}] Read message {}", CLIENT_STR_LOG_PREFIX_(this), std::string_view{message.data_ptr<char>(), message.length()});
 
     try {
-        if(val["type"].isNull()) {
+        if(val[Json::StaticString("type")].isNull()) {
             logError(this->server->getServerId(), "[{}] Invalid web json package!");
             return;
         }
-        if(val["type"].asString() == "command") {
-            Command cmd(val["command"].asString());
-            for(int index = 0; index < val["data"].size(); index++) {
-                for(auto it = val["data"][index].begin(); it != val["data"][index].end(); it++)
+        if(val[Json::StaticString("type")].asString() == "command") {
+            Command cmd(val[Json::StaticString("command")].asString());
+            for(int index = 0; index < val[Json::StaticString("data")].size(); index++) {
+                for(auto it = val[Json::StaticString("data")][index].begin(); it != val[Json::StaticString("data")][index].end(); it++)
                     cmd[index][it.key().asString()] = (*it).asString();
             }
-            for (const auto &index : val["flags"]) {
+            for (const auto &index : val[Json::StaticString("flags")]) {
                 cmd.enableParm(index.asString());
             }
 
             this->handleCommandFull(cmd, true);
-        } else if(val["type"].asString() == "ping") {
+        } else if(val[Json::StaticString("type")].asString() == "ping") {
             Json::Value response;
-            response["type"] = "pong";
-            response["payload"] = val["payload"];
-            response["ping_native"] = to_string(duration_cast<microseconds>(this->ping.value).count());
+            response[Json::StaticString("type")] = "pong";
+            response[Json::StaticString("payload")] = val[Json::StaticString("payload")];
+            response[Json::StaticString("ping_native")] = to_string(duration_cast<microseconds>(this->ping.value).count());
             this->sendJson(response);
             return;
-        } else if(val["type"].asString() == "pong") {
-            auto payload = val["payload"].isString() ? val["payload"].asString() : "";
+        } else if(val[Json::StaticString("type")].asString() == "pong") {
+            auto payload = val[Json::StaticString("payload")].isString() ? val[Json::StaticString("payload")].asString() : "";
             uint8_t response_id = 0;
             try {
                 response_id = (uint8_t) stoul(payload);
@@ -524,7 +525,7 @@ void WebClient::handleMessage(const pipes::buffer_view &message) {
             }
             this->js_ping.last_response = system_clock::now();
             this->js_ping.value = duration_cast<nanoseconds>(this->js_ping.last_response - this->js_ping.last_request);
-        } else if(val["type"].asString() == "enable-raw-commands") {
+        } else if(val[Json::StaticString("type")].asString() == "enable-raw-commands") {
             this->allow_raw_commands = true;
         }
     } catch (const std::exception& ex) {

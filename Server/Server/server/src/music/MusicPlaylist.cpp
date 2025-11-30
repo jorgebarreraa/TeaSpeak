@@ -525,29 +525,29 @@ void Playlist::execute_async_load(const std::shared_ptr<ts::music::PlaylistEntry
             FORCE_LOAD;
         }
 
-        if(!data["type"].isUInt()) {
+        if(!data[Json::StaticString("type")].isUInt()) {
             logError(this->get_server_id(), "[PlayList] Failed to parse loaded metadata for song {}. Metadata has an invalid key 'type'. Query data again!", entry->song_id);
             FORCE_LOAD;
         }
-        if(!data["url"].isString()) {
+        if(!data[Json::StaticString("url")].isString()) {
             logError(this->get_server_id(), "[PlayList] Failed to parse loaded metadata for song {}. Metadata has an invalid key 'url'. Query data again!", entry->song_id);
             FORCE_LOAD;
         }
 
-        auto type = (UrlType) data["type"].asUInt();
+        auto type = (UrlType) data[Json::StaticString("type")].asUInt();
         if(type != UrlType::TYPE_VIDEO && type != UrlType::TYPE_STREAM) {
             /* we're currently not able to parse playlists */
             FORCE_LOAD;
         } else {
             auto info = make_shared<UrlSongInfo>();
-            if(data["metadata"].isObject()) {
-                for(const auto& key : data["metadata"])
-                    info->metadata[key.asString()] = data["metadata"][key.asString()].asString();
+            if(data[Json::StaticString("metadata")].isObject()) {
+                for(const auto& key : data[Json::StaticString("metadata")])
+                    info->metadata[key.asString()] = data[Json::StaticString("metadata")][key.asString()].asString();
             }
-            info->url = data["url"].asString();
-            info->title = data["title"].asString();
+            info->url = data[Json::StaticString("url")].asString();
+            info->title = data[Json::StaticString("title")].asString();
             info->type = type;
-            info->description = data["description"].asString();
+            info->description = data[Json::StaticString("description")].asString();
 
             load_finished(LoadState::LOADED, "", info);
             return;
@@ -570,21 +570,21 @@ void Playlist::execute_async_load(const std::shared_ptr<ts::music::PlaylistEntry
         /* create the json string */
         {
             Json::Value root;
-            root["type"] = result->type;
-            root["url"] = result->url;
+            root[Json::StaticString("type")] = result->type;
+            root[Json::StaticString("url")] = result->url;
             if(result->type == UrlType::TYPE_PLAYLIST) {
                 auto casted = static_pointer_cast<UrlPlaylistInfo>(result);
             } else if(result->type == UrlType::TYPE_STREAM || result->type == UrlType::TYPE_VIDEO) {
                 auto casted = static_pointer_cast<UrlSongInfo>(result);
-                root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count();
-                root["title"] = casted->title;
-                root["description"] = casted->description;
+                root[Json::StaticString("length")] = chrono::ceil<chrono::milliseconds>(casted->length).count();
+                root[Json::StaticString("title")] = casted->title;
+                root[Json::StaticString("description")] = casted->description;
                 if(casted->thumbnail) {
                     if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)
-                        root["thumbnail"] = thump->url();
+                        root[Json::StaticString("thumbnail")] = thump->url();
                 }
                 for(const auto& meta : casted->metadata)
-                    root["metadata"][meta.first] = meta.second;
+                    root[Json::StaticString("metadata")][meta.first] = meta.second;
             }
 
             Json::StreamWriterBuilder builder;

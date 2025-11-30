@@ -70,39 +70,39 @@ command_result SpeakingClient::handleCommandHandshakeBegin(Command& cmd) { //If 
             }
 
             auto& json_data = *this->handshake.identityData;
-            if(json_data["user_id"].isNull())
+            if(json_data[Json::StaticString("user_id")].isNull())
                 return command_result{error::web_handshake_invalid}; //{findError("web_handshake_invalid"), "Missing json data (user_id)!"};
-            if(json_data["user_name"].isNull())
+            if(json_data[Json::StaticString("user_name")].isNull())
                 return command_result{error::web_handshake_invalid}; //{findError("web_handshake_invalid"), "Missing json data (user_name)!"};
-            if(json_data["user_group"].isNull())
+            if(json_data[Json::StaticString("user_group")].isNull())
                 return command_result{error::web_handshake_invalid}; //{findError("web_handshake_invalid"), "Missing json data (user_group)!"};
-            if(json_data["user_groups"].isNull())
+            if(json_data[Json::StaticString("user_groups")].isNull())
                 return command_result{error::web_handshake_invalid}; //{findError("web_handshake_invalid"), "Missing json data (user_groups)!"};
-            if(json_data["data_age"].isNull())
+            if(json_data[Json::StaticString("data_age")].isNull())
                 return command_result{error::web_handshake_invalid}; //{findError("web_handshake_invalid"), "Missing json data (data_age)!"};
 
             //Type test
-            json_data["user_id"].asInt64();
+            json_data[Json::StaticString("user_id")].asInt64();
 
-            if(json_data["data_age"].asUInt64() < duration_cast<milliseconds>((system_clock::now() - hours(72)).time_since_epoch()).count())
+            if(json_data[Json::StaticString("data_age")].asUInt64() < duration_cast<milliseconds>((system_clock::now() - hours(72)).time_since_epoch()).count())
                 return command_result{error::web_handshake_identity_outdated}; // {findError("web_handshake_invalid"), "Provided data is too old!"};
 
-            this->properties()[property::CLIENT_UNIQUE_IDENTIFIER] = base64::encode(digest::sha1("TeaSpeak-Forum#" + json_data["user_id"].asString()));
+            this->properties()[property::CLIENT_UNIQUE_IDENTIFIER] = base64::encode(digest::sha1("TeaSpeak-Forum#" + json_data[Json::StaticString("user_id")].asString()));
 
-            this->properties()[property::CLIENT_TEAFORO_ID] = json_data["user_id"].asInt64();
-            this->properties()[property::CLIENT_TEAFORO_NAME] = json_data["user_name"].asString();
+            this->properties()[property::CLIENT_TEAFORO_ID] = json_data[Json::StaticString("user_id")].asInt64();
+            this->properties()[property::CLIENT_TEAFORO_NAME] = json_data[Json::StaticString("user_name")].asString();
 
             {
                 ///* 0x01 := Banned | 0x02 := Stuff | 0x04 := Premium */
                 uint64_t flags = 0;
 
-                if(json_data["is_banned"].isBool() && json_data["is_banned"].asBool())
+                if(json_data[Json::StaticString("is_banned")].isBool() && json_data[Json::StaticString("is_banned")].asBool())
                     flags |= 0x01U;
 
-                if(json_data["is_staff"].isBool() && json_data["is_staff"].asBool())
+                if(json_data[Json::StaticString("is_staff")].isBool() && json_data[Json::StaticString("is_staff")].asBool())
                     flags |= 0x02U;
 
-                if(json_data["is_premium"].isBool() && json_data["is_premium"].asBool())
+                if(json_data[Json::StaticString("is_premium")].isBool() && json_data[Json::StaticString("is_premium")].asBool())
                     flags |= 0x04U;
 
                 this->properties()[property::CLIENT_TEAFORO_FLAGS] = flags;
