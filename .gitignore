@@ -1,0 +1,18 @@
+# Build directories
+**/build/
+**/out/
+**/_build/
+
+# Compiled libraries
+*.a
+*.so
+*.o
+
+# Symlinks created during build
+Server/libraries/
+
+# Library build artifacts
+libraries/*/build/
+libraries/*/out/
+Server/Root/libraries/*/build/
+Server/Root/libraries/*/out/
