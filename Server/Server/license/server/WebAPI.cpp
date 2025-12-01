@@ -403,9 +403,9 @@ bool WebStatistics::handle_message(const std::shared_ptr<license::web::WebStatis
 		static pipes::buffer _response;
 		if(_response.empty()) {
 			Json::Value response;
-			response["type"] = "error";
-			response["code"] = "general";
-			response["msg"] = "action not available due flood prevention";
+			response[Json::StaticString("type")] = "error";
+			response[Json::StaticString("code")] = "general";
+			response[Json::StaticString("msg")] = "action not available due flood prevention";
 			_response = json_dump(response);
 		}
 
@@ -424,28 +424,28 @@ bool WebStatistics::handle_message(const std::shared_ptr<license::web::WebStatis
 		return false;
 	}
 	try {
-		if(!message["type"].isString()) HERR("Missing/invalid type");
+		if(!message[Json::StaticString("type")].isString()) HERR("Missing/invalid type");
 
-		if(message["type"].asString() == "request") {
-			if(!message["request_type"].isString()) HERR("Missing/invalid request type");
+		if(message[Json::StaticString("type")].asString() == "request") {
+			if(!message[Json::StaticString("request_type")].isString()) HERR("Missing/invalid request type");
 
-			if(message["request_type"].asString() == "general") {
+			if(message[Json::StaticString("request_type")].asString() == "general") {
 				this->update_flood(client, 50);
 
 				Json::Value response;
-				response["type"] = "response";
-				response["code"] = message["code"];
+				response[Json::StaticString("type")] = "response";
+				response[Json::StaticString("code")] = message[Json::StaticString("code")];
 
 				auto stats = this->statistics_manager->general_statistics();
-				response["statistics"]["instances"] = to_string(stats->instances);
-				response["statistics"]["servers"] = to_string(stats->servers);
-				response["statistics"]["clients"] = to_string(stats->clients);
-				response["statistics"]["music"] = to_string(stats->bots);
+				response[Json::StaticString("statistics")]["instances"] = to_string(stats->instances);
+				response[Json::StaticString("statistics")]["servers"] = to_string(stats->servers);
+				response[Json::StaticString("statistics")]["clients"] = to_string(stats->clients);
+				response[Json::StaticString("statistics")]["music"] = to_string(stats->bots);
 
                 this->send_message(client, json_dump(response));
 				return true;
-			} else if(message["request_type"].asString() == "history" ) {
-				auto type = message["history_type"].asInt();
+			} else if(message[Json::StaticString("request_type")].asString() == "history" ) {
+				auto type = message[Json::StaticString("history_type")].asInt();
 				if(type < 0 || type > stats::HistoryStatistics::LAST_HALF_YEAR)
 					__throw_range_error("invalid range!");
 
@@ -468,42 +468,42 @@ bool WebStatistics::handle_message(const std::shared_ptr<license::web::WebStatis
 					auto history = this->statistics_manager->history((stats::HistoryStatistics::HistoryType) type);
 
 					Json::Value response;
-					response["type"] = "response";
-					response["code"] = message["code"];
+					response[Json::StaticString("type")] = "response";
+					response[Json::StaticString("code")] = message[Json::StaticString("code")];
 
-					response["history"]["timestamp"] = duration_cast<milliseconds>(history->evaluated.time_since_epoch()).count();
-					response["history"]["begin"] = duration_cast<milliseconds>(history->begin.time_since_epoch()).count();
-					response["history"]["end"] = duration_cast<milliseconds>(history->end.time_since_epoch()).count();
-					response["history"]["interval"] = duration_cast<milliseconds>(history->period).count();
+					response[Json::StaticString("history")]["timestamp"] = duration_cast<milliseconds>(history->evaluated.time_since_epoch()).count();
+					response[Json::StaticString("history")]["begin"] = duration_cast<milliseconds>(history->begin.time_since_epoch()).count();
+					response[Json::StaticString("history")]["end"] = duration_cast<milliseconds>(history->end.time_since_epoch()).count();
+					response[Json::StaticString("history")]["interval"] = duration_cast<milliseconds>(history->period).count();
 
 
 					int index;
 					auto stats = history->statistics;
-                    auto& history_data = response["history"]["data"];
+                    auto& history_data = response[Json::StaticString("history")]["data"];
                     for(index = 0; index < stats->record_count; index++) {
                         auto& indexed_data = history_data[index];
-                        indexed_data["instances_empty"] = stats->history[index].instance_empty;
-                        indexed_data["instances"] = stats->history[index].instance_online;
-                        indexed_data["servers"] = stats->history[index].servers_online;
-                        indexed_data["clients"] = stats->history[index].clients_online;
-                        indexed_data["music"] = stats->history[index].bots_online;
+                        indexed_data[Json::StaticString("instances_empty")] = stats->history[index].instance_empty;
+                        indexed_data[Json::StaticString("instances")] = stats->history[index].instance_online;
+                        indexed_data[Json::StaticString("servers")] = stats->history[index].servers_online;
+                        indexed_data[Json::StaticString("clients")] = stats->history[index].clients_online;
+                        indexed_data[Json::StaticString("music")] = stats->history[index].bots_online;
                     }
 
                     this->send_message(client, json_dump(response));
 				}).detach();
 				return true;
-			} else if(message["request_type"].asString() == "history_custom") {
-			    auto begin = std::chrono::milliseconds{message["history_begin"].asInt64()};
-                auto end = std::chrono::milliseconds{message["history_end"].asInt64()};
-                auto interval = std::chrono::milliseconds{message["history_interval"].asInt64()};
-                auto code = message["code"].asString();
+			} else if(message[Json::StaticString("request_type")].asString() == "history_custom") {
+			    auto begin = std::chrono::milliseconds{message[Json::StaticString("history_begin")].asInt64()};
+                auto end = std::chrono::milliseconds{message[Json::StaticString("history_end")].asInt64()};
+                auto interval = std::chrono::milliseconds{message[Json::StaticString("history_interval")].asInt64()};
+                auto code = message[Json::StaticString("code")].asString();
 
-                auto token = message["token"].asString();
+                auto token = message[Json::StaticString("token")].asString();
                 if(token != "blubalutsch") {
                     Json::Value response;
-                    response["type"] = "error";
-                    response["code"] = code;
-                    response["message"] = "invalid token";
+                    response[Json::StaticString("type")] = "error";
+                    response[Json::StaticString("code")] = code;
+                    response[Json::StaticString("message")] = "invalid token";
                     this->send_message(client, json_dump(response));
                     return true;
                 }
@@ -517,24 +517,24 @@ bool WebStatistics::handle_message(const std::shared_ptr<license::web::WebStatis
                     );
 
                     Json::Value response;
-                    response["type"] = "response";
-                    response["code"] = code;
+                    response[Json::StaticString("type")] = "response";
+                    response[Json::StaticString("code")] = code;
 
-                    response["history"]["timestamp"] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-                    response["history"]["begin"] = duration_cast<milliseconds>(begin).count();
-                    response["history"]["end"] = duration_cast<milliseconds>(end).count();
-                    response["history"]["interval"] = duration_cast<milliseconds>(interval).count();
+                    response[Json::StaticString("history")]["timestamp"] = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+                    response[Json::StaticString("history")]["begin"] = duration_cast<milliseconds>(begin).count();
+                    response[Json::StaticString("history")]["end"] = duration_cast<milliseconds>(end).count();
+                    response[Json::StaticString("history")]["interval"] = duration_cast<milliseconds>(interval).count();
 
 
                     int index;
-                    auto& history_data = response["history"]["data"];
+                    auto& history_data = response[Json::StaticString("history")]["data"];
                     for(index = 0; index < data->record_count; index++) {
                         auto& indexed_data = history_data[index];
-                        indexed_data["instances_empty"] = data->history[index].instance_empty;
-                        indexed_data["instances"] = data->history[index].instance_online;
-                        indexed_data["servers"] = data->history[index].servers_online;
-                        indexed_data["clients"] = data->history[index].clients_online;
-                        indexed_data["music"] = data->history[index].bots_online;
+                        indexed_data[Json::StaticString("instances_empty")] = data->history[index].instance_empty;
+                        indexed_data[Json::StaticString("instances")] = data->history[index].instance_online;
+                        indexed_data[Json::StaticString("servers")] = data->history[index].servers_online;
+                        indexed_data[Json::StaticString("clients")] = data->history[index].clients_online;
+                        indexed_data[Json::StaticString("music")] = data->history[index].bots_online;
                     }
 
                     this->send_message(client, json_dump(response));
@@ -546,18 +546,18 @@ bool WebStatistics::handle_message(const std::shared_ptr<license::web::WebStatis
 		logError(LOG_LICENSE_WEB, "[{}] Message handling throws exception: {}", client->client_prefix(), ex.what());
 
 		Json::Value response;
-		response["type"] = "error";
-		response["code"] = message["code"];
-		response["message"] = "could not execute action";
+		response[Json::StaticString("type")] = "error";
+		response[Json::StaticString("code")] = message[Json::StaticString("code")];
+		response[Json::StaticString("message")] = "could not execute action";
         this->send_message(client, json_dump(response));
 		return false;
 	}
 
 	{
 		Json::Value response;
-		response["type"] = "error";
-		response["code"] = message["code"];
-		response["message"] = "could not assign action";
+		response[Json::StaticString("type")] = "error";
+		response[Json::StaticString("code")] = message[Json::StaticString("code")];
+		response[Json::StaticString("message")] = "could not assign action";
         this->send_message(client, json_dump(response));
 	}
 	return true;
@@ -571,13 +571,13 @@ bool WebStatistics::handle_request(const std::shared_ptr<license::web::WebStatis
 	    const auto& type = request.parameters.at("request_type");
         if(type == "general") {
             Json::Value json;
-            json["type"] = "response";
+            json[Json::StaticString("type")] = "response";
             auto stats = this->statistics_manager->general_statistics();
-            json["statistics"]["instances_empty"] = to_string(stats->empty_instances);
-            json["statistics"]["instances"] = to_string(stats->instances);
-            json["statistics"]["servers"] = to_string(stats->servers);
-            json["statistics"]["clients"] = to_string(stats->clients);
-            json["statistics"]["music"] = to_string(stats->bots);
+            json[Json::StaticString("statistics")]["instances_empty"] = to_string(stats->empty_instances);
+            json[Json::StaticString("statistics")]["instances"] = to_string(stats->instances);
+            json[Json::StaticString("statistics")]["servers"] = to_string(stats->servers);
+            json[Json::StaticString("statistics")]["clients"] = to_string(stats->clients);
+            json[Json::StaticString("statistics")]["music"] = to_string(stats->bots);
             response.setHeader("data", {json_dump(json).string()});
             response.code = http::code::_200;
         }
@@ -618,8 +618,8 @@ void WebStatistics::broadcast_message(const Json::Value &value) {
 
 void WebStatistics::broadcast_notify_general_update() {
 	Json::Value message;
-	message["type"] = "notify";
-	message["target"] = "general_update";
+	message[Json::StaticString("type")] = "notify";
+	message[Json::StaticString("target")] = "general_update";
 	this->broadcast_message(message);
 }
 
