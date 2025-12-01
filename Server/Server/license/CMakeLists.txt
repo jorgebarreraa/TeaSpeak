@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 project(TeaSpeakLicence)
 
+# Force C++11 for this module (override parent CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive -Wall -Wno-sign-compare -Wno-reorder -static-libgcc -static-libstdc++")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
