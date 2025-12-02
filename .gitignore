@@ -1,0 +1,39 @@
+# Build directories
+**/out/
+**/build/
+**/_build/
+**/environment/
+
+# Downloaded libraries in Server/Root/libraries/
+Server/Root/libraries/CXXTerminal/
+Server/Root/libraries/DataPipes/
+Server/Root/libraries/StringVariable/
+Server/Root/libraries/Thread-Pool/
+Server/Root/libraries/breakpad/
+Server/Root/libraries/ed25519/
+Server/Root/libraries/event/
+Server/Root/libraries/jemalloc/
+Server/Root/libraries/jsoncpp/
+Server/Root/libraries/opus/
+Server/Root/libraries/protobuf/
+Server/Root/libraries/spdlog/
+Server/Root/libraries/tomcrypt/
+Server/Root/libraries/tommath/
+Server/Root/libraries/yaml-cpp/
+Server/Root/libraries/zstd/
+Server/Root/libraries/boringssl/
+
+# Downloaded build-helpers
+Server/Root/build-helpers/
+
+# Legacy libraries directories
+Server/libraries/
+libraries/ed25519/build/
+libraries/tomcrypt-master/out/
+libraries/tommath-develop/out/
+
+# Compiled artifacts
+*.o
+*.a
+*.so
+*.so.*
