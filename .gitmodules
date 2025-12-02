@@ -1,0 +1,78 @@
+[submodule "libraries/jsoncpp"]
+	path = libraries/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git
+	branch = master
+[submodule "libraries/Thread-Pool"]
+	path = libraries/Thread-Pool
+	url = https://git.did.science/WolverinDEV/ThreadPool.git
+	branch = master
+[submodule "libraries/tomcrypt"]
+	path = libraries/tomcrypt
+	url = https://git.did.science/TeaSpeak/libraries/tomcrypt.git
+[submodule "libraries/tommath"]
+	branch = develop
+	path = libraries/tommath
+	url = https://git.did.science/TeaSpeak/libraries/tommath.git
+[submodule "libraries/CXXTerminal"]
+	path = libraries/CXXTerminal
+	url = https://github.com/WolverinDEV/CXXTerminal.git
+	branch = master
+[submodule "libraries/opus"]
+	path = libraries/opus
+	url = https://github.com/xiph/opus
+[submodule "libraries/opusfile"]
+	path = libraries/opusfile
+	url = https://github.com/xiph/opusfile.git
+[submodule "libraries/yaml-cpp"]
+	path = libraries/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "libraries/event"]
+	path = libraries/event
+	url = https://github.com/libevent/libevent.git
+[submodule "TeaSpeak"]
+	path = TeaSpeak
+	url = https://git.did.science/TeaSpeak/Server/Server
+[submodule "libraries/spdlog"]
+	path = libraries/spdlog
+	url = https://git.did.science/TeaSpeak/libraries/spdlog.git
+[submodule "libraries/StringVariable"]
+	path = libraries/StringVariable
+	url = https://github.com/WolverinDEV/StringVariable.git
+[submodule "libraries/ed25519"]
+	path = libraries/ed25519
+	url = https://github.com/WolverinDEV/ed25519.git
+[submodule "libraries/breakpad"]
+	path = libraries/breakpad
+	url = https://chromium.googlesource.com/breakpad/breakpad
+[submodule "libraries/boringssl"]
+	path = libraries/boringssl
+	url = https://boringssl.googlesource.com/boringssl
+[submodule "libraries/protobuf"]
+	path = libraries/protobuf
+	url = https://github.com/google/protobuf.git
+	branch = 3.5.1.1
+[submodule "libraries/DataPipes"]
+	path = libraries/DataPipes
+	url = https://github.com/WolverinDEV/DataPipes.git
+[submodule "libraries/jemalloc"]
+	path = libraries/jemalloc
+	url = https://github.com/jemalloc/jemalloc.git
+	branch = dev
+[submodule "build-helpers"]
+	path = build-helpers
+	url = https://github.com/WolverinDEV/build-helpers.git
+[submodule "libraries/libnice"]
+	path = libraries/libnice
+	url = https://git.did.science/TeaSpeak/libraries/libnice-prebuild.git
+[submodule "libraries/glibc"]
+	path = libraries/glibc
+	url = https://git.did.science/TeaSpeak/libraries/glib2.0.git
+[submodule "libraries/openssl-prebuild"]
+	path = libraries/openssl-prebuild
+	url = https://git.did.science/TeaSpeak/libraries/openssl-prebuild.git
+[submodule "TeaDNS"]
+	path = TeaDNS
+	url = https://git.did.science/TeaSpeak/WebDNS.git
+[submodule "libraries/zstd"]
+	path = libraries/zstd
+	url = https://github.com/facebook/zstd.git
