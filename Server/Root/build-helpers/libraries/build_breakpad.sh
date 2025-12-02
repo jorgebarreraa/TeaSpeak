@@ -35,7 +35,7 @@ check_err_exit ${library_path} "Failed to enter build directory"
 
 ../../configure --prefix=`pwd`
 check_err_exit ${library_path} "Failed to configure"
-make CXXFLAGS="-std=c++11 ${CXX_FLAGS} -static-libgcc -static-libstdc++" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
+make CXXFLAGS="-std=c++17 ${CXX_FLAGS} -static-libgcc -static-libstdc++" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
 check_err_exit ${library_path} "Failed to build"
 make install
 check_err_exit ${library_path} "Failed to install"
