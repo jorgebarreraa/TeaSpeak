@@ -23,8 +23,8 @@ Server/Root/libraries/yaml-cpp/
 Server/Root/libraries/zstd/
 Server/Root/libraries/boringssl/
 
-# Downloaded build-helpers
-Server/Root/build-helpers/
+# Downloaded build-helpers (commented out - now tracked)
+# Server/Root/build-helpers/
 
 # Legacy libraries directories
 Server/libraries/
