@@ -18,8 +18,8 @@ cd protobuf || exit 1
 cd _build || exit 1
 cmake ../cmake/ -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_CXX_FLAGS="-std=c++11 -fPIC ${CXX_FLAGS}" -DCMAKE_C_FLAGS="${C_FLAGS}" -DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_OPTIONS} || exit 1
 make ${CMAKE_MAKE_OPTIONS} || exit 1
-sudo make install || exit 1
-#sudo ldconfig
+make install || exit 1
+#ldconfig
 
 cd ../../
 set_build_successful ${library_path}
