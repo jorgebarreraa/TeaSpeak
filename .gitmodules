@@ -7,3 +7,6 @@
 [submodule "Server/Root/build-helpers"]
 	path = Server/Root/build-helpers
 	url = https://github.com/WolverinDEV/build-helpers.git
+[submodule "Server/Root/libraries/ed25519"]
+	path = Server/Root/libraries/ed25519
+	url = https://github.com/WolverinDEV/ed25519.git
