@@ -42,6 +42,8 @@ export OPENSSL_DIR="$(pwd)/libraries/openssl-prebuild/${build_os_type}_${build_o
 export OPENSSL_LIB_DIR="${OPENSSL_DIR}/lib"
 export OPENSSL_INCLUDE_DIR="${OPENSSL_DIR}/include"
 export OPENSSL_STATIC=1
+# Disable pkg-config to force using OPENSSL_DIR
+export OPENSSL_NO_PKG_CONFIG=1
 
 # shellcheck disable=SC2154
 if [[ "$no_web" == "1" ]]; then
