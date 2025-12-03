@@ -1,6 +1,10 @@
 #!/bin/bash
 _build_helper_dir="$(pwd)/build-helpers/"
 
+# Set default build OS and architecture if not already set
+[[ -z "${build_os_type}" ]] && export build_os_type="linux"
+[[ -z "${build_os_arch}" ]] && export build_os_arch="amd64"
+
 _build_type="Debug"
 if [[ -n "$1" ]]; then
     echo "This is an automated jenkins build. Initializing variables."
