@@ -12,12 +12,25 @@ install_prefix="$(pwd)/build_libraries/"
 
 cargo update || exit 1
 
+# Verify OpenSSL environment variables are set
+if [ -z "$OPENSSL_DIR" ]; then
+    echo "ERROR: OPENSSL_DIR is not set. Please run this script from build_teaspeak.sh"
+    exit 1
+fi
+
+echo "Using OpenSSL from: $OPENSSL_DIR"
+
 # rm -r target/release/
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
 PATH="$PATH:$install_prefix/bin" \
 PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:$crypto_library_path/lib/pkgconfig/" \
+OPENSSL_DIR="$OPENSSL_DIR" \
+OPENSSL_LIB_DIR="$OPENSSL_LIB_DIR" \
+OPENSSL_INCLUDE_DIR="$OPENSSL_INCLUDE_DIR" \
+OPENSSL_STATIC="$OPENSSL_STATIC" \
+OPENSSL_NO_PKG_CONFIG="$OPENSSL_NO_PKG_CONFIG" \
 cargo rustc --release
 
 if [ $? -ne 0 ]; then
