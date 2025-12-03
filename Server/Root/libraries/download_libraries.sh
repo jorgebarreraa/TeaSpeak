@@ -37,9 +37,10 @@ clone_lib "https://github.com/WolverinDEV/StringVariable.git" "StringVariable"
 clone_lib "https://github.com/WolverinDEV/ed25519.git" "ed25519"
 clone_lib "https://chromium.googlesource.com/breakpad/breakpad" "breakpad"
 # Checkout specific commit that supports C++17 (GCC 9.4.0 compatible)
+# f032e4c3 fixes integer overflow in minidump.cc
 if [ -d "breakpad" ]; then
     echo "  Setting breakpad to C++17-compatible commit..."
-    (cd breakpad && git fetch --unshallow 2>/dev/null || true && git checkout 9ea5b228 2>/dev/null || true)
+    (cd breakpad && git fetch --unshallow 2>/dev/null || true && git checkout f032e4c3 2>/dev/null || true)
 fi
 clone_lib "https://boringssl.googlesource.com/boringssl" "boringssl"
 clone_lib "https://fuchsia.googlesource.com/third_party/protobuf" "protobuf" "v3.5.1.1"
