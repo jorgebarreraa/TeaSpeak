@@ -36,6 +36,12 @@ if [[ -n "$1" ]]; then
     fi
 fi
 
+# Configure OpenSSL for Rust/Cargo
+# Point to prebuilt OpenSSL instead of system's old 1.0.1f
+export OPENSSL_DIR="$(pwd)/libraries/openssl-prebuild/${build_os_type}_${build_os_arch}"
+export OPENSSL_LIB_DIR="${OPENSSL_DIR}/lib"
+export OPENSSL_INCLUDE_DIR="${OPENSSL_DIR}/include"
+export OPENSSL_STATIC=1
 
 # shellcheck disable=SC2154
 if [[ "$no_web" == "1" ]]; then
