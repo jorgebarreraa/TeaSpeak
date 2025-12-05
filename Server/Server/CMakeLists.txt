@@ -59,7 +59,7 @@ find_package(jsoncpp REQUIRED)
 find_package(DataPipes REQUIRED)
 find_package(Opus REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(Jemalloc REQUIRED)
+find_package(Jemalloc) # Made optional - not required for compilation
 find_package(Protobuf REQUIRED)
 message("${zstd_DIR}")
 find_package(zstd REQUIRED)

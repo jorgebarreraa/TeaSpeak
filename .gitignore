@@ -49,3 +49,5 @@ Server/Root/libraries/openssl-prebuild/
 libraries/ed25519/build/
 libraries/tomcrypt-master/out/
 libraries/tommath-develop/out/
+Server/Server/music/
+Server/Server/shared/
