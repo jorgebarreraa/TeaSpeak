@@ -2,11 +2,13 @@
 **/build/
 **/out/
 **/_build/
+**/environment/
 
-# Compiled libraries
+# Compiled artifacts
+*.o
 *.a
 *.so
-*.o
+*.so.*
 
 # Symlinks created during build
 Server/libraries/
@@ -16,3 +18,34 @@ libraries/*/build/
 libraries/*/out/
 Server/Root/libraries/*/build/
 Server/Root/libraries/*/out/
+
+# Downloaded libraries in Server/Root/libraries/
+Server/Root/libraries/CXXTerminal/
+Server/Root/libraries/DataPipes/
+Server/Root/libraries/StringVariable/
+Server/Root/libraries/Thread-Pool/
+Server/Root/libraries/breakpad/
+Server/Root/libraries/ed25519/
+Server/Root/libraries/event/
+Server/Root/libraries/jemalloc/
+Server/Root/libraries/jsoncpp/
+Server/Root/libraries/opus/
+Server/Root/libraries/protobuf/
+Server/Root/libraries/spdlog/
+Server/Root/libraries/tomcrypt/
+Server/Root/libraries/tommath/
+Server/Root/libraries/yaml-cpp/
+Server/Root/libraries/zstd/
+Server/Root/libraries/boringssl/
+Server/Root/libraries/opusfile/
+Server/Root/libraries/glibc/
+Server/Root/libraries/libnice/
+Server/Root/libraries/openssl-prebuild/
+
+# Downloaded build-helpers (commented out - now tracked)
+# Server/Root/build-helpers/
+
+# Legacy libraries directories
+libraries/ed25519/build/
+libraries/tomcrypt-master/out/
+libraries/tommath-develop/out/
