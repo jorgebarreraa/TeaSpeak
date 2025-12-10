@@ -271,7 +271,7 @@ crypto_library_path="$crypto_library_path" ./generate_shared_library.sh
 cd ../..
 
 # 5. Compilar TeaSpeak
-./build_teaspeak.sh optimized
+./build_teaspeak.sh stable
 ```
 
 ### Ahora (Automatizado):

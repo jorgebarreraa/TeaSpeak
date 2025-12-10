@@ -140,7 +140,7 @@ bash apply_submodule_fixes.sh
 cd Server/Root
 export build_os_type=linux
 export build_os_arch=amd64
-bash build_teaspeak.sh optimized
+bash build_teaspeak.sh stable
 ```
 
 Deberías ver:
