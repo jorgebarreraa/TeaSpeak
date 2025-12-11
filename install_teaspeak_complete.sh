@@ -9,12 +9,17 @@
 #
 #  Lo que hace:
 #  1. Verifica el sistema operativo
-#  2. Instala TODAS las dependencias (incluyendo meson, ninja-build)
-#  3. Clona el repositorio con la rama correcta y TODOS los submódulos
-#  4. Arregla permisos de scripts
-#  5. Compila todas las librerías necesarias
-#  6. Compila TeaSpeak en modo STABLE
-#  7. Verifica que la compilación fue exitosa
+#  2. Instala TODAS las dependencias (gcc, cmake, meson, autoconf, etc)
+#  3. Instala Rust (cargo, rustc) - requerido para compilación
+#  4. Deshabilita ld.gold (previene errores de compilación)
+#  5. Verifica versiones de herramientas (GCC 13+, OpenSSL 3.0, etc)
+#  6. Clona el repositorio con la rama correcta y TODOS los submódulos
+#  7. Arregla permisos de scripts
+#  8. Compila todas las librerías necesarias con -fPIC
+#  9. Configura entorno de compilación
+#  10. Compila TeaSpeak en modo STABLE
+#  11. Verifica que la compilación fue exitosa
+#  12. Muestra resumen final con ubicación de binarios
 #
 #  Uso:
 #    bash install_teaspeak_complete.sh [directorio_instalacion]
@@ -144,7 +149,10 @@ install_dependencies() {
         curl \
         wget \
         meson \
-        ninja-build
+        ninja-build \
+        autoconf \
+        automake \
+        libtool
 
     log_info "Instalando librerías del sistema..."
     $SUDO apt install -y \
@@ -159,10 +167,66 @@ install_dependencies() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 3: Verificar versiones de herramientas
+# PASO 3: Instalar Rust (cargo, rustc)
+# ═══════════════════════════════════════════════════════════════════════
+install_rust() {
+    log_step "PASO 3: Instalando Rust (cargo, rustc)"
+
+    # Verificar si Rust ya está instalado
+    if command -v cargo &> /dev/null && command -v rustc &> /dev/null; then
+        log_info "Rust ya está instalado:"
+        log_info "  cargo: $(cargo --version)"
+        log_info "  rustc: $(rustc --version)"
+        log_success "Rust ya disponible, saltando instalación"
+        return
+    fi
+
+    log_info "Descargando e instalando Rust..."
+    log_info "Esto puede tomar unos minutos..."
+
+    # Descargar y ejecutar rustup
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    # Cargar el entorno de Rust
+    if [[ -f "$HOME/.cargo/env" ]]; then
+        source "$HOME/.cargo/env"
+        log_success "Rust instalado correctamente"
+        log_info "  cargo: $(cargo --version)"
+        log_info "  rustc: $(rustc --version)"
+    else
+        log_error "Error al instalar Rust"
+        exit 1
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 4: Deshabilitar ld.gold (causa problemas)
+# ═══════════════════════════════════════════════════════════════════════
+disable_ld_gold() {
+    log_step "PASO 4: Verificando y Deshabilitando ld.gold"
+
+    if [[ -f /usr/bin/ld.gold ]]; then
+        log_warning "ld.gold detectado - puede causar problemas de compilación"
+        log_info "Deshabilitando ld.gold..."
+
+        if [[ $EUID -ne 0 ]]; then
+            SUDO="sudo"
+        else
+            SUDO=""
+        fi
+
+        $SUDO mv /usr/bin/ld.gold /usr/bin/NOT_USED_ld.gold 2>/dev/null || true
+        log_success "ld.gold deshabilitado"
+    else
+        log_success "ld.gold no está presente (OK)"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 5: Verificar versiones de herramientas
 # ═══════════════════════════════════════════════════════════════════════
 verify_tools() {
-    log_step "PASO 3: Verificando Versiones de Herramientas"
+    log_step "PASO 5: Verificando Versiones de Herramientas"
 
     local all_ok=true
 
@@ -248,6 +312,32 @@ verify_tools() {
         all_ok=false
     fi
 
+    # Verificar Rust (cargo, rustc)
+    if command -v cargo &> /dev/null; then
+        log_info "Cargo: $(cargo --version)"
+        log_success "Cargo instalado"
+    else
+        log_error "Cargo no encontrado"
+        all_ok=false
+    fi
+
+    if command -v rustc &> /dev/null; then
+        log_info "Rustc: $(rustc --version)"
+        log_success "Rustc instalado"
+    else
+        log_error "Rustc no encontrado"
+        all_ok=false
+    fi
+
+    # Verificar autoconf
+    if command -v autoconf &> /dev/null; then
+        log_info "Autoconf: $(autoconf --version | head -1)"
+        log_success "Autoconf instalado"
+    else
+        log_error "Autoconf no encontrado"
+        all_ok=false
+    fi
+
     if [[ "$all_ok" == false ]]; then
         log_error "Algunas verificaciones fallaron. Por favor revisa los errores arriba."
         exit 1
@@ -257,10 +347,10 @@ verify_tools() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 4: Clonar repositorio
+# PASO 6: Clonar repositorio
 # ═══════════════════════════════════════════════════════════════════════
 clone_repository() {
-    log_step "PASO 4: Clonando Repositorio TeaSpeak"
+    log_step "PASO 6: Clonando Repositorio TeaSpeak"
 
     log_info "Directorio de instalación: $INSTALL_DIR"
 
@@ -306,10 +396,10 @@ clone_repository() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 5: Arreglar permisos de scripts
+# PASO 7: Arreglar permisos de scripts
 # ═══════════════════════════════════════════════════════════════════════
 fix_permissions() {
-    log_step "PASO 5: Arreglando Permisos de Scripts"
+    log_step "PASO 7: Arreglando Permisos de Scripts"
 
     cd "$INSTALL_DIR"
 
@@ -320,10 +410,10 @@ fix_permissions() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 6: Compilar librerías
+# PASO 8: Compilar librerías
 # ═══════════════════════════════════════════════════════════════════════
 compile_libraries() {
-    log_step "PASO 6: Compilando Librerías Necesarias"
+    log_step "PASO 8: Compilando Librerías Necesarias"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -392,10 +482,10 @@ compile_libraries() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 7: Configurar entorno
+# PASO 9: Configurar entorno
 # ═══════════════════════════════════════════════════════════════════════
 setup_environment() {
-    log_step "PASO 7: Configurando Entorno de Compilación"
+    log_step "PASO 9: Configurando Entorno de Compilación"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -415,10 +505,10 @@ setup_environment() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 8: Compilar TeaSpeak
+# PASO 10: Compilar TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════
 compile_teaspeak() {
-    log_step "PASO 8: Compilando TeaSpeak Server (Modo STABLE)"
+    log_step "PASO 10: Compilando TeaSpeak Server (Modo STABLE)"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -450,10 +540,10 @@ compile_teaspeak() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 9: Verificar binarios
+# PASO 11: Verificar binarios
 # ═══════════════════════════════════════════════════════════════════════
 verify_build() {
-    log_step "PASO 9: Verificando Binarios Compilados"
+    log_step "PASO 11: Verificando Binarios Compilados"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -485,7 +575,7 @@ verify_build() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 10: Resumen final
+# PASO 12: Resumen final
 # ═══════════════════════════════════════════════════════════════════════
 show_summary() {
     log_step "✅ INSTALACIÓN COMPLETA"
@@ -555,6 +645,8 @@ main() {
     # Ejecutar todos los pasos
     check_system
     install_dependencies
+    install_rust
+    disable_ld_gold
     verify_tools
     clone_repository
     fix_permissions
