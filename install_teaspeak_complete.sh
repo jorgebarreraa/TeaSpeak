@@ -1,0 +1,513 @@
+#!/bin/bash
+#
+# ═══════════════════════════════════════════════════════════════════════
+#  Script de Instalación Completa de TeaSpeak
+# ═══════════════════════════════════════════════════════════════════════
+#
+#  Este script instala AUTOMÁTICAMENTE todo el entorno necesario para
+#  compilar TeaSpeak Server con todas las características habilitadas.
+#
+#  Lo que hace:
+#  1. Verifica el sistema operativo
+#  2. Instala todas las dependencias del sistema
+#  3. Clona el repositorio con todos los submódulos
+#  4. Compila todas las librerías necesarias
+#  5. Compila TeaSpeak en modo STABLE
+#  6. Verifica que la compilación fue exitosa
+#
+#  Uso:
+#    bash install_teaspeak_complete.sh [directorio_instalacion]
+#
+#  Ejemplo:
+#    bash install_teaspeak_complete.sh /opt/TeaSpeak
+#    bash install_teaspeak_complete.sh ~/TeaSpeak
+#    bash install_teaspeak_complete.sh   # Usa directorio actual
+#
+# ═══════════════════════════════════════════════════════════════════════
+
+set -e  # Salir si hay algún error
+
+# ═══════════════════════════════════════════════════════════════════════
+# Colores para output
+# ═══════════════════════════════════════════════════════════════════════
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# ═══════════════════════════════════════════════════════════════════════
+# Funciones de logging
+# ═══════════════════════════════════════════════════════════════════════
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[✓]${NC} $1"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[⚠]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[✗]${NC} $1"
+}
+
+log_step() {
+    echo ""
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+    echo -e "${CYAN} $1${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# Variables globales
+# ═══════════════════════════════════════════════════════════════════════
+INSTALL_DIR="${1:-$(pwd)/TeaSpeak}"
+REPO_URL="https://github.com/jorgebarreraa/TeaSpeak.git"
+REQUIRED_OPENSSL_VERSION="3.0"
+MIN_GCC_VERSION="13"
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 1: Verificar sistema operativo
+# ═══════════════════════════════════════════════════════════════════════
+check_system() {
+    log_step "PASO 1: Verificando Sistema Operativo"
+
+    if [[ ! -f /etc/os-release ]]; then
+        log_error "No se pudo detectar el sistema operativo"
+        exit 1
+    fi
+
+    . /etc/os-release
+
+    log_info "Sistema: $NAME $VERSION"
+    log_info "Arquitectura: $(uname -m)"
+
+    # Verificar que sea Linux
+    if [[ "$(uname -s)" != "Linux" ]]; then
+        log_error "Este script solo funciona en Linux"
+        exit 1
+    fi
+
+    # Verificar arquitectura
+    if [[ "$(uname -m)" != "x86_64" ]]; then
+        log_warning "Arquitectura no probada: $(uname -m)"
+        log_warning "Este script fue probado en x86_64"
+    fi
+
+    # Verificar Ubuntu/Debian
+    if [[ "$ID" == "ubuntu" ]] || [[ "$ID" == "debian" ]]; then
+        log_success "Sistema operativo compatible detectado"
+    else
+        log_warning "Sistema $ID no probado oficialmente"
+        log_warning "Puede que necesites ajustar los nombres de paquetes"
+        read -p "¿Continuar de todos modos? (y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 2: Instalar dependencias del sistema
+# ═══════════════════════════════════════════════════════════════════════
+install_dependencies() {
+    log_step "PASO 2: Instalando Dependencias del Sistema"
+
+    # Verificar si tenemos permisos de root
+    if [[ $EUID -ne 0 ]]; then
+        log_info "Necesitas permisos de sudo para instalar paquetes"
+        SUDO="sudo"
+    else
+        SUDO=""
+    fi
+
+    log_info "Actualizando lista de paquetes..."
+    $SUDO apt update
+
+    log_info "Instalando herramientas de compilación..."
+    $SUDO apt install -y \
+        build-essential \
+        gcc \
+        g++ \
+        cmake \
+        make \
+        git \
+        pkg-config \
+        curl \
+        wget
+
+    log_info "Instalando librerías del sistema..."
+    $SUDO apt install -y \
+        libssl-dev \
+        libmysqlclient-dev \
+        zlib1g-dev \
+        python3 \
+        python3-dev
+
+    log_success "Todas las dependencias instaladas"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 3: Verificar versiones de herramientas
+# ═══════════════════════════════════════════════════════════════════════
+verify_tools() {
+    log_step "PASO 3: Verificando Versiones de Herramientas"
+
+    local all_ok=true
+
+    # Verificar GCC
+    if command -v gcc &> /dev/null; then
+        gcc_version=$(gcc -dumpversion | cut -d. -f1)
+        log_info "GCC versión: $(gcc --version | head -1)"
+
+        if [[ $gcc_version -ge $MIN_GCC_VERSION ]]; then
+            log_success "GCC versión OK (>= $MIN_GCC_VERSION)"
+        else
+            log_error "GCC versión $gcc_version es muy antigua (se requiere >= $MIN_GCC_VERSION)"
+            all_ok=false
+        fi
+    else
+        log_error "GCC no encontrado"
+        all_ok=false
+    fi
+
+    # Verificar OpenSSL
+    if command -v openssl &> /dev/null; then
+        openssl_version=$(openssl version)
+        log_info "OpenSSL: $openssl_version"
+
+        if [[ $openssl_version == *"$REQUIRED_OPENSSL_VERSION"* ]]; then
+            log_success "OpenSSL versión OK ($REQUIRED_OPENSSL_VERSION.x)"
+        else
+            log_error "OpenSSL versión incorrecta. Se requiere $REQUIRED_OPENSSL_VERSION.x"
+            log_error "Tienes: $openssl_version"
+            all_ok=false
+        fi
+    else
+        log_error "OpenSSL no encontrado"
+        all_ok=false
+    fi
+
+    # Verificar CMake
+    if command -v cmake &> /dev/null; then
+        log_info "CMake: $(cmake --version | head -1)"
+        log_success "CMake instalado"
+    else
+        log_error "CMake no encontrado"
+        all_ok=false
+    fi
+
+    # Verificar Git
+    if command -v git &> /dev/null; then
+        log_info "Git: $(git --version)"
+        log_success "Git instalado"
+    else
+        log_error "Git no encontrado"
+        all_ok=false
+    fi
+
+    # Verificar librerías
+    if pkg-config --exists openssl; then
+        log_success "libssl-dev instalado"
+    else
+        log_error "libssl-dev no encontrado"
+        all_ok=false
+    fi
+
+    if pkg-config --exists mysqlclient; then
+        log_success "libmysqlclient-dev instalado"
+    else
+        log_error "libmysqlclient-dev no encontrado"
+        all_ok=false
+    fi
+
+    if [[ "$all_ok" == false ]]; then
+        log_error "Algunas verificaciones fallaron. Por favor revisa los errores arriba."
+        exit 1
+    fi
+
+    log_success "Todas las herramientas verificadas correctamente"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 4: Clonar repositorio
+# ═══════════════════════════════════════════════════════════════════════
+clone_repository() {
+    log_step "PASO 4: Clonando Repositorio TeaSpeak"
+
+    log_info "Directorio de instalación: $INSTALL_DIR"
+
+    if [[ -d "$INSTALL_DIR" ]]; then
+        log_warning "El directorio $INSTALL_DIR ya existe"
+        read -p "¿Eliminar y clonar de nuevo? (y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Eliminando directorio existente..."
+            rm -rf "$INSTALL_DIR"
+        else
+            log_info "Usando directorio existente"
+            cd "$INSTALL_DIR"
+            return
+        fi
+    fi
+
+    log_info "Clonando desde $REPO_URL ..."
+    log_info "Esto puede tomar varios minutos..."
+
+    git clone --recurse-submodules "$REPO_URL" "$INSTALL_DIR"
+
+    cd "$INSTALL_DIR"
+
+    log_success "Repositorio clonado exitosamente"
+    log_info "Total de submódulos: $(git submodule status | wc -l)"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 5: Compilar librerías
+# ═══════════════════════════════════════════════════════════════════════
+compile_libraries() {
+    log_step "PASO 5: Compilando Librerías Necesarias"
+
+    cd "$INSTALL_DIR/Server/Root"
+
+    # Las librerías más importantes que necesitan compilarse con -fPIC
+    local libraries=(
+        "StringVariable"
+        "jsoncpp"
+        "event"
+    )
+
+    for lib in "${libraries[@]}"; do
+        if [[ -d "libraries/$lib" ]]; then
+            log_info "Compilando $lib..."
+
+            case $lib in
+                "StringVariable")
+                    cd "libraries/StringVariable"
+                    rm -rf out/linux_amd64
+                    mkdir -p out/linux_amd64
+                    cd out/linux_amd64
+                    cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+                    make -j$(nproc)
+                    $SUDO make install 2>/dev/null || make install
+                    cd ../../..
+                    log_success "$lib compilado"
+                    ;;
+
+                "jsoncpp")
+                    cd "libraries/jsoncpp"
+                    rm -rf _build/linux_amd64
+                    mkdir -p _build/linux_amd64
+                    cd _build/linux_amd64
+                    cmake ../.. -DCMAKE_BUILD_TYPE=Release \
+                        -DCMAKE_CXX_FLAGS="-std=c++17 -fPIC" \
+                        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+                        -DJSONCPP_WITH_TESTS=OFF
+                    make -j$(nproc)
+                    $SUDO make install 2>/dev/null || make install
+                    cd ../../..
+                    log_success "$lib compilado"
+                    ;;
+
+                "event")
+                    cd "libraries/event"
+                    rm -rf _build/linux_amd64
+                    mkdir -p _build/linux_amd64
+                    cd _build/linux_amd64
+                    cmake ../.. -DCMAKE_BUILD_TYPE=Release \
+                        -DCMAKE_C_FLAGS="-fPIC -O3" \
+                        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+                        -DEVENT__DISABLE_TESTS=ON \
+                        -DEVENT__DISABLE_SAMPLES=ON \
+                        -DEVENT__DISABLE_BENCHMARK=ON
+                    make -j$(nproc)
+                    make install
+                    cd ../../..
+                    log_success "$lib compilado"
+                    ;;
+            esac
+        else
+            log_warning "$lib no encontrado, saltando..."
+        fi
+    done
+
+    log_success "Todas las librerías compiladas"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 6: Configurar entorno
+# ═══════════════════════════════════════════════════════════════════════
+setup_environment() {
+    log_step "PASO 6: Configurando Entorno de Compilación"
+
+    cd "$INSTALL_DIR/Server/Root"
+
+    # Verificar y ejecutar setup_environment.sh si existe
+    if [[ -f "setup_environment.sh" ]]; then
+        log_info "Ejecutando setup_environment.sh..."
+        bash setup_environment.sh
+        log_success "Entorno configurado"
+    else
+        log_info "Configurando manualmente..."
+
+        export build_os_type=linux
+        export build_os_arch=amd64
+
+        log_success "Variables de entorno exportadas"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 7: Compilar TeaSpeak
+# ═══════════════════════════════════════════════════════════════════════
+compile_teaspeak() {
+    log_step "PASO 7: Compilando TeaSpeak Server (Modo STABLE)"
+
+    cd "$INSTALL_DIR/Server/Root"
+
+    log_info "Esto tomará varios minutos (10-20 min aproximadamente)..."
+    log_info "Usando $(nproc) núcleos de CPU"
+
+    # Usar el script de compilación automática si existe
+    if [[ -f "compile_teaspeak_auto.sh" ]]; then
+        log_info "Usando script de compilación automática..."
+        bash compile_teaspeak_auto.sh 2>&1 | tee /tmp/teaspeak_compile.log
+    else
+        # Compilación manual
+        log_info "Compilando manualmente..."
+        export build_os_type=linux
+        export build_os_arch=amd64
+
+        bash build_teaspeak.sh stable 2>&1 | tee /tmp/teaspeak_compile.log
+    fi
+
+    # Verificar si la compilación fue exitosa
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+        log_success "TeaSpeak compilado exitosamente!"
+    else
+        log_error "La compilación falló. Ver /tmp/teaspeak_compile.log para detalles"
+        exit 1
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 8: Verificar binarios
+# ═══════════════════════════════════════════════════════════════════════
+verify_build() {
+    log_step "PASO 8: Verificando Binarios Compilados"
+
+    cd "$INSTALL_DIR/Server/Root"
+
+    local binaries=(
+        "TeaSpeak/Server/server/out/linux_amd64/TeaSpeakServer"
+        "TeaSpeak/MusicBot/provider/ffmpeg/out/linux_amd64/libProviderFFMpeg.so"
+        "TeaSpeak/MusicBot/provider/yt/out/linux_amd64/libProviderYT.so"
+        "TeaSpeak/MusicBot/out/linux_amd64/libTeaMusic.so"
+    )
+
+    local all_found=true
+
+    for binary in "${binaries[@]}"; do
+        if [[ -f "$binary" ]]; then
+            size=$(du -h "$binary" | cut -f1)
+            log_success "Encontrado: $binary ($size)"
+        else
+            log_error "No encontrado: $binary"
+            all_found=false
+        fi
+    done
+
+    if [[ "$all_found" == true ]]; then
+        log_success "Todos los binarios principales encontrados"
+    else
+        log_warning "Algunos binarios no fueron encontrados"
+        log_warning "La compilación puede haber sido parcial"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 9: Resumen final
+# ═══════════════════════════════════════════════════════════════════════
+show_summary() {
+    log_step "✅ INSTALACIÓN COMPLETA"
+
+    echo ""
+    echo -e "${GREEN}╔═══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}║                 TEASPEAK INSTALADO EXITOSAMENTE           ║${NC}"
+    echo -e "${GREEN}╚═══════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+
+    log_info "Directorio de instalación:"
+    echo "  $INSTALL_DIR"
+    echo ""
+
+    log_info "Binario principal:"
+    echo "  $INSTALL_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64/TeaSpeakServer"
+    echo ""
+
+    log_info "Para ejecutar TeaSpeak:"
+    echo "  cd $INSTALL_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64"
+    echo "  ./TeaSpeakServer"
+    echo ""
+
+    log_info "Para recompilar en el futuro:"
+    echo "  cd $INSTALL_DIR/Server/Root"
+    echo "  bash compile_teaspeak_auto.sh"
+    echo ""
+
+    log_info "Logs de compilación guardados en:"
+    echo "  /tmp/teaspeak_compile.log"
+    echo ""
+
+    log_success "¡Todo listo para usar TeaSpeak!"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# FUNCIÓN PRINCIPAL
+# ═══════════════════════════════════════════════════════════════════════
+main() {
+    clear
+
+    echo -e "${CYAN}"
+    echo "╔═══════════════════════════════════════════════════════════╗"
+    echo "║     INSTALADOR AUTOMÁTICO DE TEASPEAK SERVER             ║"
+    echo "║                                                           ║"
+    echo "║  Este script instalará TODAS las dependencias y          ║"
+    echo "║  compilará TeaSpeak completamente de forma automática    ║"
+    echo "╚═══════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    echo ""
+
+    log_info "Directorio de instalación: $INSTALL_DIR"
+    log_info "Tiempo estimado: 15-30 minutos"
+    echo ""
+
+    read -p "¿Continuar con la instalación? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Instalación cancelada"
+        exit 0
+    fi
+
+    # Ejecutar todos los pasos
+    check_system
+    install_dependencies
+    verify_tools
+    clone_repository
+    compile_libraries
+    setup_environment
+    compile_teaspeak
+    verify_build
+    show_summary
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# EJECUCIÓN
+# ═══════════════════════════════════════════════════════════════════════
+main "$@"
