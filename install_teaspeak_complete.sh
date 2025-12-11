@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ═══════════════════════════════════════════════════════════════════════
-#  Script de Instalación Completa de TeaSpeak
+#  Script de Instalación Completa de TeaSpeak - CORREGIDO
 # ═══════════════════════════════════════════════════════════════════════
 #
 #  Este script instala AUTOMÁTICAMENTE todo el entorno necesario para
@@ -9,11 +9,12 @@
 #
 #  Lo que hace:
 #  1. Verifica el sistema operativo
-#  2. Instala todas las dependencias del sistema
-#  3. Clona el repositorio con todos los submódulos
-#  4. Compila todas las librerías necesarias
-#  5. Compila TeaSpeak en modo STABLE
-#  6. Verifica que la compilación fue exitosa
+#  2. Instala TODAS las dependencias (incluyendo meson, ninja-build)
+#  3. Clona el repositorio con la rama correcta y TODOS los submódulos
+#  4. Arregla permisos de scripts
+#  5. Compila todas las librerías necesarias
+#  6. Compila TeaSpeak en modo STABLE
+#  7. Verifica que la compilación fue exitosa
 #
 #  Uso:
 #    bash install_teaspeak_complete.sh [directorio_instalacion]
@@ -21,7 +22,7 @@
 #  Ejemplo:
 #    bash install_teaspeak_complete.sh /opt/TeaSpeak
 #    bash install_teaspeak_complete.sh ~/TeaSpeak
-#    bash install_teaspeak_complete.sh   # Usa directorio actual
+#    bash install_teaspeak_complete.sh   # Usa /opt/TeaSpeak por defecto
 #
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -66,8 +67,9 @@ log_step() {
 # ═══════════════════════════════════════════════════════════════════════
 # Variables globales
 # ═══════════════════════════════════════════════════════════════════════
-INSTALL_DIR="${1:-$(pwd)/TeaSpeak}"
+INSTALL_DIR="${1:-/opt/TeaSpeak}"
 REPO_URL="https://github.com/jorgebarreraa/TeaSpeak.git"
+REPO_BRANCH="claude/merge-to-main-01954FhCQayunKQ1gHcJhGhw"
 REQUIRED_OPENSSL_VERSION="3.0"
 MIN_GCC_VERSION="13"
 
@@ -140,7 +142,9 @@ install_dependencies() {
         git \
         pkg-config \
         curl \
-        wget
+        wget \
+        meson \
+        ninja-build
 
     log_info "Instalando librerías del sistema..."
     $SUDO apt install -y \
@@ -148,7 +152,8 @@ install_dependencies() {
         libmysqlclient-dev \
         zlib1g-dev \
         python3 \
-        python3-dev
+        python3-dev \
+        python3-pip
 
     log_success "Todas las dependencias instaladas"
 }
@@ -203,6 +208,15 @@ verify_tools() {
         all_ok=false
     fi
 
+    # Verificar Meson
+    if command -v meson &> /dev/null; then
+        log_info "Meson: $(meson --version)"
+        log_success "Meson instalado"
+    else
+        log_error "Meson no encontrado"
+        all_ok=false
+    fi
+
     # Verificar Git
     if command -v git &> /dev/null; then
         log_info "Git: $(git --version)"
@@ -224,6 +238,13 @@ verify_tools() {
         log_success "libmysqlclient-dev instalado"
     else
         log_error "libmysqlclient-dev no encontrado"
+        all_ok=false
+    fi
+
+    if pkg-config --exists zlib; then
+        log_success "zlib1g-dev instalado"
+    else
+        log_error "zlib1g-dev no encontrado"
         all_ok=false
     fi
 
@@ -253,26 +274,56 @@ clone_repository() {
         else
             log_info "Usando directorio existente"
             cd "$INSTALL_DIR"
+
+            # Inicializar submódulos si no están
+            log_info "Verificando submódulos..."
+            git submodule update --init --recursive
+
             return
         fi
     fi
 
-    log_info "Clonando desde $REPO_URL ..."
+    log_info "Clonando desde $REPO_URL (rama: $REPO_BRANCH)..."
     log_info "Esto puede tomar varios minutos..."
 
-    git clone --recurse-submodules "$REPO_URL" "$INSTALL_DIR"
+    # Clonar con la rama correcta y submódulos
+    git clone -b "$REPO_BRANCH" --recurse-submodules "$REPO_URL" "$INSTALL_DIR"
 
     cd "$INSTALL_DIR"
 
     log_success "Repositorio clonado exitosamente"
-    log_info "Total de submódulos: $(git submodule status | wc -l)"
+
+    # Verificar submódulos
+    submodule_count=$(git submodule status | wc -l)
+    log_info "Total de submódulos: $submodule_count"
+
+    if [[ $submodule_count -eq 0 ]]; then
+        log_warning "No se detectaron submódulos, inicializando..."
+        git submodule update --init --recursive
+        submodule_count=$(git submodule status | wc -l)
+        log_info "Submódulos inicializados: $submodule_count"
+    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 5: Compilar librerías
+# PASO 5: Arreglar permisos de scripts
+# ═══════════════════════════════════════════════════════════════════════
+fix_permissions() {
+    log_step "PASO 5: Arreglando Permisos de Scripts"
+
+    cd "$INSTALL_DIR"
+
+    log_info "Dando permisos de ejecución a todos los scripts .sh ..."
+    find . -name "*.sh" -exec chmod +x {} \;
+
+    log_success "Permisos arreglados"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 6: Compilar librerías
 # ═══════════════════════════════════════════════════════════════════════
 compile_libraries() {
-    log_step "PASO 5: Compilando Librerías Necesarias"
+    log_step "PASO 6: Compilando Librerías Necesarias"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -333,18 +384,18 @@ compile_libraries() {
                     ;;
             esac
         else
-            log_warning "$lib no encontrado, saltando..."
+            log_warning "$lib no encontrado en libraries/, saltando..."
         fi
     done
 
-    log_success "Todas las librerías compiladas"
+    log_success "Compilación de librerías completada"
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 6: Configurar entorno
+# PASO 7: Configurar entorno
 # ═══════════════════════════════════════════════════════════════════════
 setup_environment() {
-    log_step "PASO 6: Configurando Entorno de Compilación"
+    log_step "PASO 7: Configurando Entorno de Compilación"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -364,27 +415,27 @@ setup_environment() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 7: Compilar TeaSpeak
+# PASO 8: Compilar TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════
 compile_teaspeak() {
-    log_step "PASO 7: Compilando TeaSpeak Server (Modo STABLE)"
+    log_step "PASO 8: Compilando TeaSpeak Server (Modo STABLE)"
 
     cd "$INSTALL_DIR/Server/Root"
 
     log_info "Esto tomará varios minutos (10-20 min aproximadamente)..."
     log_info "Usando $(nproc) núcleos de CPU"
 
-    # Usar el script de compilación automática si existe
-    if [[ -f "compile_teaspeak_auto.sh" ]]; then
-        log_info "Usando script de compilación automática..."
-        bash compile_teaspeak_auto.sh 2>&1 | tee /tmp/teaspeak_compile.log
-    else
-        # Compilación manual
-        log_info "Compilando manualmente..."
-        export build_os_type=linux
-        export build_os_arch=amd64
+    # Exportar variables
+    export build_os_type=linux
+    export build_os_arch=amd64
 
+    # Usar el script de compilación
+    if [[ -f "build_teaspeak.sh" ]]; then
+        log_info "Usando build_teaspeak.sh..."
         bash build_teaspeak.sh stable 2>&1 | tee /tmp/teaspeak_compile.log
+    else
+        log_error "No se encontró build_teaspeak.sh"
+        exit 1
     fi
 
     # Verificar si la compilación fue exitosa
@@ -392,15 +443,17 @@ compile_teaspeak() {
         log_success "TeaSpeak compilado exitosamente!"
     else
         log_error "La compilación falló. Ver /tmp/teaspeak_compile.log para detalles"
+        log_error "Últimas 50 líneas del log:"
+        tail -50 /tmp/teaspeak_compile.log
         exit 1
     fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 8: Verificar binarios
+# PASO 9: Verificar binarios
 # ═══════════════════════════════════════════════════════════════════════
 verify_build() {
-    log_step "PASO 8: Verificando Binarios Compilados"
+    log_step "PASO 9: Verificando Binarios Compilados"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -418,7 +471,7 @@ verify_build() {
             size=$(du -h "$binary" | cut -f1)
             log_success "Encontrado: $binary ($size)"
         else
-            log_error "No encontrado: $binary"
+            log_warning "No encontrado: $binary"
             all_found=false
         fi
     done
@@ -432,7 +485,7 @@ verify_build() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 9: Resumen final
+# PASO 10: Resumen final
 # ═══════════════════════════════════════════════════════════════════════
 show_summary() {
     log_step "✅ INSTALACIÓN COMPLETA"
@@ -458,7 +511,9 @@ show_summary() {
 
     log_info "Para recompilar en el futuro:"
     echo "  cd $INSTALL_DIR/Server/Root"
-    echo "  bash compile_teaspeak_auto.sh"
+    echo "  export build_os_type=linux"
+    echo "  export build_os_arch=amd64"
+    echo "  bash build_teaspeak.sh stable"
     echo ""
 
     log_info "Logs de compilación guardados en:"
@@ -477,6 +532,7 @@ main() {
     echo -e "${CYAN}"
     echo "╔═══════════════════════════════════════════════════════════╗"
     echo "║     INSTALADOR AUTOMÁTICO DE TEASPEAK SERVER             ║"
+    echo "║                    VERSIÓN CORREGIDA                      ║"
     echo "║                                                           ║"
     echo "║  Este script instalará TODAS las dependencias y          ║"
     echo "║  compilará TeaSpeak completamente de forma automática    ║"
@@ -485,6 +541,7 @@ main() {
     echo ""
 
     log_info "Directorio de instalación: $INSTALL_DIR"
+    log_info "Rama de GitHub: $REPO_BRANCH"
     log_info "Tiempo estimado: 15-30 minutos"
     echo ""
 
@@ -500,6 +557,7 @@ main() {
     install_dependencies
     verify_tools
     clone_repository
+    fix_permissions
     compile_libraries
     setup_environment
     compile_teaspeak
