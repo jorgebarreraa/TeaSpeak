@@ -26,6 +26,11 @@ Server/Root/libraries/boringssl/
 # Downloaded build-helpers (commented out - now tracked)
 # Server/Root/build-helpers/
 
+# Migration directories (contain their own .git)
+github-migration/
+Server/Server/music/
+Server/Server/shared/
+
 # Legacy libraries directories
 Server/libraries/
 libraries/ed25519/build/
