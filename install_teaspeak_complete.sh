@@ -415,7 +415,21 @@ fix_permissions() {
 compile_libraries() {
     log_step "PASO 8: Compilando Librerías Necesarias"
 
-    cd "$INSTALL_DIR/Server/Root"
+    cd "$INSTALL_DIR/Server/Root/libraries"
+
+    # Verificar si tenemos permisos de sudo
+    if [[ $EUID -ne 0 ]]; then
+        SUDO="sudo"
+    else
+        SUDO=""
+    fi
+
+    # Exportar variables de entorno para los scripts de compilación
+    export CXX_FLAGS="-fPIC"
+    export C_FLAGS="-fPIC"
+    export CMAKE_BUILD_TYPE="Release"
+    export CMAKE_OPTIONS=""
+    export CMAKE_MAKE_OPTIONS="-j$(nproc)"
 
     # Las librerías más importantes que necesitan compilarse con -fPIC
     local libraries=(
@@ -425,58 +439,34 @@ compile_libraries() {
     )
 
     for lib in "${libraries[@]}"; do
-        if [[ -d "libraries/$lib" ]]; then
+        if [[ -d "$lib" ]]; then
             log_info "Compilando $lib..."
 
-            case $lib in
-                "StringVariable")
-                    cd "libraries/StringVariable"
-                    rm -rf out/linux_amd64
-                    mkdir -p out/linux_amd64
-                    cd out/linux_amd64
-                    cmake ../.. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-                    make -j$(nproc)
-                    $SUDO make install 2>/dev/null || make install
-                    cd ../../..
-                    log_success "$lib compilado"
-                    ;;
+            # Crear directorio build si no existe
+            mkdir -p "$lib/build"
 
-                "jsoncpp")
-                    cd "libraries/jsoncpp"
-                    rm -rf _build/linux_amd64
-                    mkdir -p _build/linux_amd64
-                    cd _build/linux_amd64
-                    cmake ../.. -DCMAKE_BUILD_TYPE=Release \
-                        -DCMAKE_CXX_FLAGS="-std=c++17 -fPIC" \
-                        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-                        -DJSONCPP_WITH_TESTS=OFF
-                    make -j$(nproc)
-                    $SUDO make install 2>/dev/null || make install
-                    cd ../../..
-                    log_success "$lib compilado"
-                    ;;
+            # Usar el script de compilación oficial del proyecto
+            if [[ -f "build_${lib,,}.sh" ]]; then
+                log_info "Usando script oficial build_${lib,,}.sh..."
+                bash "build_${lib,,}.sh" 2>&1 | tee "/tmp/build_${lib}.log"
 
-                "event")
-                    cd "libraries/event"
-                    rm -rf _build/linux_amd64
-                    mkdir -p _build/linux_amd64
-                    cd _build/linux_amd64
-                    cmake ../.. -DCMAKE_BUILD_TYPE=Release \
-                        -DCMAKE_C_FLAGS="-fPIC -O3" \
-                        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-                        -DEVENT__DISABLE_TESTS=ON \
-                        -DEVENT__DISABLE_SAMPLES=ON \
-                        -DEVENT__DISABLE_BENCHMARK=ON
-                    make -j$(nproc)
-                    make install
-                    cd ../../..
-                    log_success "$lib compilado"
-                    ;;
-            esac
+                if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+                    log_success "$lib compilado exitosamente"
+                else
+                    log_error "Error compilando $lib - ver /tmp/build_${lib}.log"
+                    log_warning "Continuando con siguiente librería..."
+                fi
+            else
+                log_warning "Script build_${lib,,}.sh no encontrado, saltando..."
+            fi
         else
             log_warning "$lib no encontrado en libraries/, saltando..."
+            log_info "Esto puede indicar que los submódulos no se inicializaron correctamente"
         fi
     done
+
+    # Volver al directorio Root
+    cd "$INSTALL_DIR/Server/Root"
 
     log_success "Compilación de librerías completada"
 }
@@ -502,6 +492,34 @@ setup_environment() {
 
         log_success "Variables de entorno exportadas"
     fi
+
+    # Parche para dependencias de Rust rotas (rust-webrtc Cargo.toml inválido)
+    log_info "Aplicando parches para dependencias de Rust..."
+
+    # El repositorio rust-webrtc tiene un Cargo.toml con formato inválido
+    # que causa errores en la compilación. Lo parcheamos aquí.
+    if [[ -d "$HOME/.cargo/git/checkouts/rust-webrtc-96174f0b363793df" ]]; then
+        for cargo_toml in "$HOME/.cargo/git/checkouts/rust-webrtc-96174f0b363793df"/*/Cargo.toml; do
+            if [[ -f "$cargo_toml" ]]; then
+                # Verificar si necesita el parche
+                if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_toml" && ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_toml" | grep -q 'version'; then
+                    log_info "Parcheando $cargo_toml..."
+
+                    # Agregar versión a dev-dependencies.slog
+                    sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_toml"
+
+                    log_success "Parche aplicado a rust-webrtc Cargo.toml"
+                fi
+            fi
+        done
+    fi
+
+    # Limpiar cache de Cargo para forzar re-lectura
+    log_info "Limpiando cache de Cargo..."
+    cd "$INSTALL_DIR/Server/rtc"
+    cargo clean 2>/dev/null || true
+
+    log_success "Entorno y parches configurados"
 }
 
 # ═══════════════════════════════════════════════════════════════════════
