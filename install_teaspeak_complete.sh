@@ -410,7 +410,7 @@ fix_permissions() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 8: Compilar librerías
+# PASO 8: Compilar librerías y parchear rust-webrtc
 # ═══════════════════════════════════════════════════════════════════════
 compile_libraries() {
     log_step "PASO 8: Compilando Librerías Necesarias"
@@ -431,39 +431,63 @@ compile_libraries() {
     export CMAKE_OPTIONS=""
     export CMAKE_MAKE_OPTIONS="-j$(nproc)"
 
-    # Las librerías más importantes que necesitan compilarse con -fPIC
-    local libraries=(
-        "StringVariable"
-        "jsoncpp"
-        "event"
-    )
+    # PASO 8.1: Pre-descargar dependencias de Rust y parchear INMEDIATAMENTE
+    log_info "Pre-descargando dependencias de Rust para parchear..."
+    cd "$INSTALL_DIR/Server/rtc"
 
-    for lib in "${libraries[@]}"; do
-        if [[ -d "$lib" ]]; then
-            log_info "Compilando $lib..."
+    # Forzar descarga de dependencias sin compilar
+    timeout 60 cargo fetch 2>/dev/null || true
 
-            # Crear directorio build si no existe
-            mkdir -p "$lib/build"
+    # Aplicar parche INMEDIATAMENTE después de descargar
+    log_info "Aplicando parche crítico a rust-webrtc Cargo.toml..."
+    if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
+        # Buscar TODOS los directorios rust-webrtc
+        find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | while read cargo_file; do
+            if [[ -f "$cargo_file" ]]; then
+                # Verificar si tiene el bug
+                if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_file"; then
+                    if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_file" | grep -q 'version'; then
+                        log_warning "Parcheando: $cargo_file"
+                        # Hacer backup
+                        cp "$cargo_file" "$cargo_file.bak"
+                        # Aplicar parche
+                        sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_file"
+                        log_success "✓ Parche aplicado a rust-webrtc"
 
-            # Usar el script de compilación oficial del proyecto
-            if [[ -f "build_${lib,,}.sh" ]]; then
-                log_info "Usando script oficial build_${lib,,}.sh..."
-                bash "build_${lib,,}.sh" 2>&1 | tee "/tmp/build_${lib}.log"
-
-                if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
-                    log_success "$lib compilado exitosamente"
-                else
-                    log_error "Error compilando $lib - ver /tmp/build_${lib}.log"
-                    log_warning "Continuando con siguiente librería..."
+                        # Verificar que se aplicó
+                        if grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_file" | grep -q 'version'; then
+                            log_success "✓ Parche verificado correctamente"
+                        else
+                            log_error "✗ Parche falló, restaurando backup"
+                            mv "$cargo_file.bak" "$cargo_file"
+                        fi
+                    fi
                 fi
-            else
-                log_warning "Script build_${lib,,}.sh no encontrado, saltando..."
             fi
-        else
-            log_warning "$lib no encontrado en libraries/, saltando..."
-            log_info "Esto puede indicar que los submódulos no se inicializaron correctamente"
-        fi
-    done
+        done
+    fi
+
+    cd "$INSTALL_DIR/Server/Root/libraries"
+
+    # PASO 8.2: Compilar librerías
+    log_info "Compilando librerías C/C++..."
+
+    # Compilar usando el script principal
+    if [[ -f "build.sh" ]]; then
+        log_info "Usando build.sh del proyecto..."
+        bash build.sh 2>&1 | tee /tmp/build_libraries.log
+        log_success "Librerías compiladas con build.sh"
+    else
+        log_warning "build.sh no encontrado, compilando manualmente..."
+
+        # Librerías individuales
+        for lib_script in build_stringvariable.sh build_jsoncpp.sh build_event.sh; do
+            if [[ -f "$lib_script" ]]; then
+                log_info "Ejecutando $lib_script..."
+                bash "$lib_script" 2>&1 | tee "/tmp/$lib_script.log" || true
+            fi
+        done
+    fi
 
     # Volver al directorio Root
     cd "$INSTALL_DIR/Server/Root"
@@ -508,33 +532,6 @@ compile_teaspeak() {
     # Exportar variables
     export build_os_type=linux
     export build_os_arch=amd64
-
-    # PARCHE CRÍTICO: Corregir rust-webrtc Cargo.toml ANTES de compilar
-    log_info "Aplicando parche crítico para rust-webrtc..."
-
-    # Primero, forzar a Cargo a descargar las dependencias
-    cd "$INSTALL_DIR/Server/rtc"
-    cargo fetch 2>/dev/null || true
-
-    # Ahora buscar y parchear TODOS los checkouts de rust-webrtc
-    if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
-        find "$HOME/.cargo/git/checkouts" -type d -name "rust-webrtc-*" | while read webrtc_dir; do
-            for cargo_toml in "$webrtc_dir"/*/Cargo.toml; do
-                if [[ -f "$cargo_toml" ]]; then
-                    # Verificar si necesita el parche
-                    if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_toml"; then
-                        if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_toml" | grep -q 'version'; then
-                            log_info "Parcheando: $cargo_toml"
-                            sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_toml"
-                            log_success "✓ Parche aplicado"
-                        fi
-                    fi
-                fi
-            done
-        done
-    fi
-
-    cd "$INSTALL_DIR/Server/Root"
 
     # Usar el script de compilación
     if [[ -f "build_teaspeak.sh" ]]; then
