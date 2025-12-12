@@ -492,34 +492,6 @@ setup_environment() {
 
         log_success "Variables de entorno exportadas"
     fi
-
-    # Parche para dependencias de Rust rotas (rust-webrtc Cargo.toml inválido)
-    log_info "Aplicando parches para dependencias de Rust..."
-
-    # El repositorio rust-webrtc tiene un Cargo.toml con formato inválido
-    # que causa errores en la compilación. Lo parcheamos aquí.
-    if [[ -d "$HOME/.cargo/git/checkouts/rust-webrtc-96174f0b363793df" ]]; then
-        for cargo_toml in "$HOME/.cargo/git/checkouts/rust-webrtc-96174f0b363793df"/*/Cargo.toml; do
-            if [[ -f "$cargo_toml" ]]; then
-                # Verificar si necesita el parche
-                if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_toml" && ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_toml" | grep -q 'version'; then
-                    log_info "Parcheando $cargo_toml..."
-
-                    # Agregar versión a dev-dependencies.slog
-                    sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_toml"
-
-                    log_success "Parche aplicado a rust-webrtc Cargo.toml"
-                fi
-            fi
-        done
-    fi
-
-    # Limpiar cache de Cargo para forzar re-lectura
-    log_info "Limpiando cache de Cargo..."
-    cd "$INSTALL_DIR/Server/rtc"
-    cargo clean 2>/dev/null || true
-
-    log_success "Entorno y parches configurados"
 }
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -536,6 +508,33 @@ compile_teaspeak() {
     # Exportar variables
     export build_os_type=linux
     export build_os_arch=amd64
+
+    # PARCHE CRÍTICO: Corregir rust-webrtc Cargo.toml ANTES de compilar
+    log_info "Aplicando parche crítico para rust-webrtc..."
+
+    # Primero, forzar a Cargo a descargar las dependencias
+    cd "$INSTALL_DIR/Server/rtc"
+    cargo fetch 2>/dev/null || true
+
+    # Ahora buscar y parchear TODOS los checkouts de rust-webrtc
+    if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
+        find "$HOME/.cargo/git/checkouts" -type d -name "rust-webrtc-*" | while read webrtc_dir; do
+            for cargo_toml in "$webrtc_dir"/*/Cargo.toml; do
+                if [[ -f "$cargo_toml" ]]; then
+                    # Verificar si necesita el parche
+                    if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_toml"; then
+                        if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_toml" | grep -q 'version'; then
+                            log_info "Parcheando: $cargo_toml"
+                            sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_toml"
+                            log_success "✓ Parche aplicado"
+                        fi
+                    fi
+                fi
+            done
+        done
+    fi
+
+    cd "$INSTALL_DIR/Server/Root"
 
     # Usar el script de compilación
     if [[ -f "build_teaspeak.sh" ]]; then
