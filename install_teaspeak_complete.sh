@@ -486,42 +486,59 @@ compile_libraries() {
     # Forzar descarga de dependencias sin compilar
     timeout 60 cargo fetch 2>/dev/null || true
 
-    # Aplicar parche INMEDIATAMENTE después de descargar
-    log_info "Aplicando parche crítico a rust-webrtc Cargo.toml..."
+    # Aplicar parche COMPLETO a rust-webrtc (Cargo.toml + código fuente)
+    log_info "Aplicando parches críticos a rust-webrtc para Rust stable..."
 
-    # Buscar el archivo Cargo.toml de rust-webrtc
-    RUST_WEBRTC_CARGO=$(find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | head -1)
+    # Buscar el directorio de rust-webrtc
+    RUST_WEBRTC_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-webrtc-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
 
-    if [[ -n "$RUST_WEBRTC_CARGO" ]] && [[ -f "$RUST_WEBRTC_CARGO" ]]; then
-        log_info "Encontrado: $RUST_WEBRTC_CARGO"
+    if [[ -n "$RUST_WEBRTC_DIR" ]] && [[ -d "$RUST_WEBRTC_DIR" ]]; then
+        log_info "Encontrado rust-webrtc en: $RUST_WEBRTC_DIR"
 
-        # Verificar si necesita el parche
-        if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"; then
-            if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
-                log_warning "Aplicando parche a $RUST_WEBRTC_CARGO"
-
-                # Hacer backup
-                cp "$RUST_WEBRTC_CARGO" "$RUST_WEBRTC_CARGO.bak"
-
-                # Aplicar parche
-                sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_CARGO"
-
-                # Verificar que se aplicó
-                if grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
-                    log_success "✓ Parche aplicado y verificado correctamente"
-                    log_info "Mostrando cambio:"
-                    grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"
-                else
-                    log_error "✗ Parche falló, restaurando backup"
-                    mv "$RUST_WEBRTC_CARGO.bak" "$RUST_WEBRTC_CARGO"
-                    exit 1
+        # PARCHE 1: Cargo.toml - agregar versión a slog
+        if [[ -f "$RUST_WEBRTC_DIR/Cargo.toml" ]]; then
+            if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"; then
+                if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml" | grep -q 'version'; then
+                    log_warning "Parcheando Cargo.toml - agregando versión a slog..."
+                    sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_DIR/Cargo.toml"
+                    log_success "✓ Cargo.toml parcheado"
                 fi
-            else
-                log_success "✓ Parche ya aplicado previamente"
             fi
         fi
+
+        # PARCHE 2: src/lib.rs - eliminar características nightly
+        if [[ -f "$RUST_WEBRTC_DIR/src/lib.rs" ]]; then
+            if grep -q '#!\[feature(' "$RUST_WEBRTC_DIR/src/lib.rs"; then
+                log_warning "Eliminando características nightly de src/lib.rs..."
+                # Comentar todas las líneas #![feature(...)]
+                sed -i 's/^#!\[feature(/\/\/ #![feature(/g' "$RUST_WEBRTC_DIR/src/lib.rs"
+                log_success "✓ Características nightly comentadas"
+                log_info "Cambios aplicados:"
+                grep '// #!\[feature(' "$RUST_WEBRTC_DIR/src/lib.rs" | head -5
+            fi
+        fi
+
+        # PARCHE 3: src/rtc.rs - cambiar drain_filter a extract_if
+        if [[ -f "$RUST_WEBRTC_DIR/src/rtc.rs" ]]; then
+            if grep -q 'drain_filter' "$RUST_WEBRTC_DIR/src/rtc.rs"; then
+                log_warning "Cambiando drain_filter a extract_if en src/rtc.rs..."
+                sed -i 's/\.drain_filter(/.extract_if(/g' "$RUST_WEBRTC_DIR/src/rtc.rs"
+                log_success "✓ drain_filter cambiado a extract_if"
+                log_info "Líneas afectadas:"
+                grep -n 'extract_if' "$RUST_WEBRTC_DIR/src/rtc.rs" || true
+            fi
+        fi
+
+        # PARCHE 4: Buscar otros archivos con drain_filter
+        log_info "Buscando otros archivos con drain_filter..."
+        find "$RUST_WEBRTC_DIR/src" -type f -name "*.rs" -exec grep -l 'drain_filter' {} \; 2>/dev/null | while read file; do
+            log_warning "Parcheando $file..."
+            sed -i 's/\.drain_filter(/.extract_if(/g' "$file"
+        done
+
+        log_success "✓ Todos los parches de rust-webrtc aplicados"
     else
-        log_warning "rust-webrtc Cargo.toml no encontrado aún (se descargará durante compilación)"
+        log_warning "rust-webrtc no encontrado aún (se descargará durante compilación)"
     fi
 
     # PASO 8.1b: Parchear rust-libnice para Rust stable
