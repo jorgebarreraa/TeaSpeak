@@ -374,8 +374,11 @@ clone_repository() {
                 log_info "Descargando librerías faltantes..."
                 cd Server/Root/libraries
 
-                # Limpiar enlaces simbólicos rotos
-                find . -maxdepth 1 -type l -exec rm {} \; 2>/dev/null || true
+                # Limpiar symlinks y directorios vacíos
+                rm -f tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
+                for dir in tomcrypt tommath spdlog ed25519 openssl-prebuild; do
+                    [[ -d "$dir" ]] && [[ -z "$(ls -A $dir 2>/dev/null)" ]] && rm -rf "$dir"
+                done
 
                 bash download_libraries.sh
                 cd "$INSTALL_DIR"
@@ -411,10 +414,23 @@ clone_repository() {
     if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
         cd Server/Root/libraries
 
-        # Limpiar enlaces simbólicos rotos que impiden la clonación
-        log_info "Limpiando enlaces simbólicos rotos..."
-        find . -maxdepth 1 -type l -exec rm {} \; 2>/dev/null || true
+        # Limpiar enlaces simbólicos y directorios vacíos que vienen del repositorio
+        log_info "Limpiando enlaces simbólicos del repositorio..."
 
+        # Eliminar symlinks específicos que causan conflictos
+        rm -f tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
+
+        # Eliminar directorios vacíos que puedan existir
+        for dir in tomcrypt tommath spdlog ed25519 openssl-prebuild; do
+            if [[ -d "$dir" ]] && [[ ! -L "$dir" ]]; then
+                if [[ -z "$(ls -A $dir 2>/dev/null)" ]]; then
+                    log_info "Eliminando directorio vacío: $dir"
+                    rm -rf "$dir"
+                fi
+            fi
+        done
+
+        log_info "Ejecutando download_libraries.sh..."
         bash download_libraries.sh || {
             log_error "Error descargando librerías"
             exit 1
