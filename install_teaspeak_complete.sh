@@ -577,14 +577,22 @@ compile_teaspeak() {
         log_info "Aplicando parche a rust-webrtc..."
         RUST_WEBRTC_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-webrtc-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
 
-        if [[ -n "$RUST_WEBRTC_DIR" ]] && [[ -d "$RUST_WEBRTC_DIR/Cargo.toml" ]]; then
+        if [[ -n "$RUST_WEBRTC_DIR" ]] && [[ -f "$RUST_WEBRTC_DIR/Cargo.toml" ]]; then
+            log_info "Encontrado rust-webrtc en: $RUST_WEBRTC_DIR"
             if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"; then
                 if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml" | grep -q 'version'; then
                     log_warning "Parcheando Cargo.toml - agregando versión a slog..."
                     sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_DIR/Cargo.toml"
                     log_success "✓ rust-webrtc Cargo.toml parcheado"
+                    log_info "Mostrando cambio:"
+                    grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"
+                else
+                    log_success "✓ Parche ya aplicado previamente"
                 fi
             fi
+        else
+            log_error "rust-webrtc NO encontrado después de cargo fetch"
+            log_error "Esto causará errores de compilación"
         fi
 
         # Aplicar parche a rust-libnice
