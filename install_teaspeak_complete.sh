@@ -536,6 +536,40 @@ compile_libraries() {
         log_warning "rust-webrtc no encontrado aún (se descargará durante compilación)"
     fi
 
+    # PASO 8.1b: Parchear rust-libnice (hash_drain_filter removida de nightly)
+    log_info "Aplicando parche a rust-libnice..."
+
+    # Buscar rust-libnice en el caché de cargo
+    RUST_LIBNICE_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-libnice-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
+
+    if [[ -n "$RUST_LIBNICE_DIR" ]] && [[ -d "$RUST_LIBNICE_DIR" ]]; then
+        log_info "Encontrado rust-libnice en: $RUST_LIBNICE_DIR"
+
+        # Parchear src/lib.rs - eliminar feature obsoleta
+        if [[ -f "$RUST_LIBNICE_DIR/src/lib.rs" ]]; then
+            if grep -q '#!\[feature(hash_drain_filter)\]' "$RUST_LIBNICE_DIR/src/lib.rs"; then
+                log_warning "Eliminando feature obsoleta hash_drain_filter de lib.rs..."
+                sed -i '/#!\[feature(hash_drain_filter)\]/d' "$RUST_LIBNICE_DIR/src/lib.rs"
+                log_success "✓ Feature obsoleta eliminada"
+            fi
+        fi
+
+        # Parchear src/ice.rs - cambiar drain_filter a extract_if
+        if [[ -f "$RUST_LIBNICE_DIR/src/ice.rs" ]]; then
+            if grep -q '\.drain_filter(' "$RUST_LIBNICE_DIR/src/ice.rs"; then
+                log_warning "Cambiando drain_filter a extract_if en ice.rs..."
+                sed -i 's/\.drain_filter(/.extract_if(/g' "$RUST_LIBNICE_DIR/src/ice.rs"
+                log_success "✓ drain_filter cambiado a extract_if"
+                log_info "Mostrando cambio:"
+                grep -n 'extract_if' "$RUST_LIBNICE_DIR/src/ice.rs" | head -5
+            fi
+        fi
+
+        log_success "✓ Parche de rust-libnice aplicado"
+    else
+        log_warning "rust-libnice no encontrado aún (se descargará durante compilación)"
+    fi
+
     cd "$INSTALL_DIR/Server/Root/libraries"
 
     # PASO 8.2: Compilar librerías
