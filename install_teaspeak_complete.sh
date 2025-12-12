@@ -177,26 +177,42 @@ install_rust() {
         log_info "Rust ya está instalado:"
         log_info "  cargo: $(cargo --version)"
         log_info "  rustc: $(rustc --version)"
-        log_success "Rust ya disponible, saltando instalación"
+
+        # CRÍTICO: Verificar que esté usando nightly, si no, cambiar
+        if ! rustc --version | grep -q "nightly"; then
+            log_warning "Rust stable detectado - cambiando a nightly (requerido por rust-webrtc)..."
+            rustup install nightly
+            rustup default nightly
+            log_success "Cambiado a Rust nightly"
+            log_info "  rustc: $(rustc --version)"
+        else
+            log_success "Rust nightly ya configurado"
+        fi
         return
     fi
 
     log_info "Descargando e instalando Rust..."
     log_info "Esto puede tomar unos minutos..."
 
-    # Descargar y ejecutar rustup
+    # Descargar y ejecutar rustup (instala stable por defecto)
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
     # Cargar el entorno de Rust
     if [[ -f "$HOME/.cargo/env" ]]; then
         source "$HOME/.cargo/env"
-        log_success "Rust instalado correctamente"
-        log_info "  cargo: $(cargo --version)"
-        log_info "  rustc: $(rustc --version)"
     else
         log_error "Error al instalar Rust"
         exit 1
     fi
+
+    # CRÍTICO: rust-webrtc requiere Rust nightly - instalar y configurar como default
+    log_warning "rust-webrtc requiere Rust NIGHTLY - configurando..."
+    rustup install nightly
+    rustup default nightly
+
+    log_success "Rust nightly instalado y configurado como default"
+    log_info "  cargo: $(cargo --version)"
+    log_info "  rustc: $(rustc --version)"
 }
 
 # ═══════════════════════════════════════════════════════════════════════
