@@ -178,15 +178,15 @@ install_rust() {
         log_info "  cargo: $(cargo --version)"
         log_info "  rustc: $(rustc --version)"
 
-        # CRÍTICO: Verificar que esté usando nightly, si no, cambiar
-        if ! rustc --version | grep -q "nightly"; then
-            log_warning "Rust stable detectado - cambiando a nightly (requerido por rust-webrtc)..."
-            rustup install nightly
-            rustup default nightly
-            log_success "Cambiado a Rust nightly"
+        # CRÍTICO: Verificar que esté usando nightly-2023-05-01 específico
+        if ! rustc --version | grep -q "2023-05-01"; then
+            log_warning "Versión incorrecta de Rust - cambiando a nightly-2023-05-01..."
+            rustup install nightly-2023-05-01
+            rustup default nightly-2023-05-01
+            log_success "Cambiado a Rust nightly-2023-05-01"
             log_info "  rustc: $(rustc --version)"
         else
-            log_success "Rust nightly ya configurado"
+            log_success "Rust nightly-2023-05-01 ya configurado"
         fi
         return
     fi
@@ -205,12 +205,15 @@ install_rust() {
         exit 1
     fi
 
-    # CRÍTICO: rust-webrtc requiere Rust nightly - instalar y configurar como default
-    log_warning "rust-webrtc requiere Rust NIGHTLY - configurando..."
-    rustup install nightly
-    rustup default nightly
+    # CRÍTICO: rust-webrtc requiere Rust nightly específico - instalar y configurar como default
+    log_warning "rust-webrtc requiere Rust NIGHTLY específico (2023-05-01)..."
+    log_info "Versión requerida: nightly con btree_drain_filter, trait_alias, etc."
 
-    log_success "Rust nightly instalado y configurado como default"
+    # Instalar nightly específico que tiene las características necesarias
+    rustup install nightly-2023-05-01
+    rustup default nightly-2023-05-01
+
+    log_success "Rust nightly-2023-05-01 instalado y configurado como default"
     log_info "  cargo: $(cargo --version)"
     log_info "  rustc: $(rustc --version)"
 }
