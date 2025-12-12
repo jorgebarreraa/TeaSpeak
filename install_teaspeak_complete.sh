@@ -373,6 +373,10 @@ clone_repository() {
             if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
                 log_info "Descargando librerías faltantes..."
                 cd Server/Root/libraries
+
+                # Limpiar enlaces simbólicos rotos
+                find . -maxdepth 1 -type l -exec rm {} \; 2>/dev/null || true
+
                 bash download_libraries.sh
                 cd "$INSTALL_DIR"
             fi
@@ -406,6 +410,11 @@ clone_repository() {
     log_info "Descargando librerías adicionales (StringVariable, event, etc)..."
     if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
         cd Server/Root/libraries
+
+        # Limpiar enlaces simbólicos rotos que impiden la clonación
+        log_info "Limpiando enlaces simbólicos rotos..."
+        find . -maxdepth 1 -type l -exec rm {} \; 2>/dev/null || true
+
         bash download_libraries.sh || {
             log_error "Error descargando librerías"
             exit 1
