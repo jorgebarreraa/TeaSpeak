@@ -495,84 +495,7 @@ compile_libraries() {
     export CMAKE_OPTIONS=""
     export CMAKE_MAKE_OPTIONS="-j$(nproc)"
 
-    # PASO 8.1: Pre-descargar dependencias de Rust y parchear Cargo.toml
-    log_info "Pre-descargando dependencias de Rust..."
-    cd "$INSTALL_DIR/Server/rtc"
-
-    # Asegurar que usamos Rust nightly (requerido por rust-webrtc)
-    if [[ -f "$HOME/.cargo/env" ]]; then
-        source "$HOME/.cargo/env"
-    fi
-
-    # Forzar descarga de dependencias sin compilar
-    timeout 60 cargo fetch 2>/dev/null || true
-
-    # Aplicar parche SIMPLE a rust-webrtc Cargo.toml (solo slog version)
-    log_info "Aplicando parche a rust-webrtc Cargo.toml..."
-
-    # Buscar el directorio de rust-webrtc
-    RUST_WEBRTC_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-webrtc-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
-
-    if [[ -n "$RUST_WEBRTC_DIR" ]] && [[ -d "$RUST_WEBRTC_DIR" ]]; then
-        log_info "Encontrado rust-webrtc en: $RUST_WEBRTC_DIR"
-
-        # ÚNICO PARCHE NECESARIO: Cargo.toml - agregar versión a slog
-        if [[ -f "$RUST_WEBRTC_DIR/Cargo.toml" ]]; then
-            if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"; then
-                if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml" | grep -q 'version'; then
-                    log_warning "Parcheando Cargo.toml - agregando versión a slog..."
-                    sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_DIR/Cargo.toml"
-                    log_success "✓ Cargo.toml parcheado"
-                    log_info "Mostrando cambio:"
-                    grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"
-                else
-                    log_success "✓ Parche ya aplicado"
-                fi
-            fi
-        fi
-
-        log_success "✓ Parche de rust-webrtc aplicado (nightly features funcionarán correctamente)"
-    else
-        log_warning "rust-webrtc no encontrado aún (se descargará durante compilación)"
-    fi
-
-    # PASO 8.1b: Parchear rust-libnice (hash_drain_filter removida de nightly)
-    log_info "Aplicando parche a rust-libnice..."
-
-    # Buscar rust-libnice en el caché de cargo
-    RUST_LIBNICE_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-libnice-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
-
-    if [[ -n "$RUST_LIBNICE_DIR" ]] && [[ -d "$RUST_LIBNICE_DIR" ]]; then
-        log_info "Encontrado rust-libnice en: $RUST_LIBNICE_DIR"
-
-        # Parchear src/lib.rs - eliminar feature obsoleta
-        if [[ -f "$RUST_LIBNICE_DIR/src/lib.rs" ]]; then
-            if grep -q '#!\[feature(hash_drain_filter)\]' "$RUST_LIBNICE_DIR/src/lib.rs"; then
-                log_warning "Eliminando feature obsoleta hash_drain_filter de lib.rs..."
-                sed -i '/#!\[feature(hash_drain_filter)\]/d' "$RUST_LIBNICE_DIR/src/lib.rs"
-                log_success "✓ Feature obsoleta eliminada"
-            fi
-        fi
-
-        # Parchear src/ice.rs - cambiar drain_filter a extract_if
-        if [[ -f "$RUST_LIBNICE_DIR/src/ice.rs" ]]; then
-            if grep -q '\.drain_filter(' "$RUST_LIBNICE_DIR/src/ice.rs"; then
-                log_warning "Cambiando drain_filter a extract_if en ice.rs..."
-                sed -i 's/\.drain_filter(/.extract_if(/g' "$RUST_LIBNICE_DIR/src/ice.rs"
-                log_success "✓ drain_filter cambiado a extract_if"
-                log_info "Mostrando cambio:"
-                grep -n 'extract_if' "$RUST_LIBNICE_DIR/src/ice.rs" | head -5
-            fi
-        fi
-
-        log_success "✓ Parche de rust-libnice aplicado"
-    else
-        log_warning "rust-libnice no encontrado aún (se descargará durante compilación)"
-    fi
-
-    cd "$INSTALL_DIR/Server/Root/libraries"
-
-    # PASO 8.2: Compilar librerías
+    # PASO 8.1: Compilar librerías
     log_info "Compilando librerías C/C++..."
 
     # Compilar usando el script principal
@@ -635,6 +558,68 @@ compile_teaspeak() {
     # Exportar variables
     export build_os_type=linux
     export build_os_arch=amd64
+
+    # CRÍTICO: Parchear rust-libnice ANTES de compilar
+    log_info "Pre-descargando dependencias Rust y aplicando parches..."
+
+    # Asegurar que usamos Rust nightly
+    if [[ -f "$HOME/.cargo/env" ]]; then
+        source "$HOME/.cargo/env"
+    fi
+
+    # Ir al directorio rtc/ y forzar descarga de TODAS las dependencias
+    if [[ -d "$INSTALL_DIR/Server/rtc" ]]; then
+        cd "$INSTALL_DIR/Server/rtc"
+        log_info "Descargando dependencias Rust (incluyendo rust-libnice y rust-webrtc)..."
+        cargo fetch 2>&1 | tee /tmp/cargo_fetch.log || true
+
+        # Aplicar parche a rust-webrtc (Cargo.toml)
+        log_info "Aplicando parche a rust-webrtc..."
+        RUST_WEBRTC_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-webrtc-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
+
+        if [[ -n "$RUST_WEBRTC_DIR" ]] && [[ -d "$RUST_WEBRTC_DIR/Cargo.toml" ]]; then
+            if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml"; then
+                if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_DIR/Cargo.toml" | grep -q 'version'; then
+                    log_warning "Parcheando Cargo.toml - agregando versión a slog..."
+                    sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_DIR/Cargo.toml"
+                    log_success "✓ rust-webrtc Cargo.toml parcheado"
+                fi
+            fi
+        fi
+
+        # Aplicar parche a rust-libnice
+        log_info "Aplicando parche a rust-libnice..."
+        RUST_LIBNICE_DIR=$(find "$HOME/.cargo/git/checkouts" -type d -path "*/rust-libnice-*/*" -name "src" 2>/dev/null | head -1 | xargs dirname)
+
+        if [[ -n "$RUST_LIBNICE_DIR" ]] && [[ -d "$RUST_LIBNICE_DIR" ]]; then
+            log_info "Encontrado rust-libnice en: $RUST_LIBNICE_DIR"
+
+            # Parchear src/lib.rs
+            if [[ -f "$RUST_LIBNICE_DIR/src/lib.rs" ]]; then
+                if grep -q '#!\[feature(hash_drain_filter)\]' "$RUST_LIBNICE_DIR/src/lib.rs"; then
+                    log_warning "Eliminando feature obsoleta hash_drain_filter..."
+                    sed -i '/#!\[feature(hash_drain_filter)\]/d' "$RUST_LIBNICE_DIR/src/lib.rs"
+                    log_success "✓ Feature eliminada"
+                fi
+            fi
+
+            # Parchear src/ice.rs
+            if [[ -f "$RUST_LIBNICE_DIR/src/ice.rs" ]]; then
+                if grep -q '\.drain_filter(' "$RUST_LIBNICE_DIR/src/ice.rs"; then
+                    log_warning "Cambiando drain_filter a extract_if..."
+                    sed -i 's/\.drain_filter(/.extract_if(/g' "$RUST_LIBNICE_DIR/src/ice.rs"
+                    log_success "✓ Parche aplicado en ice.rs"
+                fi
+            fi
+
+            log_success "✓ rust-libnice parcheado correctamente"
+        else
+            log_error "rust-libnice NO encontrado después de cargo fetch"
+            log_error "Esto causará errores de compilación"
+        fi
+
+        cd "$INSTALL_DIR/Server/Root"
+    fi
 
     # Usar el script de compilación
     if [[ -f "build_teaspeak.sh" ]]; then
