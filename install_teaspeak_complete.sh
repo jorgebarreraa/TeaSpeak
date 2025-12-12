@@ -369,6 +369,14 @@ clone_repository() {
             log_info "Verificando submódulos..."
             git submodule update --init --recursive
 
+            # CRÍTICO: Descargar librerías faltantes
+            if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
+                log_info "Descargando librerías faltantes..."
+                cd Server/Root/libraries
+                bash download_libraries.sh
+                cd "$INSTALL_DIR"
+            fi
+
             return
         fi
     fi
@@ -385,13 +393,28 @@ clone_repository() {
 
     # Verificar submódulos
     submodule_count=$(git submodule status | wc -l)
-    log_info "Total de submódulos: $submodule_count"
+    log_info "Total de submódulos git: $submodule_count"
 
     if [[ $submodule_count -eq 0 ]]; then
         log_warning "No se detectaron submódulos, inicializando..."
         git submodule update --init --recursive
         submodule_count=$(git submodule status | wc -l)
         log_info "Submódulos inicializados: $submodule_count"
+    fi
+
+    # CRÍTICO: Descargar TODAS las librerías adicionales
+    log_info "Descargando librerías adicionales (StringVariable, event, etc)..."
+    if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
+        cd Server/Root/libraries
+        bash download_libraries.sh || {
+            log_error "Error descargando librerías"
+            exit 1
+        }
+        cd "$INSTALL_DIR"
+        log_success "Todas las librerías descargadas"
+    else
+        log_error "download_libraries.sh no encontrado"
+        exit 1
     fi
 }
 
@@ -440,31 +463,40 @@ compile_libraries() {
 
     # Aplicar parche INMEDIATAMENTE después de descargar
     log_info "Aplicando parche crítico a rust-webrtc Cargo.toml..."
-    if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
-        # Buscar TODOS los directorios rust-webrtc
-        find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | while read cargo_file; do
-            if [[ -f "$cargo_file" ]]; then
-                # Verificar si tiene el bug
-                if grep -q '^\[dev-dependencies\.slog\]$' "$cargo_file"; then
-                    if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_file" | grep -q 'version'; then
-                        log_warning "Parcheando: $cargo_file"
-                        # Hacer backup
-                        cp "$cargo_file" "$cargo_file.bak"
-                        # Aplicar parche
-                        sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$cargo_file"
-                        log_success "✓ Parche aplicado a rust-webrtc"
 
-                        # Verificar que se aplicó
-                        if grep -A1 '^\[dev-dependencies\.slog\]$' "$cargo_file" | grep -q 'version'; then
-                            log_success "✓ Parche verificado correctamente"
-                        else
-                            log_error "✗ Parche falló, restaurando backup"
-                            mv "$cargo_file.bak" "$cargo_file"
-                        fi
-                    fi
+    # Buscar el archivo Cargo.toml de rust-webrtc
+    RUST_WEBRTC_CARGO=$(find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | head -1)
+
+    if [[ -n "$RUST_WEBRTC_CARGO" ]] && [[ -f "$RUST_WEBRTC_CARGO" ]]; then
+        log_info "Encontrado: $RUST_WEBRTC_CARGO"
+
+        # Verificar si necesita el parche
+        if grep -q '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"; then
+            if ! grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
+                log_warning "Aplicando parche a $RUST_WEBRTC_CARGO"
+
+                # Hacer backup
+                cp "$RUST_WEBRTC_CARGO" "$RUST_WEBRTC_CARGO.bak"
+
+                # Aplicar parche
+                sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_CARGO"
+
+                # Verificar que se aplicó
+                if grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
+                    log_success "✓ Parche aplicado y verificado correctamente"
+                    log_info "Mostrando cambio:"
+                    grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"
+                else
+                    log_error "✗ Parche falló, restaurando backup"
+                    mv "$RUST_WEBRTC_CARGO.bak" "$RUST_WEBRTC_CARGO"
+                    exit 1
                 fi
+            else
+                log_success "✓ Parche ya aplicado previamente"
             fi
-        done
+        fi
+    else
+        log_warning "rust-webrtc Cargo.toml no encontrado aún (se descargará durante compilación)"
     fi
 
     cd "$INSTALL_DIR/Server/Root/libraries"
