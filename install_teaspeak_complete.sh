@@ -414,25 +414,25 @@ clone_repository() {
     if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
         cd Server/Root/libraries
 
+        # DEBUG: Mostrar qué hay antes de limpiar
+        log_info "DEBUG - Contenido antes de limpiar:"
+        ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries"
+
         # Limpiar enlaces simbólicos y directorios vacíos que vienen del repositorio
         log_info "Limpiando enlaces simbólicos del repositorio..."
 
-        # Eliminar symlinks específicos que causan conflictos
-        rm -f tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
+        # Eliminar symlinks específicos que causan conflictos (forzar con -rf)
+        rm -rf tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
 
-        # Eliminar directorios vacíos que puedan existir
-        for dir in tomcrypt tommath spdlog ed25519 openssl-prebuild; do
-            if [[ -d "$dir" ]] && [[ ! -L "$dir" ]]; then
-                if [[ -z "$(ls -A $dir 2>/dev/null)" ]]; then
-                    log_info "Eliminando directorio vacío: $dir"
-                    rm -rf "$dir"
-                fi
-            fi
-        done
+        # DEBUG: Mostrar qué hay después de limpiar
+        log_info "DEBUG - Contenido después de limpiar:"
+        ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries" || log_info "  (symlinks eliminados correctamente)"
 
         log_info "Ejecutando download_libraries.sh..."
         bash download_libraries.sh || {
             log_error "Error descargando librerías"
+            log_error "DEBUG - Contenido actual:"
+            ls -la
             exit 1
         }
         cd "$INSTALL_DIR"
