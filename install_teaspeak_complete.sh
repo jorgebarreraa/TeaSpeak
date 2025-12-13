@@ -178,15 +178,15 @@ install_rust() {
         log_info "  cargo: $(cargo --version)"
         log_info "  rustc: $(rustc --version)"
 
-        # CRÍTICO: Verificar que esté usando nightly-2023-05-01 específico
-        if ! rustc --version | grep -q "2023-05-01"; then
-            log_warning "Versión incorrecta de Rust - cambiando a nightly-2023-05-01..."
-            rustup install nightly-2023-05-01
-            rustup default nightly-2023-05-01
-            log_success "Cambiado a Rust nightly-2023-05-01"
+        # CRÍTICO: Verificar que esté usando nightly-2024-01-01 específico (Rust 1.77.0)
+        if ! rustc --version | grep -q "2023-12-31"; then
+            log_warning "Versión incorrecta de Rust - cambiando a nightly-2024-01-01..."
+            rustup install nightly-2024-01-01
+            rustup default nightly-2024-01-01
+            log_success "Cambiado a Rust nightly-2024-01-01 (1.77.0)"
             log_info "  rustc: $(rustc --version)"
         else
-            log_success "Rust nightly-2023-05-01 ya configurado"
+            log_success "Rust nightly-2024-01-01 (1.77.0) ya configurado"
         fi
         return
     fi
@@ -206,14 +206,15 @@ install_rust() {
     fi
 
     # CRÍTICO: rust-webrtc requiere Rust nightly específico - instalar y configurar como default
-    log_warning "rust-webrtc requiere Rust NIGHTLY específico (2023-05-01)..."
-    log_info "Versión requerida: nightly con btree_drain_filter, trait_alias, etc."
+    log_warning "rust-webrtc requiere Rust NIGHTLY específico (2024-01-01 / 1.77.0)..."
+    log_info "Versión requerida: nightly con btree_drain_filter, Cargo.lock v4 support"
 
     # Instalar nightly específico que tiene las características necesarias
-    rustup install nightly-2023-05-01
-    rustup default nightly-2023-05-01
+    # nightly-2024-01-01 = Rust 1.77.0 (soporta Cargo.lock v4 y btree_drain_filter)
+    rustup install nightly-2024-01-01
+    rustup default nightly-2024-01-01
 
-    log_success "Rust nightly-2023-05-01 instalado y configurado como default"
+    log_success "Rust nightly-2024-01-01 (1.77.0) instalado y configurado como default"
     log_info "  cargo: $(cargo --version)"
     log_info "  rustc: $(rustc --version)"
 }
