@@ -245,17 +245,29 @@ Este script verifica:
 |----------|----------|
 | "CMake too old" | `sudo snap install cmake --classic` |
 | "Rust not found" | Ver sección de Rust abajo |
+| "feature not found" (Rust) | **Usas stable, necesitas NIGHTLY** → `rustup default nightly` |
 | "Cannot clone git.did.science" | Migra a GitHub personal |
 | "ld.gold issues" | El script lo deshabilita automáticamente |
 | "No space left" | Necesitas 15 GB libres |
 
-### Instalar Rust Manualmente
+### Instalar Rust Manualmente (NIGHTLY REQUERIDO)
+
+⚠️ **IMPORTANTE:** TeaSpeak requiere **Rust NIGHTLY** (no stable)
 
 ```bash
+# Instalar rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source $HOME/.cargo/env
-rustc --version
+
+# CRÍTICO: Instalar y usar nightly
+rustup install nightly
+rustup default nightly
+
+# Verificar que es nightly
+rustc --version  # Debe mostrar "nightly"
 ```
+
+**¿Por qué nightly?** El código usa features inestables como `backtrace`, `core_intrinsics`, `drain_filter`, etc.
 
 ---
 

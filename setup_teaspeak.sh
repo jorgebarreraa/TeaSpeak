@@ -252,31 +252,53 @@ install_dependencies() {
 # PASO 3: Instalar Rust (cargo, rustc)
 # ═══════════════════════════════════════════════════════════════════════════
 install_rust() {
-    log_step "PASO 3: Verificando e Instalando Rust"
+    log_step "PASO 3: Verificando e Instalando Rust NIGHTLY"
+
+    # IMPORTANTE: TeaSpeak requiere Rust NIGHTLY (no stable)
+    # El código usa features inestables como: backtrace, core_intrinsics,
+    # array_methods, drain_filter, box_syntax, etc.
 
     # Verificar si Rust ya está instalado
     if command -v cargo &> /dev/null && command -v rustc &> /dev/null; then
-        log_info "Rust ya está instalado:"
-        log_info "  cargo: $(cargo --version)"
-        log_info "  rustc: $(rustc --version)"
-        log_success "Rust disponible"
-        return
+        RUST_VERSION=$(rustc --version)
+        if [[ "$RUST_VERSION" == *"nightly"* ]]; then
+            log_info "Rust nightly ya está instalado:"
+            log_info "  cargo: $(cargo --version)"
+            log_info "  rustc: $RUST_VERSION"
+            log_success "Rust nightly disponible"
+            return
+        else
+            log_warning "Rust está instalado pero NO es nightly"
+            log_warning "  Versión actual: $RUST_VERSION"
+            log_substep "Instalando Rust nightly..."
+        fi
+    else
+        log_substep "Descargando e instalando Rust nightly..."
+        log_info "Esto puede tomar unos minutos..."
+
+        # Descargar y ejecutar rustup
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     fi
-
-    log_substep "Descargando e instalando Rust..."
-    log_info "Esto puede tomar unos minutos..."
-
-    # Descargar y ejecutar rustup
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
     # Cargar el entorno de Rust
     if [[ -f "$HOME/.cargo/env" ]]; then
         source "$HOME/.cargo/env"
-        log_success "Rust instalado correctamente"
+    fi
+
+    # Instalar y configurar nightly como default
+    log_substep "Configurando Rust nightly como versión predeterminada..."
+    rustup install nightly
+    rustup default nightly
+
+    # Verificar instalación de nightly
+    RUST_VERSION=$(rustc --version)
+    if [[ "$RUST_VERSION" == *"nightly"* ]]; then
+        log_success "Rust nightly instalado correctamente"
         log_info "  cargo: $(cargo --version)"
-        log_info "  rustc: $(rustc --version)"
+        log_info "  rustc: $RUST_VERSION"
     else
-        log_error "Error al instalar Rust"
+        log_error "Error: No se pudo configurar Rust nightly"
+        log_error "  Versión actual: $RUST_VERSION"
         exit 1
     fi
 }

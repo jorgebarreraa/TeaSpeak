@@ -146,6 +146,54 @@ set -e  # Exit immediately if any command fails
 
 ---
 
+### 6. 🦀 Rust NIGHTLY (CRÍTICO)
+
+**Problema encontrado:**
+- El script instalaba Rust STABLE por defecto
+- TeaSpeak requiere RUST NIGHTLY obligatoriamente
+- El código usa features inestables NO disponibles en stable
+
+**Features nightly requeridas:**
+
+**Server/rtc/** (WebRTC):
+- `backtrace` - Stack traces en crashes
+- `core_intrinsics` - Intrínsecos del compilador
+- `array_methods` - Métodos avanzados de arrays
+
+**Server/teafile/** (FileServer):
+- `backtrace`, `with_options`, `new_uninit`
+- `drain_filter` - Filtrado con remoción
+- `label_break_value` - Break con valores
+- `box_syntax` - Sintaxis de Box
+- `btree_drain_filter`, `hash_drain_filter`
+
+**Solución aplicada:**
+
+a) **Script de instalación mejorado:**
+```bash
+# setup_teaspeak.sh - install_rust()
+# Detecta si ya hay nightly instalado
+# Si hay stable, lo reemplaza con nightly
+rustup install nightly
+rustup default nightly
+```
+
+b) **Archivos rust-toolchain.toml creados:**
+```toml
+# Server/rtc/rust-toolchain.toml
+# Server/teafile/rust-toolchain.toml
+[toolchain]
+channel = "nightly"
+```
+
+**Impacto:**
+- ✅ Garantiza uso de Rust nightly SIEMPRE
+- ✅ Evita errores de "feature not found"
+- ✅ Los archivos rust-toolchain.toml fuerzan nightly por proyecto
+- ✅ Funciona incluso si el default global cambia
+
+---
+
 ## 📊 Componentes que SE COMPILAN
 
 ### Todos estos componentes están HABILITADOS y se compilan:
@@ -334,6 +382,7 @@ cd TeaSpeak/Server/server/out/linux_amd64
 | **CPU Cores** | Hardcoded (6-12) | ✅ Auto-detect | `Server/Root/build_teaspeak.sh` |
 | **Error Handling** | ⚠️ Continúa tras errores | ✅ Para con `set -e` | `build.sh`, `build_teaspeak.sh`, `build_breakpad.sh` |
 | **Ubuntu 24.04** | ❌ Paquete realpath falla | ✅ Usa coreutils | `setup_teaspeak.sh` |
+| **Rust** | ⚠️ Stable (features missing) | ✅ Nightly forzado | `setup_teaspeak.sh`, `rust-toolchain.toml` |
 
 ---
 
