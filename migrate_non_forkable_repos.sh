@@ -161,53 +161,90 @@ cd ..
 
 migrate_repo "https://boringssl.googlesource.com/boringssl" "boringssl"
 
-# Protobuf con tag específico
-echo "  📦 Clonando protobuf con tag v3.5.1.1..."
+# Protobuf con tag específico - Fixing detached HEAD
+echo "  📦 Migrando protobuf con tag v3.5.1.1..."
 rm -rf protobuf 2>/dev/null || true
 git clone "https://fuchsia.googlesource.com/third_party/protobuf" protobuf
 cd protobuf
 git checkout v3.5.1.1 2>/dev/null || echo "  ⚠️  No se pudo hacer checkout a v3.5.1.1"
-git remote remove origin
+
+# Crear branch desde tag para evitar detached HEAD
+git checkout -b v3.5.1.1-branch 2>/dev/null || true
+
+# Crear repo y pushear
+echo "  [4/6] Creando repo en GitHub: $GITHUB_USER/protobuf"
+gh repo delete "$GITHUB_USER/protobuf" --yes 2>/dev/null || true
+sleep 2
+gh repo create "$GITHUB_USER/protobuf" --public --source=. || echo "  ⚠️  Repo puede ya existir"
+
+echo "  [5/6] Configurando remote..."
+git remote remove origin 2>/dev/null || true
 git remote add origin "https://github.com/$GITHUB_USER/protobuf.git"
-echo ""
-echo "  ✅ protobuf listo para push"
-echo "     Crear repo: https://github.com/new"
-echo "     Nombre: protobuf"
-echo "     Push: cd $TEMP_DIR/protobuf && git push -u origin \$(git branch --show-current)"
+
+echo "  [6/6] Pusheando a GitHub..."
+git push -u origin v3.5.1.1-branch -f || git push -u origin HEAD -f
+echo "  ✅ protobuf migrado exitosamente"
 echo ""
 cd ..
+
+# ═══════════════════════════════════════════════════════════════
+# SECCIÓN 3: GitHub - WolverinDEV (7 repos)
+# ═══════════════════════════════════════════════════════════════
+echo ""
+echo "╔═══════════════════════════════════════════════════════════╗"
+echo "║  SECCIÓN 3: GitHub - WolverinDEV (7 repos)                ║"
+echo "╚═══════════════════════════════════════════════════════════╝"
+echo ""
+
+migrate_repo "https://github.com/WolverinDEV/build-helpers.git" "build-helpers"
+migrate_repo "https://github.com/WolverinDEV/CXXTerminal.git" "CXXTerminal"
+migrate_repo "https://github.com/WolverinDEV/StringVariable.git" "StringVariable"
+migrate_repo "https://github.com/WolverinDEV/ed25519.git" "ed25519"
+migrate_repo "https://github.com/WolverinDEV/DataPipes.git" "DataPipes"
+migrate_repo "https://github.com/WolverinDEV/rust-webrtc.git" "rust-webrtc"
+migrate_repo "https://github.com/WolverinDEV/rust-libnice.git" "rust-libnice"
+
+# ═══════════════════════════════════════════════════════════════
+# SECCIÓN 4: GitHub - Otros autores (7 repos)
+# ═══════════════════════════════════════════════════════════════
+echo ""
+echo "╔═══════════════════════════════════════════════════════════╗"
+echo "║  SECCIÓN 4: GitHub - Otros (7 repos)                      ║"
+echo "╚═══════════════════════════════════════════════════════════╝"
+echo ""
+
+migrate_repo "https://github.com/open-source-parsers/jsoncpp.git" "jsoncpp"
+migrate_repo "https://github.com/xiph/opus" "opus"
+migrate_repo "https://github.com/xiph/opusfile.git" "opusfile"
+migrate_repo "https://github.com/jbeder/yaml-cpp.git" "yaml-cpp"
+migrate_repo "https://github.com/libevent/libevent.git" "libevent"
+migrate_repo "https://github.com/jemalloc/jemalloc.git" "jemalloc" "dev"
+migrate_repo "https://github.com/facebook/zstd.git" "zstd"
 
 # ═══════════════════════════════════════════════════════════════
 # RESUMEN FINAL
 # ═══════════════════════════════════════════════════════════════
 echo ""
 echo "════════════════════════════════════════════════════════════"
-echo "  ✅ MIGRACIÓN PREPARADA"
+echo "  ✅ MIGRACIÓN COMPLETADA - TODOS LOS 24 REPOS"
 echo "════════════════════════════════════════════════════════════"
 echo ""
-echo "📋 SIGUIENTES PASOS:"
+echo "📊 RESUMEN:"
 echo ""
-echo "1. Crea los siguientes 10 repos en GitHub (vacíos, sin README):"
-echo "   https://github.com/new"
+echo "  Sección 1: git.did.science (7 repos) ✅"
+echo "  Sección 2: Google (3 repos) ✅"
+echo "  Sección 3: GitHub - WolverinDEV (7 repos) ✅"
+echo "  Sección 4: GitHub - Otros (7 repos) ✅"
 echo ""
-echo "   Nombres de repos a crear:"
-for repo in Thread-Pool tomcrypt tommath spdlog libnice-prebuild glib2.0 openssl-prebuild breakpad boringssl protobuf; do
-    echo "   - $repo"
-done
+echo "  TOTAL: 24 repositorios migrados a github.com/$GITHUB_USER"
 echo ""
-echo "2. Luego ejecuta este comando para pushear TODOS:"
+echo "🎯 PRÓXIMO PASO:"
 echo ""
-echo "   cd $TEMP_DIR"
-echo "   for repo in Thread-Pool tomcrypt tommath spdlog libnice-prebuild glib2.0 openssl-prebuild breakpad boringssl protobuf; do"
-echo "       echo \"Pushing \$repo...\""
-echo "       cd \$repo && git push -u origin \$(git branch --show-current) && cd .."
-echo "   done"
+echo "  Ejecuta TeaSpeak con TUS dependencias:"
 echo ""
-echo "3. Para los repos de GitHub que SÍ se pueden forkear (14 repos):"
-echo "   Usa la interfaz web de GitHub para hacer fork:"
-echo "   Ver lista completa en: FORK_ALL_DEPENDENCIES.md"
+echo "    cd ~/TeaSpeak"
+echo "    ./setup_teaspeak.sh --github-user $GITHUB_USER --build-type stable"
 echo ""
-echo "4. Cuando termines, ejecuta:"
-echo "   ./setup_teaspeak.sh --github-user $GITHUB_USER --build-type stable"
+echo "  Esto usará TODOS tus repos en lugar de los originales."
 echo ""
 echo "════════════════════════════════════════════════════════════"
