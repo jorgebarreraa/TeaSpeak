@@ -253,17 +253,17 @@ fix_permissions
 compile_libraries
 ```
 
-**Script de parches permanentes:**
-- **Nuevo:** `apply_patches_to_migrated_repos.sh`
-- Aplica parches PERMANENTES a los repos del usuario:
-  - `rust-webrtc`: Fix slog dependency (version = "2.7")
-  - `build-helpers`: Fix breakpad C++17
+**Parches Automáticos:**
+- `apply_build_fixes.sh` aplica automáticamente el parche de breakpad C++17
+- Se ejecuta AUTOMÁTICAMENTE después de descargar librerías
+- El parche de rust-webrtc NO es necesario (el repo migrado ya tiene slog correcto)
 
 **Impacto:**
 - ✅ TODAS las dependencias (C/C++ y Rust) vienen del usuario cuando usa `--github-user`
 - ✅ Control total de TODOS los 24 repos
-- ✅ Parches permanentes en los repos del usuario (no auto-patches temporales)
+- ✅ Parches aplicados AUTOMÁTICAMENTE sin intervención manual
 - ✅ Inmunidad completa a cambios upstream o repos eliminados
+- ✅ **UN SOLO COMANDO:** `./setup_teaspeak.sh --github-user jorgebarreraa --build-type stable`
 
 ---
 
