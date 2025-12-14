@@ -89,22 +89,60 @@ fi
 
 ---
 
-### 4. 🛠️ Corrección de Breakpad (C++17)
+### 4. 🛠️ Corrección CRÍTICA de Breakpad (C++17)
 
 **Problema encontrado:**
-- Breakpad requiere C++14+ para `std::make_unique`
-- Build script usaba `-std=c++11`
+- Breakpad requiere C++14+ para `std::make_unique` y `std::string_view`
+- Build script usaba `-std=c++11` HARDCODED
+- **ERROR CRÍTICO:** El script correcto NO es `Server/Root/libraries/build_breakpad.sh`
+- **ARCHIVO REAL:** `Server/Root/build-helpers/libraries/build_breakpad.sh` (llamado por exec_script_external)
 
 **Solución aplicada:**
 ```bash
-# Server/Root/libraries/build_breakpad.sh línea 14-15
-# Use C++17 for breakpad (requires C++14+ for std::make_unique)
-make CXXFLAGS="-std=c++17 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
+# Server/Root/build-helpers/libraries/build_breakpad.sh línea 38-39
+# Use C++17 for breakpad (requires C++14+ for std::make_unique and std::string_view)
+make CXXFLAGS="-std=c++17 ${CXX_FLAGS} -static-libgcc -static-libstdc++" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
 ```
 
 **Impacto:**
-- ✅ Breakpad compila correctamente
+- ✅ Breakpad compila correctamente con C++17
 - ✅ Crash reporting funcional
+- ✅ Soporte para std::make_unique y std::string_view
+
+---
+
+### 5. 🚨 Manejo de Errores MEJORADO (set -e)
+
+**Problema encontrado:**
+- Los scripts de build continuaban ejecutándose DESPUÉS de errores
+- El usuario reportó: "El script deberia detenerse al tener algun error y no continuar"
+- Breakpad fallaba pero el script reportaba "Build all libraries successfully"
+
+**Solución aplicada:**
+
+a) **build.sh** - Script maestro de librerías:
+```bash
+#!/bin/bash
+set -e  # Exit immediately if any command fails
+```
+
+b) **build_teaspeak.sh** - Script de compilación principal:
+```bash
+#!/bin/bash
+set -e  # Exit immediately if any command fails
+```
+
+c) **build_breakpad.sh** - Script de breakpad:
+```bash
+#!/usr/bin/env bash
+set -e  # Exit immediately if any command fails
+```
+
+**Impacto:**
+- ✅ El script se detiene INMEDIATAMENTE al primer error
+- ✅ No más falsos positivos ("success" cuando hay errores)
+- ✅ Fácil identificar dónde falló la compilación
+- ✅ Ahorra tiempo evitando compilaciones inútiles después de errores
 
 ---
 
@@ -292,8 +330,10 @@ cd TeaSpeak/Server/server/out/linux_amd64
 | **Jemalloc** | ❌ Deshabilitado | ✅ Habilitado | `Server/Server/server/CMakeLists.txt:303` |
 | **Web Client** | ❌ Deshabilitado | ✅ Habilitado | `Server/Server/server/CMakeLists.txt:35` |
 | **Build Script** | ⚠️ Básico | ✅ Mejorado | `Server/Root/build_teaspeak.sh` |
-| **Breakpad** | ❌ C++11 (falla) | ✅ C++17 | `Server/Root/libraries/build_breakpad.sh` |
+| **Breakpad** | ❌ C++11 (falla) | ✅ C++17 | `Server/Root/build-helpers/libraries/build_breakpad.sh:38` |
 | **CPU Cores** | Hardcoded (6-12) | ✅ Auto-detect | `Server/Root/build_teaspeak.sh` |
+| **Error Handling** | ⚠️ Continúa tras errores | ✅ Para con `set -e` | `build.sh`, `build_teaspeak.sh`, `build_breakpad.sh` |
+| **Ubuntu 24.04** | ❌ Paquete realpath falla | ✅ Usa coreutils | `setup_teaspeak.sh` |
 
 ---
 

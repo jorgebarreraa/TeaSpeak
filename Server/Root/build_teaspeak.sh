@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e  # Exit immediately if any command fails
 _build_helper_dir="$(pwd)/build-helpers/"
 
 _build_type="Debug"

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e  # Exit immediately if any command fails
 
 # Enter third_party/ directory
 cd $(dirname $0)
