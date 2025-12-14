@@ -1,0 +1,50 @@
+# Downloaded libraries (can be re-downloaded with download_libraries.sh)
+Server/Root/libraries/jsoncpp/
+Server/Root/libraries/Thread-Pool/
+Server/Root/libraries/tomcrypt/
+Server/Root/libraries/tommath/
+Server/Root/libraries/CXXTerminal/
+Server/Root/libraries/opus/
+Server/Root/libraries/opusfile/
+Server/Root/libraries/yaml-cpp/
+Server/Root/libraries/event/
+Server/Root/libraries/spdlog/
+Server/Root/libraries/StringVariable/
+Server/Root/libraries/ed25519/
+Server/Root/libraries/breakpad/
+Server/Root/libraries/boringssl/
+Server/Root/libraries/protobuf/
+Server/Root/libraries/DataPipes/
+Server/Root/libraries/jemalloc/
+Server/Root/libraries/zstd/
+
+# Build helpers (can be re-downloaded)
+Server/Root/build-helpers/
+
+# Symlinks to prebuild libraries (created by setup scripts)
+Server/Root/libraries/glibc
+Server/Root/libraries/libnice
+Server/Root/libraries/openssl-prebuild
+
+# Build outputs
+Server/Root/TeaSpeak/build/
+Server/Root/TeaSpeak/Server/server/environment/
+Server/Root/TeaSpeak/*/out/
+*.so
+*.a
+*.o
+
+# Logs
+/tmp/*.log
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
