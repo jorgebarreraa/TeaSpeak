@@ -587,6 +587,14 @@ update_rust_cargo_dependencies() {
         sed -i "s|https://github.com/WolverinDEV/rust-libnice.git|https://github.com/$github_user/rust-libnice.git|g" "$rtc_cargo"
 
         log_success "✓ Cargo.toml actualizado para usar repos de $github_user"
+
+        # Limpiar cache de Cargo para forzar descarga de los nuevos repos
+        log_info "  Limpiando cache de Cargo para repos Rust..."
+        rm -rf "$HOME/.cargo/git/checkouts/rust-webrtc-"* 2>/dev/null || true
+        rm -rf "$HOME/.cargo/git/db/rust-webrtc-"* 2>/dev/null || true
+        rm -rf "$HOME/.cargo/git/checkouts/rust-libnice-"* 2>/dev/null || true
+        rm -rf "$HOME/.cargo/git/db/rust-libnice-"* 2>/dev/null || true
+        log_success "✓ Cache de Cargo limpiado"
     else
         log_warning "⚠️  No se encontró $rtc_cargo"
     fi
