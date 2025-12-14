@@ -737,10 +737,10 @@ main() {
 ║     INSTALADOR AUTOMÁTICO DE TEASPEAK SERVER              ║
 ║                  VERSIÓN MEJORADA                         ║
 ║                                                           ║
-║  • Instalación automática de dependencias                ║
-║  • Soporte para forks personales en GitHub               ║
-║  • Compilación optimizada                                ║
-║  • Verificación completa paso a paso                     ║
+║   • Instalación automática de dependencias               ║
+║   • Soporte para forks personales en GitHub              ║
+║   • Compilación optimizada                               ║
+║   • Verificación completa paso a paso                    ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 EOF
