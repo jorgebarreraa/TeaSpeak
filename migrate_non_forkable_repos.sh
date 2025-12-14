@@ -87,11 +87,15 @@ migrate_repo() {
     # [3/6] Clonar desde origen
     echo "  [3/6] Clonando desde: $source_url"
     if [[ -n "$branch" && "$branch" != "master" ]]; then
-        git clone "$source_url" "$repo_name" --branch "$branch" --depth 1 || git clone "$source_url" "$repo_name" --depth 1
+        git clone "$source_url" "$repo_name" --branch "$branch" || git clone "$source_url" "$repo_name"
     else
-        git clone "$source_url" "$repo_name" --depth 1
+        git clone "$source_url" "$repo_name"
     fi
     cd "$repo_name"
+
+    # Hacer unshallow para tener historial completo (evita errores de push)
+    echo "  [3.5/6] Obteniendo historial completo..."
+    git fetch --unshallow 2>/dev/null || echo "  ✓ Repo ya tiene historial completo"
 
     # Si se especificó un commit, hacer checkout (para breakpad)
     if [[ -n "$specific_commit" ]]; then
