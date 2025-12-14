@@ -37,11 +37,14 @@ if [[ -n "$1" ]]; then
 fi
 
 
+# Web client is enabled by default in CMakeLists.txt
+# Only disable if explicitly requested via no_web environment variable
 # shellcheck disable=SC2154
 if [[ "$no_web" == "1" ]]; then
-    echo "Disabling web support"
+    echo "Disabling web support (no_web=1)"
     _web_flag="OFF"
 else
+    echo "Web support enabled (use no_web=1 to disable)"
     _web_flag="ON"
 fi
 
@@ -69,22 +72,34 @@ if [[ $_code -ne 0 ]]; then
 	exit 1
 fi
 
-cmake --build "$(pwd)" --target ProviderFFMpeg -- -j 12; _code=$?
+# Detect number of CPU cores for parallel builds
+_cpu_cores=$(nproc 2>/dev/null || echo 4)
+echo "Building with $_cpu_cores CPU cores"
+
+# Build MusicBot providers
+echo "Building MusicBot FFmpeg provider..."
+cmake --build "$(pwd)" --target ProviderFFMpeg -- -j $_cpu_cores; _code=$?
 if [[ $_code -ne 0 ]]; then
-	echo "Failed to build ffmpeg ($_code)"
-	exit 1
-fi
-cmake --build "$(pwd)" --target ProviderYT -- -j 12; _code=$?
-if [[ $_code -ne 0 ]]; then
-	echo "Failed to build YT ($_code)"
+	echo "Failed to build ProviderFFMpeg ($_code)"
 	exit 1
 fi
 
-cmake --build "$(pwd)" --target TeaSpeakServer -- -j 6; _code=$?
+echo "Building MusicBot YouTube provider..."
+cmake --build "$(pwd)" --target ProviderYT -- -j $_cpu_cores; _code=$?
 if [[ $_code -ne 0 ]]; then
-	echo "Failed to build server ($_code)"
+	echo "Failed to build ProviderYT ($_code)"
 	exit 1
 fi
+
+# Build main TeaSpeak Server (includes VoiceServer, License, FileServer, MusicBot)
+echo "Building TeaSpeak Server (all components)..."
+cmake --build "$(pwd)" --target TeaSpeakServer -- -j $_cpu_cores; _code=$?
+if [[ $_code -ne 0 ]]; then
+	echo "Failed to build TeaSpeakServer ($_code)"
+	exit 1
+fi
+
+echo "✓ All components built successfully!"
 
 #${CXX_FLAGS}
 #${C_FLAGS}

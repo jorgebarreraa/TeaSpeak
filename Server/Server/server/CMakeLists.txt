@@ -32,8 +32,8 @@ add_definitions(-DUSE_BORINGSSL)
 #3 = PRIVATE
 option(BUILD_TYPE "Sets the build type" OFF)
 option(BUILD_TYPE_NAME "Sets the build type name" OFF)
-option(COMPILE_WEB_CLIENT "Enable/Disable the web cleint future" OFF)
-#set(COMPILE_WEB_CLIENT "ON")
+option(COMPILE_WEB_CLIENT "Enable/Disable the web client feature" ON)
+# Web client enabled by default for full functionality
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(SERVER_SOURCE_FILES
@@ -300,7 +300,7 @@ target_link_libraries(TeaSpeakServer
 #    endif ()
 #endif ()
 
-set(DISABLE_JEMALLOC ON)
+set(DISABLE_JEMALLOC OFF)
 if (NOT DISABLE_JEMALLOC)
     target_link_libraries(TeaSpeakServer
             jemalloc

@@ -11,5 +11,6 @@ fi
 
 cd build
 ../configure
-make CXXFLAGS="-std=c++11 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
+# Use C++17 for breakpad (requires C++14+ for std::make_unique)
+make CXXFLAGS="-std=c++17 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
 sudo make install
