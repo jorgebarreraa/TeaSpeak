@@ -562,6 +562,37 @@ EOFSCRIPT
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# FUNCIÓN: Modificar Cargo.toml para usar repos del usuario
+# ═══════════════════════════════════════════════════════════════════════════
+update_rust_cargo_dependencies() {
+    local github_user="$1"
+
+    if [[ -z "$github_user" ]]; then
+        log_info "No se especificó usuario GitHub, usando repos originales en Rust"
+        return 0
+    fi
+
+    log_substep "Modificando Cargo.toml para usar repos de $github_user..."
+
+    # Modificar Server/rtc/Cargo.toml
+    local rtc_cargo="$SCRIPT_DIR/Server/rtc/Cargo.toml"
+    if [[ -f "$rtc_cargo" ]]; then
+        log_info "  Actualizando $rtc_cargo..."
+
+        # Backup
+        cp "$rtc_cargo" "$rtc_cargo.backup"
+
+        # Reemplazar URLs de WolverinDEV con las del usuario
+        sed -i "s|https://github.com/WolverinDEV/rust-webrtc.git|https://github.com/$github_user/rust-webrtc.git|g" "$rtc_cargo"
+        sed -i "s|https://github.com/WolverinDEV/rust-libnice.git|https://github.com/$github_user/rust-libnice.git|g" "$rtc_cargo"
+
+        log_success "✓ Cargo.toml actualizado para usar repos de $github_user"
+    else
+        log_warning "⚠️  No se encontró $rtc_cargo"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PASO 7: Descargar librerías
 # ═══════════════════════════════════════════════════════════════════════════
 download_libraries() {
@@ -784,6 +815,7 @@ EOF
     verify_tools
     configure_github_repos
     download_libraries
+    update_rust_cargo_dependencies "$GITHUB_USER"  # Modificar Cargo.toml para usar repos del usuario
     fix_permissions
     compile_libraries
     compile_teaspeak
