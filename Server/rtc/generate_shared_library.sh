@@ -18,6 +18,9 @@ rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
 PATH="$PATH:$install_prefix/bin" \
 PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:$crypto_library_path/lib/pkgconfig/" \
+OPENSSL_DIR="$crypto_library_path" \
+OPENSSL_LIB_DIR="$crypto_library_path/lib" \
+OPENSSL_INCLUDE_DIR="$crypto_library_path/include" \
 cargo rustc --release
 
 if [ $? -ne 0 ]; then
