@@ -221,24 +221,29 @@ install_dependencies() {
         automake \
         libtool \
         gettext \
-        realpath \
-        nano \
+        coreutils \
         software-properties-common
 
     log_substep "Instalando librerías del sistema..."
+    # Instalar librerías del sistema (ignorar errores de paquetes no disponibles)
     $SUDO apt-get install -y -qq \
         libssl-dev \
         libmysqlclient-dev \
-        default-libmysqlclient-dev \
         libcurl4-openssl-dev \
         libpcre3-dev \
-        libncurses5-dev \
         libsqlite3-dev \
         libjemalloc-dev \
         zlib1g-dev \
         python3 \
         python3-dev \
-        python3-pip
+        python3-pip 2>/dev/null || true
+
+    # Intentar instalar default-libmysqlclient-dev si está disponible
+    $SUDO apt-get install -y -qq default-libmysqlclient-dev 2>/dev/null || true
+
+    # Intentar instalar libncurses5-dev o libncurses-dev
+    $SUDO apt-get install -y -qq libncurses5-dev 2>/dev/null || \
+    $SUDO apt-get install -y -qq libncurses-dev 2>/dev/null || true
 
     log_success "Todas las dependencias del sistema instaladas"
 }
