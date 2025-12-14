@@ -10,6 +10,13 @@ if [[ ! -d src/third_party/lss ]]; then
 fi
 
 cd build
-../configure
-make CXXFLAGS="-std=c++11 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
+# Configure with C++17 to generate proper Makefile
+CXXFLAGS="-std=c++17 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ../configure
+
+# CRITICAL: Patch Makefile to replace all remaining c++11 with c++17
+# Some rules have hardcoded -std=c++11 that ignore CXXFLAGS
+sed -i 's/-std=c++11/-std=c++17/g' Makefile
+
+# Build with C++17
+make CXXFLAGS="-std=c++17 ${CXX_FLAGS}" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
 sudo make install

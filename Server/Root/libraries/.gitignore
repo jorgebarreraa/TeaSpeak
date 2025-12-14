@@ -1,0 +1,11 @@
+# Compiled libraries - these are built from source
+CXXTerminal/
+DataPipes/
+StringVariable/
+breakpad/
+event/
+jemalloc/
+opus/
+protobuf/
+yaml-cpp/
+zstd/
