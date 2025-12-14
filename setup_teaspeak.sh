@@ -586,7 +586,15 @@ download_libraries() {
     fi
 
     log_success "Librerías descargadas"
+
+    # Aplicar parches automáticos a archivos de build
+    log_substep "Aplicando parches de compilación..."
     cd "$SCRIPT_DIR"
+    if [[ -f "apply_build_fixes.sh" ]]; then
+        bash apply_build_fixes.sh
+    else
+        log_warning "apply_build_fixes.sh no encontrado, saltando parches"
+    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════════

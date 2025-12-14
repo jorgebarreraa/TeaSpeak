@@ -89,25 +89,45 @@ fi
 
 ---
 
-### 4. 🛠️ Corrección CRÍTICA de Breakpad (C++17)
+### 4. 🛠️ Corrección CRÍTICA de Breakpad (C++17) con PARCHE AUTOMÁTICO
 
 **Problema encontrado:**
 - Breakpad requiere C++14+ para `std::make_unique` y `std::string_view`
 - Build script usaba `-std=c++11` HARDCODED
-- **ERROR CRÍTICO:** El script correcto NO es `Server/Root/libraries/build_breakpad.sh`
-- **ARCHIVO REAL:** `Server/Root/build-helpers/libraries/build_breakpad.sh` (llamado por exec_script_external)
+- **ERROR CRÍTICO:** El archivo `build-helpers/libraries/build_breakpad.sh` está en `.gitignore`
+- No se puede versionar en Git porque `build-helpers/` es un repositorio externo
 
 **Solución aplicada:**
+
+**a) Script de parche automático** (NUEVO):
 ```bash
-# Server/Root/build-helpers/libraries/build_breakpad.sh línea 38-39
-# Use C++17 for breakpad (requires C++14+ for std::make_unique and std::string_view)
-make CXXFLAGS="-std=c++17 ${CXX_FLAGS} -static-libgcc -static-libstdc++" CFLAGS="${C_FLAGS}" ${MAKE_OPTIONS}
+# apply_build_fixes.sh - Versionado en el repositorio principal
+# Se ejecuta automáticamente después de descargar librerías
+# Aplica el fix de C++17 a build_breakpad.sh
+```
+
+**b) Integración en setup_teaspeak.sh:**
+```bash
+# Después de download_libraries.sh, línea 590-597
+log_substep "Aplicando parches de compilación..."
+bash apply_build_fixes.sh
+```
+
+**c) El parche aplica este fix:**
+```bash
+# CXXFLAGS se pasa a ./configure (NO solo a make)
+CXXFLAGS="-std=c++17 ..." \
+../../configure --prefix=`pwd`
+# Ahora el Makefile se genera con C++17 desde el inicio
+make ${MAKE_OPTIONS}
 ```
 
 **Impacto:**
 - ✅ Breakpad compila correctamente con C++17
+- ✅ Fix se aplica AUTOMÁTICAMENTE desde el repositorio
+- ✅ Funciona en cualquier VPS - solo haz `git pull`
+- ✅ **No requiere cambios manuales** - todo desde GitHub
 - ✅ Crash reporting funcional
-- ✅ Soporte para std::make_unique y std::string_view
 
 ---
 
