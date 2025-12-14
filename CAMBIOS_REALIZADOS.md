@@ -222,6 +222,51 @@ channel = "nightly"
 
 ---
 
+### 7. 🔗 Fix CRÍTICO: Cargo.toml usando repos del usuario
+
+**Problema encontrado:**
+- El script usaba `--github-user` para dependencias C/C++, pero NO para Rust
+- Los archivos `Server/rtc/Cargo.toml` tenían URLs HARDCODED:
+  ```toml
+  webrtc_lib = { git = "https://github.com/WolverinDEV/rust-webrtc.git" }
+  libnice = { git = "https://github.com/WolverinDEV/rust-libnice.git" }
+  ```
+- Incluso con `--github-user jorgebarreraa`, Cargo descargaba repos originales
+- Error: `dependency (slog) specified without providing...` en rust-webrtc
+
+**Solución aplicada:**
+
+a) **Nueva función en setup_teaspeak.sh:**
+```bash
+update_rust_cargo_dependencies() {
+    # Modifica Server/rtc/Cargo.toml
+    sed -i "s|https://github.com/WolverinDEV/rust-webrtc.git|https://github.com/$github_user/rust-webrtc.git|g"
+    sed -i "s|https://github.com/WolverinDEV/rust-libnice.git|https://github.com/$github_user/rust-libnice.git|g"
+}
+```
+
+b) **Llamada en el flujo principal:**
+```bash
+download_libraries
+update_rust_cargo_dependencies "$GITHUB_USER"  # ← NUEVO
+fix_permissions
+compile_libraries
+```
+
+**Script de parches permanentes:**
+- **Nuevo:** `apply_patches_to_migrated_repos.sh`
+- Aplica parches PERMANENTES a los repos del usuario:
+  - `rust-webrtc`: Fix slog dependency (version = "2.7")
+  - `build-helpers`: Fix breakpad C++17
+
+**Impacto:**
+- ✅ TODAS las dependencias (C/C++ y Rust) vienen del usuario cuando usa `--github-user`
+- ✅ Control total de TODOS los 24 repos
+- ✅ Parches permanentes en los repos del usuario (no auto-patches temporales)
+- ✅ Inmunidad completa a cambios upstream o repos eliminados
+
+---
+
 ## 📊 Componentes que SE COMPILAN
 
 ### Todos estos componentes están HABILITADOS y se compilan:
