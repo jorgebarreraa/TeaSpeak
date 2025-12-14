@@ -17,10 +17,28 @@ echo "  Aplicando parches automáticos a archivos de build"
 echo "════════════════════════════════════════════════════════════"
 
 # ═══════════════════════════════════════════════════════════════
+# FIX 0: Limpiar cache corrupto de Cargo
+# ═══════════════════════════════════════════════════════════════
+echo ""
+echo "[1/2] Limpiando cache corrupto de Cargo..."
+
+if [[ -d "$HOME/.cargo/git/checkouts/rust-webrtc"* ]]; then
+    echo "  Eliminando checkouts corruptos de rust-webrtc..."
+    rm -rf "$HOME/.cargo/git/checkouts/rust-webrtc"* 2>/dev/null || true
+    echo "✓ Cache de rust-webrtc limpiado"
+fi
+
+if [[ -d "$HOME/.cargo/git/checkouts/rust-libnice"* ]]; then
+    echo "  Eliminando checkouts corruptos de rust-libnice..."
+    rm -rf "$HOME/.cargo/git/checkouts/rust-libnice"* 2>/dev/null || true
+    echo "✓ Cache de rust-libnice limpiado"
+fi
+
+# ═══════════════════════════════════════════════════════════════
 # FIX 1: Breakpad C++17
 # ═══════════════════════════════════════════════════════════════
 echo ""
-echo "[1/1] Aplicando fix de C++17 a breakpad..."
+echo "[2/2] Aplicando fix de C++17 a breakpad..."
 
 if [[ ! -f "$BREAKPAD_FILE" ]]; then
     echo "⚠️  WARNING: $BREAKPAD_FILE no existe todavía"

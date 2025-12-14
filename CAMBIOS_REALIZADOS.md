@@ -122,8 +122,16 @@ CXXFLAGS="-std=c++17 ..." \
 make ${MAKE_OPTIONS}
 ```
 
+**d) Limpieza automática de cache corrupto de Cargo:**
+```bash
+# apply_build_fixes.sh también limpia cache corrupto
+rm -rf $HOME/.cargo/git/checkouts/rust-webrtc*
+rm -rf $HOME/.cargo/git/checkouts/rust-libnice*
+```
+
 **Impacto:**
 - ✅ Breakpad compila correctamente con C++17
+- ✅ Cache corrupto de Rust se limpia automáticamente
 - ✅ Fix se aplica AUTOMÁTICAMENTE desde el repositorio
 - ✅ Funciona en cualquier VPS - solo haz `git pull`
 - ✅ **No requiere cambios manuales** - todo desde GitHub
