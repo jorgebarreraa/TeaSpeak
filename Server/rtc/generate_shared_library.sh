@@ -10,6 +10,13 @@ install_prefix="$(pwd)/build_libraries/"
 # shellcheck disable=SC2181
 [ $? -ne 0 ] && { exit 1; }
 
+# Apply Cargo.toml fix for rust-webrtc dependencies
+FIX_SCRIPT="$(pwd)/../../rtc/fix_cargo_deps.sh"
+if [ -f "$FIX_SCRIPT" ]; then
+    echo "Applying Cargo.toml fixes for rust-webrtc..."
+    bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."
+fi
+
 cargo update || exit 1
 
 # rm -r target/release/

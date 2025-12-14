@@ -17,28 +17,39 @@ echo "  Aplicando parches automáticos a archivos de build"
 echo "════════════════════════════════════════════════════════════"
 
 # ═══════════════════════════════════════════════════════════════
-# FIX 0: Limpiar cache corrupto de Cargo
+# FIX 0: Limpiar cache corrupto de Cargo COMPLETAMENTE
 # ═══════════════════════════════════════════════════════════════
 echo ""
-echo "[1/2] Limpiando cache corrupto de Cargo..."
+echo "[1/3] Limpiando cache corrupto de Cargo..."
 
-if [[ -d "$HOME/.cargo/git/checkouts/rust-webrtc"* ]]; then
-    echo "  Eliminando checkouts corruptos de rust-webrtc..."
-    rm -rf "$HOME/.cargo/git/checkouts/rust-webrtc"* 2>/dev/null || true
-    echo "✓ Cache de rust-webrtc limpiado"
+# Limpiar checkouts
+if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
+    echo "  Eliminando TODOS los checkouts de rust-webrtc..."
+    find "$HOME/.cargo/git/checkouts" -type d -name "rust-webrtc-*" -exec rm -rf {} + 2>/dev/null || true
+    echo "  Eliminando TODOS los checkouts de rust-libnice..."
+    find "$HOME/.cargo/git/checkouts" -type d -name "rust-libnice-*" -exec rm -rf {} + 2>/dev/null || true
+    echo "✓ Checkouts limpiados"
 fi
 
-if [[ -d "$HOME/.cargo/git/checkouts/rust-libnice"* ]]; then
-    echo "  Eliminando checkouts corruptos de rust-libnice..."
-    rm -rf "$HOME/.cargo/git/checkouts/rust-libnice"* 2>/dev/null || true
-    echo "✓ Cache de rust-libnice limpiado"
+# Limpiar db completo
+if [[ -d "$HOME/.cargo/git/db" ]]; then
+    echo "  Limpiando git db de rust-webrtc..."
+    find "$HOME/.cargo/git/db" -type d -name "rust-webrtc-*" -exec rm -rf {} + 2>/dev/null || true
+    find "$HOME/.cargo/git/db" -type d -name "rust-libnice-*" -exec rm -rf {} + 2>/dev/null || true
+    echo "✓ Git DB limpiado"
+fi
+
+# Copiar script de fix a rtc
+if [[ -f "${SCRIPT_DIR}/Server/rtc/fix_cargo_deps.sh" ]]; then
+    chmod +x "${SCRIPT_DIR}/Server/rtc/fix_cargo_deps.sh"
+    echo "✓ Script de fix de Cargo instalado"
 fi
 
 # ═══════════════════════════════════════════════════════════════
 # FIX 1: Breakpad C++17
 # ═══════════════════════════════════════════════════════════════
 echo ""
-echo "[2/2] Aplicando fix de C++17 a breakpad..."
+echo "[2/3] Aplicando fix de C++17 a breakpad..."
 
 if [[ ! -f "$BREAKPAD_FILE" ]]; then
     echo "⚠️  WARNING: $BREAKPAD_FILE no existe todavía"
@@ -124,6 +135,22 @@ chmod +x "$BREAKPAD_FILE"
 rm /tmp/build_breakpad_fixed.sh
 
 echo "✓ Parche de C++17 aplicado exitosamente"
+
+# ═══════════════════════════════════════════════════════════════
+# FIX 2: Fix rust-webrtc Cargo.toml before rtc build
+# ═══════════════════════════════════════════════════════════════
+echo ""
+echo "[3/3] Preparando fix para dependencias Rust..."
+
+RTC_FIX_SCRIPT="${SCRIPT_DIR}/Server/rtc/fix_cargo_deps.sh"
+if [[ -f "$RTC_FIX_SCRIPT" ]]; then
+    chmod +x "$RTC_FIX_SCRIPT"
+    echo "✓ Script de fix de Cargo.toml instalado en Server/rtc/"
+    echo "  Se ejecutará antes de compilar rtclib"
+else
+    echo "⚠️  WARNING: fix_cargo_deps.sh no encontrado"
+fi
+
 echo ""
 echo "════════════════════════════════════════════════════════════"
 echo "  Todos los parches aplicados correctamente"
