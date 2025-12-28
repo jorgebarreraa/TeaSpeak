@@ -22,29 +22,39 @@ Total de repositorios Rust migrados: **7**
 
 ### 2. **rust-libnice** ⭐ Fix hash_drain_filter
 **URL:** https://github.com/jorgebarreraa/rust-libnice
-**Commit:** `74709d0`
+**Commits:** `74709d0`, `844befc`
 
-**Fix Aplicado:**
-- Eliminado #![feature(hash_drain_filter)] (removido de Rust nightly)
-- Reemplazado drain_filter() con código estable
+**Fixes Aplicados:**
+- Fix 1: Eliminado #![feature(hash_drain_filter)] (removido de Rust nightly)
+- Fix 2: Reemplazado drain_filter() con código estable
+- Fix 3: Actualizado rust-libnice-sys para usar jorgebarreraa/rust-libnice-sys
 
 ---
 
 ### 3. **rust-libnice-sys**
 **URL:** https://github.com/jorgebarreraa/rust-libnice-sys
-**Status:** Migrado sin cambios
+**Commit:** `127db9f`
+
+**Fix Aplicado:**
+- Actualizado build-utils para usar jorgebarreraa/build-utils
 
 ---
 
-###4. **rust-usrsctp-sys**
+### 4. **rust-usrsctp-sys**
 **URL:** https://github.com/jorgebarreraa/rust-usrsctp-sys
-**Status:** Migrado sin cambios
+**Commit:** `1e09085`
+
+**Fix Aplicado:**
+- Actualizado build-utils para usar jorgebarreraa/build-utils
 
 ---
 
 ### 5. **rust-srtp2-sys**
 **URL:** https://github.com/jorgebarreraa/rust-srtp2-sys
-**Status:** Migrado sin cambios
+**Commit:** `cdfe365`
+
+**Fix Aplicado:**
+- Actualizado build-utils para usar jorgebarreraa/build-utils
 
 ---
 
