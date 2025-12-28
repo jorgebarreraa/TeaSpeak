@@ -10,14 +10,14 @@ Total de repositorios Rust migrados: **7**
 
 ### 1. **rust-webrtc** ⭐ Principal
 **URL:** https://github.com/jorgebarreraa/rust-webrtc
-**Commits:** `71b2c88`, `5b2959f`, `de5a1df`, `93415eb`, `a700127`
+**Commits:** `71b2c88`, `5b2959f`, `de5a1df`, `93415eb`, `06a98a7`
 
 **Fixes Aplicados:**
 - Fix 1: Espaciado en slog dependency
 - Fix 2: Agregado version a [dev-dependencies.slog]
 - Fix 3: Actualizado para usar repos de jorgebarreraa
 - Fix 4: Eliminado btree_drain_filter (3 usos reemplazados con código estable)
-- Fix 5: Corregido error de tipos en filter closures (desreferenciar &&mut)
+- Fix 5: Iteración manual para acceso mutable (reemplazo correcto de drain_filter)
 
 ---
 
