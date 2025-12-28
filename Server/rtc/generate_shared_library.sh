@@ -45,6 +45,7 @@ fi
 
 # rm -r target/release/
 # Force openssl-sys to use system OpenSSL 3.0
+OPENSSL_NO_VENDOR=1 \
 OPENSSL_LIB_DIR="${openssl_libdir}" \
 OPENSSL_INCLUDE_DIR="/usr/include" \
 rbuild_install_prefix="$install_prefix" \
@@ -52,7 +53,7 @@ rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
 PATH="$PATH:$install_prefix/bin" \
 PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:${openssl_pkgdir}/" \
-cargo rustc --release
+cargo rustc --release -- -v
 
 if [ $? -ne 0 ]; then
     echo "Failed to build glib"
