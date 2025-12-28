@@ -18,20 +18,7 @@ if [ -f "$FIX_SCRIPT" ]; then
     bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."
 fi
 
-# Clean cargo build to ensure fresh compilation with updated dependencies
-echo "Cleaning cargo build cache..."
-rm -rf target/
-
-# Also clean registry cache to force recompilation of openssl-sys
-echo "Cleaning cargo registry cache..."
-rm -rf ~/.cargo/registry/cache/*
-rm -rf ~/.cargo/registry/src/*
-rm -rf ~/.cargo/git/checkouts/*
-rm -rf ~/.cargo/git/db/*
-
-cargo update || exit 1
-
-# Determine OpenSSL pkgconfig directory
+# Determine OpenSSL pkgconfig directory FIRST
 openssl_pkgdir=$(pkg-config --variable=pcfiledir openssl)
 if [ -z "$openssl_pkgdir" ]; then
     openssl_pkgdir="/usr/lib/x86_64-linux-gnu/pkgconfig"
@@ -43,17 +30,28 @@ if [ -z "$openssl_libdir" ]; then
     openssl_libdir="/usr/lib/x86_64-linux-gnu"
 fi
 
-# rm -r target/release/
-# Force openssl-sys to use system OpenSSL 3.0
-OPENSSL_NO_VENDOR=1 \
-OPENSSL_LIB_DIR="${openssl_libdir}" \
-OPENSSL_INCLUDE_DIR="/usr/include" \
+# Set environment variables BEFORE any cargo commands
+export OPENSSL_NO_VENDOR=1
+export OPENSSL_LIB_DIR="${openssl_libdir}"
+export OPENSSL_INCLUDE_DIR="/usr/include"
+export PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:${openssl_pkgdir}/"
+export PATH="$PATH:$install_prefix/bin"
+
+# Clean ALL cargo artifacts and caches
+echo "Cleaning ALL cargo caches and build artifacts..."
+rm -rf target/
+rm -rf ~/.cargo/registry/cache/*
+rm -rf ~/.cargo/registry/src/*
+rm -rf ~/.cargo/git/checkouts/*
+rm -rf ~/.cargo/git/db/*
+
+cargo update || exit 1
+
+# Force rebuild with environment variables already set
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
-PATH="$PATH:$install_prefix/bin" \
-PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:${openssl_pkgdir}/" \
-cargo rustc --release -- -v
+cargo build --release
 
 if [ $? -ne 0 ]; then
     echo "Failed to build glib"
