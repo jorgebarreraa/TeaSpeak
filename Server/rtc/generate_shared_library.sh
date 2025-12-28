@@ -20,12 +20,14 @@ fi
 
 # Clean cargo build to ensure fresh compilation with updated dependencies
 echo "Cleaning cargo build cache..."
-cargo clean
+rm -rf target/
 
 # Also clean registry cache to force recompilation of openssl-sys
 echo "Cleaning cargo registry cache..."
 rm -rf ~/.cargo/registry/cache/*
 rm -rf ~/.cargo/registry/src/*
+rm -rf ~/.cargo/git/checkouts/*
+rm -rf ~/.cargo/git/db/*
 
 cargo update || exit 1
 
