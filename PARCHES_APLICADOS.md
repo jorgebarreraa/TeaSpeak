@@ -9,8 +9,8 @@ Estos parches han sido aplicados **directamente a tus repositorios en GitHub** p
 ## 🔧 Parches Permanentes Aplicados
 
 ### 1. **jorgebarreraa/rust-webrtc**
-**Commit:** `71b2c88`
-**URL:** https://github.com/jorgebarreraa/rust-webrtc/commit/71b2c88
+**Commits:** `71b2c88`, `5b2959f`
+**URL:** https://github.com/jorgebarreraa/rust-webrtc/commits/master
 
 **Problema:**
 ```
@@ -18,19 +18,36 @@ error: dependency (slog) specified without providing a local path, Git repositor
 version, or workspace dependency to use
 ```
 
-**Causa:**
-El Cargo.toml tenía formato incorrecto en la línea de slog:
-```toml
-slog = { version="2.5.2" }  # ❌ SIN espacio
-```
+**Causas:**
+1. El Cargo.toml tenía formato incorrecto en la línea de slog (línea 30)
+2. La sección `[dev-dependencies.slog]` no tenía campo `version` (línea 36-37)
 
-**Fix Aplicado:**
+**Fixes Aplicados:**
+
+**Fix 1 (commit 71b2c88):** Espaciado correcto
 ```toml
+# Antes:
+slog = { version="2.5.2" }  # ❌ SIN espacio
+
+# Después:
 slog = { version = "2.5.2" }  # ✅ CON espacio
 ```
 
+**Fix 2 (commit 5b2959f):** Agregar version a dev-dependencies ⭐ CRÍTICO
+```toml
+# Antes:
+[dev-dependencies.slog]
+features = ["release_max_level_trace", "max_level_trace"]  # ❌ SIN version
+
+# Después:
+[dev-dependencies.slog]
+version = "2.5.2"  # ✅ version agregada
+features = ["release_max_level_trace", "max_level_trace"]
+```
+
 **Razón:**
-Algunos parsers de Cargo requieren espacios alrededor de `=` en inline tables TOML.
+- Fix 1: Algunos parsers de Cargo requieren espacios en inline tables TOML
+- Fix 2: **CRÍTICO** - `[dev-dependencies.slog]` DEBE tener campo `version`
 
 ---
 
