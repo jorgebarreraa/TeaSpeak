@@ -5,6 +5,7 @@ cd $(dirname $0)
 # shellcheck disable=SC2034
 glib_version="2.66.2"
 install_prefix="$(pwd)/build_libraries/"
+
 ./build_glib.sh
 
 # shellcheck disable=SC2181
@@ -19,12 +20,18 @@ fi
 
 cargo update || exit 1
 
+# Determine OpenSSL pkgconfig directory
+openssl_pkgdir=$(pkg-config --variable=pcfiledir openssl)
+if [ -z "$openssl_pkgdir" ]; then
+    openssl_pkgdir="/usr/lib/x86_64-linux-gnu/pkgconfig"
+fi
+
 # rm -r target/release/
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
 PATH="$PATH:$install_prefix/bin" \
-PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:$crypto_library_path/lib/pkgconfig/" \
+PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:${openssl_pkgdir}/" \
 cargo rustc --release
 
 if [ $? -ne 0 ]; then
@@ -64,10 +71,16 @@ do
     libraries="$libraries $library_path/$library"
 done
 
+# Determine OpenSSL library directory
+openssl_libdir=$(pkg-config --variable=libdir openssl)
+if [ -z "$openssl_libdir" ]; then
+    openssl_libdir="/usr/lib/x86_64-linux-gnu"
+fi
+
 # shellcheck disable=SC2086
 gcc -shared -o libteaspeak_rtc.so -Wl,--whole-archive target/release/libteaspeak_rtc.a -Wl,--no-whole-archive \
     $libraries \
-     $crypto_library_path/lib/libssl.so $crypto_library_path/lib/libcrypto.so \
+     ${openssl_libdir}/libssl.so ${openssl_libdir}/libcrypto.so \
     -pthread -lm -lrt -lz -ldl -lresolv -static-libgcc \
     -Wl,--no-undefined,--gc-sections,--version-script=libteaspeakrtc.version
 
