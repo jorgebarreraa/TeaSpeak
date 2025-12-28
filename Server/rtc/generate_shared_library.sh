@@ -18,6 +18,10 @@ if [ -f "$FIX_SCRIPT" ]; then
     bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."
 fi
 
+# Clean cargo build to ensure fresh compilation with updated dependencies
+echo "Cleaning cargo build cache..."
+cargo clean
+
 cargo update || exit 1
 
 # Determine OpenSSL pkgconfig directory
@@ -80,7 +84,7 @@ fi
 # shellcheck disable=SC2086
 gcc -shared -o libteaspeak_rtc.so -Wl,--whole-archive target/release/libteaspeak_rtc.a -Wl,--no-whole-archive \
     $libraries \
-     ${openssl_libdir}/libssl.so ${openssl_libdir}/libcrypto.so \
+    -L${openssl_libdir} -lssl -lcrypto \
     -pthread -lm -lrt -lz -ldl -lresolv -static-libgcc \
     -Wl,--no-undefined,--gc-sections,--version-script=libteaspeakrtc.version
 
