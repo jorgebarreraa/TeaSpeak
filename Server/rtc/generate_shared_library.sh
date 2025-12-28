@@ -22,6 +22,11 @@ fi
 echo "Cleaning cargo build cache..."
 cargo clean
 
+# Also clean registry cache to force recompilation of openssl-sys
+echo "Cleaning cargo registry cache..."
+rm -rf ~/.cargo/registry/cache/*
+rm -rf ~/.cargo/registry/src/*
+
 cargo update || exit 1
 
 # Determine OpenSSL pkgconfig directory
@@ -30,7 +35,16 @@ if [ -z "$openssl_pkgdir" ]; then
     openssl_pkgdir="/usr/lib/x86_64-linux-gnu/pkgconfig"
 fi
 
+# Determine OpenSSL library directory
+openssl_libdir=$(pkg-config --variable=libdir openssl)
+if [ -z "$openssl_libdir" ]; then
+    openssl_libdir="/usr/lib/x86_64-linux-gnu"
+fi
+
 # rm -r target/release/
+# Force openssl-sys to use system OpenSSL 3.0
+OPENSSL_LIB_DIR="${openssl_libdir}" \
+OPENSSL_INCLUDE_DIR="/usr/include" \
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
@@ -74,12 +88,6 @@ do
 
     libraries="$libraries $library_path/$library"
 done
-
-# Determine OpenSSL library directory
-openssl_libdir=$(pkg-config --variable=libdir openssl)
-if [ -z "$openssl_libdir" ]; then
-    openssl_libdir="/usr/lib/x86_64-linux-gnu"
-fi
 
 # shellcheck disable=SC2086
 gcc -shared -o libteaspeak_rtc.so -Wl,--whole-archive target/release/libteaspeak_rtc.a -Wl,--no-whole-archive \
