@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-12-14
 
-Total de repositorios Rust migrados: **6**
+Total de repositorios Rust migrados: **7**
 
 ---
 
@@ -10,12 +10,13 @@ Total de repositorios Rust migrados: **6**
 
 ### 1. **rust-webrtc** ⭐ Principal
 **URL:** https://github.com/jorgebarreraa/rust-webrtc
-**Commits:** `71b2c88`, `5b2959f`, `de5a1df`
+**Commits:** `71b2c88`, `5b2959f`, `de5a1df`, `93415eb`
 
 **Fixes Aplicados:**
 - Fix 1: Espaciado en slog dependency
 - Fix 2: Agregado version a [dev-dependencies.slog]
 - Fix 3: Actualizado para usar repos de jorgebarreraa
+- Fix 4: Eliminado btree_drain_filter (3 usos reemplazados con código estable)
 
 ---
 
@@ -53,6 +54,12 @@ Total de repositorios Rust migrados: **6**
 
 ---
 
+### 7. **build-utils**
+**URL:** https://github.com/jorgebarreraa/build-utils
+**Status:** Migrado sin cambios
+
+---
+
 ## ✅ Independencia Total de WolverinDEV
 
 Después de estos cambios, **NO hay dependencias de WolverinDEV** en Rust.
@@ -69,10 +76,10 @@ rtp-rs = { git = "https://github.com/jorgebarreraa/rtp-rs.git" }
 
 ## 🔧 Total de Repos Migrados
 
-**C/C++ + Rust = 30 repositorios**
+**C/C++ + Rust = 31 repositorios**
 
 - 24 repos C/C++ (previamente migrados)
-- 6 repos Rust (recién migrados)
+- 7 repos Rust (migrados con fixes)
 
 ---
 
