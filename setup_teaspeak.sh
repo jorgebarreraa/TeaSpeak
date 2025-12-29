@@ -657,6 +657,8 @@ compile_libraries() {
     cd "$SCRIPT_DIR/Server/Root/libraries"
 
     # Exportar variables de compilación
+    export build_os_type=linux
+    export build_os_arch=amd64
     export CXX_FLAGS="-fPIC"
     export C_FLAGS="-fPIC"
     export CMAKE_BUILD_TYPE="Release"
