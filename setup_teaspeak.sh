@@ -490,7 +490,7 @@ clone_with_fallback "https://github.com/open-source-parsers/jsoncpp.git" "jsoncp
 clone_with_fallback "https://github.com/jorgebarreraa/Thread-Pool.git" "Thread-Pool"
 clone_with_fallback "https://github.com/jorgebarreraa/tomcrypt.git" "tomcrypt"
 clone_with_fallback "https://github.com/jorgebarreraa/tommath.git" "tommath"
-clone_with_fallback "https://github.com/WolverinDEV/CXXTerminal.git" "CXXTerminal"
+clone_with_fallback "https://github.com/jorgebarreraa/CXXTerminal.git" "CXXTerminal"
 clone_with_fallback "https://github.com/xiph/opus" "opus"
 clone_with_fallback "https://github.com/xiph/opusfile.git" "opusfile"
 clone_with_fallback "https://github.com/jbeder/yaml-cpp.git" "yaml-cpp"
@@ -521,9 +521,9 @@ endmacro()
 EOFPATCH
 fi
 
-clone_with_fallback "https://git.did.science/TeaSpeak/libraries/spdlog.git" "spdlog"
-clone_with_fallback "https://github.com/WolverinDEV/StringVariable.git" "StringVariable"
-clone_with_fallback "https://github.com/WolverinDEV/ed25519.git" "ed25519"
+clone_with_fallback "https://github.com/jorgebarreraa/spdlog.git" "spdlog"
+clone_with_fallback "https://github.com/jorgebarreraa/StringVariable.git" "StringVariable"
+clone_with_fallback "https://github.com/jorgebarreraa/ed25519.git" "ed25519"
 clone_with_fallback "https://chromium.googlesource.com/breakpad/breakpad" "breakpad"
 
 # Checkout específico para breakpad (compatible con C++17)
@@ -536,14 +536,14 @@ clone_with_fallback "https://boringssl.googlesource.com/boringssl" "boringssl"
 clone_with_fallback "https://fuchsia.googlesource.com/third_party/protobuf" "protobuf" "v3.5.1.1"
 clone_with_fallback "https://github.com/jorgebarreraa/DataPipes.git" "DataPipes"
 clone_with_fallback "https://github.com/jemalloc/jemalloc.git" "jemalloc" "dev"
-clone_with_fallback "https://git.did.science/TeaSpeak/libraries/libnice-prebuild.git" "libnice"
-clone_with_fallback "https://git.did.science/TeaSpeak/libraries/glib2.0.git" "glibc"
-clone_with_fallback "https://git.did.science/TeaSpeak/libraries/openssl-prebuild.git" "openssl-prebuild"
+clone_with_fallback "https://github.com/jorgebarreraa/libnice-prebuild.git" "libnice"
+clone_with_fallback "https://github.com/jorgebarreraa/glibc.git" "glibc"
+clone_with_fallback "https://github.com/jorgebarreraa/openssl-prebuild.git" "openssl-prebuild"
 clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 
 # build-helpers
 cd ..
-clone_with_fallback "https://github.com/WolverinDEV/build-helpers.git" "build-helpers"
+clone_with_fallback "https://github.com/jorgebarreraa/build-helpers.git" "build-helpers"
 
 echo "✓ Todas las librerías descargadas exitosamente!"
 EOFSCRIPT
@@ -610,11 +610,24 @@ download_libraries() {
 
     # Limpiar librerías que cambiaron de URL a fork del usuario
     log_substep "Limpiando librerías con URLs actualizadas..."
+    # Limpiar TODAS las librerías que cambiaron de URL (WolverinDEV y git.did.science -> jorgebarreraa)
     local libs_to_clean=(
         "DataPipes"
         "tommath"
         "tomcrypt"
         "Thread-Pool"
+        "CXXTerminal"
+        "spdlog"
+        "StringVariable"
+        "ed25519"
+        "libnice"
+        "glibc"
+        "openssl-prebuild"
+    )
+
+    # build-helpers se maneja en el directorio padre
+    local build_helpers_to_clean=(
+        "build-helpers"
     )
 
     for lib in "${libs_to_clean[@]}"; do
@@ -631,7 +644,26 @@ download_libraries() {
             }
         fi
     done
-    log_success "URLs verificadas y limpias"
+
+    # Limpiar build-helpers en el directorio padre
+    cd "$SCRIPT_DIR/Server/Root"
+    for lib in "${build_helpers_to_clean[@]}"; do
+        if [[ -d "$lib" ]]; then
+            cd "$lib" 2>/dev/null && {
+                local remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+                if [[ "$remote_url" != *"jorgebarreraa"* && "$remote_url" != "" ]]; then
+                    cd ..
+                    log_info "Borrando $lib (URL antigua: ${remote_url%%/git*})"
+                    rm -rf "$lib"
+                else
+                    cd ..
+                fi
+            }
+        fi
+    done
+    cd "$SCRIPT_DIR/Server/Root/libraries"
+
+    log_success "Todas las URLs verificadas y limpias (12 librerías monitoreadas)"
 
     # Limpiar enlaces simbólicos rotos
     log_substep "Limpiando enlaces simbólicos rotos..."
