@@ -489,7 +489,7 @@ clone_with_fallback() {
 clone_with_fallback "https://github.com/open-source-parsers/jsoncpp.git" "jsoncpp"
 clone_with_fallback "https://git.did.science/WolverinDEV/ThreadPool.git" "Thread-Pool"
 clone_with_fallback "https://git.did.science/TeaSpeak/libraries/tomcrypt.git" "tomcrypt"
-clone_with_fallback "https://git.did.science/TeaSpeak/libraries/tommath.git" "tommath"
+clone_with_fallback "https://github.com/jorgebarreraa/tommath.git" "tommath"
 clone_with_fallback "https://github.com/WolverinDEV/CXXTerminal.git" "CXXTerminal"
 clone_with_fallback "https://github.com/xiph/opus" "opus"
 clone_with_fallback "https://github.com/xiph/opusfile.git" "opusfile"
