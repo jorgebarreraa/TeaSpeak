@@ -725,20 +725,161 @@ compile_libraries() {
             exit 1
         fi
 
-        # Otras librerías (ejecutar build.sh completo pero con timeout)
-        log_substep "Compilando librerías restantes..."
-        timeout 1800 bash build.sh >> "$LOG_FILE.libraries" 2>&1 || {
-            local exit_code=$?
-            if [[ $exit_code -eq 124 ]]; then
-                log_warning "Compilación de librerías restantes excedió 30 minutos (timeout)"
-                log_info "Las librerías críticas ya están compiladas, continuando..."
-            else
-                log_warning "Algunas librerías opcionales fallaron (código: $exit_code)"
-                log_info "Las librerías críticas están OK, continuando..."
-            fi
-        }
+        # Compilar TODAS las librerías restantes individualmente
+        local failed_libs=()
+        local total_libs=16
+        local compiled_libs=3  # Ya compilamos tommath, tomcrypt, Thread-Pool
 
-        log_success "Librerías críticas compiladas exitosamente"
+        # libevent
+        log_substep "Compilando libevent..."
+        if library_path="event" ../build-helpers/libraries/build_libevent.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "libevent compilada"
+            ((compiled_libs++))
+        else
+            log_warning "libevent falló"
+            failed_libs+=("libevent")
+        fi
+
+        # CXXTerminal
+        log_substep "Compilando CXXTerminal..."
+        if library_path="CXXTerminal" libevent_path=event ../build-helpers/libraries/build_cxxterminal.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "CXXTerminal compilada"
+            ((compiled_libs++))
+        else
+            log_warning "CXXTerminal falló"
+            failed_libs+=("CXXTerminal")
+        fi
+
+        # DataPipes
+        log_substep "Compilando DataPipes..."
+        if library_path="DataPipes" ./build_datapipes.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "DataPipes compilada"
+            ((compiled_libs++))
+        else
+            log_warning "DataPipes falló"
+            failed_libs+=("DataPipes")
+        fi
+
+        # ed25519
+        log_substep "Compilando ed25519..."
+        if library_path="ed25519" ../build-helpers/libraries/build_ed25519.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "ed25519 compilada"
+            ((compiled_libs++))
+        else
+            log_warning "ed25519 falló"
+            failed_libs+=("ed25519")
+        fi
+
+        # jsoncpp
+        log_substep "Compilando jsoncpp..."
+        if library_path="jsoncpp" ../build-helpers/libraries/build_jsoncpp.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "jsoncpp compilada"
+            ((compiled_libs++))
+        else
+            log_warning "jsoncpp falló"
+            failed_libs+=("jsoncpp")
+        fi
+
+        # opus
+        log_substep "Compilando opus..."
+        if library_path="opus" ../build-helpers/libraries/build_opus.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "opus compilada"
+            ((compiled_libs++))
+        else
+            log_warning "opus falló"
+            failed_libs+=("opus")
+        fi
+
+        # protobuf
+        log_substep "Compilando protobuf..."
+        if library_path="protobuf" ./build_protobuf.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "protobuf compilada"
+            ((compiled_libs++))
+        else
+            log_warning "protobuf falló"
+            failed_libs+=("protobuf")
+        fi
+
+        # spdlog
+        log_substep "Compilando spdlog..."
+        if library_path="spdlog" ../build-helpers/libraries/build_spdlog.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "spdlog compilada"
+            ((compiled_libs++))
+        else
+            log_warning "spdlog falló"
+            failed_libs+=("spdlog")
+        fi
+
+        # StringVariable
+        log_substep "Compilando StringVariable..."
+        if library_path="StringVariable" ../build-helpers/libraries/build_stringvariable.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "StringVariable compilada"
+            ((compiled_libs++))
+        else
+            log_warning "StringVariable falló"
+            failed_libs+=("StringVariable")
+        fi
+
+        # yaml-cpp
+        log_substep "Compilando yaml-cpp..."
+        if library_path="yaml-cpp" ../build-helpers/libraries/build_yamlcpp.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "yaml-cpp compilada"
+            ((compiled_libs++))
+        else
+            log_warning "yaml-cpp falló"
+            failed_libs+=("yaml-cpp")
+        fi
+
+        # jemalloc
+        log_substep "Compilando jemalloc..."
+        if library_path="jemalloc" ../build-helpers/libraries/build_jemalloc.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "jemalloc compilada"
+            ((compiled_libs++))
+        else
+            log_warning "jemalloc falló"
+            failed_libs+=("jemalloc")
+        fi
+
+        # zstd
+        log_substep "Compilando zstd..."
+        if library_path="zstd" ../build-helpers/libraries/build_zstd.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "zstd compilada"
+            ((compiled_libs++))
+        else
+            log_warning "zstd falló"
+            failed_libs+=("zstd")
+        fi
+
+        # breakpad (último porque se cuelga - con timeout de 10 min)
+        log_substep "Compilando breakpad (puede tardar)..."
+        if timeout 600 library_path="breakpad" ../build-helpers/libraries/build_breakpad.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "breakpad compilada"
+            ((compiled_libs++))
+        else
+            log_warning "breakpad falló o excedió timeout (10 min)"
+            failed_libs+=("breakpad")
+        fi
+
+        # Resumen final
+        echo ""
+        echo "═══════════════════════════════════════════════════════════"
+        if [[ ${#failed_libs[@]} -eq 0 ]]; then
+            log_success "TODAS las librerías ($total_libs/$total_libs) compiladas exitosamente"
+        else
+            log_warning "Librerías compiladas: $compiled_libs/$total_libs"
+            log_error "Librerías que FALLARON (${#failed_libs[@]}): ${failed_libs[*]}"
+            log_error "Ver detalles completos en: $LOG_FILE.libraries"
+            echo ""
+            log_warning "¿Deseas continuar de todas formas?"
+            log_info "Las librerías críticas (tommath, tomcrypt, Thread-Pool) están OK"
+            read -p "Continuar con la compilación de TeaSpeak? [s/N]: " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Ss]$ ]]; then
+                log_error "Instalación abortada por el usuario"
+                exit 1
+            fi
+        fi
+        echo "═══════════════════════════════════════════════════════════"
     else
         log_error "build_helper.sh no encontrado"
         exit 1
