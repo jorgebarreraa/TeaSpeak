@@ -608,6 +608,31 @@ download_libraries() {
 
     cd "$SCRIPT_DIR/Server/Root/libraries"
 
+    # Limpiar librerías que cambiaron de URL a fork del usuario
+    log_substep "Limpiando librerías con URLs actualizadas..."
+    local libs_to_clean=(
+        "DataPipes"
+        "tommath"
+        "tomcrypt"
+        "Thread-Pool"
+    )
+
+    for lib in "${libs_to_clean[@]}"; do
+        if [[ -d "$lib" ]]; then
+            cd "$lib" 2>/dev/null && {
+                local remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+                if [[ "$remote_url" != *"jorgebarreraa"* && "$remote_url" != "" ]]; then
+                    cd ..
+                    log_info "Borrando $lib (URL antigua: ${remote_url%%/git*})"
+                    rm -rf "$lib"
+                else
+                    cd ..
+                fi
+            }
+        fi
+    done
+    log_success "URLs verificadas y limpias"
+
     # Limpiar enlaces simbólicos rotos
     log_substep "Limpiando enlaces simbólicos rotos..."
     rm -f tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
