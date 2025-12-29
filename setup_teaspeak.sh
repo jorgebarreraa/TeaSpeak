@@ -740,6 +740,14 @@ compile_libraries() {
     if [[ -f "../build-helpers/build_helper.sh" ]]; then
         source ../build-helpers/build_helper.sh
 
+        # Limpiar cachés de compilaciones previas fallidas
+        log_substep "Limpiando cachés de compilaciones anteriores..."
+        find . -maxdepth 2 -type d -name "_build" -exec rm -rf {} + 2>/dev/null || true
+        find . -maxdepth 2 -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
+        find . -maxdepth 3 -path "*/out/linux_amd64" -type d -exec rm -rf {} + 2>/dev/null || true
+        find . -maxdepth 2 -name ".build_linux_amd64.txt" -delete 2>/dev/null || true
+        log_success "Cachés eliminados"
+
         # TomMath (CRÍTICA)
         log_substep "Compilando TomMath..."
         if library_path="tommath" ../build-helpers/libraries/build_tommath.sh >> "$LOG_FILE.libraries" 2>&1; then

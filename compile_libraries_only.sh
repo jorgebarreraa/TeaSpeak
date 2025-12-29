@@ -30,9 +30,13 @@ echo -e "${YELLOW}▸ Limpiando procesos de compilación previos...${NC}"
 pkill -9 -f "build_breakpad.sh" 2>/dev/null || true
 pkill -9 -f "stackwalker" 2>/dev/null || true
 
-# Limpiar archivos de estado
-echo -e "${YELLOW}▸ Limpiando archivos de estado de compilaciones antiguas...${NC}"
+# Limpiar cachés de compilaciones previas fallidas
+echo -e "${YELLOW}▸ Limpiando cachés de compilaciones anteriores...${NC}"
+find . -maxdepth 2 -type d -name "_build" -exec rm -rf {} + 2>/dev/null || true
+find . -maxdepth 2 -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
+find . -maxdepth 3 -path "*/out/linux_amd64" -type d -exec rm -rf {} + 2>/dev/null || true
 find . -maxdepth 2 -name ".build_linux_amd64.txt" -delete 2>/dev/null || true
+echo -e "${GREEN}✓ Cachés eliminados${NC}"
 
 # Exportar variables
 export build_os_type=linux
