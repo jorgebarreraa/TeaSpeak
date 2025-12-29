@@ -790,7 +790,7 @@ compile_libraries() {
 
         # Compilar TODAS las librerías restantes individualmente
         local failed_libs=()
-        local total_libs=16
+        local total_libs=17
         local compiled_libs=3  # Ya compilamos tommath, tomcrypt, Thread-Pool
 
         # libevent
@@ -803,6 +803,16 @@ compile_libraries() {
             failed_libs+=("libevent")
         fi
 
+        # BoringSSL (REQUERIDO por DataPipes)
+        log_substep "Compilando BoringSSL..."
+        if library_path="boringssl" ../build-helpers/libraries/build_boringssl.sh >> "$LOG_FILE.libraries" 2>&1; then
+            log_success "BoringSSL compilada"
+            ((compiled_libs++))
+        else
+            log_warning "BoringSSL falló"
+            failed_libs+=("BoringSSL")
+        fi
+
         # CXXTerminal
         log_substep "Compilando CXXTerminal..."
         if library_path="CXXTerminal" libevent_path=event ../build-helpers/libraries/build_cxxterminal.sh >> "$LOG_FILE.libraries" 2>&1; then
@@ -813,9 +823,9 @@ compile_libraries() {
             failed_libs+=("CXXTerminal")
         fi
 
-        # DataPipes
+        # DataPipes (requiere BoringSSL)
         log_substep "Compilando DataPipes..."
-        if library_path="DataPipes" ./build_datapipes.sh >> "$LOG_FILE.libraries" 2>&1; then
+        if library_path="DataPipes" ../build-helpers/libraries/build_datapipes.sh >> "$LOG_FILE.libraries" 2>&1; then
             log_success "DataPipes compilada"
             ((compiled_libs++))
         else

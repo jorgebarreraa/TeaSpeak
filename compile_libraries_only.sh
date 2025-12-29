@@ -99,62 +99,67 @@ compile_lib "event" \
     "../build-helpers/libraries/build_libevent.sh" \
     "event/out/linux_amd64/lib/libevent.a"
 
-# 5. CXXTerminal
+# 5. BoringSSL (REQUERIDO por DataPipes)
+compile_lib "boringssl" \
+    "../build-helpers/libraries/build_boringssl.sh" \
+    "boringssl/lib/libcrypto.a"
+
+# 6. CXXTerminal
 compile_lib "CXXTerminal" \
     "../build-helpers/libraries/build_cxxterminal.sh" \
     "CXXTerminal/out/linux_amd64/include/Terminal.h"
 
-# 6. DataPipes (CON FIX DE STDEXCEPT)
+# 7. DataPipes (CON FIX DE STDEXCEPT - requiere BoringSSL)
 compile_lib "DataPipes" \
     "../build-helpers/libraries/build_datapipes.sh" \
     "DataPipes/out/linux_amd64/include/pipes/buffer.h"
 
-# 7. ed25519
+# 8. ed25519
 compile_lib "ed25519" \
     "../build-helpers/libraries/build_ed25519.sh" \
     "ed25519/out/linux_amd64/lib/libed25519.a"
 
-# 8. jsoncpp
+# 9. jsoncpp
 compile_lib "jsoncpp" \
     "../build-helpers/libraries/build_jsoncpp.sh" \
     "jsoncpp/out/linux_amd64/lib/libjsoncpp.a"
 
-# 9. opus
+# 10. opus
 compile_lib "opus" \
     "../build-helpers/libraries/build_opus.sh" \
     "opus/out/linux_amd64/lib/libopus.a"
 
-# 10. protobuf
+# 11. protobuf
 compile_lib "protobuf" \
     "../build-helpers/libraries/build_protobuf.sh" \
     "protobuf/out/linux_amd64/lib/libprotobuf-lite.a"
 
-# 11. spdlog
+# 12. spdlog
 compile_lib "spdlog" \
     "../build-helpers/libraries/build_spdlog.sh" \
     "spdlog/out/linux_amd64/include/spdlog/spdlog.h"
 
-# 12. StringVariable
+# 13. StringVariable
 compile_lib "StringVariable" \
     "../build-helpers/libraries/build_stringvariable.sh" \
     "StringVariable/out/linux_amd64/include/StringVariable.h"
 
-# 13. yaml-cpp
+# 14. yaml-cpp
 compile_lib "yaml-cpp" \
     "../build-helpers/libraries/build_yaml.sh" \
     "yaml-cpp/out/linux_amd64/lib/libyaml-cpp.a"
 
-# 14. jemalloc
+# 15. jemalloc
 compile_lib "jemalloc" \
     "../build-helpers/libraries/build_jemalloc.sh" \
     "jemalloc/out/linux_amd64/lib/libjemalloc.a"
 
-# 15. zstd
+# 16. zstd
 compile_lib "zstd" \
     "../build-helpers/libraries/build_zstd.sh" \
     "zstd/out/linux_amd64/lib/libzstd.a"
 
-# 16. breakpad (puede tardar mucho o colgar)
+# 17. breakpad (puede tardar mucho o colgar)
 echo -e "${YELLOW}▸ Compilando breakpad (puede tardar)...${NC}"
 if timeout 600 bash -c 'library_path="breakpad" ../build-helpers/libraries/build_breakpad.sh' >> "$LOG_FILE" 2>&1; then
     if [[ -f "breakpad/out/linux_amd64/lib/libbreakpad.a" ]]; then
@@ -173,21 +178,21 @@ fi
 
 echo ""
 echo "═══════════════════════════════════════════════════════════"
-if [[ $successful -eq 16 ]]; then
-    echo -e "${GREEN}[✓] ÉXITO: Todas las 16 librerías compiladas correctamente${NC}"
-elif [[ $successful -ge 12 ]]; then
-    echo -e "${YELLOW}[⚠] Librerías compiladas: $successful/16${NC}"
+if [[ $successful -eq 17 ]]; then
+    echo -e "${GREEN}[✓] ÉXITO: Todas las 17 librerías compiladas correctamente${NC}"
+elif [[ $successful -ge 13 ]]; then
+    echo -e "${YELLOW}[⚠] Librerías compiladas: $successful/17${NC}"
     echo -e "${RED}[✗] Librerías que FALLARON ($failed): ${failed_libs[@]}${NC}"
     echo -e "${BLUE}[INFO] Las librerías críticas están compiladas (suficiente para continuar)${NC}"
 else
-    echo -e "${RED}[✗] ERROR: Solo $successful/16 librerías compiladas${NC}"
+    echo -e "${RED}[✗] ERROR: Solo $successful/17 librerías compiladas${NC}"
     echo -e "${RED}[✗] Librerías que FALLARON ($failed): ${failed_libs[@]}${NC}"
 fi
 echo -e "${BLUE}[✗] Ver detalles completos en: $LOG_FILE${NC}"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
 
-if [[ $successful -ge 12 ]]; then
+if [[ $successful -ge 13 ]]; then
     echo -e "${GREEN}✅ Compilación completada con éxito suficiente${NC}"
     echo ""
     echo "🎯 Siguiente paso:"
