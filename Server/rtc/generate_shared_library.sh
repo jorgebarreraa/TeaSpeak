@@ -37,13 +37,16 @@ export OPENSSL_INCLUDE_DIR="/usr/include"
 export PKG_CONFIG_PATH="$install_prefix/lib/$(gcc -dumpmachine)/pkgconfig/:${openssl_pkgdir}/"
 export PATH="$PATH:$install_prefix/bin"
 
-# Clean ALL cargo artifacts and caches
+# Clean ALL cargo artifacts and caches - including incremental compilation
 echo "Cleaning ALL cargo caches and build artifacts..."
 rm -rf target/
 rm -rf ~/.cargo/registry/cache/*
 rm -rf ~/.cargo/registry/src/*
 rm -rf ~/.cargo/git/checkouts/*
 rm -rf ~/.cargo/git/db/*
+
+# Also remove any cached build scripts
+find ~/.cargo/registry -name "build-script-build" -delete 2>/dev/null || true
 
 cargo update || exit 1
 
