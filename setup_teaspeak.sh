@@ -222,7 +222,8 @@ install_dependencies() {
         libtool \
         gettext \
         coreutils \
-        software-properties-common
+        software-properties-common \
+        golang-go
 
     log_substep "Instalando librerías del sistema..."
     # Instalar librerías del sistema (ignorar errores de paquetes no disponibles)
