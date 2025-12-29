@@ -852,7 +852,7 @@ compile_libraries() {
 
         # breakpad (último porque se cuelga - con timeout de 10 min)
         log_substep "Compilando breakpad (puede tardar)..."
-        if timeout 600 library_path="breakpad" ../build-helpers/libraries/build_breakpad.sh >> "$LOG_FILE.libraries" 2>&1; then
+        if timeout 600 bash -c 'library_path="breakpad" ../build-helpers/libraries/build_breakpad.sh' >> "$LOG_FILE.libraries" 2>&1; then
             log_success "breakpad compilada"
             ((compiled_libs++))
         else
