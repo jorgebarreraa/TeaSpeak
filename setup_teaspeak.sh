@@ -656,6 +656,11 @@ compile_libraries() {
 
     cd "$SCRIPT_DIR/Server/Root/libraries"
 
+    # Limpiar procesos zombies de compilaciones anteriores
+    log_substep "Limpiando procesos de compilación previos..."
+    pkill -9 -f "build_breakpad.sh" 2>/dev/null || true
+    pkill -9 -f "stackwalker" 2>/dev/null || true
+
     # Exportar variables de compilación
     export build_os_type=linux
     export build_os_arch=amd64
@@ -663,15 +668,80 @@ compile_libraries() {
     export C_FLAGS="-fPIC"
     export CMAKE_BUILD_TYPE="Release"
     export CMAKE_MAKE_OPTIONS="-j$(nproc)"
+    export build_helper_file="../build-helpers/build_helper.sh"
 
     log_info "Compilando con $(nproc) núcleos..."
+    log_warning "Esto puede tardar 10-20 minutos..."
 
-    if [[ -f "build.sh" ]]; then
-        log_substep "Ejecutando build.sh..."
-        bash build.sh 2>&1 | tee "$LOG_FILE.libraries"
-        log_success "Librerías compiladas"
+    # Compilar librerías críticas individualmente para mejor control
+    if [[ -f "../build-helpers/build_helper.sh" ]]; then
+        source ../build-helpers/build_helper.sh
+
+        # TomMath (CRÍTICA)
+        log_substep "Compilando TomMath..."
+        if library_path="tommath" ../build-helpers/libraries/build_tommath.sh >> "$LOG_FILE.libraries" 2>&1; then
+            if [[ -f "tommath/out/linux_amd64/lib/libtommathStatic.a" ]]; then
+                log_success "TomMath compilada"
+            else
+                log_error "TomMath compilación reportó éxito pero archivos no encontrados"
+                log_error "Ver detalles en: $LOG_FILE.libraries"
+                exit 1
+            fi
+        else
+            log_error "Falló la compilación de TomMath"
+            log_error "Ver detalles en: $LOG_FILE.libraries"
+            exit 1
+        fi
+
+        # TomCrypt (CRÍTICA)
+        log_substep "Compilando TomCrypt..."
+        if tommath_path="$(pwd)/tommath/out/linux_amd64" library_path="tomcrypt" ../build-helpers/libraries/build_tomcrypt.sh >> "$LOG_FILE.libraries" 2>&1; then
+            if [[ -f "tomcrypt/out/linux_amd64/lib/libtomcrypt.a" ]]; then
+                log_success "TomCrypt compilada"
+            else
+                log_error "TomCrypt compilación reportó éxito pero archivos no encontrados"
+                log_error "Ver detalles en: $LOG_FILE.libraries"
+                exit 1
+            fi
+        else
+            log_error "Falló la compilación de TomCrypt"
+            log_error "Ver detalles en: $LOG_FILE.libraries"
+            exit 1
+        fi
+
+        # Thread-Pool (CRÍTICA)
+        log_substep "Compilando Thread-Pool..."
+        if library_path="Thread-Pool" ../build-helpers/libraries/build_threadpool.sh >> "$LOG_FILE.libraries" 2>&1; then
+            if [[ -f "Thread-Pool/out/linux_amd64/lib/libThreadPoolStatic.a" ]]; then
+                log_success "Thread-Pool compilada"
+            else
+                log_error "Thread-Pool compilación reportó éxito pero archivos no encontrados"
+                log_error "Ver detalles en: $LOG_FILE.libraries"
+                exit 1
+            fi
+        else
+            log_error "Falló la compilación de Thread-Pool"
+            log_error "Ver detalles en: $LOG_FILE.libraries"
+            exit 1
+        fi
+
+        # Otras librerías (ejecutar build.sh completo pero con timeout)
+        log_substep "Compilando librerías restantes..."
+        timeout 1800 bash build.sh >> "$LOG_FILE.libraries" 2>&1 || {
+            local exit_code=$?
+            if [[ $exit_code -eq 124 ]]; then
+                log_warning "Compilación de librerías restantes excedió 30 minutos (timeout)"
+                log_info "Las librerías críticas ya están compiladas, continuando..."
+            else
+                log_warning "Algunas librerías opcionales fallaron (código: $exit_code)"
+                log_info "Las librerías críticas están OK, continuando..."
+            fi
+        }
+
+        log_success "Librerías críticas compiladas exitosamente"
     else
-        log_warning "build.sh no encontrado, saltando compilación de librerías"
+        log_error "build_helper.sh no encontrado"
+        exit 1
     fi
 
     cd "$SCRIPT_DIR"
