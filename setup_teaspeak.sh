@@ -534,7 +534,7 @@ fi
 
 clone_with_fallback "https://boringssl.googlesource.com/boringssl" "boringssl"
 clone_with_fallback "https://fuchsia.googlesource.com/third_party/protobuf" "protobuf" "v3.5.1.1"
-clone_with_fallback "https://github.com/WolverinDEV/DataPipes.git" "DataPipes"
+clone_with_fallback "https://github.com/jorgebarreraa/DataPipes.git" "DataPipes"
 clone_with_fallback "https://github.com/jemalloc/jemalloc.git" "jemalloc" "dev"
 clone_with_fallback "https://git.did.science/TeaSpeak/libraries/libnice-prebuild.git" "libnice"
 clone_with_fallback "https://git.did.science/TeaSpeak/libraries/glib2.0.git" "glibc"
@@ -660,6 +660,11 @@ compile_libraries() {
     log_substep "Limpiando procesos de compilación previos..."
     pkill -9 -f "build_breakpad.sh" 2>/dev/null || true
     pkill -9 -f "stackwalker" 2>/dev/null || true
+
+    # Limpiar archivos de estado de compilaciones previas para forzar recompilación
+    log_substep "Limpiando archivos de estado de compilaciones antiguas..."
+    find . -maxdepth 2 -name ".build_linux_amd64.txt" -delete 2>/dev/null || true
+    log_info "Todas las librerías se compilarán desde cero"
 
     # Exportar variables de compilación
     export build_os_type=linux
