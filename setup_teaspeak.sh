@@ -81,6 +81,7 @@ log_substep() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GITHUB_USER=""
 SKIP_DEPS=false
+SKIP_LIBS=false
 BUILD_TYPE="stable"
 REQUIRED_OPENSSL_VERSION="3.0"
 MIN_GCC_VERSION="9"
@@ -98,6 +99,10 @@ parse_args() {
                 ;;
             --skip-deps)
                 SKIP_DEPS=true
+                shift
+                ;;
+            --skip-libs)
+                SKIP_LIBS=true
                 shift
                 ;;
             --build-type)
@@ -123,9 +128,10 @@ Uso: $0 [opciones]
 
 Opciones:
   --github-user <username>  Usar forks de este usuario de GitHub
-  --skip-deps              Saltar instalación de dependencias del sistema
-  --build-type <type>      Tipo de build: stable, optimized, debug, nightly (default: stable)
-  --help                   Mostrar esta ayuda
+  --skip-deps               Saltar instalación de dependencias del sistema
+  --skip-libs               Saltar compilación de librerías (usar cache existente)
+  --build-type <type>       Tipo de build: stable, optimized, debug, nightly (default: stable)
+  --help                    Mostrar esta ayuda
 
 Ejemplos:
   $0
@@ -734,6 +740,66 @@ compile_libraries() {
     log_step "PASO 9: Compilando Librerías"
 
     cd "$SCRIPT_DIR/Server/Root/libraries"
+
+    # Si se especificó --skip-libs, saltar sin preguntar
+    if [[ "$SKIP_LIBS" == true ]]; then
+        log_info "Flag --skip-libs detectado, saltando compilación de librerías"
+        cd "$SCRIPT_DIR"
+        return 0
+    fi
+
+    # Verificar si las librerías ya están compiladas
+    log_substep "Verificando librerías compiladas..."
+    local compiled_count=0
+    local total_libs=17
+    local libs_to_check=(
+        "tommath/out/linux_amd64/lib/libtommathStatic.a"
+        "tomcrypt/out/linux_amd64/lib/libtomcrypt.a"
+        "Thread-Pool/out/linux_amd64/lib/libThreadPoolStatic.a"
+        "CXXTerminal/out/linux_amd64/lib/libCXXTerminalStatic.a"
+        "DataPipes/out/linux_amd64/lib/libDataPipesStatic.a"
+        "ed25519/out/linux_amd64/lib/libed25519.a"
+        "jsoncpp/out/linux_amd64/lib/libjsoncpp.a"
+        "opus/out/linux_amd64/lib/libopus.a"
+        "protobuf/out/linux_amd64/lib/libprotobuf.a"
+        "spdlog/out/linux_amd64/lib/libspdlog.a"
+        "StringVariable/out/linux_amd64/lib/libStringVariableStatic.a"
+        "yaml-cpp/out/linux_amd64/lib/libyaml-cpp.a"
+        "jemalloc/out/linux_amd64/lib/libjemalloc.a"
+        "zstd/out/linux_amd64/lib/libzstd.a"
+        "event/_build/linux_amd64/lib/libevent.a"
+        "boringssl/out/linux_amd64/lib/libssl.a"
+        "breakpad/out/linux_amd64/lib/libbreakpad.a"
+    )
+
+    for lib in "${libs_to_check[@]}"; do
+        if [[ -f "$lib" ]]; then
+            ((compiled_count++))
+        fi
+    done
+
+    log_info "Librerías compiladas: $compiled_count/$total_libs"
+
+    # Si todas las librerías están compiladas, preguntar al usuario
+    if [[ $compiled_count -eq $total_libs ]]; then
+        log_success "✓ Todas las librerías ya están compiladas"
+        echo ""
+        log_warning "¿Deseas recompilar todas las librerías?"
+        log_info "  • Recompilar puede tardar 10-20 minutos"
+        log_info "  • Puedes usar --skip-libs para saltar esta pregunta en el futuro"
+        echo ""
+        read -p "Recompilar librerías? [s/N]: " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Ss]$ ]]; then
+            log_success "Usando cache de librerías existentes"
+            cd "$SCRIPT_DIR"
+            return 0
+        fi
+        log_warning "Recompilando todas las librerías desde cero..."
+    elif [[ $compiled_count -gt 0 ]]; then
+        log_warning "Algunas librerías ya están compiladas ($compiled_count/$total_libs)"
+        log_info "Las librerías faltantes serán compiladas"
+    fi
 
     # Limpiar procesos zombies de compilaciones anteriores
     log_substep "Limpiando procesos de compilación previos..."
