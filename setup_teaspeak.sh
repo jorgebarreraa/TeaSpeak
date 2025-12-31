@@ -1343,6 +1343,21 @@ EOF
         fi
     fi
 
+    # Verificar que el directorio Server/ existe (parte del repositorio)
+    if [[ ! -d "$SCRIPT_DIR/Server" ]]; then
+        log_warning "Directorio Server/ no encontrado"
+        log_info "Restaurando Server/ desde el repositorio Git..."
+
+        cd "$SCRIPT_DIR"
+        if git checkout HEAD -- Server/ >> "$LOG_FILE" 2>&1; then
+            log_success "✓ Directorio Server/ restaurado exitosamente"
+        else
+            log_error "No se pudo restaurar Server/ desde Git"
+            log_error "Por favor ejecuta: git checkout HEAD -- Server/"
+            exit 1
+        fi
+    fi
+
     # Ejecutar pasos
     check_system
     install_dependencies
