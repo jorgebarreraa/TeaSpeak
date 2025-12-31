@@ -1062,7 +1062,8 @@ compile_libraries() {
 initialize_submodules() {
     log_step "PASO 9.5: Inicializando Submódulos de TeaSpeak"
 
-    cd "$SCRIPT_DIR/Server/Server"
+    # El código se compila desde Server/Root/TeaSpeak/, no desde Server/Server/
+    cd "$SCRIPT_DIR/Server/Root/TeaSpeak"
 
     # Actualizar .gitmodules para usar repositorios de jorgebarreraa
     log_substep "Actualizando .gitmodules a repositorios de ${GITHUB_USER}..."
