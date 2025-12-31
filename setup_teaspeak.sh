@@ -970,6 +970,99 @@ compile_libraries() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PASO 9.5: Inicializar submódulos de TeaSpeak
+# ═══════════════════════════════════════════════════════════════════════════
+initialize_submodules() {
+    log_step "PASO 9.5: Inicializando Submódulos de TeaSpeak"
+
+    cd "$SCRIPT_DIR/Server/Root/TeaSpeak"
+
+    # Actualizar .gitmodules para usar repositorios de jorgebarreraa
+    log_substep "Actualizando .gitmodules a repositorios de ${GITHUB_USER}..."
+
+    if [[ -f ".gitmodules" ]]; then
+        # Actualizar URL del submódulo shared
+        if grep -q "path = shared" .gitmodules; then
+            sed -i "s|url = .*TeaSpeakLibrary.*|url = https://github.com/${GITHUB_USER}/TeaSpeakLibrary.git|g" .gitmodules
+            log_info "URL de 'shared' actualizada"
+        fi
+
+        # Actualizar URL del submódulo music
+        if grep -q "path = music" .gitmodules; then
+            sed -i "s|url = .*TeaMusic.*|url = https://github.com/${GITHUB_USER}/TeaMusic-Providers.git|g" .gitmodules
+            log_info "URL de 'music' actualizada"
+        fi
+    fi
+
+    # Verificar y clonar submódulo 'shared' (TeaSpeakLibrary)
+    log_substep "Verificando submódulo 'shared'..."
+    if [[ -d "shared/.git" ]]; then
+        cd shared
+        local remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+        if [[ "$remote_url" != *"${GITHUB_USER}"* && "$remote_url" != "" ]]; then
+            cd ..
+            log_warning "Submódulo 'shared' tiene URL antigua, eliminando..."
+            rm -rf shared
+        else
+            cd ..
+            log_success "Submódulo 'shared' ya existe con URL correcta"
+        fi
+    fi
+
+    if [[ ! -d "shared/.git" ]]; then
+        log_info "Clonando TeaSpeakLibrary desde ${GITHUB_USER}..."
+        if [[ -n "${GITHUB_TOKEN}" ]]; then
+            git clone "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaSpeakLibrary.git" shared >> "$LOG_FILE" 2>&1
+        else
+            git clone "https://github.com/${GITHUB_USER}/TeaSpeakLibrary.git" shared >> "$LOG_FILE" 2>&1
+        fi
+
+        if [[ $? -eq 0 ]]; then
+            log_success "Submódulo 'shared' clonado exitosamente"
+        else
+            log_error "Falló la clonación de 'shared'"
+            log_error "Verifica que el repositorio ${GITHUB_USER}/TeaSpeakLibrary exista"
+            exit 1
+        fi
+    fi
+
+    # Verificar y clonar submódulo 'music' (TeaMusic-Providers)
+    log_substep "Verificando submódulo 'music'..."
+    if [[ -d "music/.git" ]]; then
+        cd music
+        local remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+        if [[ "$remote_url" != *"${GITHUB_USER}"* && "$remote_url" != "" ]]; then
+            cd ..
+            log_warning "Submódulo 'music' tiene URL antigua, eliminando..."
+            rm -rf music
+        else
+            cd ..
+            log_success "Submódulo 'music' ya existe con URL correcta"
+        fi
+    fi
+
+    if [[ ! -d "music/.git" ]]; then
+        log_info "Clonando TeaMusic-Providers desde ${GITHUB_USER}..."
+        if [[ -n "${GITHUB_TOKEN}" ]]; then
+            git clone "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaMusic-Providers.git" music >> "$LOG_FILE" 2>&1
+        else
+            git clone "https://github.com/${GITHUB_USER}/TeaMusic-Providers.git" music >> "$LOG_FILE" 2>&1
+        fi
+
+        if [[ $? -eq 0 ]]; then
+            log_success "Submódulo 'music' clonado exitosamente"
+        else
+            log_error "Falló la clonación de 'music'"
+            log_error "Verifica que el repositorio ${GITHUB_USER}/TeaMusic-Providers exista"
+            exit 1
+        fi
+    fi
+
+    log_success "Submódulos inicializados correctamente"
+    cd "$SCRIPT_DIR"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PASO 10: Compilar TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════════
 compile_teaspeak() {
@@ -1120,6 +1213,7 @@ EOF
     update_rust_cargo_dependencies "$GITHUB_USER"  # Modificar Cargo.toml para usar repos del usuario
     fix_permissions
     compile_libraries
+    initialize_submodules  # Clonar submódulos TeaSpeakLibrary y TeaMusic-Providers
     compile_teaspeak
     verify_build
     show_summary
