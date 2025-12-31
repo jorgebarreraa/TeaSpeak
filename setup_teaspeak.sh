@@ -1113,18 +1113,74 @@ initialize_submodules() {
     fi
 
     # Parchar CMakeLists.txt del módulo music para corregir rutas de librerías
-    log_substep "Aplicando parche de rutas a music/CMakeLists.txt..."
+    log_substep "Aplicando parches de rutas a music/CMakeLists.txt..."
     if [[ -f "music/CMakeLists.txt" ]]; then
-        # Corregir rutas de libevent: event/build/lib/ -> event/_build/linux_amd64/lib/
-        sed -i 's|/event/build/lib/|/event/_build/linux_amd64/lib/|g' music/CMakeLists.txt 2>/dev/null || true
-
-        # Corregir rutas de includes de libevent
+        # Corregir TODAS las variantes de rutas de libevent
+        sed -i 's|event/build/lib|event/_build/linux_amd64/lib|g' music/CMakeLists.txt 2>/dev/null || true
         sed -i 's|event/build/include|event/_build/linux_amd64/include|g' music/CMakeLists.txt 2>/dev/null || true
 
-        log_success "CMakeLists.txt de music parcheado"
+        # Corregir rutas de Thread-Pool
+        sed -i 's|Thread-Pool/build|Thread-Pool/out/linux_amd64|g' music/CMakeLists.txt 2>/dev/null || true
+
+        # Agregar include directories necesarios si no existen
+        if ! grep -q "libraries/Thread-Pool/src" music/CMakeLists.txt; then
+            log_substep "Agregando include directories a music/CMakeLists.txt..."
+            # Insertar después de la línea "include_directories(include)"
+            sed -i '/^include_directories(include)/a \
+# Include directories agregados automáticamente por setup_teaspeak.sh\
+include_directories(../libraries/Thread-Pool/src)\
+include_directories(../libraries/event/include)\
+include_directories(../libraries/event/_build/linux_amd64/include)' music/CMakeLists.txt
+            log_success "✓ Include directories agregados"
+        fi
+
+        # Mostrar cambios aplicados
+        log_info "Verificando parches aplicados..."
+        if grep -q "event/_build/linux_amd64" music/CMakeLists.txt; then
+            log_success "✓ Rutas de libevent corregidas"
+        fi
+        if grep -q "Thread-Pool/src" music/CMakeLists.txt; then
+            log_success "✓ Include directories de Thread-Pool agregados"
+        fi
+
+        log_success "CMakeLists.txt de music parcheado completamente"
+    else
+        log_warning "music/CMakeLists.txt no encontrado"
     fi
 
     log_success "Submódulos inicializados correctamente"
+    cd "$SCRIPT_DIR"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PASO 9.6: Parchar rutas de librerías en CMakeLists.txt principal
+# ═══════════════════════════════════════════════════════════════════════════
+patch_cmake_library_paths() {
+    log_step "PASO 9.6: Parcheando Rutas de Librerías en CMakeLists.txt"
+
+    cd "$SCRIPT_DIR/Server/Server"
+
+    if [[ ! -f "CMakeLists.txt" ]]; then
+        log_error "CMakeLists.txt no encontrado en Server/Server/"
+        exit 1
+    fi
+
+    # Parche crítico: Corregir LIBEVENT_PATH
+    log_substep "Corrigiendo ruta de libevent..."
+    if grep -q 'event/build/lib' CMakeLists.txt; then
+        sed -i 's|event/build/lib|event/_build/linux_amd64/lib|g' CMakeLists.txt
+        log_success "✓ LIBEVENT_PATH corregida: event/_build/linux_amd64/lib"
+    else
+        log_info "Ruta de libevent ya corregida o no encontrada"
+    fi
+
+    # Verificar el cambio
+    if grep -q 'event/_build/linux_amd64/lib' CMakeLists.txt; then
+        log_success "✓ Verificación exitosa: CMakeLists.txt parcheado correctamente"
+    else
+        log_warning "⚠ No se pudo verificar el parche (puede ser normal si ya estaba corregido)"
+    fi
+
     cd "$SCRIPT_DIR"
 }
 
@@ -1298,8 +1354,9 @@ EOF
     update_rust_cargo_dependencies "$GITHUB_USER"  # Modificar Cargo.toml para usar repos del usuario
     fix_permissions
     compile_libraries
-    initialize_submodules  # Clonar submódulos TeaSpeakLibrary y TeaMusic-Providers
-    sync_cmake_modules     # Sincronizar módulos CMake actualizados desde GitHub
+    initialize_submodules       # Clonar submódulos TeaSpeakLibrary y TeaMusic-Providers
+    patch_cmake_library_paths   # Parchar rutas de librerías en CMakeLists.txt principal
+    sync_cmake_modules          # Sincronizar módulos CMake actualizados desde GitHub
     compile_teaspeak
     verify_build
     show_summary
