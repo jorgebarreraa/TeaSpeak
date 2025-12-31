@@ -1084,43 +1084,19 @@ initialize_submodules() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PASO 9.7: Sincronizar módulos CMake actualizados desde GitHub
+# PASO 9.7: Aplicar parches a módulos CMake
 # ═══════════════════════════════════════════════════════════════════════════
 sync_cmake_modules() {
-    log_step "PASO 9.7: Sincronizando Módulos CMake Actualizados"
+    log_step "PASO 9.7: Aplicando Parches a Módulos CMake"
 
-    cd "$SCRIPT_DIR/Server/Server"
+    cd "$SCRIPT_DIR"
 
-    # Verificar si estamos en un repositorio git
-    if [[ -d ".git" ]]; then
-        log_substep "Sincronizando archivos CMake desde GitHub..."
-
-        # Obtener la rama actual
-        current_branch=$(git branch --show-current 2>/dev/null || echo "")
-
-        if [[ -n "$current_branch" ]]; then
-            log_info "Rama actual: $current_branch"
-
-            # Intentar hacer pull de los archivos CMake más recientes
-            log_info "Obteniendo últimos cambios del repositorio..."
-            git fetch origin "$current_branch" >> "$LOG_FILE" 2>&1 || true
-
-            # Intentar actualizar solo el archivo Findmysql.cmake
-            if git show "origin/$current_branch:cmake/Modules/Findmysql.cmake" > /tmp/Findmysql.cmake.new 2>/dev/null; then
-                if [[ -f "cmake/Modules/Findmysql.cmake" ]]; then
-                    log_substep "Actualizando Findmysql.cmake..."
-                    cp /tmp/Findmysql.cmake.new cmake/Modules/Findmysql.cmake
-                    log_success "Findmysql.cmake actualizado desde GitHub"
-                fi
-                rm -f /tmp/Findmysql.cmake.new
-            else
-                log_info "No hay actualizaciones para Findmysql.cmake"
-            fi
-        else
-            log_warning "No se pudo detectar la rama actual"
-        fi
+    if [[ -f "apply_cmake_patches.sh" ]]; then
+        log_substep "Ejecutando script de parches CMake..."
+        bash apply_cmake_patches.sh >> "$LOG_FILE" 2>&1
+        log_success "Parches CMake aplicados"
     else
-        log_warning "No es un repositorio git, omitiendo sincronización"
+        log_warning "apply_cmake_patches.sh no encontrado, omitiendo parches"
     fi
 
     cd "$SCRIPT_DIR"
