@@ -1079,6 +1079,18 @@ initialize_submodules() {
         fi
     fi
 
+    # Parchar CMakeLists.txt del módulo music para corregir rutas de librerías
+    log_substep "Aplicando parche de rutas a music/CMakeLists.txt..."
+    if [[ -f "music/CMakeLists.txt" ]]; then
+        # Corregir rutas de libevent: event/build/lib/ -> event/_build/linux_amd64/lib/
+        sed -i 's|/event/build/lib/|/event/_build/linux_amd64/lib/|g' music/CMakeLists.txt 2>/dev/null || true
+
+        # Corregir rutas de includes de libevent
+        sed -i 's|event/build/include|event/_build/linux_amd64/include|g' music/CMakeLists.txt 2>/dev/null || true
+
+        log_success "CMakeLists.txt de music parcheado"
+    fi
+
     log_success "Submódulos inicializados correctamente"
     cd "$SCRIPT_DIR"
 }
