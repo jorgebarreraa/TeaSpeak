@@ -246,6 +246,27 @@ install_dependencies() {
     $SUDO apt-get install -y -qq libncurses5-dev 2>/dev/null || \
     $SUDO apt-get install -y -qq libncurses-dev 2>/dev/null || true
 
+    # Verificar que MySQL client dev esté instalado (crítico para TeaSpeak)
+    log_substep "Verificando instalación de MySQL client dev..."
+    if ! dpkg -l | grep -q "libmysqlclient-dev\|default-libmysqlclient-dev\|libmariadb-dev"; then
+        log_warning "MySQL client dev no detectado, intentando instalación alternativa..."
+
+        # Intentar diferentes paquetes en orden de prioridad
+        if $SUDO apt-get install -y libmysqlclient-dev 2>/dev/null; then
+            log_success "libmysqlclient-dev instalado"
+        elif $SUDO apt-get install -y default-libmysqlclient-dev 2>/dev/null; then
+            log_success "default-libmysqlclient-dev instalado"
+        elif $SUDO apt-get install -y libmariadb-dev libmariadb-dev-compat 2>/dev/null; then
+            log_success "libmariadb-dev instalado"
+        else
+            log_warning "No se pudo instalar MySQL client dev automáticamente"
+            log_info "El módulo CMake está configurado para buscar en rutas estándar"
+            log_info "Si la compilación falla, instala manualmente: sudo apt-get install libmysqlclient-dev"
+        fi
+    else
+        log_success "MySQL client dev ya está instalado"
+    fi
+
     log_success "Todas las dependencias del sistema instaladas"
 }
 
@@ -1063,6 +1084,49 @@ initialize_submodules() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PASO 9.7: Sincronizar módulos CMake actualizados desde GitHub
+# ═══════════════════════════════════════════════════════════════════════════
+sync_cmake_modules() {
+    log_step "PASO 9.7: Sincronizando Módulos CMake Actualizados"
+
+    cd "$SCRIPT_DIR/Server/Server"
+
+    # Verificar si estamos en un repositorio git
+    if [[ -d ".git" ]]; then
+        log_substep "Sincronizando archivos CMake desde GitHub..."
+
+        # Obtener la rama actual
+        current_branch=$(git branch --show-current 2>/dev/null || echo "")
+
+        if [[ -n "$current_branch" ]]; then
+            log_info "Rama actual: $current_branch"
+
+            # Intentar hacer pull de los archivos CMake más recientes
+            log_info "Obteniendo últimos cambios del repositorio..."
+            git fetch origin "$current_branch" >> "$LOG_FILE" 2>&1 || true
+
+            # Intentar actualizar solo el archivo Findmysql.cmake
+            if git show "origin/$current_branch:cmake/Modules/Findmysql.cmake" > /tmp/Findmysql.cmake.new 2>/dev/null; then
+                if [[ -f "cmake/Modules/Findmysql.cmake" ]]; then
+                    log_substep "Actualizando Findmysql.cmake..."
+                    cp /tmp/Findmysql.cmake.new cmake/Modules/Findmysql.cmake
+                    log_success "Findmysql.cmake actualizado desde GitHub"
+                fi
+                rm -f /tmp/Findmysql.cmake.new
+            else
+                log_info "No hay actualizaciones para Findmysql.cmake"
+            fi
+        else
+            log_warning "No se pudo detectar la rama actual"
+        fi
+    else
+        log_warning "No es un repositorio git, omitiendo sincronización"
+    fi
+
+    cd "$SCRIPT_DIR"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PASO 10: Compilar TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════════
 compile_teaspeak() {
@@ -1214,6 +1278,7 @@ EOF
     fix_permissions
     compile_libraries
     initialize_submodules  # Clonar submódulos TeaSpeakLibrary y TeaMusic-Providers
+    sync_cmake_modules     # Sincronizar módulos CMake actualizados desde GitHub
     compile_teaspeak
     verify_build
     show_summary
