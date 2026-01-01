@@ -360,6 +360,59 @@ else
     log_warning "shared/src/lookup/ip.h no encontrado (omitiendo parche 9)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 10: Agregar #include <utility> a file/local_server/NetTools.h
+# ═══════════════════════════════════════════════════════════════════════════
+NETTOOLS_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/file/local_server/NetTools.h"
+
+if [[ -f "$NETTOOLS_HEADER" ]]; then
+    log_info "Parcheando file/local_server/NetTools.h..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <utility>' "$NETTOOLS_HEADER"; then
+        # Agregar #include <utility> después de #include <numeric>
+        sed -i '/#include <numeric>/a #include <utility>' "$NETTOOLS_HEADER"
+
+        if grep -q '#include <utility>' "$NETTOOLS_HEADER"; then
+            log_success "✓ #include <utility> agregado a NetTools.h"
+        else
+            log_error "Error al agregar #include <utility>"
+            exit 1
+        fi
+    else
+        log_success "✓ NetTools.h ya tiene #include <utility>"
+    fi
+else
+    log_warning "file/local_server/NetTools.h no encontrado (omitiendo parche 10)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 11: Corregir include path en MusicBot/CMakeLists.txt
+# ═══════════════════════════════════════════════════════════════════════════
+MUSICBOT_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/MusicBot/CMakeLists.txt"
+
+if [[ -f "$MUSICBOT_CMAKE" ]]; then
+    log_info "Parcheando MusicBot/CMakeLists.txt..."
+
+    # Verificar si ya tiene el include_directories correcto
+    if ! grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
+        # Buscar la línea de include_directories y agregar el path a music/include
+        # Insertamos después de la línea que contiene "include_directories"
+        sed -i '/^include_directories/a include_directories(../music/include)' "$MUSICBOT_CMAKE"
+
+        if grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
+            log_success "✓ include_directories(../music/include) agregado a MusicBot/CMakeLists.txt"
+        else
+            log_error "Error al agregar include_directories"
+            exit 1
+        fi
+    else
+        log_success "✓ MusicBot/CMakeLists.txt ya tiene el include path correcto"
+    fi
+else
+    log_warning "MusicBot/CMakeLists.txt no encontrado (omitiendo parche 11)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
