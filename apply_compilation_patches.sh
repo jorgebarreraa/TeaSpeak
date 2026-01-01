@@ -247,6 +247,32 @@ else
     log_warning "shared/src/misc/task_executor.cpp no encontrado (omitiendo parche 5)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 6: Agregar #include <cstdint> a shared/src/query/escape.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+ESCAPE_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/query/escape.cpp"
+
+if [[ -f "$ESCAPE_CPP" ]]; then
+    log_info "Parcheando shared/src/query/escape.cpp..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <cstdint>' "$ESCAPE_CPP"; then
+        # Agregar #include <cstdint> después de #include <stdexcept>
+        sed -i '/#include <stdexcept>/a #include <cstdint>' "$ESCAPE_CPP"
+
+        if grep -q '#include <cstdint>' "$ESCAPE_CPP"; then
+            log_success "✓ #include <cstdint> agregado a escape.cpp"
+        else
+            log_error "Error al agregar #include <cstdint>"
+            exit 1
+        fi
+    else
+        log_success "✓ escape.cpp ya tiene #include <cstdint>"
+    fi
+else
+    log_warning "shared/src/query/escape.cpp no encontrado (omitiendo parche 6)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
