@@ -80,6 +80,7 @@ log_substep() {
 # ═══════════════════════════════════════════════════════════════════════════
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GITHUB_USER=""
+GITHUB_TOKEN=""
 SKIP_DEPS=false
 SKIP_LIBS=false
 BUILD_TYPE="stable"
@@ -95,6 +96,10 @@ parse_args() {
         case $1 in
             --github-user)
                 GITHUB_USER="$2"
+                shift 2
+                ;;
+            --github-token)
+                GITHUB_TOKEN="$2"
                 shift 2
                 ;;
             --skip-deps)
@@ -128,6 +133,7 @@ Uso: $0 [opciones]
 
 Opciones:
   --github-user <username>  Usar forks de este usuario de GitHub
+  --github-token <token>    Token de GitHub para repositorios privados
   --skip-deps               Saltar instalación de dependencias del sistema
   --skip-libs               Saltar compilación de librerías (usar cache existente)
   --build-type <type>       Tipo de build: stable, optimized, debug, nightly (default: stable)
@@ -136,6 +142,7 @@ Opciones:
 Ejemplos:
   $0
   $0 --github-user jorgebarreraa
+  $0 --github-user jorgebarreraa --github-token ghp_xxxxx
   $0 --github-user jorgebarreraa --build-type stable
   $0 --skip-deps --build-type optimized
 
