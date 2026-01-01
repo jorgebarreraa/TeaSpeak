@@ -93,6 +93,9 @@ include_directories(../../Root/libraries/Thread-Pool/out/linux_amd64/include)
 include_directories(../../Root/libraries/event/include)
 include_directories(../../Root/libraries/event/_build/linux_amd64/include)
 
+# Library paths - CORREGIDOS AUTOMÁTICAMENTE
+set(LIBEVENT_PATH "../../Root/libraries/event/_build/linux_amd64/lib")
+
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
 	add_library(ProviderYT SHARED ${HEADERS} providers/yt/YTProvider.cpp providers/yt/YTVManager.cpp providers/yt/YoutubeMusicPlayer.cpp providers/yt/YTRegex.cpp)
@@ -128,7 +131,8 @@ EOFMUSIC
     # Verificar
     if grep -q "../../Root/libraries/Thread-Pool/out/linux_amd64/include" "$MUSIC_CMAKE" && \
        grep -q "../../Root/libraries/event/include" "$MUSIC_CMAKE" && \
-       grep -q "../../Root/libraries/event/_build/linux_amd64/include" "$MUSIC_CMAKE"; then
+       grep -q "../../Root/libraries/event/_build/linux_amd64/include" "$MUSIC_CMAKE" && \
+       grep -q 'set(LIBEVENT_PATH "../../Root/libraries/event/_build/linux_amd64/lib")' "$MUSIC_CMAKE"; then
         log_success "music/CMakeLists.txt parcheado correctamente"
     else
         log_error "Error al parchar music/CMakeLists.txt"
