@@ -221,6 +221,32 @@ else
     log_warning "shared/src/misc/digest.h no encontrado (omitiendo parche 4)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 5: Agregar #include <utility> a shared/src/misc/task_executor.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+TASK_EXECUTOR_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/misc/task_executor.cpp"
+
+if [[ -f "$TASK_EXECUTOR_CPP" ]]; then
+    log_info "Parcheando shared/src/misc/task_executor.cpp..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <utility>' "$TASK_EXECUTOR_CPP"; then
+        # Agregar #include <utility> después de #include <algorithm>
+        sed -i '/#include <algorithm>/a #include <utility>' "$TASK_EXECUTOR_CPP"
+
+        if grep -q '#include <utility>' "$TASK_EXECUTOR_CPP"; then
+            log_success "✓ #include <utility> agregado a task_executor.cpp"
+        else
+            log_error "Error al agregar #include <utility>"
+            exit 1
+        fi
+    else
+        log_success "✓ task_executor.cpp ya tiene #include <utility>"
+    fi
+else
+    log_warning "shared/src/misc/task_executor.cpp no encontrado (omitiendo parche 5)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
