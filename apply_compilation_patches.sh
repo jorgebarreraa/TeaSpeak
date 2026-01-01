@@ -396,9 +396,9 @@ if [[ -f "$MUSICBOT_CMAKE" ]]; then
 
     # Verificar si ya tiene el include_directories correcto
     if ! grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
-        # Buscar la línea de include_directories y agregar el path a music/include
-        # Insertamos después de la línea que contiene "include_directories"
-        sed -i '/^include_directories/a include_directories(../music/include)' "$MUSICBOT_CMAKE"
+        # Insertamos después de la línea que contiene "project("
+        # Esto es más robusto ya que project() siempre existe en CMakeLists.txt
+        sed -i '/^project(/a include_directories(../music/include)' "$MUSICBOT_CMAKE"
 
         if grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
             log_success "✓ include_directories(../music/include) agregado a MusicBot/CMakeLists.txt"
