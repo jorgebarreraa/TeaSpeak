@@ -94,7 +94,9 @@ include_directories(../../Root/libraries/event/include)
 include_directories(../../Root/libraries/event/_build/linux_amd64/include)
 
 # Library paths - CORREGIDOS AUTOMÁTICAMENTE
-set(LIBEVENT_PATH "../../Root/libraries/event/_build/linux_amd64/lib")
+# Convert relative path to absolute path for proper linking
+get_filename_component(LIBRARY_PATH "\${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries" ABSOLUTE)
+set(LIBEVENT_PATH "\${LIBRARY_PATH}/event/_build/linux_amd64/lib")
 
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
@@ -132,7 +134,8 @@ EOFMUSIC
     if grep -q "../../Root/libraries/Thread-Pool/out/linux_amd64/include" "$MUSIC_CMAKE" && \
        grep -q "../../Root/libraries/event/include" "$MUSIC_CMAKE" && \
        grep -q "../../Root/libraries/event/_build/linux_amd64/include" "$MUSIC_CMAKE" && \
-       grep -q 'set(LIBEVENT_PATH "../../Root/libraries/event/_build/linux_amd64/lib")' "$MUSIC_CMAKE"; then
+       grep -q 'get_filename_component(LIBRARY_PATH' "$MUSIC_CMAKE" && \
+       grep -q 'set(LIBEVENT_PATH' "$MUSIC_CMAKE"; then
         log_success "music/CMakeLists.txt parcheado correctamente"
     else
         log_error "Error al parchar music/CMakeLists.txt"
