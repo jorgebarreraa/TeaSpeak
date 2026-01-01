@@ -273,6 +273,32 @@ else
     log_warning "shared/src/query/escape.cpp no encontrado (omitiendo parche 6)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 7: Agregar #include <cstdint> a shared/src/protocol/PacketLossCalculator.h
+# ═══════════════════════════════════════════════════════════════════════════
+PACKETLOSS_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/protocol/PacketLossCalculator.h"
+
+if [[ -f "$PACKETLOSS_HEADER" ]]; then
+    log_info "Parcheando shared/src/protocol/PacketLossCalculator.h..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <cstdint>' "$PACKETLOSS_HEADER"; then
+        # Agregar #include <cstdint> después de #include <bitset>
+        sed -i '/#include <bitset>/a #include <cstdint>' "$PACKETLOSS_HEADER"
+
+        if grep -q '#include <cstdint>' "$PACKETLOSS_HEADER"; then
+            log_success "✓ #include <cstdint> agregado a PacketLossCalculator.h"
+        else
+            log_error "Error al agregar #include <cstdint>"
+            exit 1
+        fi
+    else
+        log_success "✓ PacketLossCalculator.h ya tiene #include <cstdint>"
+    fi
+else
+    log_warning "shared/src/protocol/PacketLossCalculator.h no encontrado (omitiendo parche 7)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
