@@ -325,6 +325,41 @@ else
     log_warning "shared/src/log/LogSinks.cpp no encontrado (omitiendo parche 8)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 9: Agregar includes necesarios a shared/src/lookup/ip.h
+# ═══════════════════════════════════════════════════════════════════════════
+IP_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/lookup/ip.h"
+
+if [[ -f "$IP_HEADER" ]]; then
+    log_info "Parcheando shared/src/lookup/ip.h..."
+
+    # Agregar #include <memory> si no existe
+    if ! grep -q '#include <memory>' "$IP_HEADER"; then
+        sed -i '/#include <mutex>/a #include <memory>' "$IP_HEADER"
+        log_success "✓ #include <memory> agregado a ip.h"
+    else
+        log_success "✓ ip.h ya tiene #include <memory>"
+    fi
+
+    # Agregar #include <utility> si no existe
+    if ! grep -q '#include <utility>' "$IP_HEADER"; then
+        sed -i '/#include <memory>/a #include <utility>' "$IP_HEADER"
+        log_success "✓ #include <utility> agregado a ip.h"
+    else
+        log_success "✓ ip.h ya tiene #include <utility>"
+    fi
+
+    # Agregar #include <array> si no existe
+    if ! grep -q '#include <array>' "$IP_HEADER"; then
+        sed -i '/#include <utility>/a #include <array>' "$IP_HEADER"
+        log_success "✓ #include <array> agregado a ip.h"
+    else
+        log_success "✓ ip.h ya tiene #include <array>"
+    fi
+else
+    log_warning "shared/src/lookup/ip.h no encontrado (omitiendo parche 9)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
