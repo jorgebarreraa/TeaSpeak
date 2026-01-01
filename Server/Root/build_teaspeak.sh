@@ -55,6 +55,23 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# Aplicar parches de compilación automáticamente ANTES de cmake
+# ═══════════════════════════════════════════════════════════════════════════
+echo ""
+echo "Applying compilation patches..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+export SCRIPT_DIR
+
+if [[ -f "$SCRIPT_DIR/apply_compilation_patches.sh" ]]; then
+    bash "$SCRIPT_DIR/apply_compilation_patches.sh" || {
+        echo "Failed to apply compilation patches"
+        exit 1
+    }
+else
+    echo "WARNING: apply_compilation_patches.sh not found, skipping patches"
+    echo "  Location: $SCRIPT_DIR/apply_compilation_patches.sh"
+fi
 
 cd TeaSpeak || exit 1
 if [[ -d build && $teaspeak_clean_build -eq 1 ]]; then

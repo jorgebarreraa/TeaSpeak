@@ -1203,82 +1203,22 @@ initialize_submodules() {
         fi
     fi
 
-    # Parchar CMakeLists.txt del módulo music para corregir rutas de librerías
-    log_substep "Reescribiendo music/CMakeLists.txt con rutas corregidas..."
-    if [[ -f "music/CMakeLists.txt" ]]; then
-        # Crear backup antes de reescribir
-        cp music/CMakeLists.txt music/CMakeLists.txt.backup.$(date +%s) 2>/dev/null || true
+    # Aplicar parches de compilación usando el script centralizado
+    log_substep "Aplicando parches de compilación..."
 
-        # REESCRIBIR el archivo completo con las correcciones definitivas
-        cat > music/CMakeLists.txt << 'EOFMUSIC'
-cmake_minimum_required(VERSION 3.6)
-project(TeaMusic-Provider)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -Wall -Wno-sign-compare -static-libgcc -static-libstdc++ -fPIC")
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/providers")
-
-set(HEADERS include/MusicPlayer.h)
-
-option(BUILD_PROVIDER_YT "Build the Youtube-dl provider. (You requre extra headers)" ON)
-option(BUILD_PROVIDER_FFMPEG "Build the FFMpeg provider. (You requre extra headers)" ON)
-option(BUILD_HELPERS "Build the development helper classes" ON)
-
-if(NOT EXISTS ../shared/src/)
-	set(LIBRARY_PATH_THREAD_POOL "ThreadPoolStatic")
-	set(LIBRARY_PATH_JSON "jsoncpp_static")
-	set(LIBRARY_PATH_VARIBALES "StringVariablesStatic")
-endif()
-
-include_directories(include)
-# Include directories - CORREGIDOS AUTOMÁTICAMENTE
-include_directories(../libraries/Thread-Pool/out/linux_amd64/include)
-include_directories(../libraries/event/include)
-
-if (BUILD_PROVIDER_YT)
-	message("Building YouTube provider")
-	add_library(ProviderYT SHARED ${HEADERS} providers/yt/YTProvider.cpp providers/yt/YTVManager.cpp providers/yt/YoutubeMusicPlayer.cpp providers/yt/YTRegex.cpp)
-	target_link_libraries(ProviderYT ${LIBRARY_PATH_VARIBALES} ${LIBRARY_PATH_VARIBALES} ${LIBRARY_PATH_JSON} ${LIBRARY_PATH_THREAD_POOL} ProviderFFMpeg)
-	#The Youtube provider requires this libraries:
-	#- TeaMusic
-	#- ProviderOpus
-	#- stdc++fs.a
-	set_target_properties(ProviderYT
-			PROPERTIES
-			PREFIX "001" #Library load order (Requires opus provider to load)
-	)
-endif ()
-
-if(BUILD_PROVIDER_FFMPEG)
-	message("Building FFMpeg provider")
-	add_library(ProviderFFMpeg SHARED ${HEADERS} providers/ffmpeg/FFMpegProvider.cpp providers/ffmpeg/FFMpegMusicPlayer.cpp providers/ffmpeg/FFMpegMusicProcess.cpp)
-	target_link_libraries(ProviderFFMpeg ${LIBRARY_PATH_VARIBALES} ${LIBRARY_PATH_THREAD_POOL} ${LIBEVENT_PATH}/libevent.a ${LIBEVENT_PATH}/libevent_pthreads.a)
-	set_target_properties(ProviderFFMpeg
-			PROPERTIES
-			PREFIX "000" #Library load order (Requires nothink to load)
-	)
-endif()
-
-if(BUILD_HELPERS)
-	message("Building helpers")
-	add_executable(YoutubedlTest helpers/YoutubedlTest.cpp)
-	target_link_libraries(YoutubedlTest ProviderFFMpeg ProviderYT)
-	target_link_libraries(YoutubedlTest TeaMusic TeaSpeak dl stdc++fs CXXTerminal StringVariablesStatic event_pthreads pthread)
-endif()
-EOFMUSIC
-
-        log_success "✓ music/CMakeLists.txt reescrito con rutas correctas"
-
-        # Verificar que el archivo fue reescrito correctamente
-        if grep -q "Thread-Pool/out/linux_amd64/include" music/CMakeLists.txt && \
-           grep -q "libraries/event/include" music/CMakeLists.txt; then
-            log_success "✓ Verificación exitosa: Rutas correctas aplicadas"
+    cd "$SCRIPT_DIR"
+    if [[ -f "apply_compilation_patches.sh" ]]; then
+        bash apply_compilation_patches.sh >> "$LOG_FILE" 2>&1
+        if [[ $? -eq 0 ]]; then
+            log_success "✓ Parches de compilación aplicados correctamente"
         else
-            log_error "✗ Error en la reescritura del archivo"
+            log_error "✗ Error al aplicar parches de compilación"
+            log_error "Ver detalles en: $LOG_FILE"
             exit 1
         fi
     else
-        log_warning "music/CMakeLists.txt no encontrado"
+        log_error "apply_compilation_patches.sh no encontrado"
+        exit 1
     fi
 
     log_success "Submódulos inicializados correctamente"
@@ -1288,43 +1228,12 @@ EOFMUSIC
 # ═══════════════════════════════════════════════════════════════════════════
 # PASO 9.6: Parchar rutas de librerías en CMakeLists.txt principal
 # ═══════════════════════════════════════════════════════════════════════════
+# NOTA: Este paso ahora se ejecuta automáticamente en apply_compilation_patches.sh
+# que se llama desde PASO 9.5. Se mantiene la función vacía para no romper la
+# secuencia de pasos.
 patch_cmake_library_paths() {
-    log_step "PASO 9.6: Parcheando Rutas de Librerías en CMakeLists.txt"
-
-    cd "$SCRIPT_DIR/Server/Server"
-
-    if [[ ! -f "CMakeLists.txt" ]]; then
-        log_error "CMakeLists.txt no encontrado en Server/Server/"
-        exit 1
-    fi
-
-    # Crear backup antes de parchar
-    cp CMakeLists.txt CMakeLists.txt.backup.$(date +%s) 2>/dev/null || true
-
-    # Parche crítico: Corregir LIBEVENT_PATH usando awk para precisión
-    log_substep "Corrigiendo LIBEVENT_PATH con awk..."
-    awk '{
-        if ($0 ~ /^set\(LIBEVENT_PATH/) {
-            print "set(LIBEVENT_PATH \"${LIBRARY_PATH}/event/_build/linux_amd64/lib\")"
-        } else {
-            print $0
-        }
-    }' CMakeLists.txt > CMakeLists.txt.tmp
-
-    # Reemplazar archivo original con el parcheado
-    mv CMakeLists.txt.tmp CMakeLists.txt
-
-    # Verificar el cambio
-    if grep -q 'set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")' CMakeLists.txt; then
-        log_success "✓ LIBEVENT_PATH corregida exitosamente (sin barra final)"
-    else
-        log_error "✗ Error al parchar LIBEVENT_PATH"
-        log_info "Verificando línea actual:"
-        grep "LIBEVENT_PATH" CMakeLists.txt || true
-        exit 1
-    fi
-
-    cd "$SCRIPT_DIR"
+    log_step "PASO 9.6: Parches de CMakeLists.txt (ya aplicados en PASO 9.5)"
+    log_success "Los parches se aplicaron automáticamente con apply_compilation_patches.sh"
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
