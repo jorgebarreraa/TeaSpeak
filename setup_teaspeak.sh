@@ -1113,6 +1113,15 @@ initialize_submodules() {
     # El código se compila desde Server/Root/TeaSpeak/, no desde Server/Server/
     cd "$SCRIPT_DIR/Server/Root/TeaSpeak"
 
+    # Limpiar submódulos corruptos o incompletos automáticamente
+    log_substep "Verificando integridad de submódulos..."
+    for submodule in shared music; do
+        if [[ -d "$submodule" && ! -d "$submodule/.git" ]]; then
+            log_warning "Directorio '$submodule' corrupto (sin .git), eliminando..."
+            rm -rf "$submodule"
+        fi
+    done
+
     # Actualizar .gitmodules para usar repositorios de jorgebarreraa
     log_substep "Actualizando .gitmodules a repositorios de ${GITHUB_USER}..."
 
