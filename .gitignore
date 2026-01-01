@@ -38,6 +38,9 @@ Server/Root/TeaSpeak/*/out/
 /tmp/*.log
 *.log
 
+# Configuration files (contains sensitive tokens)
+.teaspeak.conf
+
 # IDE
 .idea/
 .vscode/

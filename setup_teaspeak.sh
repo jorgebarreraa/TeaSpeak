@@ -79,6 +79,7 @@ log_substep() {
 # Variables globales
 # ═══════════════════════════════════════════════════════════════════════════
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$SCRIPT_DIR/.teaspeak.conf"
 GITHUB_USER=""
 GITHUB_TOKEN=""
 SKIP_DEPS=false
@@ -87,6 +88,80 @@ BUILD_TYPE="stable"
 REQUIRED_OPENSSL_VERSION="3.0"
 MIN_GCC_VERSION="9"
 LOG_FILE="/tmp/teaspeak_setup_$(date +%Y%m%d_%H%M%S).log"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Funciones de configuración
+# ═══════════════════════════════════════════════════════════════════════════
+load_config() {
+    if [[ -f "$CONFIG_FILE" ]]; then
+        source "$CONFIG_FILE"
+        if [[ -n "$SAVED_GITHUB_TOKEN" ]]; then
+            GITHUB_TOKEN="$SAVED_GITHUB_TOKEN"
+        fi
+        if [[ -n "$SAVED_GITHUB_USER" ]]; then
+            GITHUB_USER="$SAVED_GITHUB_USER"
+        fi
+    fi
+}
+
+save_config() {
+    cat > "$CONFIG_FILE" << EOF
+# Configuración de TeaSpeak - Generado automáticamente
+# NO COMPARTIR ESTE ARCHIVO (contiene token de autenticación)
+SAVED_GITHUB_USER="$GITHUB_USER"
+SAVED_GITHUB_TOKEN="$GITHUB_TOKEN"
+EOF
+    chmod 600 "$CONFIG_FILE"
+}
+
+request_github_credentials() {
+    echo ""
+    echo "╔═══════════════════════════════════════════════════════════╗"
+    echo "║         CONFIGURACIÓN INICIAL DE GITHUB                  ║"
+    echo "╚═══════════════════════════════════════════════════════════╝"
+    echo ""
+
+    # Solicitar usuario de GitHub si no está configurado
+    if [[ -z "$GITHUB_USER" ]]; then
+        echo -e "${YELLOW}No se ha configurado un usuario de GitHub.${NC}"
+        echo ""
+        read -p "Ingresa tu usuario de GitHub: " GITHUB_USER
+
+        if [[ -z "$GITHUB_USER" ]]; then
+            echo -e "${RED}Error: El usuario de GitHub es requerido${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${GREEN}✓ Usuario de GitHub configurado: $GITHUB_USER${NC}"
+    fi
+
+    # Solicitar token de GitHub si no está configurado
+    if [[ -z "$GITHUB_TOKEN" ]]; then
+        echo ""
+        echo -e "${YELLOW}Se requiere un token de GitHub para clonar repositorios privados.${NC}"
+        echo ""
+        echo "Para generar un token:"
+        echo "  1. Visita: https://github.com/settings/tokens"
+        echo "  2. Click en 'Generate new token' → 'Generate new token (classic)'"
+        echo "  3. Selecciona el scope 'repo' (acceso completo a repositorios)"
+        echo "  4. Copia el token generado"
+        echo ""
+        read -p "Ingresa tu GitHub token (ghp_xxxxx): " GITHUB_TOKEN
+
+        if [[ -z "$GITHUB_TOKEN" ]]; then
+            echo -e "${YELLOW}Warning: Sin token, solo se podrán clonar repositorios públicos${NC}"
+        fi
+    else
+        echo -e "${GREEN}✓ Token de GitHub configurado (${GITHUB_TOKEN:0:7}...)${NC}"
+    fi
+
+    # Guardar configuración
+    save_config
+    echo ""
+    echo -e "${GREEN}✓ Configuración guardada en: $CONFIG_FILE${NC}"
+    echo -e "${CYAN}  Esta configuración se usará automáticamente en futuras ejecuciones${NC}"
+    echo ""
+}
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Parsear argumentos
@@ -1331,6 +1406,15 @@ EOF
 
     # Parsear argumentos
     parse_args "$@"
+
+    # Cargar configuración guardada (si existe)
+    load_config
+
+    # Solicitar credenciales de GitHub si no están configuradas
+    # Los parámetros --github-user y --github-token tienen prioridad sobre el archivo de config
+    if [[ -z "$GITHUB_USER" ]] || [[ -z "$GITHUB_TOKEN" ]]; then
+        request_github_credentials
+    fi
 
     log_info "Iniciando instalación..."
     log_info "Directorio: $SCRIPT_DIR"

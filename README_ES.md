@@ -19,14 +19,21 @@ cd TeaSpeak
 chmod +x setup_teaspeak.sh
 ./setup_teaspeak.sh
 
-# 3. Tomar un café ☕ (el script trabaja solo ~30-45 minutos)
+# 3. El script te pedirá configuración (solo la primera vez):
+#    - Usuario de GitHub: jorgebarreraa
+#    - Token de GitHub: ghp_xxxxx (para repos privados)
+#    Esta configuración se guarda y no volverá a pedirla
+
+# 4. Tomar un café ☕ (el script trabaja solo ~30-45 minutos)
 ```
 
 **¡Listo!** El script hace todo automáticamente:
+- ✅ Configuración de GitHub (solo primera vez)
 - ✅ Instala dependencias del sistema
 - ✅ Descarga todas las librerías
 - ✅ Compila todo
 - ✅ Verifica la instalación
+- ✅ Cache automático (futuras instalaciones son más rápidas)
 
 ---
 
