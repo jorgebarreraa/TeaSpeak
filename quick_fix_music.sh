@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# ═══════════════════════════════════════════════════════════════════════════
+# ⚠️  SCRIPT OBSOLETO - INTEGRADO EN setup_teaspeak.sh
+# ═══════════════════════════════════════════════════════════════════════════
+# Este script ya NO es necesario. Sus correcciones fueron integradas en:
+#   - PASO 9.5: initialize_submodules() → Reescribe music/CMakeLists.txt
+#   - PASO 9.6: patch_cmake_library_paths() → Corrige LIBEVENT_PATH con awk
+#
+# Ejecuta directamente: ./setup_teaspeak.sh
+# ═══════════════════════════════════════════════════════════════════════════
+
+echo "⚠️  Este script está OBSOLETO"
+echo ""
+echo "Las correcciones de este script ya están integradas en setup_teaspeak.sh"
+echo ""
+echo "Para aplicar todos los parches automáticamente, ejecuta:"
+echo "  ./setup_teaspeak.sh"
+echo ""
+exit 0
+
 # Script de parche rápido para corregir errores de compilación del módulo music
 # Este script corrige las rutas de headers sin tener que recompilar todo desde cero
 
