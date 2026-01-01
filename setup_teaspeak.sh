@@ -1208,30 +1208,29 @@ initialize_submodules() {
     if [[ -f "music/CMakeLists.txt" ]]; then
         # Corregir TODAS las variantes de rutas de libevent
         sed -i 's|event/build/lib|event/_build/linux_amd64/lib|g' music/CMakeLists.txt 2>/dev/null || true
-        sed -i 's|event/build/include|event/_build/linux_amd64/include|g' music/CMakeLists.txt 2>/dev/null || true
+        sed -i 's|event/build/include|event/include|g' music/CMakeLists.txt 2>/dev/null || true
 
         # Corregir rutas de Thread-Pool
         sed -i 's|Thread-Pool/build|Thread-Pool/out/linux_amd64|g' music/CMakeLists.txt 2>/dev/null || true
 
         # Agregar include directories necesarios si no existen
-        if ! grep -q "libraries/Thread-Pool/src" music/CMakeLists.txt; then
+        if ! grep -q "libraries/Thread-Pool/out/linux_amd64/include" music/CMakeLists.txt; then
             log_substep "Agregando include directories a music/CMakeLists.txt..."
             # Insertar después de la línea "include_directories(include)"
             sed -i '/^include_directories(include)/a \
 # Include directories agregados automáticamente por setup_teaspeak.sh\
-include_directories(../libraries/Thread-Pool/src)\
-include_directories(../libraries/event/include)\
-include_directories(../libraries/event/_build/linux_amd64/include)' music/CMakeLists.txt
+include_directories(../libraries/Thread-Pool/out/linux_amd64/include)\
+include_directories(../libraries/event/include)' music/CMakeLists.txt
             log_success "✓ Include directories agregados"
         fi
 
         # Mostrar cambios aplicados
         log_info "Verificando parches aplicados..."
-        if grep -q "event/_build/linux_amd64" music/CMakeLists.txt; then
-            log_success "✓ Rutas de libevent corregidas"
+        if grep -q "event/include" music/CMakeLists.txt; then
+            log_success "✓ Include directory de libevent agregado"
         fi
-        if grep -q "Thread-Pool/src" music/CMakeLists.txt; then
-            log_success "✓ Include directories de Thread-Pool agregados"
+        if grep -q "Thread-Pool/out/linux_amd64/include" music/CMakeLists.txt; then
+            log_success "✓ Include directory de Thread-Pool agregado"
         fi
 
         log_success "CMakeLists.txt de music parcheado completamente"
@@ -1265,8 +1264,13 @@ patch_cmake_library_paths() {
         log_info "Ruta de libevent ya corregida o no encontrada"
     fi
 
+    # Parche crítico 2: Eliminar barra al final de LIBEVENT_PATH (causa dobles barras //)
+    log_substep "Eliminando barra final de LIBEVENT_PATH..."
+    sed -i 's|event/_build/linux_amd64/lib/"|event/_build/linux_amd64/lib"|g' CMakeLists.txt
+    log_success "✓ Barra final eliminada"
+
     # Verificar el cambio
-    if grep -q 'event/_build/linux_amd64/lib' CMakeLists.txt; then
+    if grep -q 'event/_build/linux_amd64/lib"' CMakeLists.txt; then
         log_success "✓ Verificación exitosa: CMakeLists.txt parcheado correctamente"
     else
         log_warning "⚠ No se pudo verificar el parche (puede ser normal si ya estaba corregido)"
