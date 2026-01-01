@@ -195,6 +195,32 @@ else
     log_info "Directorio build no existe (normal en primera compilación)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 4: Agregar #include <cstdint> a shared/src/misc/digest.h
+# ═══════════════════════════════════════════════════════════════════════════
+DIGEST_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/misc/digest.h"
+
+if [[ -f "$DIGEST_HEADER" ]]; then
+    log_info "Parcheando shared/src/misc/digest.h..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <cstdint>' "$DIGEST_HEADER"; then
+        # Agregar #include <cstdint> después de #include <cassert>
+        sed -i '/#include <cassert>/a #include <cstdint>' "$DIGEST_HEADER"
+
+        if grep -q '#include <cstdint>' "$DIGEST_HEADER"; then
+            log_success "✓ #include <cstdint> agregado a digest.h"
+        else
+            log_error "Error al agregar #include <cstdint>"
+            exit 1
+        fi
+    else
+        log_success "✓ digest.h ya tiene #include <cstdint>"
+    fi
+else
+    log_warning "shared/src/misc/digest.h no encontrado (omitiendo parche 4)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
