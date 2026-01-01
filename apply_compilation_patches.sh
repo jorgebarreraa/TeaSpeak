@@ -95,8 +95,9 @@ include_directories(../../Root/libraries/event/_build/linux_amd64/include)
 
 # Library paths - CORREGIDOS AUTOMÁTICAMENTE
 # Convert relative paths to absolute paths for proper linking
-get_filename_component(LIBEVENT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent.a" ABSOLUTE)
-get_filename_component(LIBEVENT_PTHREADS_LIB "${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
+# Use CMAKE_SOURCE_DIR (root CMakeLists.txt dir) instead of CMAKE_CURRENT_SOURCE_DIR to avoid symlink issues
+get_filename_component(LIBEVENT_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/_build/linux_amd64/lib/libevent.a" ABSOLUTE)
+get_filename_component(LIBEVENT_PTHREADS_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/_build/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
 
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
