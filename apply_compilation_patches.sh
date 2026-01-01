@@ -95,8 +95,8 @@ include_directories(../../Root/libraries/event/_build/linux_amd64/include)
 
 # Library paths - CORREGIDOS AUTOMÁTICAMENTE
 # Convert relative paths to absolute paths for proper linking
-get_filename_component(LIBEVENT_LIB "\${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent.a" ABSOLUTE)
-get_filename_component(LIBEVENT_PTHREADS_LIB "\${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
+get_filename_component(LIBEVENT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent.a" ABSOLUTE)
+get_filename_component(LIBEVENT_PTHREADS_LIB "${CMAKE_CURRENT_SOURCE_DIR}/../../Root/libraries/event/_build/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
 
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
@@ -115,7 +115,7 @@ endif ()
 if(BUILD_PROVIDER_FFMPEG)
 	message("Building FFMpeg provider")
 	add_library(ProviderFFMpeg SHARED ${HEADERS} providers/ffmpeg/FFMpegProvider.cpp providers/ffmpeg/FFMpegMusicPlayer.cpp providers/ffmpeg/FFMpegMusicProcess.cpp)
-	target_link_libraries(ProviderFFMpeg ${LIBRARY_PATH_VARIBALES} ${LIBRARY_PATH_THREAD_POOL} \${LIBEVENT_LIB} \${LIBEVENT_PTHREADS_LIB})
+	target_link_libraries(ProviderFFMpeg ${LIBRARY_PATH_VARIBALES} ${LIBRARY_PATH_THREAD_POOL} ${LIBEVENT_LIB} ${LIBEVENT_PTHREADS_LIB})
 	set_target_properties(ProviderFFMpeg
 			PROPERTIES
 			PREFIX "000" #Library load order (Requires nothink to load)
