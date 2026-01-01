@@ -299,6 +299,32 @@ else
     log_warning "shared/src/protocol/PacketLossCalculator.h no encontrado (omitiendo parche 7)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 8: Corregir namespace en shared/src/log/LogSinks.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+LOGSINKS_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/log/LogSinks.cpp"
+
+if [[ -f "$LOGSINKS_CPP" ]]; then
+    log_info "Parcheando shared/src/log/LogSinks.cpp..."
+
+    # Verificar si ya tiene la corrección
+    if ! grep -q 'std::unique_ptr<spdlog::formatter> LogFormatter::clone()' "$LOGSINKS_CPP"; then
+        # Corregir formatter a spdlog::formatter en la línea 137
+        sed -i 's/std::unique_ptr<formatter> LogFormatter::clone()/std::unique_ptr<spdlog::formatter> LogFormatter::clone()/g' "$LOGSINKS_CPP"
+
+        if grep -q 'std::unique_ptr<spdlog::formatter> LogFormatter::clone()' "$LOGSINKS_CPP"; then
+            log_success "✓ Namespace spdlog:: agregado en LogSinks.cpp"
+        else
+            log_error "Error al corregir namespace en LogSinks.cpp"
+            exit 1
+        fi
+    else
+        log_success "✓ LogSinks.cpp ya tiene el namespace correcto"
+    fi
+else
+    log_warning "shared/src/log/LogSinks.cpp no encontrado (omitiendo parche 8)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
