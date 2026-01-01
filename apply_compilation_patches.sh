@@ -171,6 +171,20 @@ else
     log_warning "Server/Server/CMakeLists.txt no encontrado (omitiendo parche 2)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 3: Limpiar directorio build para forzar reconfiguracion de CMake
+# ═══════════════════════════════════════════════════════════════════════════
+BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build"
+
+log_info "Limpiando directorio build para forzar reconfiguracion..."
+
+if [[ -d "$BUILD_DIR" ]]; then
+    rm -rf "$BUILD_DIR"
+    log_success "Directorio build limpiado (CMake usará configuración nueva)"
+else
+    log_info "Directorio build no existe (normal en primera compilación)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
