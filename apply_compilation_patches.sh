@@ -91,6 +91,7 @@ include_directories(include)
 # Include directories - CORREGIDOS AUTOMÁTICAMENTE
 include_directories(../../Root/libraries/Thread-Pool/out/linux_amd64/include)
 include_directories(../../Root/libraries/event/include)
+include_directories(../../Root/libraries/event/_build/linux_amd64/include)
 
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
@@ -126,7 +127,8 @@ EOFMUSIC
 
     # Verificar
     if grep -q "../../Root/libraries/Thread-Pool/out/linux_amd64/include" "$MUSIC_CMAKE" && \
-       grep -q "../../Root/libraries/event/include" "$MUSIC_CMAKE"; then
+       grep -q "../../Root/libraries/event/include" "$MUSIC_CMAKE" && \
+       grep -q "../../Root/libraries/event/_build/linux_amd64/include" "$MUSIC_CMAKE"; then
         log_success "music/CMakeLists.txt parcheado correctamente"
     else
         log_error "Error al parchar music/CMakeLists.txt"
