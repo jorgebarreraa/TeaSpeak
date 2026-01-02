@@ -67,15 +67,33 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
         if [[ -d "music" ]]; then
             rm -rf music
         fi
-        git clone https://github.com/jorgebarreraa/TeaMusic-Providers.git music 2>/dev/null || \
-        git clone https://github.com/TeaSpeak/TeaMusic-Providers.git music || \
+        git clone -b master https://github.com/jorgebarreraa/TeaMusic-Providers.git music 2>/dev/null || \
+        git clone -b master https://github.com/TeaSpeak/TeaMusic-Providers.git music || \
         log_warning "No se pudo clonar submódulo music (continuando...)"
 
         if [[ -d "music/.git" ]]; then
-            log_success "✓ Submódulo 'music' clonado exitosamente"
+            log_success "✓ Submódulo 'music' clonado exitosamente (branch master)"
         fi
     else
         log_success "✓ Submódulo 'music' ya existe"
+
+        # Verificar si está en la branch correcta y tiene la estructura correcta
+        cd music
+        current_branch=$(git branch --show-current)
+        if [[ "$current_branch" != "master" ]]; then
+            log_info "Cambiando submódulo music de branch '$current_branch' a 'master'..."
+            git fetch origin master 2>/dev/null
+            git checkout master 2>/dev/null || log_warning "No se pudo cambiar a branch master"
+        fi
+
+        # Verificar estructura de directorios y corregir si es necesario
+        if [[ ! -d "include/teaspeak" ]] && [[ -f "include/MusicPlayer.h" ]]; then
+            log_info "Corrigiendo estructura de directorios en music/include/..."
+            mkdir -p include/teaspeak
+            mv include/MusicPlayer.h include/teaspeak/MusicPlayer.h
+            log_success "✓ MusicPlayer.h movido a include/teaspeak/"
+        fi
+        cd "$SUBMODULES_DIR"
     fi
 
     # Verificar submódulo shared
