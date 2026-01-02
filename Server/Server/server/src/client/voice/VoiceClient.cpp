@@ -441,7 +441,8 @@ void VoiceClient::send_voice_whisper(const std::shared_ptr<SpeakingClient> &sour
 }
 
 float VoiceClient::current_ping_deviation() {
-    return this->connection->packet_encoder().acknowledge_manager().current_rttvar();
+    // current_rttvar() does not exist in AcknowledgeManager
+    return 0.0f; // TODO: Implement proper ping deviation calculation
 }
 
 float VoiceClient::current_packet_loss() const {

@@ -54,6 +54,52 @@ echo -e "${CYAN}═════════════════════�
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PRE-PATCH: Restaurar archivos que puedan estar corruptos de ejecuciones previas
+# ═══════════════════════════════════════════════════════════════════════════
+log_info "Pre-Patch: Verificando integridad de archivos críticos..."
+
+# Lista de archivos que pueden haberse corrompido en ejecuciones anteriores
+CRITICAL_FILES=(
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h"
+)
+
+restored_count=0
+for file in "${CRITICAL_FILES[@]}"; do
+    if [[ -f "$file" ]]; then
+        # Verificar si el archivo tiene cambios no commiteados
+        file_dir="$(dirname "$file")"
+        file_name="$(basename "$file")"
+        relative_path="${file#$SCRIPT_DIR/Server/Root/TeaSpeak/}"
+
+        cd "$SCRIPT_DIR/Server/Root/TeaSpeak"
+
+        # Comprobar si hay cambios en el archivo
+        if git diff --quiet "$relative_path" 2>/dev/null; then
+            # No hay cambios, archivo limpio
+            :
+        else
+            # Hay cambios - restaurar desde git
+            log_warning "Detectados cambios en $file_name, restaurando desde repositorio..."
+            if git checkout HEAD -- "$relative_path" 2>/dev/null; then
+                log_success "✓ $file_name restaurado correctamente"
+                ((restored_count++))
+            else
+                log_warning "⚠ No se pudo restaurar $file_name (continuando...)"
+            fi
+        fi
+    fi
+done
+
+if [[ $restored_count -gt 0 ]]; then
+    log_success "✓ Pre-Patch completado: $restored_count archivo(s) restaurado(s)"
+else
+    log_success "✓ Pre-Patch completado: Todos los archivos están limpios"
+fi
+
+echo ""
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 0: Verificar y clonar submódulos si no existen
 # ═══════════════════════════════════════════════════════════════════════════
 SUBMODULES_DIR="$SCRIPT_DIR/Server/Server"

@@ -25,7 +25,7 @@ if (BUILD_INCLUDE_FILE)
     include(${BUILD_INCLUDE_FILE})
 endif ()
 
-set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")
+set(LIBEVENT_PATH "${LIBRARY_PATH}/event/build/lib/")
 
 function(resolve_library VARIABLE FALLBACK PATHS)
     set( _PATHS ${PATHS} ${ARGN} ) # Merge them together
