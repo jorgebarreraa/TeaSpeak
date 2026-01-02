@@ -526,6 +526,9 @@ for file in "${SERVER_FILES[@]}"; do
         elif grep -q '#include "MusicPlayer.h"' "$file"; then
             sed -i 's|#include "MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$file"
             log_success "✓ $(basename "$file") - include corregido a <teaspeak/MusicPlayer.h>"
+        elif grep -q '#include <MusicPlayer.h>' "$file"; then
+            sed -i 's|#include <MusicPlayer.h>|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            log_success "✓ $(basename "$file") - include corregido a <teaspeak/MusicPlayer.h>"
         elif grep -q '#include <teaspeak/MusicPlayer.h>' "$file"; then
             log_success "✓ $(basename "$file") - include ya es correcto"
         fi
