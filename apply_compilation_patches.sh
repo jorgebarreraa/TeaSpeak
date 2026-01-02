@@ -457,6 +457,28 @@ else
     log_warning "MusicBot/src/MusicPlayer.cpp no encontrado (omitiendo parche 11)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 12: Corregir include teaspeak/MusicPlayer.h en módulo server
+# ═══════════════════════════════════════════════════════════════════════════
+log_info "Parcheando includes de MusicPlayer.h en módulo server..."
+
+SERVER_FILES=(
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/ConnectedClient.h"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/music/MusicClient.h"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/music/Song.h"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/music/internal_provider/channel_replay/ChannelProvider.h"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h"
+)
+
+for file in "${SERVER_FILES[@]}"; do
+    if [[ -f "$file" ]]; then
+        if grep -q '#include <teaspeak/MusicPlayer.h>' "$file"; then
+            sed -i 's|#include <teaspeak/MusicPlayer.h>|#include <MusicPlayer.h>|g' "$file"
+            log_success "✓ $(basename "$file") - include corregido"
+        fi
+    fi
+done
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
