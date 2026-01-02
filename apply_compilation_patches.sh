@@ -479,6 +479,30 @@ for file in "${SERVER_FILES[@]}"; do
     fi
 done
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 13: Agregar #include <cstdint> a shared/src/misc/strobf.h
+# ═══════════════════════════════════════════════════════════════════════════
+STROBF_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/misc/strobf.h"
+
+if [[ -f "$STROBF_HEADER" ]]; then
+    log_info "Parcheando shared/src/misc/strobf.h..."
+
+    if ! grep -q '#include <cstdint>' "$STROBF_HEADER"; then
+        sed -i '/#include <array>/a #include <cstdint>' "$STROBF_HEADER"
+
+        if grep -q '#include <cstdint>' "$STROBF_HEADER"; then
+            log_success "✓ #include <cstdint> agregado a strobf.h"
+        else
+            log_error "Error al agregar #include <cstdint>"
+            exit 1
+        fi
+    else
+        log_success "✓ strobf.h ya tiene #include <cstdint>"
+    fi
+else
+    log_warning "shared/src/misc/strobf.h no encontrado (omitiendo parche 13)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
