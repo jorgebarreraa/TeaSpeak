@@ -458,7 +458,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 12: Corregir include teaspeak/MusicPlayer.h en módulo server
+# PARCHE 12: Corregir include MusicPlayer.h en módulo server (asegurar ruta correcta)
 # ═══════════════════════════════════════════════════════════════════════════
 log_info "Parcheando includes de MusicPlayer.h en módulo server..."
 
@@ -473,12 +473,15 @@ SERVER_FILES=(
 
 for file in "${SERVER_FILES[@]}"; do
     if [[ -f "$file" ]]; then
+        # Corregir includes incorrectos a la forma correcta <teaspeak/MusicPlayer.h>
         if grep -q '#include "teaspeak/MusicPlayer.h"' "$file"; then
-            sed -i 's|#include "teaspeak/MusicPlayer.h"|#include "MusicPlayer.h"|g' "$file"
-            log_success "✓ $(basename "$file") - include corregido"
+            sed -i 's|#include "teaspeak/MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            log_success "✓ $(basename "$file") - include corregido a <teaspeak/MusicPlayer.h>"
+        elif grep -q '#include "MusicPlayer.h"' "$file"; then
+            sed -i 's|#include "MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            log_success "✓ $(basename "$file") - include corregido a <teaspeak/MusicPlayer.h>"
         elif grep -q '#include <teaspeak/MusicPlayer.h>' "$file"; then
-            sed -i 's|#include <teaspeak/MusicPlayer.h>|#include <MusicPlayer.h>|g' "$file"
-            log_success "✓ $(basename "$file") - include corregido"
+            log_success "✓ $(basename "$file") - include ya es correcto"
         fi
     fi
 done
@@ -534,28 +537,11 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 15: Comentar campos inexistentes en music/MusicPlaylist.cpp
+# PARCHE 15: ELIMINADO - Los campos length y thumbnail SÍ existen en UrlSongInfo
 # ═══════════════════════════════════════════════════════════════════════════
-MUSICPLAYLIST_CPP2="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
-
-if [[ -f "$MUSICPLAYLIST_CPP2" ]]; then
-    log_info "Parcheando server/src/music/MusicPlaylist.cpp (campos inexistentes)..."
-
-    # Verificar si las líneas problemáticas existen (sin comentar)
-    if grep -q 'root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();' "$MUSICPLAYLIST_CPP2" 2>/dev/null; then
-        # Comentar línea 579: length field
-        sed -i '579s|^|// |' "$MUSICPLAYLIST_CPP2"
-
-        # Comentar líneas 582-585: thumbnail block (4 líneas)
-        sed -i '582,585s|^|// |' "$MUSICPLAYLIST_CPP2"
-
-        log_success "✓ MusicPlaylist.cpp campos inexistentes comentados (líneas 579, 582-585)"
-    else
-        log_success "✓ MusicPlaylist.cpp ya está corregido"
-    fi
-else
-    log_warning "server/src/music/MusicPlaylist.cpp no encontrado (omitiendo parche 15)"
-fi
+# El problema era que el include path estaba incorrecto, no que los campos faltaran.
+# Con el PATCH 12 corregido, ahora se usa <teaspeak/MusicPlayer.h> correctamente.
+log_success "✓ PATCH 15 no es necesario - campos existen en struct UrlSongInfo"
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
