@@ -533,6 +533,33 @@ else
     log_warning "server/src/client/voice/VoiceClient.cpp no encontrado (omitiendo parche 14)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 15: Comentar campos inexistentes en music/MusicPlaylist.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+MUSICPLAYLIST_CPP2="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
+
+if [[ -f "$MUSICPLAYLIST_CPP2" ]]; then
+    log_info "Parcheando server/src/music/MusicPlaylist.cpp (campos inexistentes)..."
+
+    # Verificar si las líneas problemáticas existen
+    if grep -q "casted->length" "$MUSICPLAYLIST_CPP2"; then
+        # Comentar las líneas que usan campos que no existen en UrlSongInfo
+        sed -i 's|root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();|// root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count(); // Field does not exist|g' "$MUSICPLAYLIST_CPP2"
+        sed -i 's|if(casted->thumbnail) {|// if(casted->thumbnail) { // Field does not exist|g' "$MUSICPLAYLIST_CPP2"
+        sed -i 's|if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)|// if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)|g' "$MUSICPLAYLIST_CPP2"
+        sed -i 's|root\["thumbnail"\] = thump->url();|// root["thumbnail"] = thump->url();|g' "$MUSICPLAYLIST_CPP2"
+
+        # Agregar el cierre de comentario para el bloque if
+        sed -i '/\/\/ if(casted->thumbnail) {/a \                // }' "$MUSICPLAYLIST_CPP2"
+
+        log_success "✓ MusicPlaylist.cpp campos inexistentes comentados"
+    else
+        log_success "✓ MusicPlaylist.cpp ya está corregido"
+    fi
+else
+    log_warning "server/src/music/MusicPlaylist.cpp no encontrado (omitiendo parche 15)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
