@@ -503,6 +503,32 @@ else
     log_warning "shared/src/misc/strobf.h no encontrado (omitiendo parche 13)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 14: Corregir método inexistente current_rttvar en VoiceClient.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+VOICECLIENT_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/voice/VoiceClient.cpp"
+
+if [[ -f "$VOICECLIENT_CPP" ]]; then
+    log_info "Parcheando server/src/client/voice/VoiceClient.cpp..."
+
+    # Verificar si la línea problemática existe
+    if grep -q "acknowledge_manager().current_rttvar()" "$VOICECLIENT_CPP"; then
+        # Reemplazar con un valor por defecto ya que el método no existe
+        sed -i 's|return this->connection->packet_encoder().acknowledge_manager().current_rttvar();|// current_rttvar() does not exist in AcknowledgeManager\n    return 0.0f; // TODO: Implement proper ping deviation calculation|g' "$VOICECLIENT_CPP"
+
+        if grep -q "return 0.0f; // TODO: Implement proper ping deviation calculation" "$VOICECLIENT_CPP"; then
+            log_success "✓ VoiceClient.cpp current_ping_deviation() corregido"
+        else
+            log_error "Error al corregir current_ping_deviation()"
+            exit 1
+        fi
+    else
+        log_success "✓ VoiceClient.cpp ya está corregido"
+    fi
+else
+    log_warning "server/src/client/voice/VoiceClient.cpp no encontrado (omitiendo parche 14)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
