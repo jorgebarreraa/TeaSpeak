@@ -543,14 +543,11 @@ if [[ -f "$MUSICPLAYLIST_CPP2" ]]; then
 
     # Verificar si las líneas problemáticas existen
     if grep -q "casted->length" "$MUSICPLAYLIST_CPP2"; then
-        # Comentar las líneas que usan campos que no existen en UrlSongInfo
-        sed -i 's|root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();|// root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count(); // Field does not exist|g' "$MUSICPLAYLIST_CPP2"
-        sed -i 's|if(casted->thumbnail) {|// if(casted->thumbnail) { // Field does not exist|g' "$MUSICPLAYLIST_CPP2"
-        sed -i 's|if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)|// if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)|g' "$MUSICPLAYLIST_CPP2"
-        sed -i 's|root\["thumbnail"\] = thump->url();|// root["thumbnail"] = thump->url();|g' "$MUSICPLAYLIST_CPP2"
+        # Comentar solo la línea de length (mantener el bloque intacto)
+        sed -i 's|^\([[:space:]]*\)root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();|\1// root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count(); // Field does not exist|' "$MUSICPLAYLIST_CPP2"
 
-        # Agregar el cierre de comentario para el bloque if
-        sed -i '/\/\/ if(casted->thumbnail) {/a \                // }' "$MUSICPLAYLIST_CPP2"
+        # Comentar el bloque if completo de thumbnail (4 líneas)
+        sed -i '/if(casted->thumbnail) {/,/^[[:space:]]*}[[:space:]]*$/{ s|^\([[:space:]]*\)if(casted->thumbnail) {|\1// if(casted->thumbnail) { // Field does not exist|; s|^\([[:space:]]*\)if(auto thump|\1// if(auto thump|; s|^\([[:space:]]*\)root\["thumbnail"\]|\1// root["thumbnail"]|; /^[[:space:]]*}[[:space:]]*$/ { s|^\([[:space:]]*\)}|\1// }|; q } }' "$MUSICPLAYLIST_CPP2"
 
         log_success "✓ MusicPlaylist.cpp campos inexistentes comentados"
     else
