@@ -82,16 +82,27 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
         current_branch=$(git branch --show-current)
         if [[ "$current_branch" != "master" ]]; then
             log_info "Cambiando submódulo music de branch '$current_branch' a 'master'..."
-            git fetch origin master 2>/dev/null
-            git checkout master 2>/dev/null || log_warning "No se pudo cambiar a branch master"
+            # Guardar cambios locales antes del checkout
+            git stash push -m "Auto-stash before switching to master" 2>/dev/null || true
+            git fetch origin master 2>/dev/null || true
+            if git checkout master 2>/dev/null; then
+                log_success "✓ Submódulo music cambiado a branch master"
+            else
+                log_warning "No se pudo cambiar a branch master, usando branch actual"
+            fi
         fi
 
         # Verificar estructura de directorios y corregir si es necesario
+        # SIEMPRE ejecutar esto, sin importar la branch
         if [[ ! -d "include/teaspeak" ]] && [[ -f "include/MusicPlayer.h" ]]; then
             log_info "Corrigiendo estructura de directorios en music/include/..."
             mkdir -p include/teaspeak
             mv include/MusicPlayer.h include/teaspeak/MusicPlayer.h
             log_success "✓ MusicPlayer.h movido a include/teaspeak/"
+        elif [[ -f "include/teaspeak/MusicPlayer.h" ]]; then
+            log_success "✓ Estructura de directorios correcta (include/teaspeak/)"
+        else
+            log_warning "⚠ MusicPlayer.h no encontrado en ubicación esperada"
         fi
         cd "$SUBMODULES_DIR"
     fi
