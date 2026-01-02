@@ -387,30 +387,29 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 11: Corregir include path en MusicBot/CMakeLists.txt
+# PARCHE 11: Corregir include en MusicBot/src/MusicPlayer.cpp
 # ═══════════════════════════════════════════════════════════════════════════
-MUSICBOT_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/MusicBot/CMakeLists.txt"
+MUSICPLAYER_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/MusicBot/src/MusicPlayer.cpp"
 
-if [[ -f "$MUSICBOT_CMAKE" ]]; then
-    log_info "Parcheando MusicBot/CMakeLists.txt..."
+if [[ -f "$MUSICPLAYER_CPP" ]]; then
+    log_info "Parcheando MusicBot/src/MusicPlayer.cpp..."
 
-    # Verificar si ya tiene el include_directories correcto
-    if ! grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
-        # Insertamos después de la línea que contiene "project("
-        # Esto es más robusto ya que project() siempre existe en CMakeLists.txt
-        sed -i '/^project(/a include_directories(../music/include)' "$MUSICBOT_CMAKE"
+    # Verificar si ya tiene el include correcto
+    if grep -q '#include "teaspeak/MusicPlayer.h"' "$MUSICPLAYER_CPP"; then
+        # Corregir el include para que busque MusicPlayer.h directamente
+        sed -i 's|#include "teaspeak/MusicPlayer.h"|#include "MusicPlayer.h"|g' "$MUSICPLAYER_CPP"
 
-        if grep -q 'include_directories(../music/include)' "$MUSICBOT_CMAKE"; then
-            log_success "✓ include_directories(../music/include) agregado a MusicBot/CMakeLists.txt"
-        else
-            log_error "Error al agregar include_directories"
-            exit 1
+        # Agregar #include <memory> si no existe
+        if ! grep -q '#include <memory>' "$MUSICPLAYER_CPP"; then
+            sed -i '1i #include <memory>' "$MUSICPLAYER_CPP"
         fi
+
+        log_success "✓ MusicPlayer.cpp include path corregido"
     else
-        log_success "✓ MusicBot/CMakeLists.txt ya tiene el include path correcto"
+        log_success "✓ MusicPlayer.cpp ya tiene el include correcto"
     fi
 else
-    log_warning "MusicBot/CMakeLists.txt no encontrado (omitiendo parche 11)"
+    log_warning "MusicBot/src/MusicPlayer.cpp no encontrado (omitiendo parche 11)"
 fi
 
 echo ""
