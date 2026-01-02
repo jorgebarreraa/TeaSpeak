@@ -578,6 +578,47 @@ fi
 # Con el PATCH 12 corregido, ahora se usa <teaspeak/MusicPlayer.h> correctamente.
 log_success "✓ PATCH 15 no es necesario - campos existen en struct UrlSongInfo"
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 16: Corregir includes de MusicPlayer.h en providers de música
+# ═══════════════════════════════════════════════════════════════════════════
+log_info "Parcheando includes en music providers..."
+
+# Buscar todos los archivos .cpp y .h en music/providers/
+MUSIC_PROVIDERS_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/music/providers"
+
+if [[ -d "$MUSIC_PROVIDERS_DIR" ]]; then
+    # Encontrar todos los archivos que necesitan corrección
+    find "$MUSIC_PROVIDERS_DIR" -type f \( -name "*.cpp" -o -name "*.h" \) | while read -r file; do
+        modified=false
+
+        # Corregir #include <include/MusicPlayer.h> -> #include <teaspeak/MusicPlayer.h>
+        if grep -q '#include <include/MusicPlayer.h>' "$file" 2>/dev/null; then
+            sed -i 's|#include <include/MusicPlayer.h>|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            modified=true
+        fi
+
+        # Corregir #include <MusicPlayer.h> -> #include <teaspeak/MusicPlayer.h>
+        if grep -q '#include <MusicPlayer.h>' "$file" 2>/dev/null; then
+            sed -i 's|#include <MusicPlayer.h>|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            modified=true
+        fi
+
+        # Corregir #include "MusicPlayer.h" -> #include <teaspeak/MusicPlayer.h>
+        if grep -q '#include "MusicPlayer.h"' "$file" 2>/dev/null; then
+            sed -i 's|#include "MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            modified=true
+        fi
+
+        if [[ "$modified" == true ]]; then
+            log_success "✓ $(basename "$file") - include corregido"
+        fi
+    done
+
+    log_success "✓ Todos los includes en music providers corregidos"
+else
+    log_warning "music/providers/ no encontrado (omitiendo parche 16)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
