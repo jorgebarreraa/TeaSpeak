@@ -54,6 +54,51 @@ echo -e "${CYAN}═════════════════════�
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 0: Verificar y clonar submódulos si no existen
+# ═══════════════════════════════════════════════════════════════════════════
+SUBMODULES_DIR="$SCRIPT_DIR/Server/Server"
+
+if [[ -d "$SUBMODULES_DIR" ]]; then
+    cd "$SUBMODULES_DIR"
+
+    # Verificar submódulo music
+    if [[ ! -d "music/.git" ]]; then
+        log_info "Submódulo 'music' no encontrado, clonando..."
+        if [[ -d "music" ]]; then
+            rm -rf music
+        fi
+        git clone https://github.com/jorgebarreraa/TeaMusic-Providers.git music 2>/dev/null || \
+        git clone https://github.com/TeaSpeak/TeaMusic-Providers.git music || \
+        log_warning "No se pudo clonar submódulo music (continuando...)"
+
+        if [[ -d "music/.git" ]]; then
+            log_success "✓ Submódulo 'music' clonado exitosamente"
+        fi
+    else
+        log_success "✓ Submódulo 'music' ya existe"
+    fi
+
+    # Verificar submódulo shared
+    if [[ ! -d "shared/.git" ]]; then
+        log_info "Submódulo 'shared' no encontrado, clonando..."
+        if [[ -d "shared" ]]; then
+            rm -rf shared
+        fi
+        git clone https://github.com/jorgebarreraa/TeaSpeakLibrary.git shared 2>/dev/null || \
+        git clone https://github.com/TeaSpeak/TeaSpeakLibrary.git shared || \
+        log_warning "No se pudo clonar submódulo shared (continuando...)"
+
+        if [[ -d "shared/.git" ]]; then
+            log_success "✓ Submódulo 'shared' clonado exitosamente"
+        fi
+    else
+        log_success "✓ Submódulo 'shared' ya existe"
+    fi
+
+    cd "$SCRIPT_DIR"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 1: music/CMakeLists.txt - Include directories
 # ═══════════════════════════════════════════════════════════════════════════
 MUSIC_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/music/CMakeLists.txt"
