@@ -101,6 +101,12 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
             log_success "✓ MusicPlayer.h movido a include/teaspeak/"
         elif [[ -f "include/teaspeak/MusicPlayer.h" ]]; then
             log_success "✓ Estructura de directorios correcta (include/teaspeak/)"
+            # Eliminar archivo viejo si existe (para evitar inclusión doble)
+            if [[ -f "include/MusicPlayer.h" ]]; then
+                log_info "Eliminando archivo duplicado include/MusicPlayer.h..."
+                rm -f include/MusicPlayer.h
+                log_success "✓ Archivo duplicado eliminado"
+            fi
         else
             log_warning "⚠ MusicPlayer.h no encontrado en ubicación esperada"
         fi
@@ -149,7 +155,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fpermissive -Wall -Wno-sign-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/providers")
 
-set(HEADERS include/MusicPlayer.h)
+set(HEADERS include/teaspeak/MusicPlayer.h)
 
 option(BUILD_PROVIDER_YT "Build the Youtube-dl provider. (You requre extra headers)" ON)
 option(BUILD_PROVIDER_FFMPEG "Build the FFMpeg provider. (You requre extra headers)" ON)
