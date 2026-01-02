@@ -6,7 +6,7 @@
 #include <log/LogUtils.h>
 
 #include <utility>
-#include "teaspeak/MusicPlayer.h"
+#include <teaspeak/MusicPlayer.h>
 
 using namespace ts;
 using namespace ts::music;

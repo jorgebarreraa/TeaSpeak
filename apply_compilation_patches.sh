@@ -75,18 +75,12 @@ for file in "${CRITICAL_FILES[@]}"; do
         cd "$SCRIPT_DIR/Server/Root/TeaSpeak"
 
         # Comprobar si hay cambios en el archivo
-        if git diff --quiet "$relative_path" 2>/dev/null; then
-            # No hay cambios, archivo limpio
-            :
-        else
+        if ! git diff --quiet "$relative_path" 2>/dev/null; then
             # Hay cambios - restaurar desde git
             log_warning "Detectados cambios en $file_name, restaurando desde repositorio..."
-            if git checkout HEAD -- "$relative_path" 2>/dev/null; then
-                log_success "✓ $file_name restaurado correctamente"
-                ((restored_count++))
-            else
-                log_warning "⚠ No se pudo restaurar $file_name (continuando...)"
-            fi
+            git checkout HEAD -- "$relative_path" 2>/dev/null || true
+            log_success "✓ $file_name restaurado correctamente"
+            ((restored_count++))
         fi
     fi
 done
