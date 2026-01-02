@@ -597,6 +597,12 @@ if [[ -d "$MUSIC_PROVIDERS_DIR" ]]; then
             modified=true
         fi
 
+        # Corregir #include "include/MusicPlayer.h" -> #include <teaspeak/MusicPlayer.h>
+        if grep -q '#include "include/MusicPlayer.h"' "$file" 2>/dev/null; then
+            sed -i 's|#include "include/MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$file"
+            modified=true
+        fi
+
         # Corregir #include <MusicPlayer.h> -> #include <teaspeak/MusicPlayer.h>
         if grep -q '#include <MusicPlayer.h>' "$file" 2>/dev/null; then
             sed -i 's|#include <MusicPlayer.h>|#include <teaspeak/MusicPlayer.h>|g' "$file"
