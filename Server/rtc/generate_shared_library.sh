@@ -12,10 +12,12 @@ install_prefix="$(pwd)/build_libraries/"
 [ $? -ne 0 ] && { exit 1; }
 
 # Apply Cargo.toml fix for rust-webrtc dependencies
-FIX_SCRIPT="$(pwd)/../../rtc/fix_cargo_deps.sh"
+FIX_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/fix_cargo_deps.sh"
 if [ -f "$FIX_SCRIPT" ]; then
     echo "Applying Cargo.toml fixes for rust-webrtc..."
     bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."
+else
+    echo "Warning: Cargo fix script not found at $FIX_SCRIPT"
 fi
 
 # Determine OpenSSL pkgconfig directory FIRST
