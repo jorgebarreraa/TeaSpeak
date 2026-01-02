@@ -541,15 +541,15 @@ MUSICPLAYLIST_CPP2="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlayl
 if [[ -f "$MUSICPLAYLIST_CPP2" ]]; then
     log_info "Parcheando server/src/music/MusicPlaylist.cpp (campos inexistentes)..."
 
-    # Verificar si las líneas problemáticas existen
-    if grep -q "casted->length" "$MUSICPLAYLIST_CPP2"; then
-        # Comentar solo la línea de length (mantener el bloque intacto)
-        sed -i 's|^\([[:space:]]*\)root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();|\1// root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count(); // Field does not exist|' "$MUSICPLAYLIST_CPP2"
+    # Verificar si las líneas problemáticas existen (sin comentar)
+    if grep -q 'root\["length"\] = chrono::ceil<chrono::milliseconds>(casted->length).count();' "$MUSICPLAYLIST_CPP2" 2>/dev/null; then
+        # Comentar línea 579: length field
+        sed -i '579s|^|// |' "$MUSICPLAYLIST_CPP2"
 
-        # Comentar el bloque if completo de thumbnail (4 líneas)
-        sed -i '/if(casted->thumbnail) {/,/^[[:space:]]*}[[:space:]]*$/{ s|^\([[:space:]]*\)if(casted->thumbnail) {|\1// if(casted->thumbnail) { // Field does not exist|; s|^\([[:space:]]*\)if(auto thump|\1// if(auto thump|; s|^\([[:space:]]*\)root\["thumbnail"\]|\1// root["thumbnail"]|; /^[[:space:]]*}[[:space:]]*$/ { s|^\([[:space:]]*\)}|\1// }|; q } }' "$MUSICPLAYLIST_CPP2"
+        # Comentar líneas 582-585: thumbnail block (4 líneas)
+        sed -i '582,585s|^|// |' "$MUSICPLAYLIST_CPP2"
 
-        log_success "✓ MusicPlaylist.cpp campos inexistentes comentados"
+        log_success "✓ MusicPlaylist.cpp campos inexistentes comentados (líneas 579, 582-585)"
     else
         log_success "✓ MusicPlaylist.cpp ya está corregido"
     fi
