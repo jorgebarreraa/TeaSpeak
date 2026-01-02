@@ -468,11 +468,15 @@ SERVER_FILES=(
     "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/music/Song.h"
     "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/music/internal_provider/channel_replay/ChannelProvider.h"
     "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h"
+    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
 )
 
 for file in "${SERVER_FILES[@]}"; do
     if [[ -f "$file" ]]; then
-        if grep -q '#include <teaspeak/MusicPlayer.h>' "$file"; then
+        if grep -q '#include "teaspeak/MusicPlayer.h"' "$file"; then
+            sed -i 's|#include "teaspeak/MusicPlayer.h"|#include "MusicPlayer.h"|g' "$file"
+            log_success "✓ $(basename "$file") - include corregido"
+        elif grep -q '#include <teaspeak/MusicPlayer.h>' "$file"; then
             sed -i 's|#include <teaspeak/MusicPlayer.h>|#include <MusicPlayer.h>|g' "$file"
             log_success "✓ $(basename "$file") - include corregido"
         fi
