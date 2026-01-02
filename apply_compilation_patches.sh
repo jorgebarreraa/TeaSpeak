@@ -474,16 +474,27 @@ MUSICPLAYER_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/MusicBot/src/MusicPlayer.cpp"
 if [[ -f "$MUSICPLAYER_CPP" ]]; then
     log_info "Parcheando MusicBot/src/MusicPlayer.cpp..."
 
-    # Verificar si ya tiene el include correcto
+    modified=false
+
+    # Corregir #include "teaspeak/MusicPlayer.h" -> #include <teaspeak/MusicPlayer.h>
     if grep -q '#include "teaspeak/MusicPlayer.h"' "$MUSICPLAYER_CPP"; then
-        # Corregir el include para que busque MusicPlayer.h directamente
-        sed -i 's|#include "teaspeak/MusicPlayer.h"|#include "MusicPlayer.h"|g' "$MUSICPLAYER_CPP"
+        sed -i 's|#include "teaspeak/MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$MUSICPLAYER_CPP"
+        modified=true
+    fi
 
-        # Agregar #include <memory> si no existe
-        if ! grep -q '#include <memory>' "$MUSICPLAYER_CPP"; then
-            sed -i '1i #include <memory>' "$MUSICPLAYER_CPP"
-        fi
+    # Corregir #include "MusicPlayer.h" -> #include <teaspeak/MusicPlayer.h>
+    if grep -q '#include "MusicPlayer.h"' "$MUSICPLAYER_CPP"; then
+        sed -i 's|#include "MusicPlayer.h"|#include <teaspeak/MusicPlayer.h>|g' "$MUSICPLAYER_CPP"
+        modified=true
+    fi
 
+    # Agregar #include <memory> al inicio si no existe
+    if ! grep -q '#include <memory>' "$MUSICPLAYER_CPP"; then
+        sed -i '1i #include <memory>' "$MUSICPLAYER_CPP"
+        modified=true
+    fi
+
+    if [[ "$modified" == true ]]; then
         log_success "✓ MusicPlayer.cpp include path corregido"
     else
         log_success "✓ MusicPlayer.cpp ya tiene el include correcto"
