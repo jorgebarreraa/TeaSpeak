@@ -29,6 +29,8 @@ for CHECKOUT_DIR in $WEBRTC_CHECKOUTS; do
     CARGO_TOMLS=$(find "$CHECKOUT_DIR" -name "Cargo.toml" 2>/dev/null || true)
 
     for CARGO_TOML in $CARGO_TOMLS; do
+        modified=false
+
         if grep -q "slog =" "$CARGO_TOML" 2>/dev/null; then
             echo "  Found slog dependency in: $CARGO_TOML"
 
@@ -41,11 +43,28 @@ for CHECKOUT_DIR in $WEBRTC_CHECKOUTS; do
 
                 # Fix: Add version to slog dependency
                 sed -i 's/^slog = {/slog = { version = "2.7",/' "$CARGO_TOML"
+                modified=true
 
                 echo "  ✓ Fixed slog dependency"
-            else
-                echo "  ✓ slog dependency looks OK"
             fi
+        fi
+
+        # Fix: Remove invalid [dev-dependencies.slog] section
+        if grep -q "^\[dev-dependencies\.slog\]$" "$CARGO_TOML" 2>/dev/null; then
+            echo "  ⚠️  Found invalid [dev-dependencies.slog] section - removing..."
+
+            # Backup if not already done
+            [[ ! -f "$CARGO_TOML.backup" ]] && cp "$CARGO_TOML" "$CARGO_TOML.backup"
+
+            # Remove the section and its features line
+            sed -i '/^\[dev-dependencies\.slog\]$/,/^features/d' "$CARGO_TOML"
+            modified=true
+
+            echo "  ✓ Removed invalid dev-dependencies section"
+        fi
+
+        if [[ "$modified" == "false" ]]; then
+            echo "  ✓ Cargo.toml looks OK"
         fi
     done
 done
