@@ -704,6 +704,46 @@ else
     log_warning "music/providers/ no encontrado (omitiendo parche 16)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 17: Comentar métodos inexistentes en AcknowledgeManager
+# ═══════════════════════════════════════════════════════════════════════════
+TEXT_CMD_HANDLER="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/client/ConnectedClientTextCommandHandler.cpp"
+
+if [[ -f "$TEXT_CMD_HANDLER" ]]; then
+    log_info "Parcheando ConnectedClientTextCommandHandler.cpp..."
+
+    # Verificar si ya está parcheado
+    if grep -q "// RTO.*not available in current AcknowledgeManager" "$TEXT_CMD_HANDLER" 2>/dev/null; then
+        log_success "✓ ConnectedClientTextCommandHandler.cpp ya está parcheado"
+    else
+        # Crear backup
+        if [[ ! -f "$TEXT_CMD_HANDLER.backup" ]]; then
+            cp "$TEXT_CMD_HANDLER" "$TEXT_CMD_HANDLER.backup"
+        fi
+
+        # Comentar las líneas que usan métodos inexistentes y agregar alternativa
+        sed -i '
+            /send_message(this->ref(), " RTO   : "/c\
+            // RTO, RTTVAR, SRTT methods are not available in current AcknowledgeManager\
+            send_message(this->ref(), " RTO   : Not available (API changed)");
+            /send_message(this->ref(), " RTTVAR: "/c\
+            send_message(this->ref(), " RTTVAR: Not available (API changed)");
+            /send_message(this->ref(), " SRTT  : "/c\
+            send_message(this->ref(), " SRTT  : Not available (API changed)");
+        ' "$TEXT_CMD_HANDLER"
+
+        # Verificar
+        if grep -q "Not available (API changed)" "$TEXT_CMD_HANDLER"; then
+            log_success "✓ ConnectedClientTextCommandHandler.cpp parcheado exitosamente"
+        else
+            log_error "Error al parchar ConnectedClientTextCommandHandler.cpp"
+            exit 1
+        fi
+    fi
+else
+    log_warning "ConnectedClientTextCommandHandler.cpp no encontrado (omitiendo parche 17)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
