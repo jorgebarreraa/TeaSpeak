@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-cd $(dirname $0)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
 # shellcheck disable=SC2034
 glib_version="2.66.2"
@@ -12,7 +13,7 @@ install_prefix="$(pwd)/build_libraries/"
 [ $? -ne 0 ] && { exit 1; }
 
 # Apply Cargo.toml fix for rust-webrtc dependencies
-FIX_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/fix_cargo_deps.sh"
+FIX_SCRIPT="$SCRIPT_DIR/fix_cargo_deps.sh"
 if [ -f "$FIX_SCRIPT" ]; then
     echo "Applying Cargo.toml fixes for rust-webrtc..."
     bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."

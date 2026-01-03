@@ -267,7 +267,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 2: Server/Server/CMakeLists.txt - LIBEVENT_PATH
+# PARCHE 2: Server/Server/CMakeLists.txt - LIBEVENT_PATH y music includes
 # ═══════════════════════════════════════════════════════════════════════════
 SERVER_CMAKE="$SCRIPT_DIR/Server/Server/CMakeLists.txt"
 
@@ -279,10 +279,15 @@ if [[ -f "$SERVER_CMAKE" ]]; then
         cp "$SERVER_CMAKE" "${SERVER_CMAKE}.backup"
     fi
 
-    # Usar awk para reemplazo preciso
+    # Usar awk para reemplazos precisos
     awk '{
         if ($0 ~ /^set\(LIBEVENT_PATH/) {
             print "set(LIBEVENT_PATH \"${LIBRARY_PATH}/event/_build/linux_amd64/lib\")"
+        } else if ($0 ~ /^add_subdirectory\(music/) {
+            print $0
+            print ""
+            print "# Add music include directory for server to access MusicPlayer.h"
+            print "include_directories(music/include)"
         } else {
             print $0
         }
@@ -290,11 +295,12 @@ if [[ -f "$SERVER_CMAKE" ]]; then
 
     mv "${SERVER_CMAKE}.tmp" "$SERVER_CMAKE"
 
-    # Verificar
-    if grep -q 'set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")' "$SERVER_CMAKE"; then
-        log_success "LIBEVENT_PATH corregida exitosamente"
+    # Verificar ambos cambios
+    if grep -q 'set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")' "$SERVER_CMAKE" && \
+       grep -q 'include_directories(music/include)' "$SERVER_CMAKE"; then
+        log_success "✓ LIBEVENT_PATH y music includes corregidos exitosamente"
     else
-        log_error "Error al parchar LIBEVENT_PATH"
+        log_error "Error al parchar Server/Server/CMakeLists.txt"
         exit 1
     fi
 else
