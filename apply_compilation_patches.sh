@@ -744,6 +744,32 @@ else
     log_warning "ConnectedClientTextCommandHandler.cpp no encontrado (omitiendo parche 17)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 18: Agregar #include <cstdint> a shared/src/misc/utf8.h
+# ═══════════════════════════════════════════════════════════════════════════
+UTF8_HEADER="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/misc/utf8.h"
+
+if [[ -f "$UTF8_HEADER" ]]; then
+    log_info "Parcheando shared/src/misc/utf8.h..."
+
+    # Verificar si ya tiene el include
+    if ! grep -q '#include <cstdint>' "$UTF8_HEADER"; then
+        # Agregar #include <cstdint> después de #pragma once
+        sed -i '/#pragma once/a #include <cstdint>' "$UTF8_HEADER"
+
+        if grep -q '#include <cstdint>' "$UTF8_HEADER"; then
+            log_success "✓ #include <cstdint> agregado a utf8.h"
+        else
+            log_error "Error al agregar #include <cstdint>"
+            exit 1
+        fi
+    else
+        log_success "✓ utf8.h ya tiene #include <cstdint>"
+    fi
+else
+    log_warning "shared/src/misc/utf8.h no encontrado (omitiendo parche 18)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
