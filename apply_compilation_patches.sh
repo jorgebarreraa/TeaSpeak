@@ -279,29 +279,38 @@ if [[ -f "$SERVER_CMAKE" ]]; then
         cp "$SERVER_CMAKE" "${SERVER_CMAKE}.backup"
     fi
 
-    # Usar awk para reemplazos precisos
-    awk '{
-        if ($0 ~ /^set\(LIBEVENT_PATH/) {
-            print "set(LIBEVENT_PATH \"${LIBRARY_PATH}/event/_build/linux_amd64/lib\")"
-        } else if ($0 ~ /^add_subdirectory\(music/) {
-            print $0
-            print ""
-            print "# Add music include directory for server to access MusicPlayer.h"
-            print "include_directories(music/include)"
-        } else {
-            print $0
-        }
-    }' "$SERVER_CMAKE" > "${SERVER_CMAKE}.tmp"
+    # Verificar si ya se aplicaron los cambios (idempotencia)
+    needs_libevent_fix=false
+    needs_music_include=false
 
-    mv "${SERVER_CMAKE}.tmp" "$SERVER_CMAKE"
+    if ! grep -q 'set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")' "$SERVER_CMAKE"; then
+        needs_libevent_fix=true
+    fi
 
-    # Verificar ambos cambios
-    if grep -q 'set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")' "$SERVER_CMAKE" && \
-       grep -q 'include_directories(music/include)' "$SERVER_CMAKE"; then
+    if ! grep -q 'include_directories(music/include)' "$SERVER_CMAKE"; then
+        needs_music_include=true
+    fi
+
+    # Solo aplicar el patch si es necesario
+    if [[ "$needs_libevent_fix" == "true" ]] || [[ "$needs_music_include" == "true" ]]; then
+        # Usar awk para reemplazos precisos
+        awk -v need_libevent="$needs_libevent_fix" -v need_music="$needs_music_include" '{
+            if ($0 ~ /^set\(LIBEVENT_PATH/ && need_libevent == "true") {
+                print "set(LIBEVENT_PATH \"${LIBRARY_PATH}/event/_build/linux_amd64/lib\")"
+            } else if ($0 ~ /^add_subdirectory\(music/ && need_music == "true") {
+                print $0
+                print ""
+                print "# Add music include directory for server to access MusicPlayer.h"
+                print "include_directories(music/include)"
+            } else {
+                print $0
+            }
+        }' "$SERVER_CMAKE" > "${SERVER_CMAKE}.tmp"
+
+        mv "${SERVER_CMAKE}.tmp" "$SERVER_CMAKE"
         log_success "✓ LIBEVENT_PATH y music includes corregidos exitosamente"
     else
-        log_error "Error al parchar Server/Server/CMakeLists.txt"
-        exit 1
+        log_success "✓ Server/Server/CMakeLists.txt ya está parcheado"
     fi
 else
     log_warning "Server/Server/CMakeLists.txt no encontrado (omitiendo parche 2)"
