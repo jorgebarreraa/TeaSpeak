@@ -122,14 +122,24 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
         current_branch=$(git branch --show-current)
         if [[ "$current_branch" != "master" ]]; then
             log_info "Cambiando submódulo music de branch '$current_branch' a 'master'..."
-            # Guardar cambios locales antes del checkout
-            git stash push -m "Auto-stash before switching to master" 2>/dev/null || true
+            # Forzar checkout a master descartando cambios locales
             git fetch origin master 2>/dev/null || true
-            if git checkout master 2>/dev/null; then
-                log_success "✓ Submódulo music cambiado a branch master"
-            else
-                log_warning "No se pudo cambiar a branch master, usando branch actual"
-            fi
+            git checkout -f master 2>/dev/null || {
+                # Si no existe localmente, crear desde origin/master
+                git checkout -b master origin/master 2>/dev/null || {
+                    log_error "CRÍTICO: No se pudo cambiar a branch master"
+                    log_error "La compilación FALLARÁ sin la branch master"
+                    exit 1
+                }
+            }
+            # Asegurar que está sincronizado con origin
+            git reset --hard origin/master 2>/dev/null || true
+            log_success "✓ Submódulo music cambiado a branch master"
+        else
+            # Aunque ya esté en master, asegurar que está actualizado
+            git fetch origin master 2>/dev/null || true
+            git reset --hard origin/master 2>/dev/null || true
+            log_success "✓ Submódulo music ya está en branch master (actualizado)"
         fi
 
         # Verificar estructura de directorios y corregir si es necesario
