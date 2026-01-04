@@ -826,6 +826,42 @@ else
     log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 19)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 20: Actualizar symlinks de OpenSSL a versión 3.0
+# ═══════════════════════════════════════════════════════════════════════════
+OPENSSL_LIB_DIR="$SCRIPT_DIR/Server/Root/libraries/openssl-prebuild/linux_amd64/lib"
+
+if [[ -d "$OPENSSL_LIB_DIR" ]]; then
+    log_info "Verificando versión de OpenSSL en libraries..."
+
+    # Verificar si los symlinks ya apuntan a versión 3.0
+    if [[ -L "$OPENSSL_LIB_DIR/libssl.so" ]] && [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.3" ]]; then
+        log_success "✓ Symlinks de OpenSSL ya apuntan a versión 3.0"
+    else
+        log_info "Actualizando symlinks de OpenSSL 1.1 → 3.0..."
+
+        # Verificar que existan las versiones 3.0
+        if [[ -f "$OPENSSL_LIB_DIR/libssl.so.3" ]] && [[ -f "$OPENSSL_LIB_DIR/libcrypto.so.3" ]]; then
+            # Actualizar symlinks
+            ln -sf libssl.so.3 "$OPENSSL_LIB_DIR/libssl.so"
+            ln -sf libcrypto.so.3 "$OPENSSL_LIB_DIR/libcrypto.so"
+
+            # Verificar
+            if [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.3" ]] && \
+               [[ "$(readlink "$OPENSSL_LIB_DIR/libcrypto.so")" == "libcrypto.so.3" ]]; then
+                log_success "✓ Symlinks actualizados a OpenSSL 3.0"
+            else
+                log_error "Error al actualizar symlinks de OpenSSL"
+                exit 1
+            fi
+        else
+            log_warning "OpenSSL 3.0 no encontrado en libraries (usando versión existente)"
+        fi
+    fi
+else
+    log_warning "Directorio openssl-prebuild no encontrado (omitiendo parche 20)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
