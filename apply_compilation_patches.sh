@@ -787,15 +787,25 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Agregar enlazado explícito de crypto y z al final, antes de jemalloc
-        # Buscar la línea "set(DISABLE_JEMALLOC" y agregar antes de ella
-        sed -i '/^set(DISABLE_JEMALLOC/i\
-# Fix OpenSSL and zlib linking order for mysql compatibility\
-target_link_libraries(TeaSpeakServer\
-        crypto\
-        z\
-)\
-' "$SERVER_CMAKE_LINK"
+        # Agregar enlazado explícito de crypto y z DESPUÉS de jemalloc
+        # Buscar la línea con add_definitions(-DHAVE_JEMALLOC) y agregar después del endif
+        awk '
+            /add_definitions\(-DHAVE_JEMALLOC\)/ { print; in_jemalloc=1; next }
+            in_jemalloc && /^endif \(\)/ {
+                print
+                print ""
+                print "# Fix OpenSSL and zlib linking order for mysql compatibility"
+                print "# These must come AFTER mysql in the link order"
+                print "target_link_libraries(TeaSpeakServer"
+                print "        crypto"
+                print "        z"
+                print ")"
+                in_jemalloc=0
+                next
+            }
+            { print }
+        ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
+        mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
 
         # Verificar
         if grep -q "# Fix OpenSSL and zlib linking order" "$SERVER_CMAKE_LINK"; then
