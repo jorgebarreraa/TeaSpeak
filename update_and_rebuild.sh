@@ -23,8 +23,9 @@ echo ""
 
 # Verificar que estamos en el directorio correcto
 if [[ ! -f "setup_teaspeak.sh" ]]; then
-    echo "ERROR: Ejecuta este script desde /root/TeaSpeak"
-    echo "Uso: cd /root/TeaSpeak && bash update_and_rebuild.sh"
+    echo "ERROR: Ejecuta este script desde el directorio raíz de TeaSpeak"
+    echo "Uso: cd <directorio-teaspeak> && bash update_and_rebuild.sh"
+    echo "Ejemplo: cd /home/user/TeaSpeak && bash update_and_rebuild.sh"
     exit 1
 fi
 
@@ -33,6 +34,7 @@ echo -e "${YELLOW}[1/4]${NC} Descartando cambios locales en archivos parcheados.
 git checkout -- Server/Root/build_teaspeak.sh 2>/dev/null || true
 git checkout -- Server/Root/TeaSpeak/server/CMakeLists.txt 2>/dev/null || true
 git checkout -- Server/Root/TeaSpeak/shared/src/misc/utf8.h 2>/dev/null || true
+git checkout -- Server/Root/build-helpers/libraries/build_datapipes.sh 2>/dev/null || true
 echo -e "${GREEN}✓${NC} Archivos restaurados a estado original"
 echo ""
 

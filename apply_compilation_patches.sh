@@ -913,10 +913,19 @@ fi
 if [[ -d "$DATAPIPES_LIBRARY" ]]; then
     log_info "Verificando si DataPipes necesita compilación..."
 
-    # Verificar si DataPipes ya fue compilado
-    if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
-        log_success "✓ DataPipes ya está compilado"
+    # Verificar si DataPipes realmente tiene las librerías compiladas (no solo el marker)
+    DATAPIPES_LIB_CORE="$DATAPIPES_LIBRARY/lib/libDataPipes-Core-Shared.so"
+    DATAPIPES_LIB_RTC="$DATAPIPES_LIBRARY/lib/libDataPipes-Rtc-Shared.so"
+    DATAPIPES_INCLUDE="$DATAPIPES_LIBRARY/include/pipes/buffer.h"
+
+    if [[ -f "$DATAPIPES_LIB_CORE" && -f "$DATAPIPES_LIB_RTC" && -f "$DATAPIPES_INCLUDE" ]]; then
+        log_success "✓ DataPipes ya está compilado con librerías válidas"
     else
+        if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
+            log_info "Marker de build existe pero librerías faltantes - forzando recompilación..."
+            rm -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
+        fi
+
         log_info "Compilando DataPipes con OpenSSL 3.0..."
 
         # Navegar al directorio de librerías
@@ -937,7 +946,14 @@ if [[ -d "$DATAPIPES_LIBRARY" ]]; then
             library_path="DataPipes" bash ../build-helpers/libraries/build_datapipes.sh
 
             if [[ $? -eq 0 ]]; then
-                log_success "✓ DataPipes compilado exitosamente con OpenSSL 3.0"
+                # Verificar que las librerías se compilaron correctamente
+                if [[ -f "$DATAPIPES_LIB_CORE" && -f "$DATAPIPES_LIB_RTC" ]]; then
+                    log_success "✓ DataPipes compilado exitosamente con OpenSSL 3.0"
+                else
+                    log_error "DataPipes compiló pero las librerías no se generaron"
+                    cd "$CURRENT_DIR"
+                    exit 1
+                fi
             else
                 log_error "Error al compilar DataPipes"
                 cd "$CURRENT_DIR"
