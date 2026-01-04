@@ -862,6 +862,51 @@ else
     log_warning "Directorio openssl-prebuild no encontrado (omitiendo parche 20)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 21: Recompilar DataPipes con OpenSSL 3.0 en lugar de BoringSSL
+# ═══════════════════════════════════════════════════════════════════════════
+DATAPIPES_BUILD_SCRIPT="$SCRIPT_DIR/Server/Root/build-helpers/libraries/build_datapipes.sh"
+DATAPIPES_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/DataPipes"
+
+if [[ -f "$DATAPIPES_BUILD_SCRIPT" ]]; then
+    log_info "Verificando configuración de DataPipes..."
+
+    # Verificar si ya está configurado para usar OpenSSL
+    if grep -q 'CRYPTO_TYPE="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
+        log_success "✓ DataPipes ya está configurado para usar OpenSSL"
+    else
+        log_info "Reconfigurando DataPipes para usar OpenSSL 3.0..."
+
+        # Crear backup
+        if [[ ! -f "$DATAPIPES_BUILD_SCRIPT.backup_crypto" ]]; then
+            cp "$DATAPIPES_BUILD_SCRIPT" "$DATAPIPES_BUILD_SCRIPT.backup_crypto"
+        fi
+
+        # Cambiar de BoringSSL a OpenSSL
+        sed -i 's/_crypto_type="boringssl"/_crypto_type="openssl"/' "$DATAPIPES_BUILD_SCRIPT"
+
+        # Cambiar la ruta de Crypto_ROOT_DIR para apuntar a openssl-prebuild
+        sed -i 's|Crypto_ROOT_DIR="`pwd`/boringssl/lib"|Crypto_ROOT_DIR="`pwd`/openssl-prebuild/${build_os_type}_${build_os_arch}/lib"|' "$DATAPIPES_BUILD_SCRIPT"
+
+        # Verificar
+        if grep -q 'CRYPTO_TYPE="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
+            log_success "✓ DataPipes reconfigurado para OpenSSL"
+
+            # Forzar recompilación eliminando el archivo de estado de build
+            if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
+                log_info "Forzando recompilación de DataPipes..."
+                rm "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
+                log_success "✓ DataPipes se recompilará en la próxima compilación"
+            fi
+        else
+            log_error "Error al reconfigurar DataPipes"
+            exit 1
+        fi
+    fi
+else
+    log_warning "Script build_datapipes.sh no encontrado (omitiendo parche 21)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
