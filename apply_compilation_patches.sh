@@ -787,20 +787,18 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Agregar enlazado explícito de crypto y z DESPUÉS de jemalloc
-        # Buscar la línea con add_definitions(-DHAVE_JEMALLOC) y agregar después del endif
+        # Agregar enlazado explícito de crypto y z AL FINAL ABSOLUTO
+        # Justo antes de add_executable(Snapshots-Permissions-Test ...)
         awk '
-            /add_definitions\(-DHAVE_JEMALLOC\)/ { print; in_jemalloc=1; next }
-            in_jemalloc && /^endif \(\)/ {
-                print
-                print ""
+            /^add_executable\(Snapshots-Permissions-Test/ {
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# These must come AFTER mysql in the link order"
+                print "# These must come at the VERY END to resolve mysql symbols"
                 print "target_link_libraries(TeaSpeakServer"
                 print "        crypto"
                 print "        z"
                 print ")"
-                in_jemalloc=0
+                print ""
+                print
                 next
             }
             { print }
