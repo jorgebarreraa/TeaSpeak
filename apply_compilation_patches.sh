@@ -787,21 +787,21 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Agregar una llamada adicional a target_link_libraries() DESPUÉS de jemalloc
-        # Esto fuerza que -lcrypto -lz aparezcan AL FINAL del comando de enlazado
-        # después de que CMake expanda las dependencias transitivas de libTeaSpeak.a (mysql)
+        # Usar rutas explícitas de librerías para forzar que crypto y z aparezcan AL FINAL
+        # CMake trata rutas completas diferente a targets, poniendo las en la posición exacta
         awk '
-            /^endif \(\)/ && in_jemalloc {
-                print
-                print ""
+            /^add_executable\(Snapshots-Permissions-Test/ {
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# Add final target_link_libraries call to force crypto and z AFTER mysql transitive deps"
-                print "target_link_libraries(TeaSpeakServer PRIVATE crypto z)"
-                in_jemalloc = 0
+                print "# Force crypto and z to appear AFTER all transitive dependencies (including mysql)"
+                print "# Using explicit library paths to bypass CMake dependency resolution"
+                print "find_library(CRYPTO_FINAL_LIB NAMES crypto PATHS /usr/lib/x86_64-linux-gnu /usr/lib /usr/local/lib NO_DEFAULT_PATH)"
+                print "find_library(Z_FINAL_LIB NAMES z PATHS /usr/lib/x86_64-linux-gnu /usr/lib /usr/local/lib NO_DEFAULT_PATH)"
+                print "if(CRYPTO_FINAL_LIB AND Z_FINAL_LIB)"
+                print "    target_link_libraries(TeaSpeakServer PRIVATE \"${CRYPTO_FINAL_LIB}\" \"${Z_FINAL_LIB}\")"
+                print "endif()"
+                print ""
+                print $0
                 next
-            }
-            /^if \(NOT DISABLE_JEMALLOC\)/ {
-                in_jemalloc = 1
             }
             { print }
         ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
