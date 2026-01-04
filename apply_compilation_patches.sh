@@ -778,20 +778,23 @@ SERVER_CMAKE_LINK="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
 if [[ -f "$SERVER_CMAKE_LINK" ]]; then
     log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL y zlib..."
 
-    # Verificar si ya está parcheado con v9 (usando target_link_options)
+    # Verificar si ya está parcheado con v10 (usando target_link_options)
     if grep -q "LINKER:--no-as-needed.*LINKER:-lcrypto.*LINKER:-lz" "$SERVER_CMAKE_LINK" 2>/dev/null; then
-        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v9)"
+        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v10)"
     else
         # Crear backup
         if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Usar target_link_options con flags del linker para forzar símbolos
-        # --no-as-needed fuerza al linker a incluir TODOS los símbolos de crypto y z
-        # incluso si no se referencian directamente desde el ejecutable
+        # PATCH v10: Usar target_link_options insertado después del bloque jemalloc
+        # Esto es más confiable que buscar add_executable(Snapshots-Permissions-Test)
+        # El bloque jemalloc siempre está presente y es el último target_link_libraries antes del fin
         awk '
-            /^add_executable\(Snapshots-Permissions-Test/ {
+            # Detectar el endif del bloque jemalloc
+            /^endif \(\)/ && prev_line ~ /HAVE_JEMALLOC/ {
+                print $0
+                print ""
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
                 print "# Use linker flags to force inclusion of crypto and z symbols for mysql"
                 print "target_link_options(TeaSpeakServer PRIVATE"
@@ -800,17 +803,18 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
                 print "    \"LINKER:-lz\""
                 print "    \"LINKER:--pop-state\""
                 print ")"
-                print ""
-                print $0
                 next
             }
-            { print }
+            {
+                prev_line = $0
+                print
+            }
         ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
         mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
 
         # Verificar
         if grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK"; then
-            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v9)"
+            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v10)"
         else
             log_error "Error al parchar server/CMakeLists.txt linking"
             exit 1
