@@ -779,7 +779,7 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
     log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL y zlib..."
 
     # Verificar si ya está parcheado
-    if grep -q "# Fix OpenSSL and zlib linking order for mysql" "$SERVER_CMAKE_LINK" 2>/dev/null; then
+    if grep -q "# Fix OpenSSL and zlib linking order for mysql compatibility" "$SERVER_CMAKE_LINK" 2>/dev/null; then
         log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking"
     else
         # Crear backup
@@ -787,24 +787,28 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Agregar enlazado usando CMAKE_EXE_LINKER_FLAGS
-        # Esta variable se aplica globalmente a todos los ejecutables
-        # Y se agrega AL FINAL de la línea de comando del linker
+        # Agregar una llamada adicional a target_link_libraries() DESPUÉS de jemalloc
+        # Esto fuerza que -lcrypto -lz aparezcan AL FINAL del comando de enlazado
+        # después de que CMake expanda las dependencias transitivas de libTeaSpeak.a (mysql)
         awk '
-            /^add_executable\(TeaSpeakServer/ {
+            /^endif \(\)/ && in_jemalloc {
                 print
                 print ""
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# Append to CMAKE_EXE_LINKER_FLAGS to force position at end"
-                print "set(CMAKE_EXE_LINKER_FLAGS \"${CMAKE_EXE_LINKER_FLAGS} -lcrypto -lz\")"
+                print "# Add final target_link_libraries call to force crypto and z AFTER mysql transitive deps"
+                print "target_link_libraries(TeaSpeakServer PRIVATE crypto z)"
+                in_jemalloc = 0
                 next
+            }
+            /^if \(NOT DISABLE_JEMALLOC\)/ {
+                in_jemalloc = 1
             }
             { print }
         ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
         mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
 
         # Verificar
-        if grep -q "# Fix OpenSSL and zlib linking order" "$SERVER_CMAKE_LINK"; then
+        if grep -q "# Fix OpenSSL and zlib linking order for mysql compatibility" "$SERVER_CMAKE_LINK"; then
             log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt"
         else
             log_error "Error al parchar server/CMakeLists.txt linking"
