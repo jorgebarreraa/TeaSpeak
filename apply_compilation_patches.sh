@@ -907,6 +907,55 @@ else
     log_warning "Script build_datapipes.sh no encontrado (omitiendo parche 21)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 22: Compilar DataPipes con OpenSSL 3.0
+# ═══════════════════════════════════════════════════════════════════════════
+if [[ -d "$DATAPIPES_LIBRARY" ]]; then
+    log_info "Verificando si DataPipes necesita compilación..."
+
+    # Verificar si DataPipes ya fue compilado
+    if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
+        log_success "✓ DataPipes ya está compilado"
+    else
+        log_info "Compilando DataPipes con OpenSSL 3.0..."
+
+        # Navegar al directorio de librerías
+        CURRENT_DIR="$(pwd)"
+        cd "$SCRIPT_DIR/Server/Root/libraries" || {
+            log_error "No se pudo acceder al directorio de librerías"
+            exit 1
+        }
+
+        # Definir variables de entorno para el build
+        export build_helper_file="$(pwd)/../build-helpers/build_helper.sh"
+        export build_os_type="linux"
+        export build_os_arch="amd64"
+
+        # Ejecutar el script de build de DataPipes
+        if [[ -f "../build-helpers/libraries/build_datapipes.sh" ]]; then
+            log_info "Ejecutando build_datapipes.sh..."
+            library_path="DataPipes" bash ../build-helpers/libraries/build_datapipes.sh
+
+            if [[ $? -eq 0 ]]; then
+                log_success "✓ DataPipes compilado exitosamente con OpenSSL 3.0"
+            else
+                log_error "Error al compilar DataPipes"
+                cd "$CURRENT_DIR"
+                exit 1
+            fi
+        else
+            log_error "build_datapipes.sh no encontrado"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
+
+        # Regresar al directorio original
+        cd "$CURRENT_DIR"
+    fi
+else
+    log_warning "Directorio DataPipes no encontrado (omitiendo parche 22)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
