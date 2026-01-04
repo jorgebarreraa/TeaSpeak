@@ -28,10 +28,12 @@ if [[ ! -f "setup_teaspeak.sh" ]]; then
     exit 1
 fi
 
-# PASO 1: Descartar cambios locales en build_teaspeak.sh
-echo -e "${YELLOW}[1/4]${NC} Descartando cambios locales en build_teaspeak.sh..."
-git checkout -- Server/Root/build_teaspeak.sh
-echo -e "${GREEN}✓${NC} Cambios locales descartados"
+# PASO 1: Descartar cambios locales en archivos parcheados
+echo -e "${YELLOW}[1/4]${NC} Descartando cambios locales en archivos parcheados..."
+git checkout -- Server/Root/build_teaspeak.sh 2>/dev/null || true
+git checkout -- Server/Root/TeaSpeak/server/CMakeLists.txt 2>/dev/null || true
+git checkout -- Server/Root/TeaSpeak/shared/src/misc/utf8.h 2>/dev/null || true
+echo -e "${GREEN}✓${NC} Archivos restaurados a estado original"
 echo ""
 
 # PASO 2: Pull de los cambios del repositorio
