@@ -872,7 +872,7 @@ if [[ -f "$DATAPIPES_BUILD_SCRIPT" ]]; then
     log_info "Verificando configuración de DataPipes..."
 
     # Verificar si ya está configurado para usar OpenSSL
-    if grep -q 'CRYPTO_TYPE="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
+    if grep -q '_crypto_type="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
         log_success "✓ DataPipes ya está configurado para usar OpenSSL"
     else
         log_info "Reconfigurando DataPipes para usar OpenSSL 3.0..."
@@ -889,7 +889,7 @@ if [[ -f "$DATAPIPES_BUILD_SCRIPT" ]]; then
         sed -i 's|Crypto_ROOT_DIR="`pwd`/boringssl/lib"|Crypto_ROOT_DIR="`pwd`/openssl-prebuild/${build_os_type}_${build_os_arch}/lib"|' "$DATAPIPES_BUILD_SCRIPT"
 
         # Verificar
-        if grep -q 'CRYPTO_TYPE="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
+        if grep -q '_crypto_type="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
             log_success "✓ DataPipes reconfigurado para OpenSSL"
 
             # Forzar recompilación eliminando el archivo de estado de build
