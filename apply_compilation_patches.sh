@@ -770,6 +770,44 @@ else
     log_warning "shared/src/misc/utf8.h no encontrado (omitiendo parche 18)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 19: Arreglar orden de enlazado de OpenSSL en server/CMakeLists.txt
+# ═══════════════════════════════════════════════════════════════════════════
+SERVER_CMAKE_LINK="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
+
+if [[ -f "$SERVER_CMAKE_LINK" ]]; then
+    log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL..."
+
+    # Verificar si ya está parcheado
+    if grep -q "# Fix OpenSSL linking order for mysql" "$SERVER_CMAKE_LINK" 2>/dev/null; then
+        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL linking"
+    else
+        # Crear backup
+        if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
+            cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
+        fi
+
+        # Agregar enlazado explícito de crypto al final, antes de jemalloc
+        # Buscar la línea "set(DISABLE_JEMALLOC" y agregar antes de ella
+        sed -i '/^set(DISABLE_JEMALLOC/i\
+# Fix OpenSSL linking order for mysql compatibility\
+target_link_libraries(TeaSpeakServer\
+        crypto\
+)\
+' "$SERVER_CMAKE_LINK"
+
+        # Verificar
+        if grep -q "# Fix OpenSSL linking order" "$SERVER_CMAKE_LINK"; then
+            log_success "✓ OpenSSL linking order parcheado en server/CMakeLists.txt"
+        else
+            log_error "Error al parchar server/CMakeLists.txt linking"
+            exit 1
+        fi
+    fi
+else
+    log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 19)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
