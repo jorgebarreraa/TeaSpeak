@@ -778,27 +778,28 @@ SERVER_CMAKE_LINK="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
 if [[ -f "$SERVER_CMAKE_LINK" ]]; then
     log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL y zlib..."
 
-    # Verificar si ya está parcheado
-    if grep -q "# Fix OpenSSL and zlib linking order for mysql compatibility" "$SERVER_CMAKE_LINK" 2>/dev/null; then
-        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking"
+    # Verificar si ya está parcheado con v9 (usando target_link_options)
+    if grep -q "LINKER:--no-as-needed.*LINKER:-lcrypto.*LINKER:-lz" "$SERVER_CMAKE_LINK" 2>/dev/null; then
+        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v9)"
     else
         # Crear backup
         if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Usar rutas explícitas de librerías para forzar que crypto y z aparezcan AL FINAL
-        # CMake trata rutas completas diferente a targets, poniendo las en la posición exacta
+        # Usar target_link_options con flags del linker para forzar símbolos
+        # --no-as-needed fuerza al linker a incluir TODOS los símbolos de crypto y z
+        # incluso si no se referencian directamente desde el ejecutable
         awk '
             /^add_executable\(Snapshots-Permissions-Test/ {
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# Force crypto and z to appear AFTER all transitive dependencies (including mysql)"
-                print "# Using explicit library paths to bypass CMake dependency resolution"
-                print "find_library(CRYPTO_FINAL_LIB NAMES crypto PATHS /usr/lib/x86_64-linux-gnu /usr/lib /usr/local/lib NO_DEFAULT_PATH)"
-                print "find_library(Z_FINAL_LIB NAMES z PATHS /usr/lib/x86_64-linux-gnu /usr/lib /usr/local/lib NO_DEFAULT_PATH)"
-                print "if(CRYPTO_FINAL_LIB AND Z_FINAL_LIB)"
-                print "    target_link_libraries(TeaSpeakServer PRIVATE \"${CRYPTO_FINAL_LIB}\" \"${Z_FINAL_LIB}\")"
-                print "endif()"
+                print "# Use linker flags to force inclusion of crypto and z symbols for mysql"
+                print "target_link_options(TeaSpeakServer PRIVATE"
+                print "    \"LINKER:--push-state,--no-as-needed\""
+                print "    \"LINKER:-lcrypto\""
+                print "    \"LINKER:-lz\""
+                print "    \"LINKER:--pop-state\""
+                print ")"
                 print ""
                 print $0
                 next
@@ -808,8 +809,8 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
         mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
 
         # Verificar
-        if grep -q "# Fix OpenSSL and zlib linking order for mysql compatibility" "$SERVER_CMAKE_LINK"; then
-            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt"
+        if grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK"; then
+            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v9)"
         else
             log_error "Error al parchar server/CMakeLists.txt linking"
             exit 1
