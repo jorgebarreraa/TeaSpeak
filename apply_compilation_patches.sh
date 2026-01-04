@@ -787,15 +787,15 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # Agregar enlazado explícito de crypto y z AL FINAL ABSOLUTO
-        # Justo antes de add_executable(Snapshots-Permissions-Test ...)
+        # Agregar enlazado explícito usando LINK_FLAGS para bypass de CMake
+        # Esto fuerza que -lcrypto -lz aparezcan AL FINAL de la línea del linker
         awk '
             /^add_executable\(Snapshots-Permissions-Test/ {
                 print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# These must come at the VERY END to resolve mysql symbols"
-                print "target_link_libraries(TeaSpeakServer"
-                print "        crypto"
-                print "        z"
+                print "# Use LINK_FLAGS to append directly to linker command line"
+                print "# This bypasses CMake dependency ordering"
+                print "set_target_properties(TeaSpeakServer PROPERTIES"
+                print "    LINK_FLAGS \"-lcrypto -lz\""
                 print ")"
                 print ""
                 print
