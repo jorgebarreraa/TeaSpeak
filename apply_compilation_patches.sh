@@ -780,17 +780,17 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
 
     # Verificar si ya está parcheado (verificación multilínea mejorada)
     if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
-       grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK" && \
+       grep -q -- "--no-as-needed" "$SERVER_CMAKE_LINK" && \
        grep -q "LINKER:-lcrypto" "$SERVER_CMAKE_LINK"; then
-        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v11)"
+        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v12)"
     else
         # Crear backup
         if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # PATCH v11: Usar target_link_options insertado después del bloque jemalloc
-        # Verificación mejorada para evitar duplicados
+        # PATCH v12: Usar target_link_options insertado después del bloque jemalloc
+        # Patrón de verificación corregido: usa "--no-as-needed" en lugar de "LINKER:--no-as-needed"
         awk '
             # Detectar el endif del bloque jemalloc
             /^endif \(\)/ && prev_line ~ /HAVE_JEMALLOC/ {
@@ -815,8 +815,8 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
 
         # Verificar con múltiples condiciones
         if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
-           grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK"; then
-            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v11)"
+           grep -q -- "--no-as-needed" "$SERVER_CMAKE_LINK"; then
+            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v12)"
         else
             log_error "Error al parchar server/CMakeLists.txt linking"
             exit 1
