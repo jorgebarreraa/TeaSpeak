@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Script para limpiar parches viejos de CMakeLists.txt (v1-v10)
-# Elimina tanto los parches ANTES del bloque jemalloc (v1-v9)
-# como los parches DESPUÉS del bloque jemalloc (v10)
+# Script para limpiar parches viejos de CMakeLists.txt (v1-v11)
+# Elimina TODOS los parches de OpenSSL/zlib linking, incluyendo duplicados
 
 set -e
 
@@ -13,46 +12,56 @@ if [[ ! -f "$CMAKE_FILE" ]]; then
     exit 1
 fi
 
-echo "Limpiando parches viejos de CMakeLists.txt..."
+echo "Limpiando parches viejos de CMakeLists.txt (incluyendo duplicados)..."
 
 # Crear backup
 cp "$CMAKE_FILE" "${CMAKE_FILE}.backup_clean"
 
-# Eliminar parches tanto antes como después del bloque jemalloc
+# Eliminar TODOS los bloques de parches (incluyendo duplicados e incompletos)
 awk '
-BEGIN { in_old_patch = 0 }
+BEGIN {
+    in_patch = 0
+    skip_empty = 0
+}
 
-# Detectar inicio de parche viejo (v1-v10)
+# Detectar inicio de cualquier parche de OpenSSL/zlib
 /^# Fix OpenSSL (and zlib )?linking order for mysql/ {
-    in_old_patch = 1
+    in_patch = 1
+    skip_empty = 1
     next
 }
 
-# Si estamos dentro de un parche, saltar líneas hasta encontrar el fin
-in_old_patch == 1 {
-    # Fin del parche: siguiente línea que no es parte del parche
-    if (/^set\(DISABLE_JEMALLOC/ || /^add_executable\(Snapshots-Permissions-Test/ || /^$/) {
-        # Si es línea vacía después del parche, también saltarla
-        if (/^$/) {
-            next
-        }
-        # Encontramos el fin, imprimir esta línea y salir del modo parche
-        in_old_patch = 0
+# Si estamos dentro de un parche
+in_patch == 1 {
+    # Detectar fin del parche: línea que no es comentario ni target_link_options
+    if (!/^#/ && !/^target_link_options/ && !/^    "LINKER:/ && !/^    "/ && !/^\)/ && !/^$/) {
+        # Salir del modo parche
+        in_patch = 0
+        skip_empty = 0
         print
         next
     }
-    # Seguimos dentro del parche, saltar esta línea
+    # Estamos dentro del parche, saltarlo
+    next
+}
+
+# Saltar líneas vacías inmediatamente después del parche
+skip_empty == 1 && /^$/ {
+    skip_empty = 0
     next
 }
 
 # Líneas normales: imprimir
-{ print }
+{
+    skip_empty = 0
+    print
+}
 ' "$CMAKE_FILE" > "${CMAKE_FILE}.cleaned"
 
 # Reemplazar archivo original
 mv "${CMAKE_FILE}.cleaned" "$CMAKE_FILE"
 
-echo "✓ Parches viejos eliminados"
+echo "✓ Parches viejos eliminados (incluyendo duplicados)"
 echo ""
 echo "Para verificar, ejecuta:"
 echo "  sed -n '300,330p' $CMAKE_FILE"

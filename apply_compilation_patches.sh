@@ -778,18 +778,19 @@ SERVER_CMAKE_LINK="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
 if [[ -f "$SERVER_CMAKE_LINK" ]]; then
     log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL y zlib..."
 
-    # Verificar si ya está parcheado con v10 (usando target_link_options)
-    if grep -q "LINKER:--no-as-needed.*LINKER:-lcrypto.*LINKER:-lz" "$SERVER_CMAKE_LINK" 2>/dev/null; then
-        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v10)"
+    # Verificar si ya está parcheado (verificación multilínea mejorada)
+    if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
+       grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK" && \
+       grep -q "LINKER:-lcrypto" "$SERVER_CMAKE_LINK"; then
+        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v11)"
     else
         # Crear backup
         if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
             cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
         fi
 
-        # PATCH v10: Usar target_link_options insertado después del bloque jemalloc
-        # Esto es más confiable que buscar add_executable(Snapshots-Permissions-Test)
-        # El bloque jemalloc siempre está presente y es el último target_link_libraries antes del fin
+        # PATCH v11: Usar target_link_options insertado después del bloque jemalloc
+        # Verificación mejorada para evitar duplicados
         awk '
             # Detectar el endif del bloque jemalloc
             /^endif \(\)/ && prev_line ~ /HAVE_JEMALLOC/ {
@@ -812,9 +813,10 @@ if [[ -f "$SERVER_CMAKE_LINK" ]]; then
         ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
         mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
 
-        # Verificar
-        if grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK"; then
-            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v10)"
+        # Verificar con múltiples condiciones
+        if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
+           grep -q "LINKER:--no-as-needed" "$SERVER_CMAKE_LINK"; then
+            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v11)"
         else
             log_error "Error al parchar server/CMakeLists.txt linking"
             exit 1
