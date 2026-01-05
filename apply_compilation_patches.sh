@@ -973,6 +973,54 @@ else
     log_warning "Directorio DataPipes no encontrado (omitiendo parche 22)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 23: Usar OpenSSL del sistema en lugar de openssl-prebuild
+# ═══════════════════════════════════════════════════════════════════════════
+SERVER_CMAKE_FILE="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
+
+if [[ -f "$SERVER_CMAKE_FILE" ]]; then
+    log_info "Configurando enlazado a OpenSSL del sistema..."
+
+    # Verificar si ya está parcheado
+    if grep -q "# PATCH 23: Use system OpenSSL libraries" "$SERVER_CMAKE_FILE"; then
+        log_success "✓ server/CMakeLists.txt ya usa OpenSSL del sistema"
+    else
+        log_info "Modificando CMakeLists.txt para usar OpenSSL del sistema..."
+
+        # Crear backup
+        if [[ ! -f "$SERVER_CMAKE_FILE.backup_sysssl" ]]; then
+            cp "$SERVER_CMAKE_FILE" "$SERVER_CMAKE_FILE.backup_sysssl"
+        fi
+
+        # Buscar las líneas que enlazan openssl::ssl::shared y openssl::crypto::shared
+        # y reemplazarlas con las librerías del sistema
+        awk '
+        /^[[:space:]]*openssl::ssl::shared[[:space:]]*$/ {
+            print "        # PATCH 23: Use system OpenSSL libraries instead of openssl-prebuild"
+            print "        # openssl::ssl::shared"
+            print "        ssl"
+            next
+        }
+        /^[[:space:]]*openssl::crypto::shared[[:space:]]*$/ {
+            print "        # openssl::crypto::shared"
+            print "        crypto"
+            next
+        }
+        { print }
+        ' "$SERVER_CMAKE_FILE" > "$SERVER_CMAKE_FILE.tmp" && mv "$SERVER_CMAKE_FILE.tmp" "$SERVER_CMAKE_FILE"
+
+        # Verificar
+        if grep -q "# PATCH 23: Use system OpenSSL libraries" "$SERVER_CMAKE_FILE"; then
+            log_success "✓ CMakeLists.txt modificado para usar OpenSSL del sistema"
+        else
+            log_error "Error al modificar CMakeLists.txt"
+            exit 1
+        fi
+    fi
+else
+    log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 23)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
