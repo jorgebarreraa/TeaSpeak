@@ -1021,6 +1021,86 @@ else
     log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 23)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 24: Compilar JsonCpp con soporte para C++17 std::string_view
+# ═══════════════════════════════════════════════════════════════════════════
+JSONCPP_DIR="$SCRIPT_DIR/Server/Root/libraries/jsoncpp"
+JSONCPP_LIB="/usr/local/lib/libjsoncpp.so"
+
+if [[ -d "$JSONCPP_DIR" ]]; then
+    log_info "Verificando JsonCpp..."
+
+    # Verificar si jsoncpp ya está compilado con soporte para string_view
+    if [[ -f "$JSONCPP_LIB" ]]; then
+        if nm -D "$JSONCPP_LIB" 2>/dev/null | grep -q "string_view" || \
+           nm -D "$JSONCPP_LIB"* 2>/dev/null | grep -q "string_view"; then
+            log_success "✓ JsonCpp ya está compilado con soporte para string_view"
+        else
+            log_info "JsonCpp requiere recompilación con C++17..."
+            NEED_REBUILD=1
+        fi
+    else
+        log_info "JsonCpp no está instalado, compilando..."
+        NEED_REBUILD=1
+    fi
+
+    if [[ "$NEED_REBUILD" == "1" ]]; then
+        log_info "Compilando JsonCpp con soporte para C++17..."
+
+        CURRENT_DIR="$(pwd)"
+        cd "$JSONCPP_DIR" || {
+            log_error "No se pudo acceder a $JSONCPP_DIR"
+            exit 1
+        }
+
+        # Crear directorio de build si no existe
+        mkdir -p build
+        cd build
+
+        # Configurar con CMake usando C++17
+        cmake .. \
+            -DCMAKE_CXX_FLAGS="-std=c++17 -fPIC" \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DBUILD_SHARED_LIBS=ON \
+            -DBUILD_STATIC_LIBS=OFF \
+            -DJSONCPP_WITH_TESTS=OFF \
+            -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+
+        if [[ $? -ne 0 ]]; then
+            log_error "Error al configurar JsonCpp"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
+
+        # Compilar
+        make -j$(nproc)
+
+        if [[ $? -ne 0 ]]; then
+            log_error "Error al compilar JsonCpp"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
+
+        # Instalar
+        sudo make install
+
+        if [[ $? -ne 0 ]]; then
+            log_error "Error al instalar JsonCpp"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
+
+        # Actualizar cache de librerías
+        sudo ldconfig
+
+        log_success "✓ JsonCpp compilado e instalado exitosamente"
+
+        cd "$CURRENT_DIR"
+    fi
+else
+    log_warning "Directorio jsoncpp no encontrado (omitiendo parche 24)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
