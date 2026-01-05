@@ -49,18 +49,21 @@ for CHECKOUT_DIR in $WEBRTC_CHECKOUTS; do
             fi
         fi
 
-        # Fix: Remove invalid [dev-dependencies.slog] section
+        # Fix: Add version to [dev-dependencies.slog] section if missing
         if grep -q "^\[dev-dependencies\.slog\]$" "$CARGO_TOML" 2>/dev/null; then
-            echo "  ⚠️  Found invalid [dev-dependencies.slog] section - removing..."
+            # Check if version is missing
+            if ! grep -A1 "^\[dev-dependencies\.slog\]$" "$CARGO_TOML" | grep -q "^version"; then
+                echo "  ⚠️  Found [dev-dependencies.slog] without version - fixing..."
 
-            # Backup if not already done
-            [[ ! -f "$CARGO_TOML.backup" ]] && cp "$CARGO_TOML" "$CARGO_TOML.backup"
+                # Backup if not already done
+                [[ ! -f "$CARGO_TOML.backup" ]] && cp "$CARGO_TOML" "$CARGO_TOML.backup"
 
-            # Remove the section and its features line
-            sed -i '/^\[dev-dependencies\.slog\]$/,/^features/d' "$CARGO_TOML"
-            modified=true
+                # Add version line after [dev-dependencies.slog]
+                sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$CARGO_TOML"
+                modified=true
 
-            echo "  ✓ Removed invalid dev-dependencies section"
+                echo "  ✓ Added version to dev-dependencies.slog"
+            fi
         fi
 
         if [[ "$modified" == "false" ]]; then
