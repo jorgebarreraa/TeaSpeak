@@ -7,6 +7,9 @@
 # 1. Resuelve conflictos de git descartando cambios locales
 # 2. Hace pull de los cambios más recientes
 # 3. Recompila TeaSpeak con los parches automáticos aplicados
+#
+# NOTA: Si ejecutas desde /root/TeaSpeak, asegúrate de tener el symlink:
+#       ln -sf /home/user/TeaSpeak /root/TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════════
 
 set -e
