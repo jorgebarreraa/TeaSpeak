@@ -1101,6 +1101,66 @@ else
     log_warning "Directorio jsoncpp no encontrado (omitiendo parche 24)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 25: Corregir timing de fix_cargo_deps.sh en generate_shared_library.sh
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: fix_cargo_deps.sh se ejecutaba ANTES de limpiar el caché de cargo,
+# por lo que los cambios se perdían. Debe ejecutarse DESPUÉS de cargo update.
+# ═══════════════════════════════════════════════════════════════════════════
+
+echo ""
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 25: Corregir timing de fix_cargo_deps.sh"
+log_info "════════════════════════════════════════════════════════════"
+
+GENERATE_LIB_SCRIPT="$SCRIPT_DIR/Server/Root/TeaSpeak/rtclib/generate_shared_library.sh"
+
+if [[ -f "$GENERATE_LIB_SCRIPT" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q "# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo" "$GENERATE_LIB_SCRIPT" 2>/dev/null; then
+        log_success "✓ generate_shared_library.sh ya tiene fix_cargo_deps.sh en el lugar correcto"
+    else
+        log_info "Corrigiendo timing de fix_cargo_deps.sh en generate_shared_library.sh..."
+
+        # Crear backup
+        cp "$GENERATE_LIB_SCRIPT" "$GENERATE_LIB_SCRIPT.backup"
+
+        # Paso 1: Eliminar la llamada temprana a fix_cargo_deps.sh (si existe)
+        sed -i '/# Apply Cargo.toml fix for rust-webrtc dependencies/,/^fi$/d' "$GENERATE_LIB_SCRIPT"
+
+        # Paso 2: Agregar la llamada DESPUÉS de cargo update
+        # Buscar la línea "cargo update || exit 1" y agregar el bloque después
+        awk '
+        /^cargo update \|\| exit 1$/ {
+            print
+            print ""
+            print "# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo"
+            print "FIX_SCRIPT=\"$SCRIPT_DIR/fix_cargo_deps.sh\""
+            print "if [ -f \"$FIX_SCRIPT\" ]; then"
+            print "    echo \"Applying Cargo.toml fixes for rust-webrtc...\""
+            print "    bash \"$FIX_SCRIPT\" || echo \"Warning: Cargo fix script failed, continuing...\""
+            print "else"
+            print "    echo \"Warning: Cargo fix script not found at $FIX_SCRIPT\""
+            print "fi"
+            next
+        }
+        { print }
+        ' "$GENERATE_LIB_SCRIPT.backup" > "$GENERATE_LIB_SCRIPT"
+
+        # Verificar que el parche se aplicó correctamente
+        if grep -q "# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo" "$GENERATE_LIB_SCRIPT"; then
+            log_success "✓ Timing de fix_cargo_deps.sh corregido exitosamente"
+            rm -f "$GENERATE_LIB_SCRIPT.backup"
+        else
+            log_error "[✗] Error al aplicar parche 25"
+            mv "$GENERATE_LIB_SCRIPT.backup" "$GENERATE_LIB_SCRIPT"
+            exit 1
+        fi
+    fi
+else
+    log_warning "generate_shared_library.sh no encontrado (omitiendo parche 25)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
