@@ -1116,8 +1116,9 @@ log_info "═══════════════════════�
 GENERATE_LIB_SCRIPT="$SCRIPT_DIR/Server/Root/TeaSpeak/rtclib/generate_shared_library.sh"
 
 if [[ -f "$GENERATE_LIB_SCRIPT" ]]; then
-    # Verificar si el parche ya fue aplicado
-    if grep -q "# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo" "$GENERATE_LIB_SCRIPT" 2>/dev/null; then
+    # Verificar si el parche ya fue aplicado Y las líneas de git cleanup fueron removidas
+    if grep -q "# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo" "$GENERATE_LIB_SCRIPT" 2>/dev/null && \
+       ! grep -q "rm -rf ~/\.cargo/git/checkouts/\*" "$GENERATE_LIB_SCRIPT" 2>/dev/null; then
         log_success "✓ generate_shared_library.sh ya tiene fix_cargo_deps.sh en el lugar correcto"
     else
         log_info "Corrigiendo timing de fix_cargo_deps.sh en generate_shared_library.sh..."
@@ -1128,7 +1129,12 @@ if [[ -f "$GENERATE_LIB_SCRIPT" ]]; then
         # Paso 1: Eliminar la llamada temprana a fix_cargo_deps.sh (si existe)
         sed -i '/# Apply Cargo.toml fix for rust-webrtc dependencies/,/^fi$/d' "$GENERATE_LIB_SCRIPT"
 
-        # Paso 2: Agregar la llamada DESPUÉS de cargo update
+        # Paso 2: MODIFICAR la limpieza de cargo para NO eliminar git checkouts parcheados
+        # Esto permite que el parche persista entre ejecuciones
+        sed -i '/^rm -rf ~\/\.cargo\/git\/checkouts\/\*$/d' "$GENERATE_LIB_SCRIPT"
+        sed -i '/^rm -rf ~\/\.cargo\/git\/db\/\*$/d' "$GENERATE_LIB_SCRIPT"
+
+        # Paso 3: Agregar la llamada DESPUÉS de cargo update
         # Buscar la línea "cargo update || exit 1" y agregar el bloque después
         awk '
         /^cargo update \|\| exit 1$/ {
