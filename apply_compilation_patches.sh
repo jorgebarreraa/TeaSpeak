@@ -1212,7 +1212,7 @@ fi
 # Problema: libnice usa hash_drain_filter que fue renombrado a hash_extract_if
 # Solución: Reemplazar hash_drain_filter con hash_extract_if y drain_filter con extract_if
 
-log_info "Aplicando PARCHE 27: Arreglar APIs deprecadas de Rust en libnice..."
+log_info "Aplicando PARCHE 27 y 28: Arreglar APIs deprecadas de Rust..."
 
 # Buscar el directorio de rust-libnice en el cache de cargo
 LIBNICE_DIR=$(find ~/.cargo/git/checkouts -type d -name "rust-libnice-*" 2>/dev/null | head -1)
@@ -1250,6 +1250,48 @@ if [[ -n "$LIBNICE_DIR" && -d "$LIBNICE_DIR" ]]; then
     fi
 else
     log_warning "rust-libnice no encontrado en cargo cache (se aplicará en primera compilación)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 28: Arreglar API deprecada de Rust en webrtc (btree_drain_filter)
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: webrtc usa btree_drain_filter que fue renombrado a btree_extract_if
+# Solución: Reemplazar btree_drain_filter con btree_extract_if y drain_filter con extract_if
+
+# Buscar el directorio de rust-webrtc en el cache de cargo
+WEBRTC_DIR=$(find ~/.cargo/git/checkouts -type d -name "rust-webrtc-*" 2>/dev/null | head -1)
+
+if [[ -n "$WEBRTC_DIR" && -d "$WEBRTC_DIR" ]]; then
+    # Buscar el commit específico (58d3316)
+    WEBRTC_SRC="$WEBRTC_DIR/58d3316"
+
+    if [[ ! -d "$WEBRTC_SRC" ]]; then
+        # Si no existe el commit específico, buscar cualquier subdirectorio
+        WEBRTC_SRC=$(find "$WEBRTC_DIR" -mindepth 1 -maxdepth 1 -type d | head -1)
+    fi
+
+    if [[ -d "$WEBRTC_SRC" ]]; then
+        # Verificar si el parche ya fue aplicado
+        if grep -q "btree_extract_if" "$WEBRTC_SRC/src/lib.rs" 2>/dev/null; then
+            log_success "✓ PARCHE 28 ya aplicado (webrtc btree_extract_if)"
+        else
+            log_info "Corrigiendo APIs deprecadas en rust-webrtc..."
+
+            # Fix lib.rs: btree_drain_filter -> btree_extract_if
+            if [[ -f "$WEBRTC_SRC/src/lib.rs" ]]; then
+                sed -i 's/btree_drain_filter/btree_extract_if/g' "$WEBRTC_SRC/src/lib.rs"
+            fi
+
+            # Fix all *.rs files: drain_filter -> extract_if
+            find "$WEBRTC_SRC" -name "*.rs" -type f -exec sed -i 's/\.drain_filter(/.extract_if(/g' {} \;
+
+            log_success "✓ PARCHE 28 aplicado exitosamente"
+        fi
+    else
+        log_warning "rust-webrtc source no encontrado en $WEBRTC_DIR"
+    fi
+else
+    log_warning "rust-webrtc no encontrado en cargo cache (se aplicará en primera compilación)"
 fi
 
 echo ""
