@@ -1253,10 +1253,11 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 28: Arreglar API deprecada de Rust en webrtc (btree_drain_filter)
+# PARCHE 28-29: Migrar BTreeMap a HashMap en rust-webrtc
 # ═══════════════════════════════════════════════════════════════════════════
-# Problema: webrtc usa btree_drain_filter que fue renombrado a btree_extract_if
-# Solución: Reemplazar btree_drain_filter con btree_extract_if y drain_filter con extract_if
+# Problema: Rust nightly 1.94.0 cambió BTreeMap::drain_filter API completamente
+#           Ahora extract_if acepta rangos en lugar de predicados
+# Solución: Usar HashMap que SÍ tiene extract_if con predicados en nightly
 
 # Buscar el directorio de rust-webrtc en el cache de cargo
 WEBRTC_DIR=$(find ~/.cargo/git/checkouts -type d -name "rust-webrtc-*" 2>/dev/null | head -1)
@@ -1272,20 +1273,29 @@ if [[ -n "$WEBRTC_DIR" && -d "$WEBRTC_DIR" ]]; then
 
     if [[ -d "$WEBRTC_SRC" ]]; then
         # Verificar si el parche ya fue aplicado
-        if grep -q "btree_extract_if" "$WEBRTC_SRC/src/lib.rs" 2>/dev/null; then
-            log_success "✓ PARCHE 28 ya aplicado (webrtc btree_extract_if)"
+        if grep -q "hash_extract_if" "$WEBRTC_SRC/src/lib.rs" 2>/dev/null && \
+           grep -q "HashMap" "$WEBRTC_SRC/src/rtc.rs" 2>/dev/null; then
+            log_success "✓ PARCHE 28-29 ya aplicado (webrtc HashMap migration)"
         else
-            log_info "Corrigiendo APIs deprecadas en rust-webrtc..."
+            log_info "Migrando de BTreeMap a HashMap en rust-webrtc..."
 
-            # Fix lib.rs: btree_drain_filter -> btree_extract_if
+            # Fix lib.rs: btree_drain_filter -> hash_extract_if
             if [[ -f "$WEBRTC_SRC/src/lib.rs" ]]; then
-                sed -i 's/btree_drain_filter/btree_extract_if/g' "$WEBRTC_SRC/src/lib.rs"
+                sed -i 's/btree_drain_filter/hash_extract_if/g' "$WEBRTC_SRC/src/lib.rs"
+                sed -i 's/btree_extract_if/hash_extract_if/g' "$WEBRTC_SRC/src/lib.rs"
+            fi
+
+            # Fix rtc.rs: BTreeMap -> HashMap
+            if [[ -f "$WEBRTC_SRC/src/rtc.rs" ]]; then
+                sed -i 's/use std::collections::{BTreeMap,/use std::collections::{HashMap,/g' "$WEBRTC_SRC/src/rtc.rs"
+                sed -i 's/BTreeMap::/HashMap::/g' "$WEBRTC_SRC/src/rtc.rs"
+                sed -i 's/: BTreeMap</: HashMap</g' "$WEBRTC_SRC/src/rtc.rs"
             fi
 
             # Fix all *.rs files: drain_filter -> extract_if
             find "$WEBRTC_SRC" -name "*.rs" -type f -exec sed -i 's/\.drain_filter(/.extract_if(/g' {} \;
 
-            log_success "✓ PARCHE 28 aplicado exitosamente"
+            log_success "✓ PARCHE 28-29 aplicado exitosamente"
         fi
     else
         log_warning "rust-webrtc source no encontrado en $WEBRTC_DIR"
