@@ -1206,6 +1206,52 @@ else
     log_warning "MusicPlaylist.cpp no encontrado (omitiendo PARCHE 26)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 27: Arreglar API deprecada de Rust en libnice (hash_drain_filter)
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: libnice usa hash_drain_filter que fue renombrado a hash_extract_if
+# Solución: Reemplazar hash_drain_filter con hash_extract_if y drain_filter con extract_if
+
+log_info "Aplicando PARCHE 27: Arreglar APIs deprecadas de Rust en libnice..."
+
+# Buscar el directorio de rust-libnice en el cache de cargo
+LIBNICE_DIR=$(find ~/.cargo/git/checkouts -type d -name "rust-libnice-*" 2>/dev/null | head -1)
+
+if [[ -n "$LIBNICE_DIR" && -d "$LIBNICE_DIR" ]]; then
+    # Buscar el commit específico (933be6c)
+    LIBNICE_SRC="$LIBNICE_DIR/933be6c"
+
+    if [[ ! -d "$LIBNICE_SRC" ]]; then
+        # Si no existe el commit específico, buscar cualquier subdirectorio
+        LIBNICE_SRC=$(find "$LIBNICE_DIR" -mindepth 1 -maxdepth 1 -type d | head -1)
+    fi
+
+    if [[ -d "$LIBNICE_SRC" ]]; then
+        # Verificar si el parche ya fue aplicado
+        if grep -q "hash_extract_if" "$LIBNICE_SRC/src/lib.rs" 2>/dev/null; then
+            log_success "✓ PARCHE 27 ya aplicado (libnice hash_extract_if)"
+        else
+            log_info "Corrigiendo APIs deprecadas en rust-libnice..."
+
+            # Fix lib.rs: hash_drain_filter -> hash_extract_if
+            if [[ -f "$LIBNICE_SRC/src/lib.rs" ]]; then
+                sed -i 's/hash_drain_filter/hash_extract_if/g' "$LIBNICE_SRC/src/lib.rs"
+            fi
+
+            # Fix ice.rs: drain_filter -> extract_if
+            if [[ -f "$LIBNICE_SRC/src/ice.rs" ]]; then
+                sed -i 's/\.drain_filter(/.extract_if(/g' "$LIBNICE_SRC/src/ice.rs"
+            fi
+
+            log_success "✓ PARCHE 27 aplicado exitosamente"
+        fi
+    else
+        log_warning "rust-libnice source no encontrado en $LIBNICE_DIR"
+    fi
+else
+    log_warning "rust-libnice no encontrado en cargo cache (se aplicará en primera compilación)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
