@@ -1161,6 +1161,45 @@ else
     log_warning "generate_shared_library.sh no encontrado (omitiendo parche 25)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 26: Evitar sobrecarga string_view en JsonCpp operator[]
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: Cuando se compila con C++17, el compilador intenta usar
+# operator[](std::string_view) que no existe en JsonCpp 1.9.7
+# Solución: Usar std::string() explícitamente para forzar operator[](const char*)
+
+MUSIC_PLAYLIST_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
+
+if [[ -f "$MUSIC_PLAYLIST_CPP" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q 'root\[std::string("type")\]' "$MUSIC_PLAYLIST_CPP" 2>/dev/null; then
+        log_success "✓ PARCHE 26 ya aplicado (JsonCpp string_view fix)"
+    else
+        log_info "Aplicando PARCHE 26: Evitar sobrecarga string_view en JsonCpp..."
+
+        # Crear backup
+        cp "$MUSIC_PLAYLIST_CPP" "$MUSIC_PLAYLIST_CPP.backup26"
+
+        # Aplicar transformación: envolver literales de string en std::string()
+        sed -i \
+            -e 's/root\["\([^"]*\)"\]/root[std::string("\1")]/g' \
+            -e 's/builder\["\([^"]*\)"\]/builder[std::string("\1")]/g' \
+            "$MUSIC_PLAYLIST_CPP"
+
+        # Verificar que el parche se aplicó
+        if grep -q 'root\[std::string("type")\]' "$MUSIC_PLAYLIST_CPP"; then
+            log_success "✓ PARCHE 26 aplicado exitosamente"
+            rm -f "$MUSIC_PLAYLIST_CPP.backup26"
+        else
+            log_error "[✗] Error al aplicar PARCHE 26"
+            mv "$MUSIC_PLAYLIST_CPP.backup26" "$MUSIC_PLAYLIST_CPP"
+            exit 1
+        fi
+    fi
+else
+    log_warning "MusicPlaylist.cpp no encontrado (omitiendo PARCHE 26)"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"

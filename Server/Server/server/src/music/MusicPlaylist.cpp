@@ -570,25 +570,25 @@ void Playlist::execute_async_load(const std::shared_ptr<ts::music::PlaylistEntry
         /* create the json string */
         {
             Json::Value root;
-            root["type"] = result->type;
-            root["url"] = result->url;
+            root[std::string("type")] = result->type;
+            root[std::string("url")] = result->url;
             if(result->type == UrlType::TYPE_PLAYLIST) {
                 auto casted = static_pointer_cast<UrlPlaylistInfo>(result);
             } else if(result->type == UrlType::TYPE_STREAM || result->type == UrlType::TYPE_VIDEO) {
                 auto casted = static_pointer_cast<UrlSongInfo>(result);
-                root["length"] = chrono::ceil<chrono::milliseconds>(casted->length).count();
-                root["title"] = casted->title;
-                root["description"] = casted->description;
+                root[std::string("length")] = chrono::ceil<chrono::milliseconds>(casted->length).count();
+                root[std::string("title")] = casted->title;
+                root[std::string("description")] = casted->description;
                 if(casted->thumbnail) {
                     if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)
-                        root["thumbnail"] = thump->url();
+                        root[std::string("thumbnail")] = thump->url();
                 }
                 for(const auto& meta : casted->metadata)
-                    root["metadata"][meta.first] = meta.second;
+                    root[std::string("metadata")][meta.first] = meta.second;
             }
 
             Json::StreamWriterBuilder builder;
-            builder["indentation"] = ""; // If you want whitespace-less output
+            builder[std::string("indentation")] = ""; // If you want whitespace-less output
             entry->metadata.json_string = Json::writeString(builder, root);
         }
 

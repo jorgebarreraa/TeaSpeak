@@ -285,11 +285,8 @@ endif()
 
 # include_directories(${LIBRARY_PATH}/boringssl/include/)
 target_link_libraries(TeaSpeakServer
-        # PATCH 23: Use system OpenSSL libraries instead of openssl-prebuild
-        # openssl::ssl::shared
-        ssl
-        # openssl::crypto::shared
-        crypto
+        openssl::ssl::shared
+        openssl::crypto::shared
         dl
         z
         rt # For clock_gettime
@@ -310,15 +307,6 @@ if (NOT DISABLE_JEMALLOC)
     )
     add_definitions(-DHAVE_JEMALLOC)
 endif ()
-
-# Fix OpenSSL and zlib linking order for mysql compatibility
-# Use linker flags to force inclusion of crypto and z symbols for mysql
-target_link_options(TeaSpeakServer PRIVATE
-    "LINKER:--push-state,--no-as-needed"
-    "LINKER:-lcrypto"
-    "LINKER:-lz"
-    "LINKER:--pop-state"
-)
 
 
 add_executable(Snapshots-Permissions-Test src/snapshots/permission.cpp tests/snapshots/permission.cpp)

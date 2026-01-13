@@ -67,6 +67,9 @@ find_package(zstd REQUIRED)
 include_directories(${StringVariable_INCLUDE_DIR})
 add_subdirectory(music/)
 
+# Add music include directory for server to access MusicPlayer.h
+include_directories(music/include)
+
 # LibEvent fucks up the CMAKE_FIND_LIBRARY_SUFFIXES variable
 macro(find_event static)
     set(_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})

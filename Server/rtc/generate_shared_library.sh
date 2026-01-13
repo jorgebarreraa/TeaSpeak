@@ -53,6 +53,15 @@ find ~/.cargo/registry -name "build-script-build" -delete 2>/dev/null || true
 
 cargo update || exit 1
 
+# Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo
+FIX_SCRIPT="$SCRIPT_DIR/fix_cargo_deps.sh"
+if [ -f "$FIX_SCRIPT" ]; then
+    echo "Applying Cargo.toml fixes for rust-webrtc..."
+    bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed, continuing..."
+else
+    echo "Warning: Cargo fix script not found at $FIX_SCRIPT"
+fi
+
 # Force rebuild with environment variables already set
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \

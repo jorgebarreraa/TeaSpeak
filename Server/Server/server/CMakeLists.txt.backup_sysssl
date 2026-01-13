@@ -285,11 +285,8 @@ endif()
 
 # include_directories(${LIBRARY_PATH}/boringssl/include/)
 target_link_libraries(TeaSpeakServer
-        # PATCH 23: Use system OpenSSL libraries instead of openssl-prebuild
-        # openssl::ssl::shared
-        ssl
-        # openssl::crypto::shared
-        crypto
+        openssl::ssl::shared
+        openssl::crypto::shared
         dl
         z
         rt # For clock_gettime
