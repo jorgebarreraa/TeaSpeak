@@ -1290,6 +1290,8 @@ if [[ -n "$WEBRTC_DIR" && -d "$WEBRTC_DIR" ]]; then
                 sed -i 's/use std::collections::{BTreeMap,/use std::collections::{HashMap,/g' "$WEBRTC_SRC/src/rtc.rs"
                 sed -i 's/BTreeMap::/HashMap::/g' "$WEBRTC_SRC/src/rtc.rs"
                 sed -i 's/: BTreeMap</: HashMap</g' "$WEBRTC_SRC/src/rtc.rs"
+                # HashMap no tiene first_key_value, usar iter().next() en su lugar
+                sed -i 's/\.first_key_value()/.iter().next()/g' "$WEBRTC_SRC/src/rtc.rs"
             fi
 
             # Fix all *.rs files: drain_filter -> extract_if
