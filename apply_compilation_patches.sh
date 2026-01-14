@@ -59,9 +59,9 @@ echo ""
 log_info "Pre-Patch: Verificando integridad de archivos críticos..."
 
 # Lista de archivos que pueden haberse corrompido en ejecuciones anteriores
+# NOTA: MusicPlaylist.cpp/h fueron removidos porque PARCHE 30 los modifica intencionalmente
 CRITICAL_FILES=(
-    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
-    "$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.h"
+    # Vacío - todos los archivos se manejan con git normalmente
 )
 
 restored_count=0
