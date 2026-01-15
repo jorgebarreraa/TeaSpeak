@@ -570,25 +570,25 @@ void Playlist::execute_async_load(const std::shared_ptr<ts::music::PlaylistEntry
         /* create the json string */
         {
             Json::Value root;
-            root[static_cast<const char*>("type")] = result->type;
-            root[static_cast<const char*>("url")] = result->url;
+            root[std::string("type").c_str()] = result->type;
+            root[std::string("url").c_str()] = result->url;
             if(result->type == UrlType::TYPE_PLAYLIST) {
                 auto casted = static_pointer_cast<UrlPlaylistInfo>(result);
             } else if(result->type == UrlType::TYPE_STREAM || result->type == UrlType::TYPE_VIDEO) {
                 auto casted = static_pointer_cast<UrlSongInfo>(result);
-                root[static_cast<const char*>("length")] = chrono::ceil<chrono::milliseconds>(casted->length).count();
-                root[static_cast<const char*>("title")] = casted->title;
-                root[static_cast<const char*>("description")] = casted->description;
+                root[std::string("length").c_str()] = chrono::ceil<chrono::milliseconds>(casted->length).count();
+                root[std::string("title").c_str()] = casted->title;
+                root[std::string("description").c_str()] = casted->description;
                 if(casted->thumbnail) {
                     if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)
-                        root[static_cast<const char*>("thumbnail")] = thump->url();
+                        root[std::string("thumbnail").c_str()] = thump->url();
                 }
                 for(const auto& meta : casted->metadata)
-                    root[static_cast<const char*>("metadata")][meta.first.c_str()] = meta.second;
+                    root[std::string("metadata").c_str()][meta.first.c_str()] = meta.second;
             }
 
             Json::StreamWriterBuilder builder;
-            builder[static_cast<const char*>("indentation")] = ""; // If you want whitespace-less output
+            builder[std::string("indentation").c_str()] = ""; // If you want whitespace-less output
             entry->metadata.json_string = Json::writeString(builder, root);
         }
 
