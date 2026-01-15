@@ -569,26 +569,37 @@ void Playlist::execute_async_load(const std::shared_ptr<ts::music::PlaylistEntry
 
         /* create the json string */
         {
+            // Use const char* variables to force operator[](const char*) overload
+            // and avoid operator[](string_view) which doesn't exist in JsonCpp library
+            const char* const type_key = "type";
+            const char* const url_key = "url";
+            const char* const length_key = "length";
+            const char* const title_key = "title";
+            const char* const description_key = "description";
+            const char* const thumbnail_key = "thumbnail";
+            const char* const metadata_key = "metadata";
+            const char* const indentation_key = "indentation";
+
             Json::Value root;
-            root[std::string("type").c_str()] = result->type;
-            root[std::string("url").c_str()] = result->url;
+            root[type_key] = result->type;
+            root[url_key] = result->url;
             if(result->type == UrlType::TYPE_PLAYLIST) {
                 auto casted = static_pointer_cast<UrlPlaylistInfo>(result);
             } else if(result->type == UrlType::TYPE_STREAM || result->type == UrlType::TYPE_VIDEO) {
                 auto casted = static_pointer_cast<UrlSongInfo>(result);
-                root[std::string("length").c_str()] = chrono::ceil<chrono::milliseconds>(casted->length).count();
-                root[std::string("title").c_str()] = casted->title;
-                root[std::string("description").c_str()] = casted->description;
+                root[length_key] = chrono::ceil<chrono::milliseconds>(casted->length).count();
+                root[title_key] = casted->title;
+                root[description_key] = casted->description;
                 if(casted->thumbnail) {
                     if(auto thump = dynamic_pointer_cast<::music::ThumbnailUrl>(casted->thumbnail); thump)
-                        root[std::string("thumbnail").c_str()] = thump->url();
+                        root[thumbnail_key] = thump->url();
                 }
                 for(const auto& meta : casted->metadata)
-                    root[std::string("metadata").c_str()][meta.first.c_str()] = meta.second;
+                    root[metadata_key][meta.first.c_str()] = meta.second;
             }
 
             Json::StreamWriterBuilder builder;
-            builder[std::string("indentation").c_str()] = ""; // If you want whitespace-less output
+            builder[indentation_key] = ""; // If you want whitespace-less output
             entry->metadata.json_string = Json::writeString(builder, root);
         }
 
