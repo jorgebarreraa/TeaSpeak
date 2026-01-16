@@ -1254,10 +1254,25 @@ add_definitions(-DJSON_HAS_STD_STRING_VIEW=0)  # Disable string_view in JsonCpp 
             log_success "✓ PARCHE 26b aplicado exitosamente"
             rm -f "$SERVER_CMAKE.backup26b"
 
-            # Limpiar archivos objeto de MusicPlaylist para forzar recompilación
-            log_info "Limpiando objetos compilados de MusicPlaylist para forzar recompilación..."
-            find "$SCRIPT_DIR/Server/Root/TeaSpeak" -name "MusicPlaylist.cpp.o" -delete 2>/dev/null || true
-            find "$SCRIPT_DIR/Server/Root/TeaSpeak" -type d -name "CMakeFiles" -exec find {} -name "MusicPlaylist.cpp.o" -delete \; 2>/dev/null || true
+            # CRÍTICO: Limpiar build directory para forzar regeneración de CMake
+            log_info "Limpiando build directory para forzar regeneración de CMake con nueva definición..."
+
+            # Limpiar build en Server/Server/build (symlink)
+            if [[ -d "$SCRIPT_DIR/Server/Server/build" ]]; then
+                log_info "  → Limpiando Server/Server/build..."
+                rm -rf "$SCRIPT_DIR/Server/Server/build"
+            fi
+
+            # Limpiar build en Server/Root/TeaSpeak (real)
+            if [[ -d "$SCRIPT_DIR/Server/Root/TeaSpeak/build" ]]; then
+                log_info "  → Limpiando Server/Root/TeaSpeak/build..."
+                rm -rf "$SCRIPT_DIR/Server/Root/TeaSpeak/build"
+            fi
+
+            # Limpiar CMakeCache en cualquier ubicación
+            find "$SCRIPT_DIR/Server" -name "CMakeCache.txt" -path "*/TeaSpeak/*" -delete 2>/dev/null || true
+
+            log_success "✓ Build limpiado - CMake regenerará configuración en próxima compilación"
         else
             log_error "[✗] Error al aplicar PARCHE 26b"
             mv "$SERVER_CMAKE.backup26b" "$SERVER_CMAKE"
