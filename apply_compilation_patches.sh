@@ -1227,6 +1227,43 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 26b: Desactivar string_view en JsonCpp headers
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: JsonCpp librería compilada con C++11 no tiene símbolos string_view,
+#           pero headers detectan C++17 y declaran operator[](string_view)
+# Solución: Añadir -DJSON_HAS_STD_STRING_VIEW=0 para desactivar string_view
+
+SERVER_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
+
+if [[ -f "$SERVER_CMAKE" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q 'JSON_HAS_STD_STRING_VIEW=0' "$SERVER_CMAKE" 2>/dev/null; then
+        log_success "✓ PARCHE 26b ya aplicado (JsonCpp string_view disabled)"
+    else
+        log_info "Aplicando PARCHE 26b: Desactivar string_view en JsonCpp..."
+
+        # Crear backup
+        cp "$SERVER_CMAKE" "$SERVER_CMAKE.backup26b"
+
+        # Añadir la definición después de add_definitions(-DUSE_BORINGSSL)
+        sed -i '/add_definitions(-DUSE_BORINGSSL)/a\
+add_definitions(-DJSON_HAS_STD_STRING_VIEW=0)  # Disable string_view in JsonCpp to avoid linker errors' "$SERVER_CMAKE"
+
+        # Verificar que el parche se aplicó
+        if grep -q 'JSON_HAS_STD_STRING_VIEW=0' "$SERVER_CMAKE"; then
+            log_success "✓ PARCHE 26b aplicado exitosamente"
+            rm -f "$SERVER_CMAKE.backup26b"
+        else
+            log_error "[✗] Error al aplicar PARCHE 26b"
+            mv "$SERVER_CMAKE.backup26b" "$SERVER_CMAKE"
+            exit 1
+        fi
+    fi
+else
+    log_warning "server/CMakeLists.txt no encontrado (omitiendo PARCHE 26b)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 27: Arreglar API deprecada de Rust en libnice (hash_drain_filter)
 # ═══════════════════════════════════════════════════════════════════════════
 # Problema: libnice usa hash_drain_filter que fue renombrado a hash_extract_if
