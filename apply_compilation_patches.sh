@@ -1253,6 +1253,11 @@ add_definitions(-DJSON_HAS_STD_STRING_VIEW=0)  # Disable string_view in JsonCpp 
         if grep -q 'JSON_HAS_STD_STRING_VIEW=0' "$SERVER_CMAKE"; then
             log_success "✓ PARCHE 26b aplicado exitosamente"
             rm -f "$SERVER_CMAKE.backup26b"
+
+            # Limpiar archivos objeto de MusicPlaylist para forzar recompilación
+            log_info "Limpiando objetos compilados de MusicPlaylist para forzar recompilación..."
+            find "$SCRIPT_DIR/Server/Root/TeaSpeak" -name "MusicPlaylist.cpp.o" -delete 2>/dev/null || true
+            find "$SCRIPT_DIR/Server/Root/TeaSpeak" -type d -name "CMakeFiles" -exec find {} -name "MusicPlaylist.cpp.o" -delete \; 2>/dev/null || true
         else
             log_error "[✗] Error al aplicar PARCHE 26b"
             mv "$SERVER_CMAKE.backup26b" "$SERVER_CMAKE"
