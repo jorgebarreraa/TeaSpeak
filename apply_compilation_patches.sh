@@ -1234,6 +1234,45 @@ fi
 log_success "✓ PARCHE 26b no necesario (JsonCpp usa C++11)"
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 26d: Aplicar mismo fix de string_view a YTVManager.cpp
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: YTVManager.cpp también usa root["key"] y falla por misma razón
+# Solución: Usar std::string("key").c_str() para forzar operator[](const char*)
+
+YTVMANAGER_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/music/providers/yt/YTVManager.cpp"
+
+if [[ -f "$YTVMANAGER_CPP" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q 'std::string("description")\.c_str()' "$YTVMANAGER_CPP" 2>/dev/null; then
+        log_success "✓ PARCHE 26d ya aplicado (YTVManager JsonCpp fix)"
+    else
+        log_info "Aplicando PARCHE 26d: Fix JsonCpp en YTVManager.cpp..."
+
+        # Crear backup
+        cp "$YTVMANAGER_CPP" "$YTVMANAGER_CPP.backup26d"
+
+        # Reemplazar todos los accesos root["key"] y json["key"] con std::string("key").c_str()
+        sed -i \
+            -e 's/root\["\([^"]*\)"\]/root[std::string("\1").c_str()]/g' \
+            -e 's/json\["\([^"]*\)"\]/json[std::string("\1").c_str()]/g' \
+            -e 's/(\*jsons\[0\])\["\([^"]*\)"\]/(*jsons[0])[std::string("\1").c_str()]/g' \
+            "$YTVMANAGER_CPP"
+
+        # Verificar que el parche se aplicó
+        if grep -q 'std::string("description")\.c_str()' "$YTVMANAGER_CPP"; then
+            log_success "✓ PARCHE 26d aplicado exitosamente"
+            rm -f "$YTVMANAGER_CPP.backup26d"
+        else
+            log_error "[✗] Error al aplicar PARCHE 26d"
+            mv "$YTVMANAGER_CPP.backup26d" "$YTVMANAGER_CPP"
+            exit 1
+        fi
+    fi
+else
+    log_warning "YTVManager.cpp no encontrado (omitiendo PARCHE 26d)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 27: Arreglar API deprecada de Rust en libnice (hash_drain_filter)
 # ═══════════════════════════════════════════════════════════════════════════
 # Problema: libnice usa hash_drain_filter que fue renombrado a hash_extract_if
