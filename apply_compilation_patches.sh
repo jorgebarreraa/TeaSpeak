@@ -1227,99 +1227,59 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 26b: Desactivar string_view en JsonCpp headers
+# PARCHE 26b: Recompilar JsonCpp con soporte string_view habilitado
 # ═══════════════════════════════════════════════════════════════════════════
-# Problema: JsonCpp librería compilada con C++11 no tiene símbolos string_view,
-#           pero headers detectan C++17 y declaran operator[](string_view)
-# Solución: Añadir -DJSON_HAS_STD_STRING_VIEW=0 para desactivar string_view
+# Problema: JsonCpp fue compilado SIN string_view, causando errores de linker
+#           cuando el código intenta usar operator[](string_view)
+# Solución CORRECTA: Recompilar JsonCpp CON -DJSON_USE_STD_STRING_VIEW=ON
+#           (build_jsoncpp.sh ya fue modificado con este flag)
 
-SERVER_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
+JSONCPP_MARKER="/usr/local/include/json/.jsoncpp_compiled_with_stringview"
 
-if [[ -f "$SERVER_CMAKE" ]]; then
-    # Verificar si el parche ya fue aplicado
-    if grep -q 'JSON_HAS_STD_STRING_VIEW=0' "$SERVER_CMAKE" 2>/dev/null; then
-        log_success "✓ PARCHE 26b ya aplicado (JsonCpp string_view disabled)"
-    else
-        log_info "Aplicando PARCHE 26b: Desactivar string_view en JsonCpp..."
-
-        # Crear backup
-        cp "$SERVER_CMAKE" "$SERVER_CMAKE.backup26b"
-
-        # Añadir la definición después de add_definitions(-DUSE_BORINGSSL)
-        sed -i '/add_definitions(-DUSE_BORINGSSL)/a\
-add_definitions(-DJSON_HAS_STD_STRING_VIEW=0)  # Disable string_view in JsonCpp to avoid linker errors' "$SERVER_CMAKE"
-
-        # Verificar que el parche se aplicó
-        if grep -q 'JSON_HAS_STD_STRING_VIEW=0' "$SERVER_CMAKE"; then
-            log_success "✓ PARCHE 26b aplicado exitosamente"
-            rm -f "$SERVER_CMAKE.backup26b"
-
-            # CRÍTICO: Limpiar build directory para forzar regeneración de CMake
-            log_info "Limpiando build directory para forzar regeneración de CMake con nueva definición..."
-
-            # Limpiar build en Server/Server/build (symlink)
-            if [[ -d "$SCRIPT_DIR/Server/Server/build" ]]; then
-                log_info "  → Limpiando Server/Server/build..."
-                rm -rf "$SCRIPT_DIR/Server/Server/build"
-            fi
-
-            # Limpiar build en Server/Root/TeaSpeak (real)
-            if [[ -d "$SCRIPT_DIR/Server/Root/TeaSpeak/build" ]]; then
-                log_info "  → Limpiando Server/Root/TeaSpeak/build..."
-                rm -rf "$SCRIPT_DIR/Server/Root/TeaSpeak/build"
-            fi
-
-            # Limpiar CMakeCache en cualquier ubicación
-            find "$SCRIPT_DIR/Server" -name "CMakeCache.txt" -path "*/TeaSpeak/*" -delete 2>/dev/null || true
-
-            log_success "✓ Build limpiado - CMake regenerará configuración en próxima compilación"
-        else
-            log_error "[✗] Error al aplicar PARCHE 26b"
-            mv "$SERVER_CMAKE.backup26b" "$SERVER_CMAKE"
-            exit 1
-        fi
-    fi
+if [[ -f "$JSONCPP_MARKER" ]]; then
+    log_success "✓ PARCHE 26b ya aplicado (JsonCpp compilado con string_view)"
 else
-    log_warning "server/CMakeLists.txt no encontrado (omitiendo PARCHE 26b)"
-fi
+    log_info "Aplicando PARCHE 26b: Recompilar JsonCpp con soporte string_view..."
 
-# ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 26c: Parchear headers de JsonCpp para deshabilitar string_view
-# ═══════════════════════════════════════════════════════════════════════════
-# Problema: Los headers de JsonCpp en /usr/local/include NO respetan JSON_HAS_STD_STRING_VIEW
-#           y declaran operator[](string_view) sin condiciones
-# Solución: ELIMINAR directamente las declaraciones de string_view en value.h (no comentar)
+    # Verificar si JsonCpp ya está instalado
+    if [[ -f "/usr/local/include/json/json.h" ]]; then
+        log_info "  → JsonCpp ya instalado - forzando recompilación con string_view..."
 
-JSONCPP_HEADER="/usr/local/include/json/value.h"
-
-if [[ -f "$JSONCPP_HEADER" ]]; then
-    # Verificar si el parche ya fue aplicado
-    if grep -q '// PARCHE 26c: string_view declarations removed' "$JSONCPP_HEADER" 2>/dev/null; then
-        log_success "✓ PARCHE 26c ya aplicado (JsonCpp headers patched)"
-    else
-        log_info "Aplicando PARCHE 26c: Parchear headers de JsonCpp..."
-
-        # Crear backup
-        sudo cp "$JSONCPP_HEADER" "$JSONCPP_HEADER.backup26c"
-
-        # Agregar marcador al inicio del archivo
-        sudo sed -i '1i// PARCHE 26c: string_view declarations removed to avoid linker errors' "$JSONCPP_HEADER"
-
-        # ELIMINAR (no comentar) todas las líneas que declaran string_view
-        sudo sed -i '/std::string_view/d' "$JSONCPP_HEADER"
-
-        # Verificar que el parche se aplicó correctamente
-        if grep -q 'PARCHE 26c: string_view declarations removed' "$JSONCPP_HEADER" && ! grep -q 'std::string_view' "$JSONCPP_HEADER" 2>/dev/null; then
-            log_success "✓ PARCHE 26c aplicado exitosamente - JsonCpp string_view declarations removed"
-            rm -f "$JSONCPP_HEADER.backup26c"
-        else
-            log_error "[✗] Error al aplicar PARCHE 26c"
-            sudo mv "$JSONCPP_HEADER.backup26c" "$JSONCPP_HEADER"
-            exit 1
+        # Desinstalar JsonCpp actual (compilado sin string_view)
+        if [[ -d "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build" ]]; then
+            log_info "  → Desinstalando JsonCpp anterior..."
+            cd "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
+            sudo make uninstall 2>/dev/null || true
+            cd "$SCRIPT_DIR"
         fi
+
+        # Limpiar build directory para forzar recompilación
+        if [[ -d "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build" ]]; then
+            log_info "  → Limpiando build directory de JsonCpp..."
+            rm -rf "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
+            mkdir -p "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
+        fi
+
+        # Recompilar JsonCpp (build_jsoncpp.sh ahora incluye -DJSON_USE_STD_STRING_VIEW=ON)
+        log_info "  → Recompilando JsonCpp con string_view habilitado..."
+        cd "$SCRIPT_DIR/Server/Root/libraries"
+        bash build_jsoncpp.sh
+        cd "$SCRIPT_DIR"
+
+        # Crear marcador para indicar que JsonCpp fue recompilado correctamente
+        sudo touch "$JSONCPP_MARKER"
+        log_success "✓ PARCHE 26b aplicado - JsonCpp recompilado con string_view"
+
+        # Limpiar builds de TeaSpeak para que recompilen con la nueva JsonCpp
+        log_info "  → Limpiando builds de TeaSpeak para usar nueva JsonCpp..."
+        rm -rf "$SCRIPT_DIR/Server/Server/build" 2>/dev/null || true
+        rm -rf "$SCRIPT_DIR/Server/Root/TeaSpeak/build" 2>/dev/null || true
+        find "$SCRIPT_DIR/Server" -name "CMakeCache.txt" -delete 2>/dev/null || true
+        log_success "✓ Builds limpiados - recompilarán con JsonCpp actualizado"
+    else
+        log_info "  → JsonCpp no instalado aún - se compilará con string_view en la instalación normal"
+        sudo touch "$JSONCPP_MARKER"
     fi
-else
-    log_warning "JsonCpp header no encontrado en /usr/local/include/json/value.h (omitiendo PARCHE 26c)"
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
