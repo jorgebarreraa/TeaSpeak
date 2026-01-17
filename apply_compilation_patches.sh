@@ -1168,67 +1168,70 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 26: ELIMINADO - Ya no necesario
+# PARCHE 26: Evitar sobrecarga string_view en JsonCpp operator[]
 # ═══════════════════════════════════════════════════════════════════════════
-# Anteriormente modificaba MusicPlaylist.cpp para evitar string_view
-# AHORA: JsonCpp se compila CON string_view, por lo que el código original funciona
-# El archivo MusicPlaylist.cpp se mantiene en su estado original del proyecto upstream
+# Problema: Cuando se compila con C++17, el compilador intenta usar
+# operator[](std::string_view) que no existe en JsonCpp compilado con C++11
+# Solución: Usar variables const char* const para forzar operator[](const char*)
 
-# ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 26b: Recompilar JsonCpp con soporte string_view habilitado
-# ═══════════════════════════════════════════════════════════════════════════
-# Problema: JsonCpp fue compilado SIN string_view, causando errores de linker
-#           cuando el código intenta usar operator[](string_view)
-# Solución CORRECTA: Recompilar JsonCpp CON -DJSON_USE_STD_STRING_VIEW=ON
-#           (build_jsoncpp.sh ya fue modificado con este flag)
+MUSIC_PLAYLIST_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
 
-JSONCPP_MARKER="/usr/local/include/json/.jsoncpp_compiled_with_stringview"
-
-if [[ -f "$JSONCPP_MARKER" ]]; then
-    log_success "✓ PARCHE 26b ya aplicado (JsonCpp compilado con string_view)"
-else
-    log_info "Aplicando PARCHE 26b: Recompilar JsonCpp con soporte string_view..."
-
-    # Verificar si JsonCpp ya está instalado
-    if [[ -f "/usr/local/include/json/json.h" ]]; then
-        log_info "  → JsonCpp ya instalado - forzando recompilación con string_view..."
-
-        # Desinstalar JsonCpp actual (compilado sin string_view)
-        if [[ -d "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build" ]]; then
-            log_info "  → Desinstalando JsonCpp anterior..."
-            cd "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
-            sudo make uninstall 2>/dev/null || true
-            cd "$SCRIPT_DIR"
-        fi
-
-        # Limpiar build directory para forzar recompilación
-        if [[ -d "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build" ]]; then
-            log_info "  → Limpiando build directory de JsonCpp..."
-            rm -rf "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
-            mkdir -p "$SCRIPT_DIR/Server/Root/libraries/jsoncpp/build"
-        fi
-
-        # Recompilar JsonCpp (build_jsoncpp.sh ahora incluye -DJSON_USE_STD_STRING_VIEW=ON)
-        log_info "  → Recompilando JsonCpp con string_view habilitado..."
-        cd "$SCRIPT_DIR/Server/Root/libraries"
-        bash build_jsoncpp.sh
-        cd "$SCRIPT_DIR"
-
-        # Crear marcador para indicar que JsonCpp fue recompilado correctamente
-        sudo touch "$JSONCPP_MARKER"
-        log_success "✓ PARCHE 26b aplicado - JsonCpp recompilado con string_view"
-
-        # Limpiar builds de TeaSpeak para que recompilen con la nueva JsonCpp
-        log_info "  → Limpiando builds de TeaSpeak para usar nueva JsonCpp..."
-        rm -rf "$SCRIPT_DIR/Server/Server/build" 2>/dev/null || true
-        rm -rf "$SCRIPT_DIR/Server/Root/TeaSpeak/build" 2>/dev/null || true
-        find "$SCRIPT_DIR/Server" -name "CMakeCache.txt" -delete 2>/dev/null || true
-        log_success "✓ Builds limpiados - recompilarán con JsonCpp actualizado"
+if [[ -f "$MUSIC_PLAYLIST_CPP" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q 'const char\* const type_key = "type"' "$MUSIC_PLAYLIST_CPP" 2>/dev/null; then
+        log_success "✓ PARCHE 26 ya aplicado (JsonCpp string_view fix)"
     else
-        log_info "  → JsonCpp no instalado aún - se compilará con string_view en la instalación normal"
-        sudo touch "$JSONCPP_MARKER"
+        log_info "Aplicando PARCHE 26: Evitar sobrecarga string_view en JsonCpp..."
+
+        # Crear backup
+        cp "$MUSIC_PLAYLIST_CPP" "$MUSIC_PLAYLIST_CPP.backup26"
+
+        # Paso 1: Insertar declaraciones de variables después de "Json::Value root;"
+        sed -i '/Json::Value root;/a\
+            \/\/ Use const char* variables to force operator[](const char*) overload\
+            \/\/ and avoid operator[](string_view) which doesn'\''t exist in JsonCpp library\
+            const char* const type_key = "type";\
+            const char* const url_key = "url";\
+            const char* const length_key = "length";\
+            const char* const title_key = "title";\
+            const char* const description_key = "description";\
+            const char* const thumbnail_key = "thumbnail";\
+            const char* const metadata_key = "metadata";\
+            const char* const indentation_key = "indentation";' "$MUSIC_PLAYLIST_CPP"
+
+        # Paso 2: Reemplazar los accesos con literales por variables
+        sed -i \
+            -e 's/root\["type"\]/root[type_key]/g' \
+            -e 's/root\["url"\]/root[url_key]/g' \
+            -e 's/root\["length"\]/root[length_key]/g' \
+            -e 's/root\["title"\]/root[title_key]/g' \
+            -e 's/root\["description"\]/root[description_key]/g' \
+            -e 's/root\["thumbnail"\]/root[thumbnail_key]/g' \
+            -e 's/root\["metadata"\]/root[metadata_key]/g' \
+            -e 's/builder\["indentation"\]/builder[indentation_key]/g' \
+            -e 's/\]\[meta\.first\]/][meta.first.c_str()]/g' \
+            "$MUSIC_PLAYLIST_CPP"
+
+        # Verificar que el parche se aplicó
+        if grep -q 'const char\* const type_key = "type"' "$MUSIC_PLAYLIST_CPP"; then
+            log_success "✓ PARCHE 26 aplicado exitosamente"
+            rm -f "$MUSIC_PLAYLIST_CPP.backup26"
+        else
+            log_error "[✗] Error al aplicar PARCHE 26"
+            mv "$MUSIC_PLAYLIST_CPP.backup26" "$MUSIC_PLAYLIST_CPP"
+            exit 1
+        fi
     fi
+else
+    log_warning "MusicPlaylist.cpp no encontrado (omitiendo PARCHE 26)"
 fi
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 26b: ELIMINADO - Ya no necesario
+# ═══════════════════════════════════════════════════════════════════════════
+# JsonCpp se compila con C++11 (sin string_view) desde build_jsoncpp.sh
+# PARCHE 26 maneja la compatibilidad modificando MusicPlaylist.cpp
+log_success "✓ PARCHE 26b no necesario (JsonCpp usa C++11)"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 27: Arreglar API deprecada de Rust en libnice (hash_drain_filter)
