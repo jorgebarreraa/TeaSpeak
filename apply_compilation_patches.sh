@@ -1288,13 +1288,13 @@ fi
 # ═══════════════════════════════════════════════════════════════════════════
 # Problema: Los headers de JsonCpp en /usr/local/include NO respetan JSON_HAS_STD_STRING_VIEW
 #           y declaran operator[](string_view) sin condiciones
-# Solución: Comentar directamente las declaraciones de string_view en value.h
+# Solución: ELIMINAR directamente las declaraciones de string_view en value.h (no comentar)
 
 JSONCPP_HEADER="/usr/local/include/json/value.h"
 
 if [[ -f "$JSONCPP_HEADER" ]]; then
     # Verificar si el parche ya fue aplicado
-    if grep -q '// PARCHE 26c: string_view disabled' "$JSONCPP_HEADER" 2>/dev/null; then
+    if grep -q '// PARCHE 26c: string_view declarations removed' "$JSONCPP_HEADER" 2>/dev/null; then
         log_success "✓ PARCHE 26c ya aplicado (JsonCpp headers patched)"
     else
         log_info "Aplicando PARCHE 26c: Parchear headers de JsonCpp..."
@@ -1302,14 +1302,16 @@ if [[ -f "$JSONCPP_HEADER" ]]; then
         # Crear backup
         sudo cp "$JSONCPP_HEADER" "$JSONCPP_HEADER.backup26c"
 
-        # Comentar todas las declaraciones relacionadas con string_view
-        sudo sed -i \
-            -e '/std::string_view/s/^/\/\/ PARCHE 26c: string_view disabled - /' \
-            "$JSONCPP_HEADER"
+        # Agregar marcador al inicio del archivo
+        sudo sed -i '1i// PARCHE 26c: string_view declarations removed to avoid linker errors' "$JSONCPP_HEADER"
 
-        # Verificar que el parche se aplicó
-        if grep -q 'PARCHE 26c: string_view disabled' "$JSONCPP_HEADER"; then
-            log_success "✓ PARCHE 26c aplicado exitosamente - JsonCpp headers patched"
+        # ELIMINAR (no comentar) todas las líneas que declaran string_view
+        sudo sed -i '/std::string_view/d' "$JSONCPP_HEADER"
+
+        # Verificar que el parche se aplicó correctamente
+        if grep -q 'PARCHE 26c: string_view declarations removed' "$JSONCPP_HEADER" && ! grep -q 'std::string_view' "$JSONCPP_HEADER" 2>/dev/null; then
+            log_success "✓ PARCHE 26c aplicado exitosamente - JsonCpp string_view declarations removed"
+            rm -f "$JSONCPP_HEADER.backup26c"
         else
             log_error "[✗] Error al aplicar PARCHE 26c"
             sudo mv "$JSONCPP_HEADER.backup26c" "$JSONCPP_HEADER"
