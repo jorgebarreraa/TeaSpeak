@@ -1168,63 +1168,11 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 26: Evitar sobrecarga string_view en JsonCpp operator[]
+# PARCHE 26: ELIMINADO - Ya no necesario
 # ═══════════════════════════════════════════════════════════════════════════
-# Problema: Cuando se compila con C++17, el compilador intenta usar
-# operator[](std::string_view) que no existe en JsonCpp 1.9.7
-# Solución: Usar variables const char* const para forzar operator[](const char*)
-
-MUSIC_PLAYLIST_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/server/src/music/MusicPlaylist.cpp"
-
-if [[ -f "$MUSIC_PLAYLIST_CPP" ]]; then
-    # Verificar si el parche ya fue aplicado
-    if grep -q 'const char\* const type_key = "type"' "$MUSIC_PLAYLIST_CPP" 2>/dev/null; then
-        log_success "✓ PARCHE 26 ya aplicado (JsonCpp string_view fix)"
-    else
-        log_info "Aplicando PARCHE 26: Evitar sobrecarga string_view en JsonCpp..."
-
-        # Crear backup
-        cp "$MUSIC_PLAYLIST_CPP" "$MUSIC_PLAYLIST_CPP.backup26"
-
-        # Paso 1: Insertar declaraciones de variables después de "Json::Value root;"
-        sed -i '/Json::Value root;/a\
-            \/\/ Use const char* variables to force operator[](const char*) overload\
-            \/\/ and avoid operator[](string_view) which doesn'\''t exist in JsonCpp library\
-            const char* const type_key = "type";\
-            const char* const url_key = "url";\
-            const char* const length_key = "length";\
-            const char* const title_key = "title";\
-            const char* const description_key = "description";\
-            const char* const thumbnail_key = "thumbnail";\
-            const char* const metadata_key = "metadata";\
-            const char* const indentation_key = "indentation";' "$MUSIC_PLAYLIST_CPP"
-
-        # Paso 2: Reemplazar los accesos con literales por variables
-        sed -i \
-            -e 's/root\["type"\]/root[type_key]/g' \
-            -e 's/root\["url"\]/root[url_key]/g' \
-            -e 's/root\["length"\]/root[length_key]/g' \
-            -e 's/root\["title"\]/root[title_key]/g' \
-            -e 's/root\["description"\]/root[description_key]/g' \
-            -e 's/root\["thumbnail"\]/root[thumbnail_key]/g' \
-            -e 's/root\["metadata"\]/root[metadata_key]/g' \
-            -e 's/builder\["indentation"\]/builder[indentation_key]/g' \
-            -e 's/\]\[meta\.first\]/][meta.first.c_str()]/g' \
-            "$MUSIC_PLAYLIST_CPP"
-
-        # Verificar que el parche se aplicó
-        if grep -q 'const char\* const type_key = "type"' "$MUSIC_PLAYLIST_CPP"; then
-            log_success "✓ PARCHE 26 aplicado exitosamente"
-            rm -f "$MUSIC_PLAYLIST_CPP.backup26"
-        else
-            log_error "[✗] Error al aplicar PARCHE 26"
-            mv "$MUSIC_PLAYLIST_CPP.backup26" "$MUSIC_PLAYLIST_CPP"
-            exit 1
-        fi
-    fi
-else
-    log_warning "MusicPlaylist.cpp no encontrado (omitiendo PARCHE 26)"
-fi
+# Anteriormente modificaba MusicPlaylist.cpp para evitar string_view
+# AHORA: JsonCpp se compila CON string_view, por lo que el código original funciona
+# El archivo MusicPlaylist.cpp se mantiene en su estado original del proyecto upstream
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 26b: Recompilar JsonCpp con soporte string_view habilitado
