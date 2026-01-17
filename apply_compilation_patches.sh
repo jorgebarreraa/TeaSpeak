@@ -1284,6 +1284,43 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 26c: Parchear headers de JsonCpp para deshabilitar string_view
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: Los headers de JsonCpp en /usr/local/include NO respetan JSON_HAS_STD_STRING_VIEW
+#           y declaran operator[](string_view) sin condiciones
+# Solución: Comentar directamente las declaraciones de string_view en value.h
+
+JSONCPP_HEADER="/usr/local/include/json/value.h"
+
+if [[ -f "$JSONCPP_HEADER" ]]; then
+    # Verificar si el parche ya fue aplicado
+    if grep -q '// PARCHE 26c: string_view disabled' "$JSONCPP_HEADER" 2>/dev/null; then
+        log_success "✓ PARCHE 26c ya aplicado (JsonCpp headers patched)"
+    else
+        log_info "Aplicando PARCHE 26c: Parchear headers de JsonCpp..."
+
+        # Crear backup
+        sudo cp "$JSONCPP_HEADER" "$JSONCPP_HEADER.backup26c"
+
+        # Comentar todas las declaraciones relacionadas con string_view
+        sudo sed -i \
+            -e '/std::string_view/s/^/\/\/ PARCHE 26c: string_view disabled - /' \
+            "$JSONCPP_HEADER"
+
+        # Verificar que el parche se aplicó
+        if grep -q 'PARCHE 26c: string_view disabled' "$JSONCPP_HEADER"; then
+            log_success "✓ PARCHE 26c aplicado exitosamente - JsonCpp headers patched"
+        else
+            log_error "[✗] Error al aplicar PARCHE 26c"
+            sudo mv "$JSONCPP_HEADER.backup26c" "$JSONCPP_HEADER"
+            exit 1
+        fi
+    fi
+else
+    log_warning "JsonCpp header no encontrado en /usr/local/include/json/value.h (omitiendo PARCHE 26c)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 27: Arreglar API deprecada de Rust en libnice (hash_drain_filter)
 # ═══════════════════════════════════════════════════════════════════════════
 # Problema: libnice usa hash_drain_filter que fue renombrado a hash_extract_if
