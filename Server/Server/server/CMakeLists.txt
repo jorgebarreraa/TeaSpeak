@@ -27,7 +27,8 @@ add_definitions(-DMUSIC_BOT)
 add_definitions(-DUSE_BORINGSSL)
 # Disable string_view in JsonCpp headers to avoid linker errors
 # JsonCpp library compiled with C++11 doesn't have string_view implementation
-add_definitions(-DJSON_HAS_NO_STRING_VIEW=1)
+# Use JSONCPP_HAS_STRING_VIEW=0 to override the default in value.h
+add_definitions(-DJSONCPP_HAS_STRING_VIEW=0)
 
 #0 = STABLE
 #1 = BETA
