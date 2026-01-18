@@ -25,6 +25,9 @@ include_directories(../MusicBot/src)
 add_definitions(-DLTM_DESC)
 add_definitions(-DMUSIC_BOT)
 add_definitions(-DUSE_BORINGSSL)
+# Disable string_view in JsonCpp headers to avoid linker errors
+# JsonCpp library compiled with C++11 doesn't have string_view implementation
+add_definitions(-DJSON_HAS_NO_STRING_VIEW=1)
 
 #0 = STABLE
 #1 = BETA
