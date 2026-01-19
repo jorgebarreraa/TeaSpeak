@@ -990,11 +990,20 @@ compile_libraries() {
             failed_libs+=("ed25519")
         fi
 
-        # jsoncpp
-        log_substep "Compilando jsoncpp..."
+        # jsoncpp (requiere limpieza completa para C++17)
+        log_substep "Compilando jsoncpp con C++17..."
+        # Limpiar build previo para forzar recompilación con C++17
+        rm -rf jsoncpp/build 2>/dev/null || true
         if library_path="jsoncpp" ../build-helpers/libraries/build_jsoncpp.sh >> "$LOG_FILE.libraries" 2>&1; then
-            log_success "jsoncpp compilada"
-            ((compiled_libs++))
+            # Verificar que tenga símbolos string_view
+            if nm -D /usr/local/lib/libjsoncpp.so 2>/dev/null | grep -q "string_view"; then
+                log_success "jsoncpp compilada con soporte C++17"
+                ((compiled_libs++))
+            else
+                log_warning "jsoncpp compilada pero sin símbolos string_view"
+                log_warning "Esto causará errores de linker - revisar compilación"
+                failed_libs+=("jsoncpp (sin string_view)")
+            fi
         else
             log_warning "jsoncpp falló"
             failed_libs+=("jsoncpp")
@@ -1266,6 +1275,11 @@ compile_teaspeak() {
     log_step "PASO 10: Compilando TeaSpeak ($BUILD_TYPE)"
 
     cd "$SCRIPT_DIR/Server/Root"
+
+    # Limpiar build del servidor para forzar recompilación con JsonCpp C++17
+    log_substep "Limpiando build previo del servidor..."
+    rm -rf TeaSpeak/server/build 2>/dev/null || true
+    log_info "Build del servidor limpiado - se recompilará con JsonCpp C++17"
 
     # Configurar variables de entorno
     export build_os_type=linux
