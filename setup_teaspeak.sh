@@ -655,6 +655,10 @@ clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 cd ..
 clone_with_fallback "https://github.com/jorgebarreraa/build-helpers.git" "build-helpers"
 
+# Sobrescribir build_jsoncpp.sh de build-helpers con versión C++17
+echo "Sobrescribiendo build_jsoncpp.sh con versión C++17..."
+cp -f libraries/build_jsoncpp.sh build-helpers/libraries/build_jsoncpp.sh
+
 echo "✓ Todas las librerías descargadas exitosamente!"
 EOFSCRIPT
 
