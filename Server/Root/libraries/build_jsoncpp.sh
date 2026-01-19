@@ -30,7 +30,9 @@ mkdir -p jsoncpp/build
 cd jsoncpp/build
 echo "Compilando JsonCpp con C++17..."
 cmake .. \
-    -DCMAKE_CXX_FLAGS="-std=c++17 -fPIC ${CXX_FLAGS}" \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+    -DCMAKE_CXX_FLAGS="-fPIC ${CXX_FLAGS}" \
     -DCMAKE_C_FLAGS="${C_FLAGS}" \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     ${CMAKE_OPTIONS}
