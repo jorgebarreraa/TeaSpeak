@@ -2,6 +2,12 @@
 echo "Desinstalando JsonCpp del sistema..."
 sudo apt-get remove -y libjsoncpp-dev libjsoncpp25 2>/dev/null || true
 
+# Reinstalar cmake si se eliminó como dependencia
+if ! command -v cmake &> /dev/null; then
+    echo "Reinstalando cmake..."
+    sudo apt-get install -y cmake
+fi
+
 # Limpiar headers parcheados de sesiones anteriores
 echo "Limpiando headers y librerías de JsonCpp previas..."
 sudo rm -rf /usr/local/include/json
