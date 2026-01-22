@@ -974,48 +974,43 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 23: Usar OpenSSL del sistema en lugar de openssl-prebuild
+# PARCHE 23: REVERTIDO - Usar OpenSSL prebuild del proyecto (no del sistema)
 # ═══════════════════════════════════════════════════════════════════════════
+# Este parche se revirtió porque el servidor necesita OpenSSL prebuild del proyecto
+# para mantener compatibilidad con la versión original de TeaSpeak
 SERVER_CMAKE_FILE="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
 
 if [[ -f "$SERVER_CMAKE_FILE" ]]; then
-    log_info "Configurando enlazado a OpenSSL del sistema..."
-
-    # Verificar si ya está parcheado
+    # Verificar si el PATCH 23 incorrecto está aplicado y revertirlo
     if grep -q "# PATCH 23: Use system OpenSSL libraries" "$SERVER_CMAKE_FILE"; then
-        log_success "✓ server/CMakeLists.txt ya usa OpenSSL del sistema"
-    else
-        log_info "Modificando CMakeLists.txt para usar OpenSSL del sistema..."
+        log_info "Revirtiendo PATCH 23 para usar OpenSSL prebuild del proyecto..."
 
-        # Crear backup
-        if [[ ! -f "$SERVER_CMAKE_FILE.backup_sysssl" ]]; then
-            cp "$SERVER_CMAKE_FILE" "$SERVER_CMAKE_FILE.backup_sysssl"
-        fi
-
-        # Buscar las líneas que enlazan openssl::ssl::shared y openssl::crypto::shared
-        # y reemplazarlas con las librerías del sistema
+        # Revertir al uso de openssl::ssl::shared y openssl::crypto::shared
         awk '
-        /^[[:space:]]*openssl::ssl::shared[[:space:]]*$/ {
-            print "        # PATCH 23: Use system OpenSSL libraries instead of openssl-prebuild"
-            print "        # openssl::ssl::shared"
-            print "        ssl"
+        /# PATCH 23: Use system OpenSSL libraries/ {
+            getline; getline; getline; getline; getline
+            print "        openssl::ssl::shared"
             next
         }
-        /^[[:space:]]*openssl::crypto::shared[[:space:]]*$/ {
-            print "        # openssl::crypto::shared"
-            print "        crypto"
-            next
-        }
+        /^[[:space:]]*#[[:space:]]*openssl::ssl::shared[[:space:]]*$/ { next }
+        /^[[:space:]]*ssl[[:space:]]*$/ && ssl_skip { next }
+        /^[[:space:]]*#[[:space:]]*openssl::crypto::shared[[:space:]]*$/ { next }
+        /^[[:space:]]*crypto[[:space:]]*$/ && crypto_skip { next }
+        /# PATCH 23:/ { ssl_skip=1; next }
+        /openssl::ssl::shared/ { ssl_skip=0 }
         { print }
-        ' "$SERVER_CMAKE_FILE" > "$SERVER_CMAKE_FILE.tmp" && mv "$SERVER_CMAKE_FILE.tmp" "$SERVER_CMAKE_FILE"
+        ' "$SERVER_CMAKE_FILE" > "$SERVER_CMAKE_FILE.tmp"
 
-        # Verificar
-        if grep -q "# PATCH 23: Use system OpenSSL libraries" "$SERVER_CMAKE_FILE"; then
-            log_success "✓ CMakeLists.txt modificado para usar OpenSSL del sistema"
-        else
-            log_error "Error al modificar CMakeLists.txt"
-            exit 1
-        fi
+        # Método más simple: usar sed para limpiar las líneas del PATCH 23
+        sed -i '/# PATCH 23: Use system OpenSSL libraries/d' "$SERVER_CMAKE_FILE"
+        sed -i 's/^[[:space:]]*# openssl::ssl::shared[[:space:]]*$/        openssl::ssl::shared/' "$SERVER_CMAKE_FILE"
+        sed -i '/^[[:space:]]*ssl[[:space:]]*$/d' "$SERVER_CMAKE_FILE"
+        sed -i 's/^[[:space:]]*# openssl::crypto::shared[[:space:]]*$/        openssl::crypto::shared/' "$SERVER_CMAKE_FILE"
+        sed -i '/^[[:space:]]*crypto[[:space:]]*$/d' "$SERVER_CMAKE_FILE"
+
+        log_success "✓ PATCH 23 revertido - usando OpenSSL prebuild del proyecto"
+    else
+        log_success "✓ server/CMakeLists.txt ya usa OpenSSL prebuild correctamente"
     fi
 else
     log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 23)"
