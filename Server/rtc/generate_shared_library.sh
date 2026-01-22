@@ -49,10 +49,11 @@ rm -rf ~/.cargo/registry/src/*
 # Also remove any cached build scripts
 find ~/.cargo/registry -name "build-script-build" -delete 2>/dev/null || true
 
-# First update and fetch all dependencies
-cargo update || exit 1
+# First update and fetch all dependencies (may fail due to broken git checkout Cargo.toml)
+echo "Attempting to update Cargo dependencies..."
+cargo update || echo "Warning: cargo update failed, will retry after patching checkouts"
 echo "Fetching all Cargo dependencies (including git repos)..."
-cargo fetch || exit 1
+cargo fetch || echo "Warning: cargo fetch failed, will retry after patching checkouts"
 
 # Apply Cargo.toml fix for rust-webrtc dependencies AFTER cargo clones the repo
 FIX_SCRIPT="$SCRIPT_DIR/fix_cargo_deps.sh"
