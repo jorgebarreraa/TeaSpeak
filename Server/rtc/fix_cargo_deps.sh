@@ -117,7 +117,25 @@ WEBRTC_CHECKOUTS=$(find "$HOME/.cargo/git/checkouts/" -type d -name "rust-webrtc
 
 if [[ -n "$WEBRTC_CHECKOUTS" ]]; then
     for CHECKOUT_DIR in $WEBRTC_CHECKOUTS; do
-        # Fix deprecated slog macros
+        # Fix btree_drain_filter -> btree_extract_if in lib.rs
+        LIB_RS_FILES=$(find "$CHECKOUT_DIR" -name "lib.rs" -type f 2>/dev/null || true)
+        for lib_file in $LIB_RS_FILES; do
+            if grep -q "btree_drain_filter" "$lib_file"; then
+                echo "  Fixing $lib_file (btree_drain_filter -> btree_extract_if)"
+                sed -i 's/btree_drain_filter/btree_extract_if/g' "$lib_file"
+            fi
+        done
+
+        # Fix drain_filter -> extract_if in rtc.rs and all .rs files
+        RTC_RS_FILES=$(find "$CHECKOUT_DIR" -name "rtc.rs" -type f 2>/dev/null || true)
+        for rtc_file in $RTC_RS_FILES; do
+            if grep -q "\.drain_filter(" "$rtc_file"; then
+                echo "  Fixing $rtc_file (drain_filter -> extract_if)"
+                sed -i 's/\.drain_filter(/.extract_if(/g' "$rtc_file"
+            fi
+        done
+
+        # Fix deprecated slog macros in all .rs files
         find "$CHECKOUT_DIR" -name "*.rs" -type f -exec sed -i \
             -e 's/slog::slog_trace!/slog::trace!/g' \
             -e 's/slog::slog_debug!/slog::debug!/g' \

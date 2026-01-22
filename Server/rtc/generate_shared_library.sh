@@ -63,15 +63,36 @@ else
     echo "Warning: Cargo fix script not found at $FIX_SCRIPT"
 fi
 
-# Force rebuild with environment variables already set
+# Try to build - this will create all checkouts if they don't exist
+echo "Attempting first build (may fail if checkouts need patches)..."
 rbuild_install_prefix="$install_prefix" \
 rbuild_library_type=static \
 rbuild_libnice_gupnp=disabled \
 cargo build --release
 
+# If first build failed, apply patches again and retry
 if [ $? -ne 0 ]; then
-    echo "Failed to build glib"
-    exit 1
+    echo ""
+    echo "════════════════════════════════════════════════════════════"
+    echo "  First build failed - applying patches to new checkouts"
+    echo "════════════════════════════════════════════════════════════"
+
+    # Apply patches to newly created checkouts
+    if [ -f "$FIX_SCRIPT" ]; then
+        bash "$FIX_SCRIPT" || echo "Warning: Cargo fix script failed"
+    fi
+
+    echo ""
+    echo "Retrying build with patched dependencies..."
+    rbuild_install_prefix="$install_prefix" \
+    rbuild_library_type=static \
+    rbuild_libnice_gupnp=disabled \
+    cargo build --release
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to build after applying patches"
+        exit 1
+    fi
 fi
 
 if [ ! -e "target/release/libteaspeak_rtc.a" ]; then
