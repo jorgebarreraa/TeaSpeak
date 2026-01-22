@@ -25,10 +25,6 @@ include_directories(../MusicBot/src)
 add_definitions(-DLTM_DESC)
 add_definitions(-DMUSIC_BOT)
 add_definitions(-DUSE_BORINGSSL)
-# Disable string_view in JsonCpp headers to avoid linker errors
-# JsonCpp library compiled with C++11 doesn't have string_view implementation
-# Use JSONCPP_HAS_STRING_VIEW=0 to override the default in value.h
-add_definitions(-DJSONCPP_HAS_STRING_VIEW=0)
 
 #0 = STABLE
 #1 = BETA
@@ -289,11 +285,8 @@ endif()
 
 # include_directories(${LIBRARY_PATH}/boringssl/include/)
 target_link_libraries(TeaSpeakServer
-        # PATCH 23: Use system OpenSSL libraries instead of openssl-prebuild
-        # openssl::ssl::shared
-        ssl
-        # openssl::crypto::shared
-        crypto
+        openssl::ssl::shared
+        openssl::crypto::shared
         dl
         z
         rt # For clock_gettime
