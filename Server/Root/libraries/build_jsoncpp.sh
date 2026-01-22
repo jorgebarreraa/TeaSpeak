@@ -21,6 +21,12 @@ echo "Restaurando código fuente limpio de JsonCpp..."
 cd jsoncpp
 git checkout . 2>/dev/null || true
 git clean -fdx 2>/dev/null || true
+
+# Forzar C++17 directamente en CMakeLists.txt
+echo "Forzando C++17 en CMakeLists.txt de JsonCpp..."
+sed -i 's/set(CMAKE_CXX_STANDARD 11)/set(CMAKE_CXX_STANDARD 17)/' CMakeLists.txt
+sed -i 's/set(CMAKE_CXX_STANDARD 14)/set(CMAKE_CXX_STANDARD 17)/' CMakeLists.txt
+
 cd ..
 
 # Crear directorio de build limpio
