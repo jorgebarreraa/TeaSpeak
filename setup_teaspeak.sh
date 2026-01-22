@@ -992,9 +992,13 @@ compile_libraries() {
 
         # jsoncpp (requiere limpieza completa para C++17)
         log_substep "Compilando jsoncpp con C++17..."
-        # Limpiar build previo Y archivo marker para forzar recompilación con C++17
+        # Limpiar COMPLETAMENTE para forzar recompilación con C++17
         rm -rf jsoncpp/build 2>/dev/null || true
         rm -f jsoncpp/.build_linux_amd64.txt 2>/dev/null || true
+        # CRÍTICO: Eliminar archivos instalados para que requires_rebuild detecte que falta
+        sudo rm -rf /usr/local/include/json 2>/dev/null || true
+        sudo rm -f /usr/local/lib/libjsoncpp* 2>/dev/null || true
+        sudo rm -rf /usr/local/lib/cmake/jsoncpp 2>/dev/null || true
         if library_path="jsoncpp" ../build-helpers/libraries/build_jsoncpp.sh >> "$LOG_FILE.libraries" 2>&1; then
             # Verificar que tenga símbolos string_view
             if nm -D /usr/local/lib/libjsoncpp.so 2>/dev/null | grep -q "string_view"; then
