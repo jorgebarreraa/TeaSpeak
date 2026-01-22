@@ -1053,13 +1053,38 @@ if [[ -d "$JSONCPP_DIR" ]]; then
             exit 1
         }
 
-        # Crear directorio de build si no existe
+        # Limpiar código fuente para asegurar estado limpio
+        git checkout . 2>/dev/null || true
+        git clean -fdx 2>/dev/null || true
+
+        # CRÍTICO: Modificar CMakeLists.txt para forzar C++17
+        # El set(CMAKE_CXX_STANDARD 11) en CMakeLists.txt sobrescribe flags de línea de comandos
+        log_info "Modificando CMakeLists.txt para forzar C++17..."
+        if [[ -f "CMakeLists.txt" ]]; then
+            sed -i 's/set(CMAKE_CXX_STANDARD [0-9]\+)/set(CMAKE_CXX_STANDARD 17)/' CMakeLists.txt
+            if grep -q "CMAKE_CXX_STANDARD 17" CMakeLists.txt; then
+                log_success "✓ CMakeLists.txt modificado a C++17"
+            else
+                log_error "Error: No se pudo modificar CMakeLists.txt"
+                cd "$CURRENT_DIR"
+                exit 1
+            fi
+        else
+            log_error "CMakeLists.txt no encontrado"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
+
+        # Limpiar y crear directorio de build
+        rm -rf build
         mkdir -p build
         cd build
 
         # Configurar con CMake usando C++17
         cmake .. \
-            -DCMAKE_CXX_FLAGS="-std=c++17 -fPIC" \
+            -DCMAKE_CXX_STANDARD=17 \
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+            -DCMAKE_CXX_FLAGS="-fPIC" \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DBUILD_SHARED_LIBS=ON \
             -DBUILD_STATIC_LIBS=OFF \
@@ -1093,7 +1118,14 @@ if [[ -d "$JSONCPP_DIR" ]]; then
         # Actualizar cache de librerías
         sudo ldconfig
 
-        log_success "✓ JsonCpp compilado e instalado exitosamente"
+        # Verificar que la compilación fue exitosa
+        if nm -D /usr/local/lib/libjsoncpp.so 2>/dev/null | grep -q "string_view"; then
+            log_success "✓ JsonCpp compilado e instalado exitosamente con símbolos C++17"
+        else
+            log_error "JsonCpp compilado pero SIN símbolos string_view - compilación falló"
+            cd "$CURRENT_DIR"
+            exit 1
+        fi
 
         cd "$CURRENT_DIR"
     fi
