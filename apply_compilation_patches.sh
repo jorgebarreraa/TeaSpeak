@@ -1381,6 +1381,42 @@ else
     log_warning "rust-webrtc no encontrado en cargo cache (se aplicará en primera compilación)"
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 30: Usar bibliotecas estáticas de OpenSSL prebuild
+# ═══════════════════════════════════════════════════════════════════════════
+# Problema: libssl.so del prebuild está dinámicamente vinculado a libcrypto.so.3
+#           del sistema, causando conflictos de versión de símbolos @OPENSSL_3.0.0
+# Solución: Usar las bibliotecas estáticas (.a) del prebuild que son autocontenidas
+
+log_info "Aplicando PARCHE 30: Configurar bibliotecas estáticas de OpenSSL..."
+
+if [[ -f "$SERVER_CMAKE_FILE" ]]; then
+    # Verificar si ya está usando bibliotecas estáticas
+    if grep -q "\${LIBRARY_PATH}/openssl-prebuild/linux_amd64/lib/libssl.a" "$SERVER_CMAKE_FILE"; then
+        log_success "✓ PARCHE 30 ya aplicado (usando OpenSSL estático)"
+    else
+        log_info "Modificando CMakeLists.txt para usar bibliotecas estáticas de OpenSSL..."
+
+        # Reemplazar openssl::ssl::shared y openssl::crypto::shared con rutas estáticas
+        sed -i '/target_link_libraries(TeaSpeakServer$/,/^)$/ {
+            s|openssl::ssl::shared|${LIBRARY_PATH}/openssl-prebuild/linux_amd64/lib/libssl.a|g
+            s|openssl::crypto::shared|${LIBRARY_PATH}/openssl-prebuild/linux_amd64/lib/libcrypto.a|g
+        }' "$SERVER_CMAKE_FILE"
+
+        # También actualizar en file/CMakeLists.txt
+        FILE_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/file/CMakeLists.txt"
+        if [[ -f "$FILE_CMAKE" ]]; then
+            sed -i 's|openssl::ssl::shared|${LIBRARY_PATH}/openssl-prebuild/linux_amd64/lib/libssl.a|g' "$FILE_CMAKE"
+            sed -i 's|openssl::crypto::shared|${LIBRARY_PATH}/openssl-prebuild/linux_amd64/lib/libcrypto.a|g' "$FILE_CMAKE"
+        fi
+
+        log_success "✓ PARCHE 30 aplicado exitosamente"
+    fi
+else
+    log_error "CMakeLists.txt del servidor no encontrado"
+    exit 1
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
