@@ -1397,6 +1397,14 @@ if [[ -f "$SERVER_CMAKE_FILE" ]]; then
     else
         log_info "Modificando CMakeLists.txt para usar bibliotecas estáticas de OpenSSL..."
 
+        # CRÍTICO: Limpiar directorio build para forzar regeneración de CMake
+        BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build"
+        if [[ -d "$BUILD_DIR" ]]; then
+            log_info "Limpiando directorio build para forzar regeneración de CMake..."
+            rm -rf "$BUILD_DIR"
+            log_success "✓ Directorio build limpiado"
+        fi
+
         # Reemplazar openssl::ssl::shared y openssl::crypto::shared con rutas estáticas
         # Nota: LIBRARY_PATH ya termina con '/', no agregar otra barra
         sed -i '/target_link_libraries(TeaSpeakServer$/,/^)$/ {
