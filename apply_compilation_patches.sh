@@ -1390,20 +1390,21 @@ fi
 
 log_info "Aplicando PARCHE 30: Configurar bibliotecas estáticas de OpenSSL..."
 
+# CRÍTICO: SIEMPRE limpiar directorio build si existe para forzar regeneración de CMake
+# Esto evita problemas con Makefiles antiguos que referencian openssl::ssl::shared
+BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build"
+if [[ -d "$BUILD_DIR" ]]; then
+    log_info "Limpiando directorio build para forzar regeneración de CMake..."
+    rm -rf "$BUILD_DIR"
+    log_success "✓ Directorio build limpiado"
+fi
+
 if [[ -f "$SERVER_CMAKE_FILE" ]]; then
     # Verificar si ya está usando bibliotecas estáticas
     if grep -q "\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl.a" "$SERVER_CMAKE_FILE"; then
         log_success "✓ PARCHE 30 ya aplicado (usando OpenSSL estático)"
     else
         log_info "Modificando CMakeLists.txt para usar bibliotecas estáticas de OpenSSL..."
-
-        # CRÍTICO: Limpiar directorio build para forzar regeneración de CMake
-        BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build"
-        if [[ -d "$BUILD_DIR" ]]; then
-            log_info "Limpiando directorio build para forzar regeneración de CMake..."
-            rm -rf "$BUILD_DIR"
-            log_success "✓ Directorio build limpiado"
-        fi
 
         # Reemplazar openssl::ssl::shared y openssl::crypto::shared con rutas estáticas
         # Nota: LIBRARY_PATH ya termina con '/', no agregar otra barra
