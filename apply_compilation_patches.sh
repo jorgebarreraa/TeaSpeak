@@ -1390,6 +1390,18 @@ fi
 
 log_info "Aplicando PARCHE 30: Configurar bibliotecas estáticas de OpenSSL..."
 
+# CRÍTICO: Parchear build_teaspeak.sh para SIEMPRE limpiar el build
+# Esto garantiza que Makefiles antiguos con referencias incorrectas se regeneren
+BUILD_TEASPEAK_SCRIPT="$SCRIPT_DIR/Server/Root/build_teaspeak.sh"
+if [[ -f "$BUILD_TEASPEAK_SCRIPT" ]]; then
+    # Cambiar la condición para que SIEMPRE limpie el build incondicionalmente
+    if grep -q 'if \[\[ -d build && \$teaspeak_clean_build -eq 1 \]\]; then' "$BUILD_TEASPEAK_SCRIPT"; then
+        log_info "Parcheando build_teaspeak.sh para limpiar build incondicionalmente..."
+        sed -i 's/if \[\[ -d build && \$teaspeak_clean_build -eq 1 \]\]; then/if [[ -d build ]]; then/g' "$BUILD_TEASPEAK_SCRIPT"
+        log_success "✓ build_teaspeak.sh parcheado - ahora limpia build/ automáticamente"
+    fi
+fi
+
 # CRÍTICO: SIEMPRE limpiar directorio build si existe para forzar regeneración de CMake
 # Esto evita problemas con Makefiles antiguos que referencian openssl::ssl::shared
 BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build"

@@ -74,7 +74,7 @@ else
 fi
 
 cd TeaSpeak || exit 1
-if [[ -d build && $teaspeak_clean_build -eq 1 ]]; then
+if [[ -d build ]]; then
 	rm -r build
 fi
 [[ ! -d build ]] && { mkdir build || exit 1; }
