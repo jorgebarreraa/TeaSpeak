@@ -285,8 +285,8 @@ endif()
 
 # include_directories(${LIBRARY_PATH}/boringssl/include/)
 target_link_libraries(TeaSpeakServer
-        /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl.a
-        /home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
+        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libssl.a
+        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
         dl
         z
         rt # For clock_gettime

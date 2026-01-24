@@ -1400,27 +1400,27 @@ if [[ -d "$BUILD_DIR" ]]; then
 fi
 
 if [[ -f "$SERVER_CMAKE_FILE" ]]; then
-    # Calcular ruta absoluta a las bibliotecas OpenSSL estáticas
-    OPENSSL_LIB_DIR="$SCRIPT_DIR/Server/Root/libraries/openssl-prebuild/linux_amd64/lib"
-    OPENSSL_SSL_A="$OPENSSL_LIB_DIR/libssl.a"
-    OPENSSL_CRYPTO_A="$OPENSSL_LIB_DIR/libcrypto.a"
+    # Usar variables de CMake en lugar de rutas absolutas hardcodeadas
+    # Esto funciona en cualquier máquina donde se clone el repositorio
+    OPENSSL_SSL_CMAKE="\${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libssl.a"
+    OPENSSL_CRYPTO_CMAKE="\${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a"
 
-    # Verificar si ya está usando bibliotecas estáticas con ruta absoluta
-    if grep -q "$OPENSSL_SSL_A" "$SERVER_CMAKE_FILE"; then
-        log_success "✓ PARCHE 30 ya aplicado (usando OpenSSL estático)"
+    # Verificar si ya está usando bibliotecas estáticas con variables de CMake
+    if grep -q '\${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libssl\.a' "$SERVER_CMAKE_FILE"; then
+        log_success "✓ PARCHE 30 ya aplicado (usando OpenSSL estático con variables CMake)"
     else
-        log_info "Modificando CMakeLists.txt para usar bibliotecas estáticas de OpenSSL (rutas absolutas)..."
+        log_info "Modificando CMakeLists.txt para usar bibliotecas estáticas de OpenSSL (variables CMake)..."
 
-        # Reemplazar openssl::ssl::shared y openssl::crypto::shared con rutas absolutas
-        # Escapar las barras para sed
-        OPENSSL_SSL_A_ESC=$(echo "$OPENSSL_SSL_A" | sed 's/\//\\\//g')
-        OPENSSL_CRYPTO_A_ESC=$(echo "$OPENSSL_CRYPTO_A" | sed 's/\//\\\//g')
-
+        # Reemplazar openssl::ssl::shared y openssl::crypto::shared con variables de CMake
         sed -i '/target_link_libraries(TeaSpeakServer$/,/^)$/ {
-            s|openssl::ssl::shared|'"$OPENSSL_SSL_A_ESC"'|g
-            s|openssl::crypto::shared|'"$OPENSSL_CRYPTO_A_ESC"'|g
-            s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_A_ESC"'|g
-            s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_A_ESC"'|g
+            s|openssl::ssl::shared|'"$OPENSSL_SSL_CMAKE"'|g
+            s|openssl::crypto::shared|'"$OPENSSL_CRYPTO_CMAKE"'|g
+            s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+            s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
+            s|/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+            s|/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
+            s|/root/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+            s|/root/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
         }' "$SERVER_CMAKE_FILE"
 
         # También actualizar en file/CMakeLists.txt
@@ -1428,10 +1428,14 @@ if [[ -f "$SERVER_CMAKE_FILE" ]]; then
         if [[ -f "$FILE_CMAKE" ]]; then
             log_info "Parcheando file/CMakeLists.txt también..."
             sed -i '/target_link_libraries(TeaSpeak-FileServer/,/^)$/ {
-                s|openssl::ssl::shared|'"$OPENSSL_SSL_A_ESC"'|g
-                s|openssl::crypto::shared|'"$OPENSSL_CRYPTO_A_ESC"'|g
-                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_A_ESC"'|g
-                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_A_ESC"'|g
+                s|openssl::ssl::shared|'"$OPENSSL_SSL_CMAKE"'|g
+                s|openssl::crypto::shared|'"$OPENSSL_CRYPTO_CMAKE"'|g
+                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
+                s|/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+                s|/home/user/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
+                s|/root/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_CMAKE"'|g
+                s|/root/TeaSpeak/Server/Root/libraries/openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_CMAKE"'|g
             }' "$FILE_CMAKE"
             log_success "✓ file/CMakeLists.txt parcheado"
         fi
