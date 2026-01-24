@@ -1426,10 +1426,14 @@ if [[ -f "$SERVER_CMAKE_FILE" ]]; then
         # También actualizar en file/CMakeLists.txt
         FILE_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/file/CMakeLists.txt"
         if [[ -f "$FILE_CMAKE" ]]; then
-            sed -i "s|openssl::ssl::shared|$OPENSSL_SSL_A_ESC|g" "$FILE_CMAKE"
-            sed -i "s|openssl::crypto::shared|$OPENSSL_CRYPTO_A_ESC|g" "$FILE_CMAKE"
-            sed -i "s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|$OPENSSL_SSL_A_ESC|g" "$FILE_CMAKE"
-            sed -i "s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|$OPENSSL_CRYPTO_A_ESC|g" "$FILE_CMAKE"
+            log_info "Parcheando file/CMakeLists.txt también..."
+            sed -i '/target_link_libraries(TeaSpeak-FileServer/,/^)$/ {
+                s|openssl::ssl::shared|'"$OPENSSL_SSL_A_ESC"'|g
+                s|openssl::crypto::shared|'"$OPENSSL_CRYPTO_A_ESC"'|g
+                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libssl\.a|'"$OPENSSL_SSL_A_ESC"'|g
+                s|\${LIBRARY_PATH}openssl-prebuild/linux_amd64/lib/libcrypto\.a|'"$OPENSSL_CRYPTO_A_ESC"'|g
+            }' "$FILE_CMAKE"
+            log_success "✓ file/CMakeLists.txt parcheado"
         fi
 
         log_success "✓ PARCHE 30 aplicado exitosamente"
