@@ -29,8 +29,8 @@ target_link_libraries(TeaSpeak-FileServer PUBLIC TeaSpeak ${StringVariable_LIBRA
         libevent::core libevent::pthreads
         # We're not linking this here, since we may later use DataPipes::shared linking
         # DataPipes::core::static
-        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libssl.a
-        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
+        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
+        ${CMAKE_SOURCE_DIR}/../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
 )
 
 target_include_directories(TeaSpeak-FileServer PUBLIC include/)
