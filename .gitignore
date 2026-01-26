@@ -51,3 +51,7 @@ Server/Root/TeaSpeak/*/out/
 # OS
 .DS_Store
 Thumbs.db
+
+# Build outputs for compiled libraries
+libraries/*/build/
+libraries/*/out/
