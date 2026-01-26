@@ -48,7 +48,7 @@ endfunction()
 
 find_package(TomMath REQUIRED)
 find_package(TomCrypt REQUIRED)
-find_package(Breakpad REQUIRED)
+find_package(Breakpad) # Optional: crash reporting
 find_package(Protobuf REQUIRED)
 find_package(Crypto REQUIRED)
 find_package(ThreadPool REQUIRED)
