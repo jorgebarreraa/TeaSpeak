@@ -1025,14 +1025,15 @@ compile_libraries() {
             failed_libs+=("opus")
         fi
 
-        # protobuf
+        # protobuf (OPCIONAL - el sistema usa protobuf 3.21.12)
         log_substep "Compilando protobuf..."
         if library_path="protobuf" ./build_protobuf.sh >> "$LOG_FILE.libraries" 2>&1; then
             log_success "protobuf compilada"
             ((compiled_libs++))
         else
-            log_warning "protobuf falló"
-            failed_libs+=("protobuf")
+            log_warning "protobuf falló (usando protobuf del sistema: $(protoc --version 2>&1))"
+            log_info "El servidor usará protobuf del sistema en su lugar"
+            # No agregar a failed_libs - protobuf del sistema es suficiente
         fi
 
         # spdlog
