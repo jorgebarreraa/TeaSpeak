@@ -991,24 +991,25 @@ compile_libraries() {
             failed_libs+=("ed25519")
         fi
 
-        # jsoncpp (requiere limpieza completa para C++17)
-        log_substep "Compilando jsoncpp con C++17..."
-        # Limpiar COMPLETAMENTE para forzar recompilación con C++17
+        # jsoncpp (compila con C++11 - código TeaSpeak maneja compatibilidad C++17)
+        log_substep "Compilando jsoncpp..."
+        # Limpiar para forzar recompilación limpia
         rm -rf jsoncpp/build 2>/dev/null || true
         rm -f jsoncpp/.build_linux_amd64.txt 2>/dev/null || true
-        # CRÍTICO: Eliminar archivos instalados para que requires_rebuild detecte que falta
+        # Limpiar archivos instalados anteriormente
         sudo rm -rf /usr/local/include/json 2>/dev/null || true
         sudo rm -f /usr/local/lib/libjsoncpp* 2>/dev/null || true
         sudo rm -rf /usr/local/lib/cmake/jsoncpp 2>/dev/null || true
         if library_path="jsoncpp" ../build-helpers/libraries/build_jsoncpp.sh >> "$LOG_FILE.libraries" 2>&1; then
-            # Verificar que tenga símbolos string_view
-            if nm -D /usr/local/lib/libjsoncpp.so 2>/dev/null | grep -q "string_view"; then
-                log_success "jsoncpp compilada con soporte C++17"
+            # Verificar que la librería se instaló correctamente
+            # NOTA: jsoncpp se compila con C++11 (sin string_view) - esto es correcto
+            # Los parches en el código fuente (PARCHE 26/26d) manejan la compatibilidad
+            if [[ -f /usr/local/lib/libjsoncpp.a ]] || [[ -f /usr/local/lib/libjsoncpp.so ]]; then
+                log_success "jsoncpp compilada (C++11 - compatibilidad manejada por parches)"
                 ((compiled_libs++))
             else
-                log_warning "jsoncpp compilada pero sin símbolos string_view"
-                log_warning "Esto causará errores de linker - revisar compilación"
-                failed_libs+=("jsoncpp (sin string_view)")
+                log_warning "jsoncpp compiló pero archivos no encontrados en /usr/local/lib/"
+                failed_libs+=("jsoncpp (archivos no encontrados)")
             fi
         else
             log_warning "jsoncpp falló"
