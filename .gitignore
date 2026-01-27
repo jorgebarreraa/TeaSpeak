@@ -52,26 +52,8 @@ Server/Root/TeaSpeak/*/out/
 .DS_Store
 Thumbs.db
 
-# Build outputs for compiled libraries
-libraries/*/build/
-libraries/*/out/
-libraries/*/_build/
-libraries/*/.build_*.txt
-
-# Library source directories (downloaded/cloned during compilation)
-libraries/CXXTerminal/
-libraries/DataPipes/
-libraries/StringVariable/
-libraries/Thread-Pool/
-libraries/event/
-libraries/jemalloc/
-libraries/jsoncpp/
-libraries/opus/
-libraries/yaml-cpp/
-libraries/ed25519/
-libraries/tommath-develop/
-libraries/tomcrypt-master/
-libraries/spdlog-master/
+# Build outputs for compiled libraries (already covered by Server/Root/libraries/)
+# All library build outputs in Server/Root/libraries/ are already ignored above
 
 # Build test directory
 build_test/
