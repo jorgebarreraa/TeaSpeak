@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <array>
+#include <cstdint>
 #include <string_view>
 
 namespace str_obf {

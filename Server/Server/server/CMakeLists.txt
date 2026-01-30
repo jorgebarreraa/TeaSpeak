@@ -251,7 +251,6 @@ target_link_libraries(TeaSpeakServer
         pthread
         stdc++fs
         libevent::core libevent::pthreads
-        opus::static
         yaml-cpp
 
         #Require a so
@@ -268,6 +267,11 @@ target_link_libraries(TeaSpeakServer
         jsoncpp_lib
         zstd::libzstd_static
 )
+
+# Link opus if available (optional dependency)
+if(TARGET opus::static)
+    target_link_libraries(TeaSpeakServer opus::static)
+endif()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/rtclib/libteaspeak_rtc.so" AND NOT NO_RELEASE_RTC)
    message("Linking to release librtc file")

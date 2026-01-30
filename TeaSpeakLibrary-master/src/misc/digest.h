@@ -4,6 +4,7 @@
 #include <string_view>
 #include <cstring>
 #include <cassert>
+#include <cstdint>
 
 #ifdef NO_OPEN_SSL
     #define SHA_DIGEST_LENGTH (20)

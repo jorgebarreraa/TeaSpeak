@@ -1,5 +1,6 @@
 #include "escape.h"
 #include <stdexcept>
+#include <cstdint>
 
 using namespace ts;
 using namespace std;
