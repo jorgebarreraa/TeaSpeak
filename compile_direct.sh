@@ -123,8 +123,8 @@ compile_lib "boringssl" \
     "boringssl/lib/libssl.a" || true
 
 # CXXTerminal necesita libevent
-# Exportar event_path para que CXXTerminal lo encuentre
-export event_path="$(pwd)/event/_build/linux_amd64"
+# Exportar libevent_path para que CXXTerminal lo encuentre
+export libevent_path="event"
 compile_lib "CXXTerminal" \
     "../build-helpers/libraries/build_cxxterminal.sh" \
     "CXXTerminal/out/linux_amd64/lib/libCXXTerminalStatic.a" || true
