@@ -164,21 +164,25 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
     fi
 
     # Verificar submódulo shared
-    if [[ ! -d "shared/.git" ]]; then
-        # Check if shared is a symlink that already works
-        if [[ -L "shared" ]] && [[ -d "shared" ]]; then
-            log_success "✓ Submódulo 'shared' existe como symlink (usando license/shared)"
+    if [[ ! -d "shared/.git" ]] && [[ ! -L "shared" ]]; then
+        # Check if TeaSpeakLibrary exists in the repository root
+        if [[ -d "/home/user/TeaSpeak/TeaSpeakLibrary-master" ]]; then
+            log_info "Creando symlink a TeaSpeakLibrary-master..."
+            ln -s /home/user/TeaSpeak/TeaSpeakLibrary-master shared
+            log_success "✓ Symlink a TeaSpeakLibrary-master creado exitosamente"
+        elif [[ -d "/home/user/TeaSpeak/TeaSpeakLibrary-1.4.10" ]]; then
+            log_info "Creando symlink a TeaSpeakLibrary-1.4.10..."
+            ln -s /home/user/TeaSpeak/TeaSpeakLibrary-1.4.10 shared
+            log_success "✓ Symlink a TeaSpeakLibrary-1.4.10 creado exitosamente"
         else
+            log_warning "TeaSpeakLibrary no encontrado en el repositorio"
             log_info "Submódulo 'shared' no encontrado, clonando..."
-            if [[ -d "shared" ]] && [[ ! -L "shared" ]]; then
-                rm -rf shared
-            fi
             git clone https://github.com/jorgebarreraa/TeaSpeakLibrary.git shared 2>/dev/null || \
             git clone https://github.com/TeaSpeak/TeaSpeakLibrary.git shared || {
-                log_warning "No se pudo clonar submódulo shared, creando symlink a license/shared..."
+                log_warning "No se pudo clonar submódulo shared, intentando symlink a license/shared..."
                 if [[ ! -e "shared" ]]; then
                     ln -s license/shared shared
-                    log_success "✓ Symlink a license/shared creado exitosamente"
+                    log_warning "✓ Symlink a license/shared creado (puede fallar al compilar)"
                 fi
             }
 
