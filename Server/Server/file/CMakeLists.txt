@@ -34,7 +34,7 @@ target_link_libraries(TeaSpeak-FileServer PUBLIC TeaSpeak ${StringVariable_LIBRA
 )
 
 target_include_directories(TeaSpeak-FileServer PUBLIC include/)
-target_include_directories(TeaSpeak-FileServer PUBLIC ${CMAKE_SOURCE_DIR}/../shared/src)
+target_include_directories(TeaSpeak-FileServer PUBLIC ${CMAKE_SOURCE_DIR}/shared/src)
 target_compile_options(TeaSpeak-FileServer PUBLIC "-Wswitch-enum")
 target_compile_features(TeaSpeak-FileServer PUBLIC cxx_std_20)
 
