@@ -257,7 +257,6 @@ target_link_libraries(TeaSpeakServer
         sqlite3
         DataPipes::core::static
 
-        breakpad::static
         protobuf::libprotobuf
         #jemalloc::shared
 
@@ -268,9 +267,13 @@ target_link_libraries(TeaSpeakServer
         zstd::libzstd_static
 )
 
-# Link opus if available (optional dependency)
+# Link optional dependencies if available
 if(TARGET opus::static)
     target_link_libraries(TeaSpeakServer opus::static)
+endif()
+
+if(TARGET breakpad::static)
+    target_link_libraries(TeaSpeakServer breakpad::static)
 endif()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/rtclib/libteaspeak_rtc.so" AND NOT NO_RELEASE_RTC)
