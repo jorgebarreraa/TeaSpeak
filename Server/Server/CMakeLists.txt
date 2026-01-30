@@ -65,7 +65,9 @@ message("${zstd_DIR}")
 find_package(zstd REQUIRED)
 
 include_directories(${StringVariable_INCLUDE_DIR})
-include_directories(${spdlog_INCLUDE_DIR})
+# Get spdlog include directory from the target
+get_target_property(SPDLOG_INCLUDE_DIRS spdlog::spdlog INTERFACE_INCLUDE_DIRECTORIES)
+include_directories(${SPDLOG_INCLUDE_DIRS})
 add_subdirectory(music/)
 
 # Add music include directory for server to access MusicPlayer.h
