@@ -10,6 +10,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/libs/)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories(../music/include/)
+include_directories(../shared/src)
 add_definitions(-DLTM_DESC)
 
 #The basic library
