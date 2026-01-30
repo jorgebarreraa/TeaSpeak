@@ -532,6 +532,14 @@ verify_tools() {
 configure_github_repos() {
     log_step "PASO 6: Configurando Repositorios de Dependencias"
 
+    # Verificar que el directorio existe antes de intentar cd
+    if [[ ! -d "$SCRIPT_DIR/Server/Root/libraries" ]]; then
+        log_error "ERROR: Directorio $SCRIPT_DIR/Server/Root/libraries no existe"
+        log_info "SCRIPT_DIR=$SCRIPT_DIR"
+        log_info "pwd=$(pwd)"
+        exit 1
+    fi
+
     cd "$SCRIPT_DIR/Server/Root/libraries"
 
     if [[ -n "$GITHUB_USER" ]]; then
