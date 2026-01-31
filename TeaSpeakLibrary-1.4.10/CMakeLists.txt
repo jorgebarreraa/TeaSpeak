@@ -249,12 +249,16 @@ target_link_libraries(TeaSpeak PUBLIC
 )
 
 if (TEASPEAK_SERVER)
-    find_package(mysql REQUIRED)
-    message("Found MySQL")
-    target_link_libraries(TeaSpeak PUBLIC
-            mysql::client::static
-    )
-    target_compile_options(TeaSpeak PRIVATE "-Wall" "-DHAVE_MYSQL_H")
+    find_package(mysql)
+    if(mysql_FOUND)
+        message("Found MySQL")
+        target_link_libraries(TeaSpeak PUBLIC
+                mysql::client::static
+        )
+        target_compile_options(TeaSpeak PRIVATE "-Wall" "-DHAVE_MYSQL_H")
+    else()
+        message(WARNING "MySQL not found - compiling without MySQL support")
+    endif()
 
     target_link_libraries(TeaSpeak PUBLIC CXXTerminal::static)
 endif ()
