@@ -108,7 +108,7 @@ include_directories(${StringVariable_INCLUDE_DIR})
 add_definitions(-DINET -DINET6)
 
 # shared/ is a library directory used by other modules, not a CMake project
-# add_subdirectory(shared/)
+add_subdirectory(shared/)
 add_subdirectory(server/)
 add_subdirectory(license/)
 add_subdirectory(MusicBot/)
