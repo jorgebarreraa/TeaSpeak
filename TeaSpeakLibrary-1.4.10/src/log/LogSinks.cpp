@@ -134,7 +134,7 @@ namespace logger {
         }
     }
 
-    [[nodiscard]] std::unique_ptr<formatter> LogFormatter::clone() const {
+    [[nodiscard]] std::unique_ptr<spdlog::formatter> LogFormatter::clone() const {
         return std::make_unique<LogFormatter>(this->_colored);
     }
 }

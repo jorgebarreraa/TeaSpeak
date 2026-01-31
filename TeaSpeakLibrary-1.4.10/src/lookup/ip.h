@@ -1,6 +1,9 @@
 #pragma once
 
 #include <mutex>
+#include <memory>
+#include <utility>
+#include <array>
 #include "../misc/spin_mutex.h"
 
 namespace lookup {
