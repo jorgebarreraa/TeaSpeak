@@ -54,7 +54,7 @@ namespace logger {
             auto _logger = ::logger::logger(serverId);
             std::string fmt_message;
             try {
-                fmt_message = fmt::format(message, args...);
+                fmt_message = fmt::format(fmt::runtime(message), args...);
             } catch (const std::exception &ex) {
                 fmt_message = "failed to format message '" + std::string{message} + "': " + ex.what();
             }
