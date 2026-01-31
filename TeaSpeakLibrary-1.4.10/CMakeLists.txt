@@ -206,13 +206,25 @@ if(FEATURE_DATABASE)
     set(SOURCE_FILES ${SOURCE_FILES}
         src/sql/SqlQuery.cpp
         src/sql/sqlite/SqliteSQL.cpp
-        src/sql/mysql/MySQL.cpp
     )
     set(HEADER_FILES ${HEADER_FILES}
         src/sql/SqlQuery.h
         src/sql/sqlite/SqliteSQL.h
-        src/sql/mysql/MySQL.h
     )
+endif()
+
+# MySQL sources are separate from general database support
+if(FEATURE_DATABASE AND TEASPEAK_SERVER)
+    find_package(mysql)
+    if(mysql_FOUND)
+        set(SOURCE_FILES ${SOURCE_FILES}
+            src/sql/mysql/MySQL.cpp
+        )
+        set(HEADER_FILES ${HEADER_FILES}
+            src/sql/mysql/MySQL.h
+        )
+        set(HAVE_MYSQL ON)
+    endif()
 endif()
 
 if(HAVE_OPEN_SSL)
@@ -249,8 +261,7 @@ target_link_libraries(TeaSpeak PUBLIC
 )
 
 if (TEASPEAK_SERVER)
-    find_package(mysql)
-    if(mysql_FOUND)
+    if(HAVE_MYSQL)
         message("Found MySQL")
         target_link_libraries(TeaSpeak PUBLIC
                 mysql::client::static
