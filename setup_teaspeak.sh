@@ -1012,11 +1012,11 @@ compile_libraries() {
             # Verificar que la librería se instaló correctamente
             # NOTA: jsoncpp se compila con C++11 (sin string_view) - esto es correcto
             # Los parches en el código fuente (PARCHE 26/26d) manejan la compatibilidad
-            if [[ -f /usr/local/lib/libjsoncpp.a ]] || [[ -f /usr/local/lib/libjsoncpp.so ]]; then
+            if [[ -f jsoncpp/out/linux_amd64/lib/libjsoncpp.a ]] || [[ -f jsoncpp/out/linux_amd64/lib/libjsoncpp.so ]]; then
                 log_success "jsoncpp compilada (C++11 - compatibilidad manejada por parches)"
                 ((compiled_libs++))
             else
-                log_warning "jsoncpp compiló pero archivos no encontrados en /usr/local/lib/"
+                log_warning "jsoncpp compiló pero archivos no encontrados en jsoncpp/out/linux_amd64/lib/"
                 failed_libs+=("jsoncpp (archivos no encontrados)")
             fi
         else
@@ -1036,7 +1036,7 @@ compile_libraries() {
 
         # protobuf (OPCIONAL - el sistema usa protobuf 3.21.12)
         log_substep "Compilando protobuf..."
-        if library_path="protobuf" ./build_protobuf.sh >> "$LOG_FILE.libraries" 2>&1; then
+        if library_path="protobuf" ../build-helpers/libraries/build_protobuf.sh >> "$LOG_FILE.libraries" 2>&1; then
             log_success "protobuf compilada"
             ((compiled_libs++))
         else

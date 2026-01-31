@@ -200,7 +200,7 @@ namespace logger {
         }
 
         try {
-            logger->log(level, message_format, server_id, buffer);
+            logger->log(level, fmt::runtime(message_format), server_id, buffer);
         } catch (const std::exception &ex) {
             //TODO better?
             std::cerr << "An exception has raised while logging a message (" << ex.what() << "): " << buffer << "\n";

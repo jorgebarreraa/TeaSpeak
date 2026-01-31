@@ -518,7 +518,7 @@ bool ConnectedClient::notifyClientLeftView(
         case ViewReasonId::VREASON_CHANNEL_KICK:
         case ViewReasonId::VREASON_SERVER_KICK:
             if(!invoker) {
-                logCritical(this->getServerId(), "{} ConnectedClient::notifyClientLeftView() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, reason_id);
+                logCritical(this->getServerId(), "{} ConnectedClient::notifyClientLeftView() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, static_cast<int>(reason_id));
                 if(this->server)
                     invoker = this->server->serverRoot;
             }
@@ -583,7 +583,7 @@ bool ConnectedClient::notifyClientLeftViewKicked(const std::shared_ptr<Connected
     }), this->visibleClients.end());
 
     if(!invoker) {
-        logCritical(this->getServerId(), "{} ConnectedClient::notifyClientLeftViewKicked() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, target_channel ? ViewReasonId::VREASON_CHANNEL_KICK : ViewReasonId::VREASON_SERVER_KICK);
+        logCritical(this->getServerId(), "{} ConnectedClient::notifyClientLeftViewKicked() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, static_cast<int>(target_channel ? ViewReasonId::VREASON_CHANNEL_KICK : ViewReasonId::VREASON_SERVER_KICK));
         if(this->server)
             invoker = this->server->serverRoot;
     }
