@@ -651,7 +651,7 @@ if [ -d "breakpad" ]; then
 fi
 
 clone_with_fallback "https://boringssl.googlesource.com/boringssl" "boringssl"
-clone_with_fallback "https://fuchsia.googlesource.com/third_party/protobuf" "protobuf" "v3.5.1.1"
+clone_with_fallback "https://github.com/protocolbuffers/protobuf.git" "protobuf" "v21.12"
 clone_with_fallback "https://github.com/jorgebarreraa/DataPipes.git" "DataPipes"
 clone_with_fallback "https://github.com/jemalloc/jemalloc.git" "jemalloc" "dev"
 clone_with_fallback "https://github.com/jorgebarreraa/libnice-prebuild.git" "libnice"
