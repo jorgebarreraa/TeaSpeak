@@ -115,9 +115,14 @@ inline bool execute_commands(sql::SqlManager* sql, std::string& error, const std
 bool SqlDataManager::initialize(std::string& error) {
     if(ts::config::database::url.find("sqlite://") == 0)
         this->manager = new sql::sqlite::SqliteManager();
-    else if(ts::config::database::url.find("mysql://") == 0)
+    else if(ts::config::database::url.find("mysql://") == 0) {
+#ifdef HAVE_MYSQL
         this->manager = new sql::mysql::MySQLManager();
-    else {
+#else
+        error = "MySQL support not compiled in. Please use SQLite or recompile with MySQL support.";
+        return false;
+#endif
+    } else {
         error = "Invalid database type!";
         return false;
     }

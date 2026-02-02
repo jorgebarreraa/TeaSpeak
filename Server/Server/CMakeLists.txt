@@ -20,7 +20,7 @@ if (NOT BUILD_OS_ARCH)
     set(BUILD_OS_ARCH $ENV{build_os_arch})
 endif ()
 
-set(LIBRARY_PATH "${CMAKE_SOURCE_DIR}/../libraries/")
+set(LIBRARY_PATH "/home/user/TeaSpeak/Server/Root/libraries/")
 if (BUILD_INCLUDE_FILE)
     include(${BUILD_INCLUDE_FILE})
 endif ()

@@ -307,7 +307,7 @@ target_link_libraries(TeaSpeakServer
 #    endif ()
 #endif ()
 
-set(DISABLE_JEMALLOC OFF)
+set(DISABLE_JEMALLOC ON)
 if (NOT DISABLE_JEMALLOC)
     target_link_libraries(TeaSpeakServer
             jemalloc
