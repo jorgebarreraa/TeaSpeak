@@ -1291,16 +1291,25 @@ initialize_submodules() {
     if [[ ! -d "shared/.git" ]]; then
         log_info "Clonando TeaSpeakLibrary desde ${GITHUB_USER}..."
         if [[ -n "${GITHUB_TOKEN}" ]]; then
-            git clone "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaSpeakLibrary.git" shared >> "$LOG_FILE" 2>&1
+            # Usar GIT_TERMINAL_PROMPT=0 para evitar prompts interactivos
+            # Usar timeout para evitar bloqueos indefinidos
+            GIT_TERMINAL_PROMPT=0 timeout 120 git clone \
+                "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaSpeakLibrary.git" \
+                shared >> "$LOG_FILE" 2>&1
         else
-            git clone "https://github.com/${GITHUB_USER}/TeaSpeakLibrary.git" shared >> "$LOG_FILE" 2>&1
+            log_error "Token de GitHub no disponible"
+            log_error "El repositorio TeaSpeakLibrary es privado y requiere autenticación"
+            exit 1
         fi
 
         if [[ $? -eq 0 ]]; then
             log_success "Submódulo 'shared' clonado exitosamente"
         else
             log_error "Falló la clonación de 'shared'"
-            log_error "Verifica que el repositorio ${GITHUB_USER}/TeaSpeakLibrary exista"
+            log_error "Verifica que:"
+            log_error "  • El repositorio ${GITHUB_USER}/TeaSpeakLibrary exista"
+            log_error "  • El token tenga acceso a repositorios privados"
+            log_error "  • La conexión a internet esté funcionando"
             exit 1
         fi
     fi
@@ -1323,16 +1332,25 @@ initialize_submodules() {
     if [[ ! -d "music/.git" ]]; then
         log_info "Clonando TeaMusic-Providers desde ${GITHUB_USER}..."
         if [[ -n "${GITHUB_TOKEN}" ]]; then
-            git clone "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaMusic-Providers.git" music >> "$LOG_FILE" 2>&1
+            # Usar GIT_TERMINAL_PROMPT=0 para evitar prompts interactivos
+            # Usar timeout para evitar bloqueos indefinidos
+            GIT_TERMINAL_PROMPT=0 timeout 120 git clone \
+                "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaMusic-Providers.git" \
+                music >> "$LOG_FILE" 2>&1
         else
-            git clone "https://github.com/${GITHUB_USER}/TeaMusic-Providers.git" music >> "$LOG_FILE" 2>&1
+            log_error "Token de GitHub no disponible"
+            log_error "El repositorio TeaMusic-Providers es privado y requiere autenticación"
+            exit 1
         fi
 
         if [[ $? -eq 0 ]]; then
             log_success "Submódulo 'music' clonado exitosamente"
         else
             log_error "Falló la clonación de 'music'"
-            log_error "Verifica que el repositorio ${GITHUB_USER}/TeaMusic-Providers exista"
+            log_error "Verifica que:"
+            log_error "  • El repositorio ${GITHUB_USER}/TeaMusic-Providers exista"
+            log_error "  • El token tenga acceso a repositorios privados"
+            log_error "  • La conexión a internet esté funcionando"
             exit 1
         fi
     fi
