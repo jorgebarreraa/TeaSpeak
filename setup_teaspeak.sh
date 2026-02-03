@@ -1293,16 +1293,43 @@ initialize_submodules() {
         if [[ -n "${GITHUB_TOKEN}" ]]; then
             # Usar GIT_TERMINAL_PROMPT=0 para evitar prompts interactivos
             # Usar timeout para evitar bloqueos indefinidos
-            GIT_TERMINAL_PROMPT=0 timeout 120 git clone \
-                "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaSpeakLibrary.git" \
-                shared >> "$LOG_FILE" 2>&1
+            # Mostrar progreso al usuario mientras clona
+            (
+                GIT_TERMINAL_PROMPT=0 timeout 120 git clone --progress \
+                    "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaSpeakLibrary.git" \
+                    shared 2>&1 | tee -a "$LOG_FILE" | grep -E "Cloning|Receiving|Resolving|done" || true
+            ) &
+            local clone_pid=$!
+
+            # Mostrar indicador de progreso mientras clona
+            local dots=0
+            while kill -0 $clone_pid 2>/dev/null; do
+                echo -n "."
+                sleep 2
+                dots=$((dots + 1))
+                if [ $dots -ge 60 ]; then
+                    echo ""
+                    log_warning "La clonación está tardando más de lo esperado..."
+                    dots=0
+                fi
+            done
+            wait $clone_pid
+            local clone_result=$?
+            echo "" # Nueva línea después de los puntos
+
+            if [ $clone_result -eq 0 ]; then
+                :  # Continuar con la verificación normal
+            else
+                log_error "Falló la clonación de 'shared' (código de salida: $clone_result)"
+                exit 1
+            fi
         else
             log_error "Token de GitHub no disponible"
             log_error "El repositorio TeaSpeakLibrary es privado y requiere autenticación"
             exit 1
         fi
 
-        if [[ $? -eq 0 ]]; then
+        if [[ -d "shared/.git" ]]; then
             log_success "Submódulo 'shared' clonado exitosamente"
         else
             log_error "Falló la clonación de 'shared'"
@@ -1334,16 +1361,43 @@ initialize_submodules() {
         if [[ -n "${GITHUB_TOKEN}" ]]; then
             # Usar GIT_TERMINAL_PROMPT=0 para evitar prompts interactivos
             # Usar timeout para evitar bloqueos indefinidos
-            GIT_TERMINAL_PROMPT=0 timeout 120 git clone \
-                "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaMusic-Providers.git" \
-                music >> "$LOG_FILE" 2>&1
+            # Mostrar progreso al usuario mientras clona
+            (
+                GIT_TERMINAL_PROMPT=0 timeout 120 git clone --progress \
+                    "https://${GITHUB_TOKEN}@github.com/${GITHUB_USER}/TeaMusic-Providers.git" \
+                    music 2>&1 | tee -a "$LOG_FILE" | grep -E "Cloning|Receiving|Resolving|done" || true
+            ) &
+            local clone_pid=$!
+
+            # Mostrar indicador de progreso mientras clona
+            local dots=0
+            while kill -0 $clone_pid 2>/dev/null; do
+                echo -n "."
+                sleep 2
+                dots=$((dots + 1))
+                if [ $dots -ge 60 ]; then
+                    echo ""
+                    log_warning "La clonación está tardando más de lo esperado..."
+                    dots=0
+                fi
+            done
+            wait $clone_pid
+            local clone_result=$?
+            echo "" # Nueva línea después de los puntos
+
+            if [ $clone_result -eq 0 ]; then
+                :  # Continuar con la verificación normal
+            else
+                log_error "Falló la clonación de 'music' (código de salida: $clone_result)"
+                exit 1
+            fi
         else
             log_error "Token de GitHub no disponible"
             log_error "El repositorio TeaMusic-Providers es privado y requiere autenticación"
             exit 1
         fi
 
-        if [[ $? -eq 0 ]]; then
+        if [[ -d "music/.git" ]]; then
             log_success "Submódulo 'music' clonado exitosamente"
         else
             log_error "Falló la clonación de 'music'"
