@@ -134,12 +134,16 @@ validate_github_token() {
     local all_valid=true
 
     for repo in "${repos[@]}"; do
-        local repo_url="https://${token}@github.com/${user}/${repo}.git"
+        # Usar GitHub API para verificar acceso (más confiable que git ls-remote)
+        local api_url="https://api.github.com/repos/${user}/${repo}"
+        local http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${token}" \
+            "${api_url}")
 
-        if timeout 10 git ls-remote "$repo_url" &>/dev/null; then
+        if [[ "$http_code" == "200" ]]; then
             echo -e "  ${GREEN}✓${NC} Acceso verificado: ${user}/${repo}"
         else
-            echo -e "  ${RED}✗${NC} Sin acceso a: ${user}/${repo}"
+            echo -e "  ${RED}✗${NC} Sin acceso a: ${user}/${repo} (HTTP ${http_code})"
             all_valid=false
         fi
     done
