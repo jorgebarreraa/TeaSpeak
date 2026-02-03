@@ -107,59 +107,132 @@ load_config() {
 save_config() {
     cat > "$CONFIG_FILE" << EOF
 # Configuración de TeaSpeak - Generado automáticamente
-# NO COMPARTIR ESTE ARCHIVO (contiene token de autenticación)
+# ⚠️  NO COMPARTIR ESTE ARCHIVO (contiene token de autenticación privado)
 SAVED_GITHUB_USER="$GITHUB_USER"
 SAVED_GITHUB_TOKEN="$GITHUB_TOKEN"
 EOF
     chmod 600 "$CONFIG_FILE"
 }
 
+# ═══════════════════════════════════════════════════════════════════════════
+# Validar token de GitHub
+# ═══════════════════════════════════════════════════════════════════════════
+validate_github_token() {
+    local token="$1"
+    local user="$2"
+
+    echo ""
+    log_substep "Validando token de acceso..."
+
+    # Lista de repositorios requeridos
+    local repos=(
+        "TeaSpeak"
+        "TeaSpeakLibrary"
+        "TeaMusic-Providers"
+    )
+
+    local all_valid=true
+
+    for repo in "${repos[@]}"; do
+        local repo_url="https://${token}@github.com/${user}/${repo}.git"
+
+        if timeout 10 git ls-remote "$repo_url" &>/dev/null; then
+            echo -e "  ${GREEN}✓${NC} Acceso verificado: ${user}/${repo}"
+        else
+            echo -e "  ${RED}✗${NC} Sin acceso a: ${user}/${repo}"
+            all_valid=false
+        fi
+    done
+
+    echo ""
+
+    if [[ "$all_valid" == "true" ]]; then
+        log_success "Token válido - Acceso verificado a todos los repositorios"
+        # Configurar git credential helper para cachear el token durante esta sesión
+        git config --global credential.helper 'cache --timeout=86400'
+        return 0
+    else
+        log_error "Token inválido o sin permisos suficientes"
+        echo ""
+        echo -e "${YELLOW}Posibles causas:${NC}"
+        echo "  • El token ha expirado"
+        echo "  • El token no tiene permisos 'repo'"
+        echo "  • No tienes acceso a los repositorios privados de ${user}"
+        echo "  • Tu licencia/acceso ha finalizado"
+        echo ""
+        return 1
+    fi
+}
+
 request_github_credentials() {
     echo ""
     echo "╔═══════════════════════════════════════════════════════════╗"
-    echo "║         CONFIGURACIÓN INICIAL DE GITHUB                  ║"
+    echo "║       🔐 AUTENTICACIÓN DE TEASPEAK REQUERIDA             ║"
     echo "╚═══════════════════════════════════════════════════════════╝"
+    echo ""
+    echo -e "${CYAN}Este software requiere autenticación para acceder a los${NC}"
+    echo -e "${CYAN}repositorios privados necesarios para la instalación.${NC}"
     echo ""
 
     # Solicitar usuario de GitHub si no está configurado
     if [[ -z "$GITHUB_USER" ]]; then
-        echo -e "${YELLOW}No se ha configurado un usuario de GitHub.${NC}"
-        echo ""
-        read -p "Ingresa tu usuario de GitHub: " GITHUB_USER
+        echo -e "${YELLOW}Usuario de GitHub del propietario de los repositorios:${NC}"
+        read -p "Ingresa el usuario de GitHub: " GITHUB_USER
 
         if [[ -z "$GITHUB_USER" ]]; then
-            echo -e "${RED}Error: El usuario de GitHub es requerido${NC}"
+            echo -e "${RED}✗ Error: El usuario de GitHub es obligatorio${NC}"
             exit 1
         fi
     else
-        echo -e "${GREEN}✓ Usuario de GitHub configurado: $GITHUB_USER${NC}"
+        echo -e "${GREEN}✓ Usuario configurado: $GITHUB_USER${NC}"
     fi
 
-    # Solicitar token de GitHub si no está configurado
+    # Solicitar token de GitHub - OBLIGATORIO
     if [[ -z "$GITHUB_TOKEN" ]]; then
         echo ""
-        echo -e "${YELLOW}Se requiere un token de GitHub para clonar repositorios privados.${NC}"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo -e "${YELLOW}📋 TOKEN DE ACCESO REQUERIDO${NC}"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
-        echo "Para generar un token:"
-        echo "  1. Visita: https://github.com/settings/tokens"
-        echo "  2. Click en 'Generate new token' → 'Generate new token (classic)'"
-        echo "  3. Selecciona el scope 'repo' (acceso completo a repositorios)"
-        echo "  4. Copia el token generado"
+        echo "Para obtener un token de acceso válido:"
         echo ""
-        read -p "Ingresa tu GitHub token (ghp_xxxxx): " GITHUB_TOKEN
+        echo "  🔹 Si ya tienes una licencia/acceso:"
+        echo "     Usa el token que se te proporcionó al momento de la compra"
+        echo ""
+        echo "  🔹 Si necesitas adquirir acceso:"
+        echo "     Contacta con el proveedor del software"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        read -sp "Ingresa tu token de acceso (ghp_xxxxx): " GITHUB_TOKEN
+        echo ""
 
         if [[ -z "$GITHUB_TOKEN" ]]; then
-            echo -e "${YELLOW}Warning: Sin token, solo se podrán clonar repositorios públicos${NC}"
+            echo ""
+            echo -e "${RED}✗ Error: El token de acceso es obligatorio para continuar${NC}"
+            echo -e "${YELLOW}  La instalación no puede proceder sin autenticación válida${NC}"
+            exit 1
         fi
     else
-        echo -e "${GREEN}✓ Token de GitHub configurado (${GITHUB_TOKEN:0:7}...)${NC}"
+        echo -e "${GREEN}✓ Token configurado (${GITHUB_TOKEN:0:7}...)${NC}"
     fi
 
-    # Guardar configuración
+    echo ""
+
+    # Validar que el token tenga acceso
+    if ! validate_github_token "$GITHUB_TOKEN" "$GITHUB_USER"; then
+        echo -e "${RED}✗ Autenticación fallida${NC}"
+        echo ""
+        echo "La instalación no puede continuar sin un token válido."
+        exit 1
+    fi
+
+    # Guardar configuración solo si la validación fue exitosa
     save_config
     echo ""
-    echo -e "${GREEN}✓ Configuración guardada en: $CONFIG_FILE${NC}"
-    echo -e "${CYAN}  Esta configuración se usará automáticamente en futuras ejecuciones${NC}"
+    echo -e "${GREEN}✓ Autenticación exitosa - Configuración guardada${NC}"
+    echo -e "${CYAN}  Archivo: $CONFIG_FILE${NC}"
+    echo -e "${CYAN}  El token se reutilizará automáticamente en futuras ejecuciones${NC}"
     echo ""
 }
 
@@ -204,28 +277,56 @@ parse_args() {
 
 show_help() {
     cat << EOF
+╔═══════════════════════════════════════════════════════════════════╗
+║              INSTALADOR DE TEASPEAK SERVER                        ║
+║              Sistema de Autenticación Requerido                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
 Uso: $0 [opciones]
 
-Opciones:
-  --github-user <username>  Usar forks de este usuario de GitHub
-  --github-token <token>    Token de GitHub para repositorios privados
+AUTENTICACIÓN:
+  Este software requiere autenticación válida para acceder a los
+  repositorios privados necesarios para la compilación.
+
+  Al ejecutar el script por primera vez, se solicitará:
+    • Usuario de GitHub (propietario de los repositorios)
+    • Token de acceso (proporcionado con tu licencia)
+
+  El token se guardará localmente y se reutilizará automáticamente
+  en ejecuciones futuras.
+
+OPCIONES:
+  --github-user <username>  Usuario de GitHub (ej: jorgebarreraa)
+  --github-token <token>    Token de acceso (formato: ghp_xxxxx)
   --skip-deps               Saltar instalación de dependencias del sistema
-  --skip-libs               Saltar compilación de librerías (usar cache existente)
-  --build-type <type>       Tipo de build: stable, optimized, debug, nightly (default: stable)
+  --skip-libs               Saltar compilación de librerías (usar cache)
+  --build-type <type>       Tipo de build (default: stable)
   --help                    Mostrar esta ayuda
 
-Ejemplos:
-  $0
-  $0 --github-user jorgebarreraa
-  $0 --github-user jorgebarreraa --github-token ghp_xxxxx
-  $0 --github-user jorgebarreraa --build-type stable
-  $0 --skip-deps --build-type optimized
-
-Tipos de build:
+TIPOS DE BUILD:
   stable     - Build de producción estable (recomendado)
-  optimized  - Build optimizado (más rápido)
-  debug      - Build con información de debugging
-  nightly    - Build nightly con optimizaciones y debug info
+  optimized  - Build optimizado con máximo rendimiento
+  debug      - Build con símbolos de debugging
+  nightly    - Build experimental con últimas características
+
+EJEMPLOS:
+  # Primera instalación (solicitará credenciales interactivamente)
+  $0
+
+  # Con credenciales en línea de comandos
+  $0 --github-user jorgebarreraa --github-token ghp_xxxxx
+
+  # Build optimizado reutilizando credenciales guardadas
+  $0 --build-type optimized
+
+  # Reinstalación rápida (sin recompilar librerías)
+  $0 --skip-libs
+
+NOTAS:
+  • El token se guarda en: .teaspeak.conf (permisos 600)
+  • NO compartas el archivo .teaspeak.conf
+  • Si el token expira, el script lo detectará y solicitará uno nuevo
+  • Los logs se guardan en: /tmp/teaspeak_setup_*.log
 
 EOF
 }
@@ -1418,6 +1519,23 @@ EOF
     # Los parámetros --github-user y --github-token tienen prioridad sobre el archivo de config
     if [[ -z "$GITHUB_USER" ]] || [[ -z "$GITHUB_TOKEN" ]]; then
         request_github_credentials
+    else
+        # Si las credenciales ya están configuradas (por argumentos o archivo), validarlas
+        echo ""
+        echo "╔═══════════════════════════════════════════════════════════╗"
+        echo "║       🔐 VERIFICANDO AUTENTICACIÓN                       ║"
+        echo "╚═══════════════════════════════════════════════════════════╝"
+        echo -e "${GREEN}✓ Usuario configurado: $GITHUB_USER${NC}"
+        echo -e "${GREEN}✓ Token configurado (${GITHUB_TOKEN:0:7}...)${NC}"
+
+        if ! validate_github_token "$GITHUB_TOKEN" "$GITHUB_USER"; then
+            echo -e "${RED}✗ La autenticación guardada ya no es válida${NC}"
+            echo ""
+            # Limpiar configuración inválida
+            rm -f "$CONFIG_FILE"
+            # Solicitar nuevas credenciales
+            request_github_credentials
+        fi
     fi
 
     log_info "Iniciando instalación..."
