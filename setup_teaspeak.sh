@@ -1250,7 +1250,12 @@ initialize_submodules() {
     # Limpiar submódulos corruptos o incompletos automáticamente
     log_substep "Verificando integridad de submódulos..."
     for submodule in shared music; do
-        if [[ -d "$submodule" && ! -d "$submodule/.git" ]]; then
+        # Verificar si es un symlink
+        if [[ -L "$submodule" ]]; then
+            log_warning "Directorio '$submodule' es un enlace simbólico, eliminando..."
+            rm -rf "$submodule"
+        # Verificar si es un directorio sin .git
+        elif [[ -d "$submodule" && ! -d "$submodule/.git" ]]; then
             log_warning "Directorio '$submodule' corrupto (sin .git), eliminando..."
             rm -rf "$submodule"
         fi
