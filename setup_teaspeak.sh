@@ -667,6 +667,14 @@ clone_lib() {
     local dir="$2"
     local branch="$3"
 
+    # Verificación especial para build-helpers
+    if [[ "$dir" == "build-helpers" ]]; then
+        if [[ -d "$dir" && ! -f "$dir/build_helper.sh" ]]; then
+            echo "  ⚠ $dir existe pero está incompleto, eliminando..."
+            rm -rf "$dir"
+        fi
+    fi
+
     if [ -d "$dir" ]; then
         echo "  ✓ $dir ya existe, omitiendo"
         return 0
@@ -1004,26 +1012,13 @@ compile_libraries() {
 
     # Verificar que build_helper.sh existe
     if [[ ! -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
-        log_warning "build_helper.sh no encontrado, restaurando build-helpers..."
-
-        # Intentar restaurar el repositorio
-        if [[ -d "$SCRIPT_DIR/Server/Root/build-helpers/.git" ]]; then
-            cd "$SCRIPT_DIR/Server/Root/build-helpers"
-            git reset --hard HEAD >/dev/null 2>&1
-            cd "$SCRIPT_DIR/Server/Root/libraries"
-
-            if [[ -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
-                log_success "✓ build-helpers restaurado correctamente"
-            else
-                log_error "✗ No se pudo restaurar build-helpers"
-                log_error "Por favor ejecuta: cd $SCRIPT_DIR/Server/Root/build-helpers && git reset --hard HEAD"
-                exit 1
-            fi
-        else
-            log_error "✗ Directorio build-helpers/.git no existe"
-            log_error "Por favor ejecuta el script de instalación desde el inicio"
-            exit 1
-        fi
+        log_error "build_helper.sh no encontrado en: $SCRIPT_DIR/Server/Root/build-helpers/"
+        log_error "El directorio build-helpers parece estar corrupto o incompleto"
+        log_error ""
+        log_error "Para solucionar esto, ejecuta:"
+        log_error "  rm -rf $SCRIPT_DIR/Server/Root/build-helpers"
+        log_error "  ./setup_teaspeak.sh"
+        exit 1
     fi
 
     # Cargar build_helper.sh
