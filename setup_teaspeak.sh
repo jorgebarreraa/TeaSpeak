@@ -939,7 +939,12 @@ fix_permissions() {
 compile_libraries() {
     log_step "PASO 9: Compilando Librerías"
 
-    cd "$SCRIPT_DIR/Server/Root/libraries"
+    cd "$SCRIPT_DIR/Server/Root/libraries" || {
+        log_error "No se pudo cambiar al directorio: $SCRIPT_DIR/Server/Root/libraries"
+        log_error "SCRIPT_DIR=$SCRIPT_DIR"
+        log_error "Directorio actual: $(pwd)"
+        exit 1
+    }
 
     # Archivo marker de compilación exitosa
     local success_marker="$SCRIPT_DIR/Server/Root/libraries/.libraries_compiled_successfully"
