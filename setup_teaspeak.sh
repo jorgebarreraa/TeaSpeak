@@ -994,9 +994,22 @@ compile_libraries() {
     log_info "Compilando con $(nproc) núcleos..."
     log_warning "Esto puede tardar 10-20 minutos..."
 
-    # Debug: Mostrar directorio actual
+    # Debug: Mostrar directorio actual y verificar archivo
     log_info "Directorio actual: $(pwd)"
     log_info "Verificando: ../build-helpers/build_helper.sh"
+    if [[ -e "../build-helpers/build_helper.sh" ]]; then
+        log_info "✓ Archivo existe (test -e)"
+        if [[ -f "../build-helpers/build_helper.sh" ]]; then
+            log_info "✓ Es un archivo regular (test -f)"
+        else
+            log_error "✗ NO es un archivo regular (test -f failed)"
+            ls -la ../build-helpers/build_helper.sh
+        fi
+    else
+        log_error "✗ Archivo NO existe (test -e failed)"
+        log_error "Contenido de ../build-helpers/:"
+        ls -la ../build-helpers/ || log_error "Directorio ../build-helpers/ no existe"
+    fi
 
     # Compilar librerías críticas individualmente para mejor control
     if [[ -f "../build-helpers/build_helper.sh" ]]; then
@@ -1613,7 +1626,7 @@ EOF
         # Si las credenciales ya están configuradas (por argumentos o archivo), validarlas
         echo ""
         echo "╔═══════════════════════════════════════════════════════════╗"
-        echo "║       🔐 VERIFICANDO AUTENTICACIÓN                       ║"
+        echo "║       🔐 VERIFICANDO AUTENTICACIÓN                      ║"
         echo "╚═══════════════════════════════════════════════════════════╝"
         echo -e "${GREEN}✓ Usuario configurado: $GITHUB_USER${NC}"
         echo -e "${GREEN}✓ Token configurado (${GITHUB_TOKEN:0:7}...)${NC}"
