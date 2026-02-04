@@ -989,6 +989,10 @@ compile_libraries() {
     log_info "Compilando con $(nproc) núcleos..."
     log_warning "Esto puede tardar 10-20 minutos..."
 
+    # Debug: Mostrar directorio actual
+    log_info "Directorio actual: $(pwd)"
+    log_info "Verificando: ../build-helpers/build_helper.sh"
+
     # Compilar librerías críticas individualmente para mejor control
     if [[ -f "../build-helpers/build_helper.sh" ]]; then
         source ../build-helpers/build_helper.sh
