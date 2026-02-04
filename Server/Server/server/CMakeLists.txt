@@ -351,9 +351,9 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
     tommath::static
 )
 if(TARGET CXXTerminal::static)
-    target_link_libraries(Snapshots-Permissions-Test CXXTerminal::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC CXXTerminal::static)
 endif()
 if(TARGET DataPipes::core::static)
-    target_link_libraries(Snapshots-Permissions-Test DataPipes::core::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC DataPipes::core::static)
 endif()
 target_include_directories(Snapshots-Permissions-Test PUBLIC ${CMAKE_SOURCE_DIR}/server/src/)
