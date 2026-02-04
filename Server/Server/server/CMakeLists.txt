@@ -175,10 +175,12 @@ add_executable(PermHelper helpers/permgen.cpp)
 target_link_libraries(PermHelper
         TeaSpeak
         stdc++fs
-        CXXTerminal::static
         libevent::core libevent::pthreads
         ${StringVariable_LIBRARIES_STATIC}
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(PermHelper CXXTerminal::static)
+endif()
 
 add_executable(PermMapHelper helpers/PermMapGen.cpp)
 target_link_libraries(PermMapHelper
@@ -336,7 +338,6 @@ target_link_options(TeaSpeakServer PRIVATE
 add_executable(Snapshots-Permissions-Test src/snapshots/permission.cpp tests/snapshots/permission.cpp)
 target_link_libraries(Snapshots-Permissions-Test PUBLIC
     TeaSpeak
-    CXXTerminal::static  #Static
     ${StringVariable_LIBRARIES_STATIC}
     ${YAML_CPP_LIBRARIES}
     pthread
@@ -345,7 +346,13 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
 
     #Require a so
     sqlite3
-    DataPipes::core::static
+)
+if(TARGET CXXTerminal::static)
+    target_link_libraries(Snapshots-Permissions-Test CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(Snapshots-Permissions-Test DataPipes::core::static)
+endif()
 
     tomcrypt::static
     tommath::static
