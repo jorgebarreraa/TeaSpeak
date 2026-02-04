@@ -52,17 +52,17 @@ find_package(Breakpad) # Optional: crash reporting
 find_package(Protobuf REQUIRED)
 find_package(Crypto REQUIRED)
 find_package(ThreadPool REQUIRED)
-find_package(CXXTerminal REQUIRED)
+find_package(CXXTerminal) # Optional: Terminal library
 find_package(StringVariable REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(jsoncpp REQUIRED)
-find_package(DataPipes REQUIRED)
-find_package(Opus REQUIRED)
+find_package(DataPipes) # Optional: Pipes library
+find_package(Opus) # Optional: Opus codec
 find_package(spdlog REQUIRED)
 find_package(Jemalloc REQUIRED)
 find_package(Protobuf REQUIRED)
 message("${zstd_DIR}")
-find_package(zstd REQUIRED)
+find_package(zstd) # Optional: zstd compression
 
 include_directories(${StringVariable_INCLUDE_DIR})
 # Get spdlog include directory from the target
@@ -99,9 +99,13 @@ if(HAVE_MYSQL_H)
 endif()
 
 #FIXME: Use module for this
-include_directories(${breakpad_INCLUDE_DIR})
+if(breakpad_INCLUDE_DIR)
+    include_directories(${breakpad_INCLUDE_DIR})
+endif()
 include_directories(${ThreadPool_INCLUDE_DIR})
-include_directories(${DataPipes_INCLUDE_DIR})
+if(DataPipes_INCLUDE_DIR)
+    include_directories(${DataPipes_INCLUDE_DIR})
+endif()
 include_directories(${LIBEVENT_INCLUDE_DIRS})
 include_directories(${StringVariable_INCLUDE_DIR})
 

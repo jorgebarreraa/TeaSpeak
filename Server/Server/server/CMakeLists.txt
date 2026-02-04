@@ -243,7 +243,6 @@ target_link_libraries(TeaSpeakServer
         TeaSpeak            #Static
         TeaLicenseHelper    #Static
         TeaMusic            #Static
-        CXXTerminal::static  #Static
         TeaSpeak-FileServer
         # TeaSpeak-FileRust
         ${StringVariable_LIBRARIES_STATIC}
@@ -255,7 +254,6 @@ target_link_libraries(TeaSpeakServer
 
         #Require a so
         sqlite3
-        DataPipes::core::static
 
         protobuf::libprotobuf
         #jemalloc::shared
@@ -264,8 +262,18 @@ target_link_libraries(TeaSpeakServer
         tommath::static
 
         jsoncpp_lib
-        zstd::libzstd_static
 )
+
+# Link optional dependencies if available
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaSpeakServer CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaSpeakServer DataPipes::core::static)
+endif()
+if(TARGET zstd::libzstd_static)
+    target_link_libraries(TeaSpeakServer zstd::libzstd_static)
+endif()
 
 # Link optional dependencies if available
 if(TARGET opus::static)
