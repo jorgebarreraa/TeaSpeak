@@ -346,15 +346,11 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
 
     #Require a so
     sqlite3
-)
+
 if(TARGET CXXTerminal::static)
     target_link_libraries(Snapshots-Permissions-Test CXXTerminal::static)
 endif()
 if(TARGET DataPipes::core::static)
     target_link_libraries(Snapshots-Permissions-Test DataPipes::core::static)
 endif()
-
-    tomcrypt::static
-    tommath::static
-)
 target_include_directories(Snapshots-Permissions-Test PUBLIC ${CMAKE_SOURCE_DIR}/server/src/)
