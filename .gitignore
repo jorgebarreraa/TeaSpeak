@@ -57,3 +57,7 @@ Thumbs.db
 
 # Build test directory
 build_test/
+
+# Submodules (managed separately)
+Server/Server/shared/
+Server/Server/music/
