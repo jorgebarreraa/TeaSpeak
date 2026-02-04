@@ -347,6 +347,9 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
     #Require a so
     sqlite3
 
+    tomcrypt::static
+    tommath::static
+)
 if(TARGET CXXTerminal::static)
     target_link_libraries(Snapshots-Permissions-Test CXXTerminal::static)
 endif()
