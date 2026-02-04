@@ -996,26 +996,30 @@ compile_libraries() {
 
     # Debug: Mostrar directorio actual y verificar archivo
     log_info "Directorio actual: $(pwd)"
+    log_info "Listing build-helpers with full path:"
+    ls -la "$SCRIPT_DIR/Server/Root/build-helpers/" | head -15
     log_info "Verificando: ../build-helpers/build_helper.sh"
-    if [[ -e "../build-helpers/build_helper.sh" ]]; then
-        log_info "✓ Archivo existe (test -e)"
-        if [[ -f "../build-helpers/build_helper.sh" ]]; then
-            log_info "✓ Es un archivo regular (test -f)"
-        else
-            log_error "✗ NO es un archivo regular (test -f failed)"
-            ls -la ../build-helpers/build_helper.sh
-        fi
+    log_info "Absolute path would be: $SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh"
+
+    # Test with absolute path first
+    if [[ -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
+        log_success "✓ Archivo existe (usando ruta absoluta)"
+        # Use absolute path for sourcing
+        source "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh"
+    elif [[ -f "../build-helpers/build_helper.sh" ]]; then
+        log_success "✓ Archivo existe (usando ruta relativa)"
+        source ../build-helpers/build_helper.sh
     else
-        log_error "✗ Archivo NO existe (test -e failed)"
+        log_error "✗ Archivo NO existe en ninguna ruta"
+        log_error "Contenido de \$SCRIPT_DIR/Server/Root/build-helpers/:"
+        ls -la "$SCRIPT_DIR/Server/Root/build-helpers/" || log_error "Directorio no existe"
         log_error "Contenido de ../build-helpers/:"
-        ls -la ../build-helpers/ || log_error "Directorio ../build-helpers/ no existe"
+        ls -la ../build-helpers/ || log_error "Directorio no existe"
+        log_error "build_helper.sh no encontrado"
+        exit 1
     fi
 
-    # Compilar librerías críticas individualmente para mejor control
-    if [[ -f "../build-helpers/build_helper.sh" ]]; then
-        source ../build-helpers/build_helper.sh
-
-        # Limpiar cachés de compilaciones previas fallidas
+    # Limpiar cachés de compilaciones previas fallidas
         log_substep "Limpiando cachés de compilaciones anteriores..."
         find . -maxdepth 2 -type d -name "_build" -exec rm -rf {} + 2>/dev/null || true
         find . -maxdepth 2 -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
@@ -1252,10 +1256,6 @@ compile_libraries() {
             exit 1
         fi
         echo "═══════════════════════════════════════════════════════════"
-    else
-        log_error "build_helper.sh no encontrado"
-        exit 1
-    fi
 
     cd "$SCRIPT_DIR"
 }
@@ -1626,7 +1626,7 @@ EOF
         # Si las credenciales ya están configuradas (por argumentos o archivo), validarlas
         echo ""
         echo "╔═══════════════════════════════════════════════════════════╗"
-        echo "║       🔐 VERIFICANDO AUTENTICACIÓN                      ║"
+        echo "║       🔐 VERIFICANDO AUTENTICACIÓN                        ║"
         echo "╚═══════════════════════════════════════════════════════════╝"
         echo -e "${GREEN}✓ Usuario configurado: $GITHUB_USER${NC}"
         echo -e "${GREEN}✓ Token configurado (${GITHUB_TOKEN:0:7}...)${NC}"
