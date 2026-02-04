@@ -768,6 +768,14 @@ clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 cd ..
 clone_with_fallback "https://github.com/jorgebarreraa/build-helpers.git" "build-helpers"
 
+# Asegurar que build-helpers tenga todos los archivos (puede haber sido parcialmente clonado antes)
+if [[ -d "build-helpers/.git" ]]; then
+    echo "  Verificando integridad de build-helpers..."
+    cd build-helpers
+    git reset --hard HEAD >/dev/null 2>&1
+    cd ..
+fi
+
 # Sobrescribir build_jsoncpp.sh de build-helpers con versión C++17
 # NOTE: This file no longer exists in libraries/, build-helpers has the correct version
 # echo "Sobrescribiendo build_jsoncpp.sh con versión C++17..."
@@ -994,30 +1002,33 @@ compile_libraries() {
     log_info "Compilando con $(nproc) núcleos..."
     log_warning "Esto puede tardar 10-20 minutos..."
 
-    # Debug: Mostrar directorio actual y verificar archivo
-    log_info "Directorio actual: $(pwd)"
-    log_info "Listing build-helpers with full path:"
-    ls -la "$SCRIPT_DIR/Server/Root/build-helpers/" | head -15
-    log_info "Verificando: ../build-helpers/build_helper.sh"
-    log_info "Absolute path would be: $SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh"
+    # Verificar que build_helper.sh existe
+    if [[ ! -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
+        log_warning "build_helper.sh no encontrado, restaurando build-helpers..."
 
-    # Test with absolute path first
-    if [[ -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
-        log_success "✓ Archivo existe (usando ruta absoluta)"
-        # Use absolute path for sourcing
-        source "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh"
-    elif [[ -f "../build-helpers/build_helper.sh" ]]; then
-        log_success "✓ Archivo existe (usando ruta relativa)"
-        source ../build-helpers/build_helper.sh
-    else
-        log_error "✗ Archivo NO existe en ninguna ruta"
-        log_error "Contenido de \$SCRIPT_DIR/Server/Root/build-helpers/:"
-        ls -la "$SCRIPT_DIR/Server/Root/build-helpers/" || log_error "Directorio no existe"
-        log_error "Contenido de ../build-helpers/:"
-        ls -la ../build-helpers/ || log_error "Directorio no existe"
-        log_error "build_helper.sh no encontrado"
-        exit 1
+        # Intentar restaurar el repositorio
+        if [[ -d "$SCRIPT_DIR/Server/Root/build-helpers/.git" ]]; then
+            cd "$SCRIPT_DIR/Server/Root/build-helpers"
+            git reset --hard HEAD >/dev/null 2>&1
+            cd "$SCRIPT_DIR/Server/Root/libraries"
+
+            if [[ -f "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh" ]]; then
+                log_success "✓ build-helpers restaurado correctamente"
+            else
+                log_error "✗ No se pudo restaurar build-helpers"
+                log_error "Por favor ejecuta: cd $SCRIPT_DIR/Server/Root/build-helpers && git reset --hard HEAD"
+                exit 1
+            fi
+        else
+            log_error "✗ Directorio build-helpers/.git no existe"
+            log_error "Por favor ejecuta el script de instalación desde el inicio"
+            exit 1
+        fi
     fi
+
+    # Cargar build_helper.sh
+    log_info "Cargando build_helper.sh..."
+    source "$SCRIPT_DIR/Server/Root/build-helpers/build_helper.sh"
 
     # Limpiar cachés de compilaciones previas fallidas
         log_substep "Limpiando cachés de compilaciones anteriores..."
