@@ -41,10 +41,14 @@ target_compile_features(TeaSpeak-FileServer PUBLIC cxx_std_20)
 add_executable(TeaSpeak-FileServerTest test/main.cpp)
 target_link_libraries(TeaSpeak-FileServerTest PUBLIC TeaSpeak-FileServer
         TeaMusic            #Static (Must be in here, so we link against TeaMusic which uses C++11. That forbids GCC to use the newer glibc version)
-        CXXTerminal::static
-        DataPipes::core::static
         stdc++fs
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaSpeak-FileServerTest PUBLIC CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaSpeak-FileServerTest PUBLIC DataPipes::core::static)
+endif()
 target_compile_options(TeaSpeak-FileServerTest PUBLIC -static-libgcc -static-libstdc++)
 
 add_executable(FileServer-CLNText local_server/clnpath.cpp)

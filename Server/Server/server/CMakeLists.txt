@@ -175,10 +175,12 @@ add_executable(PermHelper helpers/permgen.cpp)
 target_link_libraries(PermHelper
         TeaSpeak
         stdc++fs
-        CXXTerminal::static
         libevent::core libevent::pthreads
         ${StringVariable_LIBRARIES_STATIC}
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(PermHelper CXXTerminal::static)
+endif()
 
 add_executable(PermMapHelper helpers/PermMapGen.cpp)
 target_link_libraries(PermMapHelper
@@ -243,7 +245,6 @@ target_link_libraries(TeaSpeakServer
         TeaSpeak            #Static
         TeaLicenseHelper    #Static
         TeaMusic            #Static
-        CXXTerminal::static  #Static
         TeaSpeak-FileServer
         # TeaSpeak-FileRust
         ${StringVariable_LIBRARIES_STATIC}
@@ -255,7 +256,6 @@ target_link_libraries(TeaSpeakServer
 
         #Require a so
         sqlite3
-        DataPipes::core::static
 
         protobuf::libprotobuf
         #jemalloc::shared
@@ -264,10 +264,21 @@ target_link_libraries(TeaSpeakServer
         tommath::static
 
         jsoncpp_lib
-        zstd::libzstd_static
 )
 
 # Link optional dependencies if available
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaSpeakServer CXXTerminal::static)
+endif()
+
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaSpeakServer DataPipes::core::static)
+endif()
+
+if(TARGET zstd::libzstd_static)
+    target_link_libraries(TeaSpeakServer zstd::libzstd_static)
+endif()
+
 if(TARGET opus::static)
     target_link_libraries(TeaSpeakServer opus::static)
 endif()
@@ -328,7 +339,6 @@ target_link_options(TeaSpeakServer PRIVATE
 add_executable(Snapshots-Permissions-Test src/snapshots/permission.cpp tests/snapshots/permission.cpp)
 target_link_libraries(Snapshots-Permissions-Test PUBLIC
     TeaSpeak
-    CXXTerminal::static  #Static
     ${StringVariable_LIBRARIES_STATIC}
     ${YAML_CPP_LIBRARIES}
     pthread
@@ -337,9 +347,14 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
 
     #Require a so
     sqlite3
-    DataPipes::core::static
 
     tomcrypt::static
     tommath::static
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC DataPipes::core::static)
+endif()
 target_include_directories(Snapshots-Permissions-Test PUBLIC ${CMAKE_SOURCE_DIR}/server/src/)

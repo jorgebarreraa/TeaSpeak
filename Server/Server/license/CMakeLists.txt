@@ -61,12 +61,10 @@ target_link_libraries(TeaLicenseServer
 		TeaSpeak
 		TeaLicenseHelper    #Static
         threadpool::static    #Static
-        CXXTerminal::static  #Static
         libevent::core libevent::pthreads
 
         mysqlclient
         jsoncpp_lib
-		DataPipes::core::static
         openssl::ssl::static
         openssl::crypto::static
 
@@ -75,6 +73,12 @@ target_link_libraries(TeaLicenseServer
 		z
 		rt
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaLicenseServer CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaLicenseServer DataPipes::core::static)
+endif()
 
 #The test license client
 add_executable(TeaLicenseClient LicenseClientMain.cpp)
