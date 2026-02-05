@@ -1528,19 +1528,19 @@ else
 fi
 
 log_info "════════════════════════════════════════════════════════════"
-log_info "  PARCHE 33: Fix spin_mutex -> spin_lock in file module"
+log_info "  PARCHE 33: Fix spin_mutex -> spin_lock in file and server modules"
 log_info "════════════════════════════════════════════════════════════"
-# Fix incorrect include name and type name in file module
+# Fix incorrect include name and type name in file and server modules
 NEEDS_PATCH=0
-if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "misc/spin_mutex\.h" {} \; 2>/dev/null; then
+if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "misc/spin_mutex\.h" {} \; 2>/dev/null; then
     log_info "Corrigiendo includes de spin_mutex.h -> spin_lock.h..."
-    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's|misc/spin_mutex\.h|misc/spin_lock.h|g' {} + 2>/dev/null
+    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's|misc/spin_mutex\.h|misc/spin_lock.h|g' {} + 2>/dev/null
     NEEDS_PATCH=1
 fi
 
-if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "spin_mutex " {} \; 2>/dev/null; then
+if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "spin_mutex " {} \; 2>/dev/null; then
     log_info "Corrigiendo tipo spin_mutex -> spin_lock..."
-    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's/spin_mutex /spin_lock /g' {} + 2>/dev/null
+    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's/spin_mutex /spin_lock /g' {} + 2>/dev/null
     NEEDS_PATCH=1
 fi
 

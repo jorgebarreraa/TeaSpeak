@@ -17,7 +17,7 @@ using namespace ts::command;
 
 namespace ts::server {
     struct ServerCommandQueueInner {
-        spin_mutex pending_commands_lock{};
+        spin_lock pending_commands_lock{};
         command::ReassembledCommand* pending_commands_head{nullptr};
         command::ReassembledCommand** pending_commands_tail{&pending_commands_head};
         bool has_command_handling_scheduled{false};

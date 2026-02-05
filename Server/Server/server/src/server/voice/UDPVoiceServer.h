@@ -50,7 +50,7 @@ namespace ts::server::server::udp {
             lookup::ip_v4<connection::VoiceClientConnection> clients_by_ipv4{};
             lookup::ip_v4<connection::VoiceClientConnection> clients_by_ipv6{};
 
-            spin_mutex client_write_lock{};
+            spin_lock client_write_lock{};
             connection::VoiceClientConnection* client_write_head{nullptr};
             connection::VoiceClientConnection** client_write_tail{&client_write_head};
 
