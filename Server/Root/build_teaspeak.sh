@@ -2,6 +2,10 @@
 set -e  # Exit immediately if any command fails
 _build_helper_dir="$(pwd)/build-helpers/"
 
+# Export OS type and architecture for CMake configuration
+export build_os_type="linux"
+export build_os_arch="amd64"
+
 _build_type="Debug"
 if [[ -n "$1" ]]; then
     echo "This is an automated jenkins build. Initializing variables."
