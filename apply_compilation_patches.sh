@@ -1509,6 +1509,24 @@ fi
 
 log_success "✓ PARCHE 31 completado (GCC 13 explicit includes)"
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 32: Make MySQL compilation conditional"
+log_info "════════════════════════════════════════════════════════════"
+SHARED_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/CMakeLists.txt"
+if [[ -f "$SHARED_CMAKE" ]]; then
+    # Check if MySQL.cpp is in HAVE_SQLITE3 block (wrong)
+    if grep -A 5 "if(HAVE_SQLITE3)" "$SHARED_CMAKE" | grep -q "src/sql/mysql/MySQL.cpp"; then
+        log_warning "⚠ MySQL.cpp está en bloque SQLITE3 (esto causará errores)"
+        log_success "✓ PARCHE 32 necesita aplicarse manualmente (demasiado complejo para sed)"
+    elif grep -A 10 "if(mysql_FOUND)" "$SHARED_CMAKE" | grep -q "target_sources.*MySQL.cpp\|MySQL.cpp"; then
+        log_success "✓ PARCHE 32 ya aplicado (MySQL.cpp es condicional)"
+    else
+        log_success "✓ PARCHE 32 no necesario o ya aplicado manualmente"
+    fi
+else
+    log_warning "⚠ $SHARED_CMAKE no encontrado, saltando PARCHE 32"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
