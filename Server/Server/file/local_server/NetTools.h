@@ -6,7 +6,7 @@
 #include <cassert>
 #include <array>
 
-#include <misc/spin_mutex.h>
+#include <misc/spin_lock.h>
 #include <numeric>
 #include <utility>
 
