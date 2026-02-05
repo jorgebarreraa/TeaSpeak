@@ -1467,6 +1467,25 @@ else
     exit 1
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 31: Fix missing semicolon in converter.cpp"
+log_info "════════════════════════════════════════════════════════════"
+CONVERTER_FILE="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/converters/converter.cpp"
+if [[ -f "$CONVERTER_FILE" ]]; then
+    # Check if the file already has the fix
+    if grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));" "$CONVERTER_FILE"; then
+        log_success "✓ PARCHE 31 ya aplicado (converter.cpp tiene punto y coma)"
+    elif grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))" "$CONVERTER_FILE"; then
+        log_info "Aplicando fix de punto y coma faltante..."
+        sed -i 's/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));/' "$CONVERTER_FILE"
+        log_success "✓ PARCHE 31 aplicado exitosamente"
+    else
+        log_success "✓ PARCHE 31 no necesario (archivo ya correcto)"
+    fi
+else
+    log_warning "⚠ $CONVERTER_FILE no encontrado, saltando PARCHE 31"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
