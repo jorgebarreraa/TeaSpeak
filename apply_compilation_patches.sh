@@ -1468,23 +1468,34 @@ else
 fi
 
 log_info "════════════════════════════════════════════════════════════"
-log_info "  PARCHE 31: Fix missing semicolon in converter.cpp"
+log_info "  PARCHE 31: Fix converter.cpp/h (semicolon + cstdint)"
 log_info "════════════════════════════════════════════════════════════"
-CONVERTER_FILE="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/converters/converter.cpp"
-if [[ -f "$CONVERTER_FILE" ]]; then
-    # Check if the file already has the fix
-    if grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));" "$CONVERTER_FILE"; then
-        log_success "✓ PARCHE 31 ya aplicado (converter.cpp tiene punto y coma)"
-    elif grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))" "$CONVERTER_FILE"; then
+
+# Fix converter.cpp - missing semicolon
+CONVERTER_CPP="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/converters/converter.cpp"
+if [[ -f "$CONVERTER_CPP" ]]; then
+    if grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));" "$CONVERTER_CPP"; then
+        log_success "✓ converter.cpp ya tiene punto y coma"
+    elif grep -q "CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))" "$CONVERTER_CPP"; then
         log_info "Aplicando fix de punto y coma faltante..."
-        sed -i 's/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));/' "$CONVERTER_FILE"
-        log_success "✓ PARCHE 31 aplicado exitosamente"
-    else
-        log_success "✓ PARCHE 31 no necesario (archivo ya correcto)"
+        sed -i 's/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))/CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));/' "$CONVERTER_CPP"
+        log_success "✓ converter.cpp parcheado"
     fi
-else
-    log_warning "⚠ $CONVERTER_FILE no encontrado, saltando PARCHE 31"
 fi
+
+# Fix converter.h - missing #include <cstdint>
+CONVERTER_H="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/converters/converter.h"
+if [[ -f "$CONVERTER_H" ]]; then
+    if grep -q "#include <cstdint>" "$CONVERTER_H"; then
+        log_success "✓ converter.h ya tiene #include <cstdint>"
+    else
+        log_info "Agregando #include <cstdint> a converter.h..."
+        sed -i '/#include <cstddef>/a #include <cstdint>' "$CONVERTER_H"
+        log_success "✓ converter.h parcheado"
+    fi
+fi
+
+log_success "✓ PARCHE 31 completado"
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
