@@ -9,7 +9,7 @@
 #include <pipes/ws.h>
 #include <pipes/ssl.h>
 #include <misc/net.h>
-#include <misc/spin_lock.h>
+#include <misc/spin_mutex.h>
 #include <random>
 #include <misc/memtracker.h>
 #include "./NetTools.h"

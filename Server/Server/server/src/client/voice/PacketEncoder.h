@@ -1,6 +1,6 @@
 #pragma once
 
-#include <misc/spin_lock.h>
+#include <misc/spin_mutex.h>
 #include <mutex>
 #include <deque>
 #include <protocol/Packet.h>
@@ -72,7 +72,7 @@ namespace ts::server::server::udp {
             protocol::PacketStatistics* packet_statistics_{nullptr};
             connection::AcknowledgeManager acknowledge_manager_{};
 
-            spin_lock write_queue_mutex{};
+            spin_mutex write_queue_mutex{};
             protocol::OutgoingServerPacket* send_queue_head{nullptr};
             protocol::OutgoingServerPacket** send_queue_tail{&send_queue_head};
 
@@ -80,7 +80,7 @@ namespace ts::server::server::udp {
             protocol::OutgoingServerPacket** encrypt_queue_tail{&encrypt_queue_head};
 
             protocol::PacketIdManager packet_id_manager;
-            spin_lock packet_id_mutex{};
+            spin_mutex packet_id_mutex{};
 
 
             /* thread save function */

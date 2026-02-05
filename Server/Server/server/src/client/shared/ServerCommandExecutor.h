@@ -1,6 +1,6 @@
 #pragma once
 
-#include <misc/spin_lock.h>
+#include <misc/spin_mutex.h>
 #include <pipes/buffer.h>
 #include <EventLoop.h>
 

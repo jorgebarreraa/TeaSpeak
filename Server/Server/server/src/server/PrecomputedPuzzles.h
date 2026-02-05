@@ -4,7 +4,7 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-#include <misc/spin_lock.h>
+#include <misc/spin_mutex.h>
 #include <random>
 
 namespace ts::server::udp {
