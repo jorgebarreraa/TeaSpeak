@@ -19,6 +19,7 @@ include_directories(../music/include/)
 include_directories(../shared/src)
 include_directories(../license/src)
 include_directories(../MusicBot/src)
+include_directories(../../../TeaSpeakLibrary-1.4.10/src)
 # include_directories(/usr/local/include/breakpad)
 # include_directories(${LIBRARY_PATH}/tomcrypt/src/headers)
 

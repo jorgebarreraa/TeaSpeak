@@ -1550,6 +1550,22 @@ else
     log_success "✓ PARCHE 33 ya aplicado (spin_lock correcto)"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 34: Add TeaSpeakLibrary include path to server CMakeLists.txt"
+log_info "════════════════════════════════════════════════════════════"
+SERVER_CMAKE="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
+if [[ -f "$SERVER_CMAKE" ]]; then
+    if grep -q "include_directories(../../../TeaSpeakLibrary-1.4.10/src)" "$SERVER_CMAKE"; then
+        log_success "✓ TeaSpeakLibrary ya está en include_directories"
+    else
+        log_info "Agregando TeaSpeakLibrary a include_directories..."
+        sed -i '/include_directories(..\/MusicBot\/src)/a include_directories(../../../TeaSpeakLibrary-1.4.10/src)' "$SERVER_CMAKE"
+        log_success "✓ PARCHE 34 aplicado exitosamente"
+    fi
+else
+    log_warning "⚠ $SERVER_CMAKE no encontrado, saltando PARCHE 34"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
