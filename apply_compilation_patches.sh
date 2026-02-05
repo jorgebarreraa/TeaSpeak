@@ -1468,7 +1468,7 @@ else
 fi
 
 log_info "════════════════════════════════════════════════════════════"
-log_info "  PARCHE 31: Fix converter.cpp/h (semicolon + cstdint)"
+log_info "  PARCHE 31: Fix shared module includes (GCC 13 compatibility)"
 log_info "════════════════════════════════════════════════════════════"
 
 # Fix converter.cpp - missing semicolon
@@ -1495,7 +1495,19 @@ if [[ -f "$CONVERTER_H" ]]; then
     fi
 fi
 
-log_success "✓ PARCHE 31 completado"
+# Fix advanced_mutex.h - missing #include <memory>
+ADVANCED_MUTEX_H="$SCRIPT_DIR/Server/Root/TeaSpeak/shared/src/misc/advanced_mutex.h"
+if [[ -f "$ADVANCED_MUTEX_H" ]]; then
+    if grep -q "#include <memory>" "$ADVANCED_MUTEX_H"; then
+        log_success "✓ advanced_mutex.h ya tiene #include <memory>"
+    else
+        log_info "Agregando #include <memory> a advanced_mutex.h..."
+        sed -i '/#include <map>/a #include <memory>' "$ADVANCED_MUTEX_H"
+        log_success "✓ advanced_mutex.h parcheado"
+    fi
+fi
+
+log_success "✓ PARCHE 31 completado (GCC 13 explicit includes)"
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
