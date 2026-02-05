@@ -134,7 +134,7 @@ namespace ts::server::file::networking {
         size_t span_bytes{0};
         std::array<size_t, kAverageTimeCount> history{};
 
-        spin_mutex mutex{};
+        spin_lock mutex{};
 
         inline void increase_bytes(size_t bytes) {
             auto current_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
