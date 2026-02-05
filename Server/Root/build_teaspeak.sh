@@ -2,7 +2,9 @@
 set -e  # Exit immediately if any command fails
 _build_helper_dir="$(pwd)/build-helpers/"
 
-# Export OS type and architecture for CMake configuration
+# Export OS type and architecture for CMake configuration (uppercase for CMake, lowercase for bash scripts)
+export BUILD_OS_TYPE="linux"
+export BUILD_OS_ARCH="amd64"
 export build_os_type="linux"
 export build_os_arch="amd64"
 
