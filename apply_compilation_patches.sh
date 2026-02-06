@@ -1528,26 +1528,27 @@ else
 fi
 
 log_info "════════════════════════════════════════════════════════════"
-log_info "  PARCHE 33: Fix spin_mutex -> spin_lock in file and server modules"
+log_info "  PARCHE 33: Fix spin_lock -> spin_mutex in file and server modules"
 log_info "════════════════════════════════════════════════════════════"
 # Fix incorrect include name and type name in file and server modules
+# NOTE: The correct header is spin_mutex.h, NOT spin_lock.h
 NEEDS_PATCH=0
-if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "misc/spin_mutex\.h" {} \; 2>/dev/null; then
-    log_info "Corrigiendo includes de spin_mutex.h -> spin_lock.h..."
-    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's|misc/spin_mutex\.h|misc/spin_lock.h|g' {} + 2>/dev/null
+if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "misc/spin_lock\.h" {} \; 2>/dev/null; then
+    log_info "Corrigiendo includes de spin_lock.h -> spin_mutex.h..."
+    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's|misc/spin_lock\.h|misc/spin_mutex.h|g' {} + 2>/dev/null
     NEEDS_PATCH=1
 fi
 
-if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "spin_mutex " {} \; 2>/dev/null; then
-    log_info "Corrigiendo tipo spin_mutex -> spin_lock..."
-    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's/spin_mutex /spin_lock /g' {} + 2>/dev/null
+if find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec grep -q "spin_lock " {} \; 2>/dev/null; then
+    log_info "Corrigiendo tipo spin_lock -> spin_mutex..."
+    find "$SCRIPT_DIR/Server/Root/TeaSpeak/file" "$SCRIPT_DIR/Server/Root/TeaSpeak/server" -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i 's/spin_lock /spin_mutex /g' {} + 2>/dev/null
     NEEDS_PATCH=1
 fi
 
 if [[ $NEEDS_PATCH -eq 1 ]]; then
     log_success "✓ PARCHE 33 aplicado exitosamente"
 else
-    log_success "✓ PARCHE 33 ya aplicado (spin_lock correcto)"
+    log_success "✓ PARCHE 33 ya aplicado (spin_mutex correcto)"
 fi
 
 log_info "════════════════════════════════════════════════════════════"

@@ -41,10 +41,29 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Línea 137: `spin_lock mutex{}` → `spin_mutex mutex{}`
 - **Estado:** ✅ PUSHEADO
 
+#### 5. Fix: Patch 33 en apply_compilation_patches.sh (CRÍTICO)
+- **Commit:** Pendiente
+- **Archivo:** `apply_compilation_patches.sh:1531-1550`
+- **Problema:** Patch 33 estaba **revirtiendo** nuestros cambios - cambiaba `spin_mutex.h` de vuelta a `spin_lock.h` (incorrecto)
+- **Solución:** Invertida la lógica del patch:
+  - Cambio 1: `spin_lock.h` → `spin_mutex.h` (era al revés)
+  - Cambio 2: `spin_lock ` → `spin_mutex ` (era al revés)
+  - Actualizado mensaje de log
+- **Estado:** ⏳ PENDIENTE COMMIT
+
+#### 6. Fix: ServerCommandExecutor.h include incorrecto
+- **Commit:** Pendiente
+- **Archivo:** `Server/Server/server/src/client/shared/ServerCommandExecutor.h:3`
+- **Problema:** Include `<misc/spin_lock.h>` (archivo no existe)
+- **Solución:** Cambiado a `<misc/spin_mutex.h>`
+- **Estado:** ⏳ PENDIENTE COMMIT
+
 ### 🔄 Próximo Paso:
 
-**Recompilar** para verificar que el error `spin_lock.h` está resuelto:
+**Commit y recompilar** para verificar que el error `spin_lock.h` está completamente resuelto:
 ```bash
+git add -A
+git commit -m "Fix: Correct Patch 33 and remaining spin_lock.h references"
 cd /root/TeaSpeak/Server/Root
 bash build_teaspeak.sh stable
 ```
