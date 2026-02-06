@@ -1,6 +1,6 @@
 #pragma once
 
-#include <misc/spin_lock.h>
+#include <misc/spin_mutex.h>
 #include <mutex>
 #include <deque>
 #include <protocol/Packet.h>
