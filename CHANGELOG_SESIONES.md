@@ -26,10 +26,28 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   ```
 - **Estado:** ✅ PUSHEADO
 
+#### 3. Docs: Session Changelog
+- **Commit:** `9d5afe5`
+- **Archivo:** `CHANGELOG_SESIONES.md` (NUEVO)
+- **Descripción:** Creado archivo de seguimiento de cambios entre sesiones
+- **Estado:** ✅ PUSHEADO
+
+### ⚠️ ERROR ACTUAL EN COMPILACIÓN:
+
+**Error:** `misc/spin_lock.h: No such file or directory` en módulo `file`
+
+**Análisis:**
+- Los archivos `.h` en `Server/Root/TeaSpeak/file/local_server/` ya tienen `#include <misc/spin_mutex.h>` correcto
+- Verificado: `LocalFileProvider.h`, `LocalFileSystem.h`, `LocalFileTransfer.h`, `NetTools.h` todos usan `spin_mutex.h`
+- Build cache limpiado: `rm -rf Server/Root/TeaSpeak/build`
+- **POSIBLE CAUSA:** Archivo caché de CMake o problema con symlinks entre Server/Server y Server/Root/TeaSpeak
+
+**Próximo paso:** Volver a compilar después de limpiar cache
+
 ### 📝 Contexto Importante:
 - Usuario trabaja desde `/root/TeaSpeak` (symlink a `/home/user/TeaSpeak`)
 - Usa `setup_teaspeak.sh` con autenticación GitHub
-- Error reportado: CMake no encontraba TomMath durante configuración
+- Compilación CMake configuró OK, falló al compilar módulo `file`
 
 ---
 
