@@ -74,7 +74,7 @@ log_step() {
 # ═══════════════════════════════════════════════════════════════════════
 INSTALL_DIR="${1:-/opt/TeaSpeak}"
 REPO_URL="https://github.com/jorgebarreraa/TeaSpeak.git"
-REPO_BRANCH="claude/merge-to-main-01954FhCQayunKQ1gHcJhGhw"
+REPO_BRANCH="main"
 REQUIRED_OPENSSL_VERSION="3.0"
 MIN_GCC_VERSION="13"
 
