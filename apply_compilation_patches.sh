@@ -841,35 +841,39 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 20: Actualizar symlinks de OpenSSL a versión 3.0
+# PARCHE 20: Usar OpenSSL 1.1 (no 3.0) para evitar conflictos con librerías del sistema
 # ═══════════════════════════════════════════════════════════════════════════
+# IMPORTANTE: OpenSSL 3.0 shared libs (.so) están enlazadas dinámicamente al sistema
+# y causan conflictos de símbolos @OPENSSL_3.0.0. Usamos 1.1 que es más estable.
+# NOTA: Con PATCH 35, usamos bibliotecas estáticas (.a) que son autocontenidas,
+# pero mantenemos los symlinks en 1.1 por consistencia.
 OPENSSL_LIB_DIR="$SCRIPT_DIR/Server/Root/libraries/openssl-prebuild/linux_amd64/lib"
 
 if [[ -d "$OPENSSL_LIB_DIR" ]]; then
     log_info "Verificando versión de OpenSSL en libraries..."
 
-    # Verificar si los symlinks ya apuntan a versión 3.0
-    if [[ -L "$OPENSSL_LIB_DIR/libssl.so" ]] && [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.3" ]]; then
-        log_success "✓ Symlinks de OpenSSL ya apuntan a versión 3.0"
+    # Verificar si los symlinks ya apuntan a versión 1.1
+    if [[ -L "$OPENSSL_LIB_DIR/libssl.so" ]] && [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.1.1" ]]; then
+        log_success "✓ Symlinks de OpenSSL ya apuntan a versión 1.1 (correcto)"
     else
-        log_info "Actualizando symlinks de OpenSSL 1.1 → 3.0..."
+        log_info "Actualizando symlinks de OpenSSL a versión 1.1..."
 
-        # Verificar que existan las versiones 3.0
-        if [[ -f "$OPENSSL_LIB_DIR/libssl.so.3" ]] && [[ -f "$OPENSSL_LIB_DIR/libcrypto.so.3" ]]; then
-            # Actualizar symlinks
-            ln -sf libssl.so.3 "$OPENSSL_LIB_DIR/libssl.so"
-            ln -sf libcrypto.so.3 "$OPENSSL_LIB_DIR/libcrypto.so"
+        # Verificar que existan las versiones 1.1
+        if [[ -f "$OPENSSL_LIB_DIR/libssl.so.1.1" ]] && [[ -f "$OPENSSL_LIB_DIR/libcrypto.so.1.1" ]]; then
+            # Actualizar symlinks a 1.1
+            ln -sf libssl.so.1.1 "$OPENSSL_LIB_DIR/libssl.so"
+            ln -sf libcrypto.so.1.1 "$OPENSSL_LIB_DIR/libcrypto.so"
 
             # Verificar
-            if [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.3" ]] && \
-               [[ "$(readlink "$OPENSSL_LIB_DIR/libcrypto.so")" == "libcrypto.so.3" ]]; then
-                log_success "✓ Symlinks actualizados a OpenSSL 3.0"
+            if [[ "$(readlink "$OPENSSL_LIB_DIR/libssl.so")" == "libssl.so.1.1" ]] && \
+               [[ "$(readlink "$OPENSSL_LIB_DIR/libcrypto.so")" == "libcrypto.so.1.1" ]]; then
+                log_success "✓ Symlinks actualizados a OpenSSL 1.1"
             else
                 log_error "Error al actualizar symlinks de OpenSSL"
                 exit 1
             fi
         else
-            log_warning "OpenSSL 3.0 no encontrado en libraries (usando versión existente)"
+            log_warning "OpenSSL 1.1 no encontrado en libraries (usando versión existente)"
         fi
     fi
 else
@@ -877,7 +881,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 21: Recompilar DataPipes con OpenSSL 3.0 en lugar de BoringSSL
+# PARCHE 21: Recompilar DataPipes con OpenSSL 1.1 en lugar de BoringSSL
 # ═══════════════════════════════════════════════════════════════════════════
 DATAPIPES_BUILD_SCRIPT="$SCRIPT_DIR/Server/Root/build-helpers/libraries/build_datapipes.sh"
 DATAPIPES_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/DataPipes"
@@ -889,7 +893,7 @@ if [[ -f "$DATAPIPES_BUILD_SCRIPT" ]]; then
     if grep -q '_crypto_type="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
         log_success "✓ DataPipes ya está configurado para usar OpenSSL"
     else
-        log_info "Reconfigurando DataPipes para usar OpenSSL 3.0..."
+        log_info "Reconfigurando DataPipes para usar OpenSSL 1.1..."
 
         # Crear backup
         if [[ ! -f "$DATAPIPES_BUILD_SCRIPT.backup_crypto" ]]; then
@@ -922,7 +926,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 22: Compilar DataPipes con OpenSSL 3.0
+# PARCHE 22: Compilar DataPipes con OpenSSL 1.1 (bibliotecas estáticas)
 # ═══════════════════════════════════════════════════════════════════════════
 if [[ -d "$DATAPIPES_LIBRARY" ]]; then
     log_info "Verificando si DataPipes necesita compilación..."
@@ -940,7 +944,7 @@ if [[ -d "$DATAPIPES_LIBRARY" ]]; then
             rm -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
         fi
 
-        log_info "Compilando DataPipes con OpenSSL 3.0..."
+        log_info "Compilando DataPipes con OpenSSL 1.1 (estático)..."
 
         # Navegar al directorio de librerías
         CURRENT_DIR="$(pwd)"
@@ -962,7 +966,7 @@ if [[ -d "$DATAPIPES_LIBRARY" ]]; then
             if [[ $? -eq 0 ]]; then
                 # Verificar que las librerías se compilaron correctamente
                 if [[ -f "$DATAPIPES_LIB_CORE" && -f "$DATAPIPES_LIB_STATIC" ]]; then
-                    log_success "✓ DataPipes compilado exitosamente con OpenSSL 3.0"
+                    log_success "✓ DataPipes compilado exitosamente con OpenSSL 1.1 (estático)"
                 else
                     log_error "DataPipes compiló pero las librerías no se generaron en out/linux_amd64/lib/"
                     log_error "Buscando: $DATAPIPES_LIB_CORE"

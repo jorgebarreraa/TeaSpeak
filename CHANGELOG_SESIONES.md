@@ -4,6 +4,71 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2025-02-07 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados y Pusheados:
+
+#### 1. Fix: PATCH 35 - OpenSSL Linking Conflicts
+- **Commit:** `5631b92`
+- **Archivos:**
+  - `apply_compilation_patches.sh` (PATCH 35 agregado)
+  - `Server/Root/libraries/DataPipes/cmake/modules/FindCrypto.cmake` (modificado)
+- **Problema:**
+  - DataPipes compilado con OpenSSL shared libraries (`.so`)
+  - Server intentaba enlazar con OpenSSL static libraries (`.a`)
+  - Conflicto de símbolos @OPENSSL_3.0.0 al mezclar static + shared
+  - Error: `undefined reference to SSL_CTX_set_tlsext_servername_callback`
+- **Solución:**
+  - PATCH 35 modifica `FindCrypto.cmake` para priorizar bibliotecas estáticas
+  - Cambio: `NAMES libssl.so` → `NAMES libssl.a ssl.lib libssl.so`
+  - Cambio: `NAMES libcrypto.so` → `NAMES libcrypto.a crypto.lib libcrypto.so`
+  - Fuerza recompilación de DataPipes automáticamente
+- **Estado:** ✅ PUSHEADO
+
+#### 2. Fix: PATCH 20 Corregido - OpenSSL 1.1 vs 3.0
+- **Commit:** Pendiente
+- **Archivo:** `apply_compilation_patches.sh:843-881`
+- **Problema:**
+  - PATCH 20 cambiaba symlinks a OpenSSL 3.0
+  - OpenSSL 3.0 shared libs enlazadas al sistema causan conflictos
+- **Solución:**
+  - Cambiado de OpenSSL 3.0 → OpenSSL 1.1
+  - Symlinks ahora apuntan a `libssl.so.1.1` y `libcrypto.so.1.1`
+  - Agregado comentario explicativo sobre conflictos con versión 3.0
+- **Estado:** ⏳ PENDIENTE COMMIT
+
+#### 3. Fix: PATCH 21 y 22 - Referencias a OpenSSL actualizadas
+- **Commit:** Pendiente
+- **Archivos:** `apply_compilation_patches.sh:883-989`
+- **Cambio:** Actualizados mensajes de log para indicar OpenSSL 1.1 (estático)
+- **Estado:** ⏳ PENDIENTE COMMIT
+
+### 📋 Resumen Técnico del Fix:
+
+**Problema raíz:** Enlazado mixto de bibliotecas estáticas y compartidas de OpenSSL
+
+**Capas del fix:**
+1. ✅ **PATCH 35**: FindCrypto.cmake prioriza `.a` sobre `.so`
+2. ✅ **PATCH 20**: Symlinks apuntan a OpenSSL 1.1 (no 3.0)
+3. ✅ **Symlinks manuales**: Ya corregidos a 1.1 en ambos directorios
+4. ✅ **DataPipes reconstruido**: Con OpenSSL 1.1 estático
+
+**Ventajas del fix:**
+- Bibliotecas estáticas son autocontenidas (sin dependencias dinámicas)
+- Evita conflictos con librerías del sistema
+- Consistente entre DataPipes y Server
+- Se aplica automáticamente en cada compilación
+
+### 🔄 Próximo Paso:
+Commit y push de las correcciones a PATCH 20, 21, 22:
+```bash
+git add apply_compilation_patches.sh CHANGELOG_SESIONES.md
+git commit -m "Docs: Update CHANGELOG - OpenSSL linking fix completed"
+git push
+```
+
+---
+
 ## 🔄 SESIÓN: 2025-02-06 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados y Pusheados:
