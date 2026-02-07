@@ -1567,6 +1567,43 @@ else
     log_warning "⚠ $SERVER_CMAKE no encontrado, saltando PARCHE 34"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 35: Fix DataPipes FindCrypto.cmake to use static OpenSSL"
+log_info "════════════════════════════════════════════════════════════"
+FINDCRYPTO_CMAKE="$SCRIPT_DIR/Server/Root/libraries/DataPipes/cmake/modules/FindCrypto.cmake"
+if [[ -f "$FINDCRYPTO_CMAKE" ]]; then
+    if grep -q "NAMES libssl.a ssl.lib libssl.so" "$FINDCRYPTO_CMAKE"; then
+        log_success "✓ FindCrypto.cmake ya prioriza bibliotecas estáticas"
+    else
+        log_info "Modificando FindCrypto.cmake para usar bibliotecas estáticas de OpenSSL..."
+
+        # Modificar find_library para SSL para que busque primero .a (static) y luego .so (shared)
+        sed -i 's/NAMES libssl\.so ssl\.dll ssl\.lib/NAMES libssl.a ssl.lib libssl.so ssl.dll/g' "$FINDCRYPTO_CMAKE"
+
+        # Modificar find_library para CRYPTO para que busque primero .a (static) y luego .so (shared)
+        sed -i 's/NAMES libcrypto\.so crypto\.dll crypto\.lib/NAMES libcrypto.a crypto.lib libcrypto.so crypto.dll/g' "$FINDCRYPTO_CMAKE"
+
+        if grep -q "NAMES libssl.a ssl.lib libssl.so" "$FINDCRYPTO_CMAKE" && \
+           grep -q "NAMES libcrypto.a crypto.lib libcrypto.so" "$FINDCRYPTO_CMAKE"; then
+            log_success "✓ PARCHE 35 aplicado exitosamente"
+
+            # Forzar recompilación de DataPipes
+            DATAPIPES_BUILD_MARKER="$SCRIPT_DIR/Server/Root/libraries/DataPipes/.build_linux_amd64.txt"
+            if [[ -f "$DATAPIPES_BUILD_MARKER" ]]; then
+                log_info "Marcando DataPipes para recompilación..."
+                rm -f "$DATAPIPES_BUILD_MARKER"
+                rm -rf "$SCRIPT_DIR/Server/Root/libraries/DataPipes/_build/linux_amd64"
+                log_success "✓ DataPipes se recompilará automáticamente"
+            fi
+        else
+            log_error "Error al aplicar PARCHE 35"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ FindCrypto.cmake no encontrado, saltando PARCHE 35"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
