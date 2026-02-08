@@ -9,7 +9,7 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 ### ✅ Cambios Completados:
 
 #### 1. Fix: PATCH 36 - Shared Library OpenSSL Linking
-- **Commit:** Pendiente
+- **Commit:** `0478ee7`
 - **Archivos:**
   - `apply_compilation_patches.sh` (PATCH 36 agregado)
   - `Server/Server/shared/CMakeLists.txt` (será modificado por el patch)
@@ -23,7 +23,7 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - PATCH 36 modifica línea 221 de `shared/CMakeLists.txt`
   - Cambio: `openssl::ssl::shared openssl::crypto::shared` → `openssl::ssl::static openssl::crypto::static`
   - Fuerza recompilación del módulo shared automáticamente
-- **Estado:** ⏳ PENDIENTE APLICAR Y TESTEAR
+- **Estado:** ✅ PUSHEADO
 
 ### 📋 Resumen Técnico del Fix:
 
