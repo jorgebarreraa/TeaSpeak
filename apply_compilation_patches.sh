@@ -1608,6 +1608,43 @@ else
     log_warning "⚠ FindCrypto.cmake no encontrado, saltando PARCHE 35"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 36: Fix shared library to use static OpenSSL"
+log_info "════════════════════════════════════════════════════════════"
+SHARED_CMAKE="$SCRIPT_DIR/Server/Server/shared/CMakeLists.txt"
+if [[ -f "$SHARED_CMAKE" ]]; then
+    if grep -q "set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)" "$SHARED_CMAKE"; then
+        log_success "✓ shared/CMakeLists.txt ya usa bibliotecas estáticas de OpenSSL"
+    else
+        log_info "Modificando shared/CMakeLists.txt para usar bibliotecas estáticas de OpenSSL..."
+
+        # Crear backup si no existe
+        if [[ ! -f "$SHARED_CMAKE.backup_ssl" ]]; then
+            cp "$SHARED_CMAKE" "$SHARED_CMAKE.backup_ssl"
+        fi
+
+        # Reemplazar shared por static en la línea de OPENSSL_LIBRARIES
+        sed -i 's/set(OPENSSL_LIBRARIES openssl::ssl::shared openssl::crypto::shared)/set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)/g' "$SHARED_CMAKE"
+
+        if grep -q "set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)" "$SHARED_CMAKE"; then
+            log_success "✓ PARCHE 36 aplicado exitosamente"
+
+            # Forzar recompilación del módulo shared
+            SHARED_BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build/shared"
+            if [[ -d "$SHARED_BUILD_DIR" ]]; then
+                log_info "Limpiando compilación previa de shared..."
+                rm -rf "$SHARED_BUILD_DIR"
+                log_success "✓ Módulo shared se recompilará automáticamente"
+            fi
+        else
+            log_error "Error al aplicar PARCHE 36"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ shared/CMakeLists.txt no encontrado, saltando PARCHE 36"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"

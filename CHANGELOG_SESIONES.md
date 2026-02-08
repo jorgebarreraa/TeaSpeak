@@ -4,6 +4,38 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2025-02-08 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix: PATCH 36 - Shared Library OpenSSL Linking
+- **Commit:** Pendiente
+- **Archivos:**
+  - `apply_compilation_patches.sh` (PATCH 36 agregado)
+  - `Server/Server/shared/CMakeLists.txt` (será modificado por el patch)
+- **Problema:**
+  - `shared/CMakeLists.txt` enlaza OpenSSL shared libraries (`.so`)
+  - Server enlaza OpenSSL static libraries (`.a`)
+  - Conflicto durante linking final: ambas versiones intentan enlazarse
+  - Error: `undefined reference to EVP_idea_cbc@OPENSSL_3.0.0` y otros símbolos
+  - `libssl.so.3` no puede encontrar símbolos en `libcrypto.so.3`
+- **Solución:**
+  - PATCH 36 modifica línea 221 de `shared/CMakeLists.txt`
+  - Cambio: `openssl::ssl::shared openssl::crypto::shared` → `openssl::ssl::static openssl::crypto::static`
+  - Fuerza recompilación del módulo shared automáticamente
+- **Estado:** ⏳ PENDIENTE APLICAR Y TESTEAR
+
+### 📋 Resumen Técnico del Fix:
+
+**Problema raíz:** El módulo shared enlazaba OpenSSL compartido mientras el server enlazaba OpenSSL estático
+
+**Solución:**
+- ✅ **PATCH 36**: shared/CMakeLists.txt usa bibliotecas estáticas de OpenSSL
+- Consistencia total: todos los módulos usan OpenSSL estático
+- Evita conflictos de símbolos entre versiones dinámicas y estáticas
+
+---
+
 ## 🔄 SESIÓN: 2025-02-07 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados y Pusheados:
