@@ -90,7 +90,7 @@ namespace ts::server {
             bool whitelisted{false};
             int client_file_descriptor{-1};
 
-            spin_lock network_mutex{};
+            spin_mutex network_mutex{};
             ::event* event_read{nullptr};
             ::event* event_write{nullptr};
 
