@@ -1673,6 +1673,8 @@ if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
         sed -i 's|"${LIBRARY_PATH}CXXTerminal/|"${LIBRARY_PATH}/CXXTerminal/|g' "$TEAROOT_SERVER_CMAKE"
         sed -i 's|"${LIBRARY_PATH}StringVariable/|"${LIBRARY_PATH}/StringVariable/|g' "$TEAROOT_SERVER_CMAKE"
         sed -i 's|"${LIBRARY_PATH}yaml-cpp/|"${LIBRARY_PATH}/yaml-cpp/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}jemalloc/|"${LIBRARY_PATH}/jemalloc/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}boringssl/|"${LIBRARY_PATH}/boringssl/|g' "$TEAROOT_SERVER_CMAKE"
 
         if grep -q 'SET(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE" && \
            grep -q 'SET(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"; then
@@ -1754,6 +1756,76 @@ if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
 else
     log_warning "⚠ tearoot-server.cmake no encontrado, saltando PARCHE 39"
 fi
+
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 40: Fix OpenSSL linking for DataPipes (add -lssl)"
+log_info "════════════════════════════════════════════════════════════"
+SERVER_CMAKE="$SCRIPT_DIR/Server/Server/server/CMakeLists.txt"
+if [[ -f "$SERVER_CMAKE" ]]; then
+    # Check if -lssl is already in target_link_options
+    if grep -A 3 "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE" | grep -q '"LINKER:-lssl"'; then
+        log_success "✓ server/CMakeLists.txt ya incluye -lssl en target_link_options"
+    else
+        log_info "Agregando -lssl a target_link_options en server/CMakeLists.txt..."
+
+        # Create backup if not exists
+        if [[ ! -f "$SERVER_CMAKE.backup_patch40" ]]; then
+            cp "$SERVER_CMAKE" "$SERVER_CMAKE.backup_patch40"
+        fi
+
+        # Add "LINKER:-lssl" before "LINKER:-lcrypto"
+        sed -i '/"LINKER:-lcrypto"/i\    "LINKER:-lssl"' "$SERVER_CMAKE"
+
+        if grep -A 4 "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE" | grep -q '"LINKER:-lssl"'; then
+            log_success "✓ PARCHE 40 aplicado exitosamente"
+        else
+            log_error "Error al aplicar PARCHE 40"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ server/CMakeLists.txt no encontrado, saltando PARCHE 40"
+fi
+
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 41: Make CXXTerminal and Breakpad optional"
+log_info "════════════════════════════════════════════════════════════"
+
+# Disable BREAKPAD_EXCEPTION_HANDLER in SignalHandler.cpp
+SIGNAL_HANDLER_CPP="$SCRIPT_DIR/Server/Server/server/src/SignalHandler.cpp"
+if [[ -f "$SIGNAL_HANDLER_CPP" ]]; then
+    if grep -q "#define BREAKPAD_EXCEPTION_HANDLER 0" "$SIGNAL_HANDLER_CPP"; then
+        log_success "✓ SignalHandler.cpp ya tiene Breakpad deshabilitado"
+    else
+        log_info "Deshabilitando Breakpad en SignalHandler.cpp..."
+        if [[ ! -f "$SIGNAL_HANDLER_CPP.backup_patch41" ]]; then
+            cp "$SIGNAL_HANDLER_CPP" "$SIGNAL_HANDLER_CPP.backup_patch41"
+        fi
+        sed -i 's/#define BREAKPAD_EXCEPTION_HANDLER 1/#define BREAKPAD_EXCEPTION_HANDLER 0/' "$SIGNAL_HANDLER_CPP"
+        log_success "✓ Breakpad deshabilitado en SignalHandler.cpp"
+    fi
+else
+    log_warning "⚠ SignalHandler.cpp no encontrado"
+fi
+
+# Comment out CXXTerminal include in main.cpp
+MAIN_CPP="$SCRIPT_DIR/Server/Server/server/main.cpp"
+if [[ -f "$MAIN_CPP" ]]; then
+    if grep -q "^//#include <CXXTerminal/QuickTerminal.h>" "$MAIN_CPP"; then
+        log_success "✓ main.cpp ya tiene CXXTerminal comentado"
+    else
+        log_info "Comentando CXXTerminal en main.cpp..."
+        if [[ ! -f "$MAIN_CPP.backup_patch41" ]]; then
+            cp "$MAIN_CPP" "$MAIN_CPP.backup_patch41"
+        fi
+        sed -i 's|^#include <CXXTerminal/QuickTerminal.h>|//#include <CXXTerminal/QuickTerminal.h>|' "$MAIN_CPP"
+        log_success "✓ CXXTerminal comentado en main.cpp"
+    fi
+else
+    log_warning "⚠ main.cpp no encontrado"
+fi
+
+log_success "✓ PARCHE 41 aplicado exitosamente"
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
