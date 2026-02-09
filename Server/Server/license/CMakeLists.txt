@@ -57,6 +57,7 @@ add_executable(TeaLicenseServer ${LICENCE_SOURCE_FILES}
 		# Only for boringssl: MySQLLibSSLFix.c
 )
 
+# PATCH 37: Use explicit OpenSSL paths to avoid linking conflicts
 target_link_libraries(TeaLicenseServer
 		TeaSpeak
 		TeaLicenseHelper    #Static
@@ -65,8 +66,8 @@ target_link_libraries(TeaLicenseServer
 
         mysqlclient
         jsoncpp_lib
-        openssl::ssl::static
-        openssl::crypto::static
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libssl.a
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
 
         pthread
         dl
@@ -77,6 +78,7 @@ if(TARGET CXXTerminal::static)
     target_link_libraries(TeaLicenseServer CXXTerminal::static)
 endif()
 if(TARGET DataPipes::core::static)
+# PATCH 37: Use explicit OpenSSL paths to avoid linking conflicts
     target_link_libraries(TeaLicenseServer DataPipes::core::static)
 endif()
 

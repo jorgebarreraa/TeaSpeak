@@ -1645,6 +1645,91 @@ else
     log_warning "⚠ shared/CMakeLists.txt no encontrado, saltando PARCHE 36"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 38: Fix library paths in tearoot-server.cmake"
+log_info "════════════════════════════════════════════════════════════"
+TEAROOT_SERVER_CMAKE="$SCRIPT_DIR/Server/Root/build-helpers/cmake/config/tearoot-server.cmake"
+if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
+    if grep -q 'SET(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE" && \
+       grep -q 'SET(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"; then
+        log_success "✓ tearoot-server.cmake ya tiene las rutas correctas de bibliotecas"
+    else
+        log_info "Corrigiendo rutas de bibliotecas en tearoot-server.cmake..."
+
+        # Crear backup si no existe
+        if [[ ! -f "$TEAROOT_SERVER_CMAKE.backup_patch38" ]]; then
+            cp "$TEAROOT_SERVER_CMAKE" "$TEAROOT_SERVER_CMAKE.backup_patch38"
+        fi
+
+        # Agregar las barras faltantes en las rutas de bibliotecas
+        # Usar un enfoque más general para evitar romper rutas que ya tienen la barra
+        sed -i 's|"${LIBRARY_PATH}tommath/|"${LIBRARY_PATH}/tommath/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}tomcrypt/|"${LIBRARY_PATH}/tomcrypt/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}opus/|"${LIBRARY_PATH}/opus/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}breakpad/|"${LIBRARY_PATH}/breakpad/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}ed25519/|"${LIBRARY_PATH}/ed25519/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}DataPipes/|"${LIBRARY_PATH}/DataPipes/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}Thread-Pool/|"${LIBRARY_PATH}/Thread-Pool/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}CXXTerminal/|"${LIBRARY_PATH}/CXXTerminal/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}StringVariable/|"${LIBRARY_PATH}/StringVariable/|g' "$TEAROOT_SERVER_CMAKE"
+        sed -i 's|"${LIBRARY_PATH}yaml-cpp/|"${LIBRARY_PATH}/yaml-cpp/|g' "$TEAROOT_SERVER_CMAKE"
+
+        if grep -q 'SET(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE" && \
+           grep -q 'SET(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"; then
+            log_success "✓ PARCHE 38 aplicado exitosamente"
+        else
+            log_error "Error al aplicar PARCHE 38"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ tearoot-server.cmake no encontrado, saltando PARCHE 38"
+fi
+
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 37: Fix license CMakeLists.txt to use explicit OpenSSL paths"
+log_info "════════════════════════════════════════════════════════════"
+LICENSE_CMAKE="$SCRIPT_DIR/Server/Server/license/CMakeLists.txt"
+if [[ -f "$LICENSE_CMAKE" ]]; then
+    if grep -q "# PATCH 37: Use explicit OpenSSL paths" "$LICENSE_CMAKE"; then
+        log_success "✓ license/CMakeLists.txt ya usa rutas explícitas de OpenSSL"
+    else
+        log_info "Modificando license/CMakeLists.txt para usar rutas explícitas de OpenSSL..."
+
+        # Crear backup si no existe
+        if [[ ! -f "$LICENSE_CMAKE.backup_patch37" ]]; then
+            cp "$LICENSE_CMAKE" "$LICENSE_CMAKE.backup_patch37"
+        fi
+
+        # Reemplazar openssl::ssl::static y openssl::crypto::static con rutas explícitas
+        # Buscar la sección target_link_libraries(TeaLicenseServer y reemplazar
+        sed -i '/target_link_libraries(TeaLicenseServer/,/^)/ {
+            s|openssl::ssl::static|${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libssl.a|g
+            s|openssl::crypto::static|${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a|g
+        }' "$LICENSE_CMAKE"
+
+        # Agregar marcador de que el patch fue aplicado
+        sed -i '/target_link_libraries(TeaLicenseServer/i\# PATCH 37: Use explicit OpenSSL paths to avoid linking conflicts' "$LICENSE_CMAKE"
+
+        if grep -q "# PATCH 37: Use explicit OpenSSL paths" "$LICENSE_CMAKE"; then
+            log_success "✓ PARCHE 37 aplicado exitosamente"
+
+            # Forzar recompilación del módulo license
+            LICENSE_BUILD_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/build/license"
+            if [[ -d "$LICENSE_BUILD_DIR" ]]; then
+                log_info "Limpiando compilación previa de license..."
+                rm -rf "$LICENSE_BUILD_DIR"
+                log_success "✓ Módulo license se recompilará automáticamente"
+            fi
+        else
+            log_error "Error al aplicar PARCHE 37"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ license/CMakeLists.txt no encontrado, saltando PARCHE 37"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
