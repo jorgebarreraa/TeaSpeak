@@ -3,7 +3,7 @@
 //#include <client/linux/handler/exception_handler.h>
 #include <iostream>
 #include <misc/strobf.h>
-#include <CXXTerminal/QuickTerminal.h>
+//#include <CXXTerminal/QuickTerminal.h>
 #include <event2/thread.h>
 #include <log/LogUtils.h>
 #include <ThreadPool/Timer.h>

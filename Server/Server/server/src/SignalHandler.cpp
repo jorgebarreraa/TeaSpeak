@@ -11,7 +11,7 @@
 
 #include <iterator>
 
-#define BREAKPAD_EXCEPTION_HANDLER 1
+#define BREAKPAD_EXCEPTION_HANDLER 0
 #ifdef BREAKPAD_EXCEPTION_HANDLER
 #include <breakpad/client/linux/handler/exception_handler.h>
 #endif

@@ -330,6 +330,7 @@ endif ()
 # Use linker flags to force inclusion of crypto and z symbols for mysql
 target_link_options(TeaSpeakServer PRIVATE
     "LINKER:--push-state,--no-as-needed"
+    "LINKER:-lssl"
     "LINKER:-lcrypto"
     "LINKER:-lz"
     "LINKER:--pop-state"
