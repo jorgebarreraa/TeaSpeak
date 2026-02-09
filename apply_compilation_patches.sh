@@ -1730,6 +1730,31 @@ else
     log_warning "⚠ license/CMakeLists.txt no encontrado, saltando PARCHE 37"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 39: Fix spdlog_ROOT_DIR in tearoot-server.cmake"
+log_info "════════════════════════════════════════════════════════════"
+TEAROOT_SERVER_CMAKE="$SCRIPT_DIR/Server/Root/build-helpers/cmake/config/tearoot-server.cmake"
+if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
+    # Check if spdlog_ROOT_DIR is already set
+    if grep -q "^SET(spdlog_ROOT_DIR" "$TEAROOT_SERVER_CMAKE"; then
+        log_success "✓ tearoot-server.cmake ya tiene spdlog_ROOT_DIR configurado"
+    else
+        log_info "Agregando spdlog_ROOT_DIR a tearoot-server.cmake..."
+
+        # Add spdlog_ROOT_DIR after the spdlog_DIR line
+        sed -i '/^set(spdlog_DIR/a\SET(spdlog_ROOT_DIR "${LIBRARY_PATH}/spdlog/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"
+
+        if grep -q "^SET(spdlog_ROOT_DIR" "$TEAROOT_SERVER_CMAKE"; then
+            log_success "✓ PARCHE 39 aplicado exitosamente"
+        else
+            log_error "Error al aplicar PARCHE 39"
+            exit 1
+        fi
+    fi
+else
+    log_warning "⚠ tearoot-server.cmake no encontrado, saltando PARCHE 39"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
