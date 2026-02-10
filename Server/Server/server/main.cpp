@@ -494,7 +494,9 @@ int main(int argc, char** argv) {
             errorMessage = "";
         }
     }
+#if ENABLE_TERMINAL
     if(terminal::instance()) terminal::instance()->setPrompt("§aStarting server. §7[§aloading sql§7]");
+#endif
 
     sql = new ts::server::SqlDataManager();
     if(!sql->initialize(errorMessage)) {
@@ -510,7 +512,9 @@ int main(int argc, char** argv) {
         goto stopApp;
     }
 
+#if ENABLE_TERMINAL
     if(terminal::instance()) terminal::instance()->setPrompt("§aStarting server. §7[§astarting instance§7]");
+#endif
 
     serverInstance = new ts::server::InstanceHandler(sql); //if error than mainThreadActive = false
     if(!mainThreadActive || !serverInstance->startInstance())
@@ -532,10 +536,13 @@ int main(int argc, char** argv) {
     }
 
     terminal::initialize_pipe(arguments.get_option("--pipe-path"));
+#if ENABLE_TERMINAL
     if(terminal::instance()) terminal::instance()->setPrompt("§7> §f");
+#endif
     while(mainThreadActive) {
         usleep(5 * 1000);
 
+#if ENABLE_TERMINAL
         if(terminal::instance()) {
             if(terminal::instance()->linesAvailable() > 0){
                 while(!(line = terminal::instance()->readLine("§7> §f")).empty())
@@ -553,6 +560,7 @@ int main(int argc, char** argv) {
                     });
             }
         }
+#endif
     }
 
     terminal::finalize_pipe();
@@ -573,8 +581,10 @@ int main(int argc, char** argv) {
     logMessageFmt(true, LOG_GENERAL, "Application suspend successful!");
 
     logger::uninstall();
+#if ENABLE_TERMINAL
     if(terminal::active())
         terminal::uninstall();
+#endif
     mainThreadDone = true;
     return 0;
 }
