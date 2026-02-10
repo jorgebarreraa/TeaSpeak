@@ -3,7 +3,10 @@
 //#include <client/linux/handler/exception_handler.h>
 #include <iostream>
 #include <misc/strobf.h>
-//#include <CXXTerminal/QuickTerminal.h>
+#define ENABLE_TERMINAL 0
+#if ENABLE_TERMINAL
+#include <CXXTerminal/QuickTerminal.h>
+#endif
 #include <event2/thread.h>
 #include <log/LogUtils.h>
 #include <ThreadPool/Timer.h>
@@ -207,8 +210,10 @@ int main(int argc, char** argv) {
     }
 
     if(!arguments.cmdOptionExists("--no-terminal")) {
+#if ENABLE_TERMINAL
         terminal::install();
         if(!terminal::active()) { cerr << "could not setup terminal!" << endl; return -1; }
+#endif
     }
 
     if(arguments.cmdOptionExists("--help") || arguments.cmdOptionExists("-h")) {
@@ -218,7 +223,9 @@ int main(int argc, char** argv) {
         logMessageFmt(true, LOG_GENERAL, HELP_FMT, "-q", "--set_query_password", "Changed the server admin query password");
         logMessageFmt(true, LOG_GENERAL, HELP_FMT, "-P<property>=<value>", "--property:<property>=<value>", "Override a config value manual");
         logMessageFmt(true, LOG_GENERAL, HELP_FMT, "-l", "--property-list", "List all available properties");
+#if ENABLE_TERMINAL
         terminal::uninstall();
+#endif
         return 0;
     }
     if(arguments.cmdOptionExists("--property-list") || arguments.cmdOptionExists("-l")) {
@@ -374,7 +381,11 @@ int main(int argc, char** argv) {
     logConfig->file_colored = ts::config::log::logfileColored;
     logConfig->logPath = ts::config::log::path;
     logConfig->vs_group_size = ts::config::log::vs_size;
+#if ENABLE_TERMINAL
     logConfig->sync = !terminal::instance();
+#else
+    logConfig->sync = true;
+#endif
 
     logger::setup(logConfig);
     threads::timer::function_log = [](const std::string& message, bool debug) {
@@ -446,13 +457,17 @@ int main(int argc, char** argv) {
 
     logMessage(LOG_GENERAL, "Starting music providers");
 
+#if ENABLE_TERMINAL
     if(terminal::instance()) terminal::instance()->setPrompt("§aStarting server. §7[§aloading music§7]");
+#endif
     if(ts::config::music::enabled && !arguments.cmdOptionExists("--no-providers")) {
         ::music::manager::loadProviders("providers");
         ::music::manager::register_provider(::music::provider::ChannelProvider::create_provider());
     }
 
+#if ENABLE_TERMINAL
     if(terminal::instance()) terminal::instance()->setPrompt("§aStarting server. §7[§aloading geoloc§7]");
+#endif
 
     if(!ts::config::geo::staticFlag) {
         if(ts::config::geo::type == geoloc::PROVIDER_SOFTWARE77)

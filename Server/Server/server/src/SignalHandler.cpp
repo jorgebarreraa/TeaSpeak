@@ -12,14 +12,14 @@
 #include <iterator>
 
 #define BREAKPAD_EXCEPTION_HANDLER 0
-#ifdef BREAKPAD_EXCEPTION_HANDLER
+#if BREAKPAD_EXCEPTION_HANDLER
 #include <breakpad/client/linux/handler/exception_handler.h>
 #endif
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
 
-#ifdef BREAKPAD_EXCEPTION_HANDLER
+#if BREAKPAD_EXCEPTION_HANDLER
 google_breakpad::ExceptionHandler* globalExceptionHandler = nullptr;
 #endif
 #define SIG(s, c) \
@@ -39,7 +39,7 @@ void print_current_exception() {
 }
 
 extern bool mainThreadDone;
-#ifdef BREAKPAD_EXCEPTION_HANDLER
+#if BREAKPAD_EXCEPTION_HANDLER
 static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void* context, bool succeeded) {
     if(ts::server::isShuttingDown()) {
         /* We don't care about this crash dump. Remove it. */
@@ -80,7 +80,7 @@ static bool dumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, 
 std::atomic spawn_failed_count = 0;
 bool ts::syssignal::setup() {
     logMessage(LOG_GENERAL, "Setting up exception handler");
-#ifdef BREAKPAD_EXCEPTION_HANDLER
+#if BREAKPAD_EXCEPTION_HANDLER
     globalExceptionHandler = new google_breakpad::ExceptionHandler(google_breakpad::MinidumpDescriptor("."), nullptr, dumpCallback, nullptr, true, -1);
 #endif
 
