@@ -301,10 +301,31 @@ else()
     message(FATAL_ERROR "Missing librtc library file")
 endif()
 
-# include_directories(${LIBRARY_PATH}/boringssl/include/)
+# Link against BoringSSL (required for DataPipes compatibility).
+# DataPipes is compiled against BoringSSL (googlesource), where functions such as
+# SSL_CTX_set_tlsext_servername_callback, BIO_clear_retry_flags, BIO_set_retry_read
+# are OPENSSL_EXPORT symbols.  openssl-prebuild-master is OpenSSL 1.x where these
+# are plain macros – so the symbols are absent from the archive and the linker fails.
+include_directories(${LIBRARY_PATH}/boringssl/include/)
+if(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.a")
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/lib/libssl.a
+            ${LIBRARY_PATH}/boringssl/lib/libcrypto.a
+    )
+elseif(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.so")
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/lib/libssl.so
+            ${LIBRARY_PATH}/boringssl/lib/libcrypto.so
+    )
+else()
+    message(WARNING "BoringSSL not found at ${LIBRARY_PATH}/boringssl/lib/ -- "
+                    "falling back to openssl-prebuild-master (may cause linker errors).")
+    target_link_libraries(TeaSpeakServer
+            ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
+            ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
+    )
+endif()
 target_link_libraries(TeaSpeakServer
-        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
-        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
         dl
         z
         rt # For clock_gettime
@@ -326,12 +347,10 @@ if (NOT DISABLE_JEMALLOC)
     add_definitions(-DHAVE_JEMALLOC)
 endif ()
 
-# Fix OpenSSL and zlib linking order for mysql compatibility
-# Use linker flags to force inclusion of crypto and z symbols for mysql
+# Fix zlib linking order for mysql compatibility
+# -lssl/-lcrypto are satisfied by the explicit BoringSSL link above
 target_link_options(TeaSpeakServer PRIVATE
     "LINKER:--push-state,--no-as-needed"
-    "LINKER:-lssl"
-    "LINKER:-lcrypto"
     "LINKER:-lz"
     "LINKER:--pop-state"
 )
