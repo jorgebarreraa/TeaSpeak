@@ -110,12 +110,34 @@ clone_with_fallback "https://github.com/jorgebarreraa/openssl-prebuild.git" "ope
 clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 
 # build-helpers
+# NOTE: build-helpers/ already exists in the repo (with cmake/ subdirectory).
+# We need to populate build-helpers/libraries/ which contains the library build scripts.
+# Since the directory exists, a plain git clone would be skipped. We handle this specially:
 cd ..
-clone_with_fallback "https://github.com/jorgebarreraa/build-helpers.git" "build-helpers"
+if [ ! -d "build-helpers/libraries" ]; then
+    echo "  Populating build-helpers/libraries/ from jorgebarreraa/build-helpers..."
+    if [ -d "build-helpers/.git" ]; then
+        # Already a git repo, pull the libraries/ subdirectory
+        (cd build-helpers && git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || true)
+    else
+        # build-helpers/ is from the main repo (not a git clone), clone into a temp location
+        # and copy the libraries/ directory
+        _tmp_bh="/tmp/_build_helpers_tmp_$$"
+        git clone --depth 1 "https://github.com/jorgebarreraa/build-helpers.git" "$_tmp_bh" 2>/dev/null && {
+            cp -r "$_tmp_bh/." "build-helpers/"
+            rm -rf "$_tmp_bh"
+            echo "  ✓ build-helpers/libraries/ populated"
+        } || {
+            echo "  ⚠ Could not clone jorgebarreraa/build-helpers (will use built-in scripts)"
+        }
+    fi
+else
+    echo "  ✓ build-helpers/libraries/ already exists, skipping"
+fi
 
-# Sobrescribir build_jsoncpp.sh de build-helpers con versión C++17
-# NOTE: This file no longer exists in libraries/, build-helpers has the correct version
-# echo "Sobrescribiendo build_jsoncpp.sh con versión C++17..."
-# cp -f libraries/build_jsoncpp.sh build-helpers/libraries/build_jsoncpp.sh
+# Also ensure our local build_helper.sh is available (in case clone failed)
+if [ ! -f "build-helpers/build_helper.sh" ]; then
+    echo "  ⚠ build-helpers/build_helper.sh missing - using built-in fallback"
+fi
 
 echo "✓ Todas las librerías descargadas exitosamente!"

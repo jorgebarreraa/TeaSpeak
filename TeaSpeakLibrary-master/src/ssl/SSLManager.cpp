@@ -315,7 +315,8 @@ std::shared_ptr<SSLContext> SSLManager::loadContext(std::string &rawKey, std::st
     }
 
     //Create context
-    context = shared_ptr<SSL_CTX>(SSL_CTX_new(SSLv23_server_method()), ::SSL_CTX_free);
+    /* SSLv23_server_method was renamed to TLS_server_method in OpenSSL 1.1+ and removed in BoringSSL */
+    context = shared_ptr<SSL_CTX>(SSL_CTX_new(TLS_server_method()), ::SSL_CTX_free);
     if (!context) SSL_ERROR("Could not create context: ");
 
 

@@ -18,8 +18,9 @@ Server/Root/libraries/DataPipes/
 Server/Root/libraries/jemalloc/
 Server/Root/libraries/zstd/
 
-# Build helpers (can be re-downloaded)
-Server/Root/build-helpers/
+# Build helpers - exclude auto-downloaded external scripts but keep our own
+# The libraries/ subdirectory below is our own (tracked), not from external repo
+Server/Root/build-helpers/build_helper.sh.external
 
 # Symlinks to prebuild libraries (created by setup scripts)
 Server/Root/libraries/glibc

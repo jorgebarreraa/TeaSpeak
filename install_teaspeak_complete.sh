@@ -526,7 +526,31 @@ compile_libraries() {
 
     cd "$INSTALL_DIR/Server/Root/libraries"
 
-    # PASO 8.2: Compilar librerías
+    # PASO 8.2: Build BoringSSL first (required for DataPipes compatibility)
+    log_info "Compilando BoringSSL (requerido para DataPipes)..."
+    if [[ -f "build_boringssl.sh" ]]; then
+        if [[ ! -f "boringssl/lib/libssl.a" ]]; then
+            # Install Go if needed (required for BoringSSL code generation)
+            if ! command -v go &>/dev/null; then
+                log_info "Instalando golang-go (requerido por BoringSSL)..."
+                $SUDO apt-get install -y golang-go 2>&1 | tail -5
+            fi
+            log_info "Construyendo BoringSSL desde código fuente..."
+            bash build_boringssl.sh 2>&1 | tee /tmp/build_boringssl.log
+            if [[ -f "boringssl/lib/libssl.a" ]]; then
+                log_success "BoringSSL compilado exitosamente"
+            else
+                log_error "BoringSSL falló. Ver /tmp/build_boringssl.log"
+                log_warning "Continuando sin BoringSSL (puede causar errores de enlazado)"
+            fi
+        else
+            log_success "BoringSSL ya compilado"
+        fi
+    else
+        log_warning "build_boringssl.sh no encontrado, saltando"
+    fi
+
+    # PASO 8.3: Compilar librerías
     log_info "Compilando librerías C/C++..."
 
     # Compilar usando el script principal

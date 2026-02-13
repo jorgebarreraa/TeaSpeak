@@ -306,20 +306,37 @@ endif()
 # SSL_CTX_set_tlsext_servername_callback, BIO_clear_retry_flags, BIO_set_retry_read
 # are OPENSSL_EXPORT symbols.  openssl-prebuild-master is OpenSSL 1.x where these
 # are plain macros – so the symbols are absent from the archive and the linker fails.
-include_directories(${LIBRARY_PATH}/boringssl/include/)
+#
+# IMPORTANT: include_directories is only added when the library files exist, to avoid
+# compiling with BoringSSL headers but linking against OpenSSL (causing symbol mismatches).
 if(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.a")
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
     target_link_libraries(TeaSpeakServer
             ${LIBRARY_PATH}/boringssl/lib/libssl.a
             ${LIBRARY_PATH}/boringssl/lib/libcrypto.a
     )
 elseif(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.so")
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
     target_link_libraries(TeaSpeakServer
             ${LIBRARY_PATH}/boringssl/lib/libssl.so
             ${LIBRARY_PATH}/boringssl/lib/libcrypto.so
     )
+elseif(EXISTS "${LIBRARY_PATH}/boringssl/build/ssl/libssl.a")
+    # BoringSSL built but not yet installed to lib/ subdirectory
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/build/ssl/libssl.a
+            ${LIBRARY_PATH}/boringssl/build/crypto/libcrypto.a
+    )
 else()
     message(WARNING "BoringSSL not found at ${LIBRARY_PATH}/boringssl/lib/ -- "
-                    "falling back to openssl-prebuild-master (may cause linker errors).")
+                    "falling back to openssl-prebuild-master.\n"
+                    "NOTE: DataPipes requires BoringSSL. Build BoringSSL first:\n"
+                    "  cd ${LIBRARY_PATH} && bash build_boringssl.sh")
+    # Use prebuild OpenSSL (may cause linker errors if DataPipes is linked)
     target_link_libraries(TeaSpeakServer
             ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
             ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
