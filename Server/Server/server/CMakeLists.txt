@@ -336,11 +336,16 @@ else()
                     "falling back to openssl-prebuild-master.\n"
                     "NOTE: DataPipes requires BoringSSL. Build BoringSSL first:\n"
                     "  cd ${LIBRARY_PATH} && bash build_boringssl.sh")
-    # Use prebuild OpenSSL (may cause linker errors if DataPipes is linked)
+    # Use prebuild OpenSSL.
     target_link_libraries(TeaSpeakServer
             ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
             ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
     )
+    # DataPipes was compiled with BoringSSL, which exports these as real functions.
+    # OpenSSL provides them only as macros (no exported symbols), so the linker
+    # cannot resolve them.  Compile a thin wrapper that implements them via the
+    # underlying OpenSSL function calls.
+    target_sources(TeaSpeakServer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/boringssl_compat.c)
 endif()
 target_link_libraries(TeaSpeakServer
         dl
