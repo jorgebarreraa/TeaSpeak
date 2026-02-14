@@ -5,7 +5,7 @@
 #include <misc/strobf.h>
 #define ENABLE_TERMINAL 0
 #if ENABLE_TERMINAL
-#include <CXXTerminal/QuickTerminal.h>
+//#include <CXXTerminal/QuickTerminal.h>
 #endif
 #include <event2/thread.h>
 #include <log/LogUtils.h>

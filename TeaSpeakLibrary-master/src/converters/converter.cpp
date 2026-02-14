@@ -29,7 +29,7 @@ CONVERTER_PRIMITIVE_ST(int32_t, std::stol(std::string{str}) & 0xFFFFFFFF);
 CONVERTER_PRIMITIVE_ST(uint32_t, std::stoul(std::string{str}) & 0xFFFFFFFF);
 
 CONVERTER_PRIMITIVE_ST(int64_t, std::stoll(std::string{str}));
-CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}))
+CONVERTER_PRIMITIVE_ST(uint64_t, std::stoull(std::string{str}));
 
 CONVERTER_PRIMITIVE_ST(bool, str == "1" || str == "true");
 CONVERTER_PRIMITIVE_ST(float, std::stof(std::string{str}));

@@ -87,7 +87,7 @@ fi
 cd build || exit 1
 
 echo "Build type: $_build_type"
-_command="cmake .. -DCMAKE_BUILD_TYPE=\"$_build_type\" -DCMAKE_CXX_FLAGS=\"${CXX_FLAGS}\" -DBUILD_INCLUDE_FILE=\"$_build_helper_dir/cmake/config/tearoot-server.cmake\" -DCMAKE_MODULE_PATH=\"$_build_helper_dir/cmake/\" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT=\"$_web_flag\" $TEASPEAK_DEPLOY_TYPE_SPECIFIER -Dmysql_ROOT_DIR=\"/usr\""
+_command="cmake .. -DCMAKE_BUILD_TYPE=\"$_build_type\" -DCMAKE_CXX_FLAGS=\"${CXX_FLAGS}\" -DBUILD_INCLUDE_FILE=\"$_build_helper_dir/cmake/config/tearoot-server.cmake\" -DCMAKE_MODULE_PATH=\"$_build_helper_dir/cmake/\" -DBUILD_OS_TYPE=\"${BUILD_OS_TYPE}\" -DBUILD_OS_ARCH=\"${BUILD_OS_ARCH}\" -DDISABLE_QT=1 -DDISABLE_CUSTOM_OUTPUT=ON -DDISABLE_QT=ON -DCOMPILE_WEB_CLIENT=\"$_web_flag\" $TEASPEAK_DEPLOY_TYPE_SPECIFIER -Dmysql_ROOT_DIR=\"/usr\""
 echo "> $_command"
 eval $_command
 _code=$?

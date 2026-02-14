@@ -1558,7 +1558,7 @@ log_info "  PARCHE 36: Fix shared library to use static OpenSSL"
 log_info "════════════════════════════════════════════════════════════"
 SHARED_CMAKE="$SCRIPT_DIR/Server/Server/shared/CMakeLists.txt"
 if [[ -f "$SHARED_CMAKE" ]]; then
-    if grep -q "set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)" "$SHARED_CMAKE"; then
+    if ! grep -q "openssl::ssl::shared\|openssl::crypto::shared" "$SHARED_CMAKE"; then
         log_success "✓ shared/CMakeLists.txt ya usa bibliotecas estáticas de OpenSSL"
     else
         log_info "Modificando shared/CMakeLists.txt para usar bibliotecas estáticas de OpenSSL..."
@@ -1568,10 +1568,11 @@ if [[ -f "$SHARED_CMAKE" ]]; then
             cp "$SHARED_CMAKE" "$SHARED_CMAKE.backup_ssl"
         fi
 
-        # Reemplazar shared por static en la línea de OPENSSL_LIBRARIES
-        sed -i 's/set(OPENSSL_LIBRARIES openssl::ssl::shared openssl::crypto::shared)/set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)/g' "$SHARED_CMAKE"
+        # Reemplazar todas las ocurrencias de shared por static para openssl targets
+        sed -i 's/openssl::ssl::shared/openssl::ssl::static/g' "$SHARED_CMAKE"
+        sed -i 's/openssl::crypto::shared/openssl::crypto::static/g' "$SHARED_CMAKE"
 
-        if grep -q "set(OPENSSL_LIBRARIES openssl::ssl::static openssl::crypto::static)" "$SHARED_CMAKE"; then
+        if ! grep -q "openssl::ssl::shared\|openssl::crypto::shared" "$SHARED_CMAKE"; then
             log_success "✓ PARCHE 36 aplicado exitosamente"
 
             # Forzar recompilación del módulo shared
@@ -1582,7 +1583,7 @@ if [[ -f "$SHARED_CMAKE" ]]; then
                 log_success "✓ Módulo shared se recompilará automáticamente"
             fi
         else
-            log_error "Error al aplicar PARCHE 36"
+            log_error "Error al aplicar PARCHE 36: aún quedan referencias shared"
             exit 1
         fi
     fi
@@ -1595,8 +1596,8 @@ log_info "  PARCHE 38: Fix library paths in tearoot-server.cmake"
 log_info "════════════════════════════════════════════════════════════"
 TEAROOT_SERVER_CMAKE="$SCRIPT_DIR/Server/Root/build-helpers/cmake/config/tearoot-server.cmake"
 if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
-    if grep -q 'SET(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE" && \
-       grep -q 'SET(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"; then
+    if grep -qi 'TomMath_ROOT_DIR.*".*\${LIBRARY_PATH}/tommath/' "$TEAROOT_SERVER_CMAKE" && \
+       grep -qi 'TomCrypt_ROOT_DIR.*".*\${LIBRARY_PATH}/tomcrypt/' "$TEAROOT_SERVER_CMAKE"; then
         log_success "✓ tearoot-server.cmake ya tiene las rutas correctas de bibliotecas"
     else
         log_info "Corrigiendo rutas de bibliotecas en tearoot-server.cmake..."
@@ -1621,11 +1622,11 @@ if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
         sed -i 's|"${LIBRARY_PATH}jemalloc/|"${LIBRARY_PATH}/jemalloc/|g' "$TEAROOT_SERVER_CMAKE"
         sed -i 's|"${LIBRARY_PATH}boringssl/|"${LIBRARY_PATH}/boringssl/|g' "$TEAROOT_SERVER_CMAKE"
 
-        if grep -q 'SET(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE" && \
-           grep -q 'SET(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")' "$TEAROOT_SERVER_CMAKE"; then
+        if grep -qi 'TomMath_ROOT_DIR.*".*\${LIBRARY_PATH}/tommath/' "$TEAROOT_SERVER_CMAKE" && \
+           grep -qi 'TomCrypt_ROOT_DIR.*".*\${LIBRARY_PATH}/tomcrypt/' "$TEAROOT_SERVER_CMAKE"; then
             log_success "✓ PARCHE 38 aplicado exitosamente"
         else
-            log_error "Error al aplicar PARCHE 38"
+            log_error "Error al aplicar PARCHE 38: rutas de bibliotecas incorrectas"
             exit 1
         fi
     fi
@@ -1682,8 +1683,8 @@ log_info "  PARCHE 39: Fix spdlog_ROOT_DIR in tearoot-server.cmake"
 log_info "════════════════════════════════════════════════════════════"
 TEAROOT_SERVER_CMAKE="$SCRIPT_DIR/Server/Root/build-helpers/cmake/config/tearoot-server.cmake"
 if [[ -f "$TEAROOT_SERVER_CMAKE" ]]; then
-    # Check if spdlog_ROOT_DIR is already set
-    if grep -q "^SET(spdlog_ROOT_DIR" "$TEAROOT_SERVER_CMAKE"; then
+    # Check if spdlog_ROOT_DIR is already set (case-insensitive)
+    if grep -qi "^set(spdlog_ROOT_DIR\|^SET(spdlog_ROOT_DIR" "$TEAROOT_SERVER_CMAKE"; then
         log_success "✓ tearoot-server.cmake ya tiene spdlog_ROOT_DIR configurado"
     else
         log_info "Agregando spdlog_ROOT_DIR a tearoot-server.cmake..."

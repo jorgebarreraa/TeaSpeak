@@ -369,6 +369,16 @@ if (NOT DISABLE_JEMALLOC)
     add_definitions(-DHAVE_JEMALLOC)
 endif ()
 
+# Fix OpenSSL and zlib linking order for mysql compatibility
+# Use linker flags to force inclusion of crypto and z symbols for mysql
+target_link_options(TeaSpeakServer PRIVATE
+    "LINKER:--push-state,--no-as-needed"
+    "LINKER:-lssl"
+    "LINKER:-lcrypto"
+    "LINKER:-lz"
+    "LINKER:--pop-state"
+)
+
 # Fix zlib linking order for mysql compatibility
 # -lssl/-lcrypto are satisfied by the explicit BoringSSL link above
 target_link_options(TeaSpeakServer PRIVATE
