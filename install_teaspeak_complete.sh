@@ -370,7 +370,7 @@ clone_repository() {
             git submodule update --init --recursive
 
             # CRÍTICO: Descargar librerías faltantes
-            if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
+            if [[ -f "Server/Root/libraries/download_libraries_custom.sh" ]]; then
                 log_info "Descargando librerías faltantes..."
                 cd Server/Root/libraries
 
@@ -380,7 +380,7 @@ clone_repository() {
                     [[ -d "$dir" ]] && [[ -z "$(ls -A $dir 2>/dev/null)" ]] && rm -rf "$dir"
                 done
 
-                bash download_libraries.sh
+                bash download_libraries_custom.sh
                 cd "$INSTALL_DIR"
             fi
 
@@ -411,7 +411,7 @@ clone_repository() {
 
     # CRÍTICO: Descargar TODAS las librerías adicionales
     log_info "Descargando librerías adicionales (StringVariable, event, etc)..."
-    if [[ -f "Server/Root/libraries/download_libraries.sh" ]]; then
+    if [[ -f "Server/Root/libraries/download_libraries_custom.sh" ]]; then
         cd Server/Root/libraries
 
         # DEBUG: Mostrar qué hay antes de limpiar
@@ -428,8 +428,8 @@ clone_repository() {
         log_info "DEBUG - Contenido después de limpiar:"
         ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries" || log_info "  (symlinks eliminados correctamente)"
 
-        log_info "Ejecutando download_libraries.sh..."
-        bash download_libraries.sh || {
+        log_info "Ejecutando download_libraries_custom.sh..."
+        bash download_libraries_custom.sh || {
             log_error "Error descargando librerías"
             log_error "DEBUG - Contenido actual:"
             ls -la
@@ -438,7 +438,7 @@ clone_repository() {
         cd "$INSTALL_DIR"
         log_success "Todas las librerías descargadas"
     else
-        log_error "download_libraries.sh no encontrado"
+        log_error "download_libraries_custom.sh no encontrado"
         exit 1
     fi
 }
