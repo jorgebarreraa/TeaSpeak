@@ -33,7 +33,7 @@ set(_sv_search_paths
 )
 
 find_path(StringVariable_INCLUDE_DIR
-    NAMES StringVariable/StringVariable.h
+    NAMES StringVariable.h
     PATHS ${_sv_search_paths}
     PATH_SUFFIXES include
     NO_DEFAULT_PATH
@@ -41,7 +41,7 @@ find_path(StringVariable_INCLUDE_DIR
 )
 
 find_library(StringVariable_LIBRARIES_STATIC
-    NAMES libStringVariable.a StringVariable
+    NAMES libStringVariablesStatic.a StringVariablesStatic StringVariable
     PATHS ${_sv_search_paths}
     PATH_SUFFIXES lib
     NO_DEFAULT_PATH
@@ -49,8 +49,8 @@ find_library(StringVariable_LIBRARIES_STATIC
 )
 
 if(NOT StringVariable_INCLUDE_DIR OR NOT StringVariable_LIBRARIES_STATIC)
-    find_path(StringVariable_INCLUDE_DIR NAMES StringVariable/StringVariable.h PATHS /usr/local/include /usr/include)
-    find_library(StringVariable_LIBRARIES_STATIC NAMES StringVariable PATHS /usr/local/lib /usr/lib)
+    find_path(StringVariable_INCLUDE_DIR NAMES StringVariable.h PATHS /usr/local/include /usr/include)
+    find_library(StringVariable_LIBRARIES_STATIC NAMES StringVariablesStatic StringVariable PATHS /usr/local/lib /usr/lib)
 endif()
 
 if(StringVariable_INCLUDE_DIR AND StringVariable_LIBRARIES_STATIC)

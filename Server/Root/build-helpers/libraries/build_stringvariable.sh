@@ -14,7 +14,7 @@ source ${build_helper_file}
 requires_rebuild "${library_path}"
 if [[ $? -eq 0 ]]; then
     # Marker exists; verify the output library is actually present before skipping.
-    _sv_out="${library_path}/out/${build_os_type:-linux}_${build_os_arch:-amd64}/lib/libStringVariable.a"
+    _sv_out="${library_path}/out/${build_os_type:-linux}_${build_os_arch:-amd64}/lib/libStringVariablesStatic.a"
     if [[ -f "$_sv_out" ]]; then
         exit 0
     fi

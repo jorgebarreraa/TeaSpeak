@@ -941,7 +941,7 @@ fi
 # ═══════════════════════════════════════════════════════════════════════════
 SV_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/StringVariable"
 if [[ -d "$SV_LIBRARY" ]]; then
-    SV_LIB_STATIC="$SV_LIBRARY/out/linux_amd64/lib/libStringVariable.a"
+    SV_LIB_STATIC="$SV_LIBRARY/out/linux_amd64/lib/libStringVariablesStatic.a"
     SV_MARKER="$SV_LIBRARY/.build_successful"
 
     if [[ -f "$SV_LIB_STATIC" ]]; then
@@ -951,7 +951,7 @@ if [[ -d "$SV_LIBRARY" ]]; then
             touch "$SV_MARKER"
         fi
     elif [[ -f "$SV_MARKER" ]]; then
-        log_info "Marker de build presente pero libStringVariable.a faltante - limpiando marker..."
+        log_info "Marker de build presente pero libStringVariablesStatic.a faltante - limpiando marker..."
         rm -f "$SV_MARKER"
         log_success "✓ StringVariable se recompilará al ejecutar build.sh"
     else
