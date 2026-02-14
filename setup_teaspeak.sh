@@ -1036,6 +1036,9 @@ compile_libraries() {
         # themselves before configuring (e.g. build_boringssl.sh, build_breakpad.sh).
         find . -maxdepth 3 -path "*/out/linux_amd64" -type d -exec rm -rf {} + 2>/dev/null || true
         find . -maxdepth 2 -name ".build_linux_amd64.txt" -delete 2>/dev/null || true
+        # Also clear per-library success markers so requires_rebuild() doesn't skip
+        # libraries whose out/ was just deleted above.
+        find . -maxdepth 2 -name ".build_successful" -delete 2>/dev/null || true
         log_success "Cachés eliminados"
 
         # TomMath (CRÍTICA)
