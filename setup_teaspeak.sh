@@ -1029,7 +1029,11 @@ compile_libraries() {
     # Limpiar cachés de compilaciones previas fallidas
         log_substep "Limpiando cachés de compilaciones anteriores..."
         find . -maxdepth 2 -type d -name "_build" -exec rm -rf {} + 2>/dev/null || true
-        find . -maxdepth 2 -type d -name "build" -exec rm -rf {} + 2>/dev/null || true
+        find . -maxdepth 2 -type d -name "_cmake_build" -exec rm -rf {} + 2>/dev/null || true
+        # NOTE: do NOT remove directories named "build" here — some library source
+        # trees (e.g. zstd/build/cmake/) use "build" as part of their source layout.
+        # Individual build scripts that need a clean "build/" sub-directory remove it
+        # themselves before configuring (e.g. build_boringssl.sh, build_breakpad.sh).
         find . -maxdepth 3 -path "*/out/linux_amd64" -type d -exec rm -rf {} + 2>/dev/null || true
         find . -maxdepth 2 -name ".build_linux_amd64.txt" -delete 2>/dev/null || true
         log_success "Cachés eliminados"

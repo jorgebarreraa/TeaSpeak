@@ -44,7 +44,7 @@ mkdir -p build
 cd build
 
 ../configure \
-    CXXFLAGS="-std=c++11 -fPIC ${CXX_FLAGS}" \
+    CXXFLAGS="-fPIC ${CXX_FLAGS}" \
     CFLAGS="${C_FLAGS} -fPIC" \
     --prefix="${out_dir}"
 check_err_exit "${library_path}" "breakpad configure failed"

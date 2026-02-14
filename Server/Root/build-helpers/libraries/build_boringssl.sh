@@ -61,10 +61,16 @@ cd ../..
 mkdir -p "${library_path}/lib"
 check_err_exit "${library_path}" "Failed to create ${library_path}/lib directory"
 
-cp "${build_path}/ssl/libssl.a"       "${library_path}/lib/libssl.a"
+# BoringSSL changed output layout: older versions put libs in build/ssl/ and
+# build/crypto/, newer versions put them directly in build/. Search both.
+_libssl=$(find "${build_path}" -maxdepth 2 -name "libssl.a" 2>/dev/null | head -1)
+[[ -z "$_libssl" ]] && { echo "ERROR: libssl.a not found under ${build_path}"; exit 1; }
+cp "$_libssl" "${library_path}/lib/libssl.a"
 check_err_exit "${library_path}" "Failed to copy libssl.a"
 
-cp "${build_path}/crypto/libcrypto.a" "${library_path}/lib/libcrypto.a"
+_libcrypto=$(find "${build_path}" -maxdepth 2 -name "libcrypto.a" 2>/dev/null | head -1)
+[[ -z "$_libcrypto" ]] && { echo "ERROR: libcrypto.a not found under ${build_path}"; exit 1; }
+cp "$_libcrypto" "${library_path}/lib/libcrypto.a"
 check_err_exit "${library_path}" "Failed to copy libcrypto.a"
 
 echo "BoringSSL built successfully. Libraries in ${library_path}/lib/"
