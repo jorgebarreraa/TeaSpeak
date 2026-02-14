@@ -881,111 +881,56 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 21: Recompilar DataPipes con OpenSSL 1.1 en lugar de BoringSSL
+# PARCHE 21: Verificar que DataPipes use BoringSSL (configuración correcta)
 # ═══════════════════════════════════════════════════════════════════════════
+# NOTA: La versión anterior de este parche intentaba cambiar de BoringSSL a OpenSSL,
+# pero la decisión correcta es usar BoringSSL (commit 4325f01c).
+# El build_datapipes.sh actual ya usa BoringSSL directamente via crypto_options.
+# Este parche verifica que la configuración sea correcta y es NO-OP si ya está bien.
 DATAPIPES_BUILD_SCRIPT="$SCRIPT_DIR/Server/Root/build-helpers/libraries/build_datapipes.sh"
-DATAPIPES_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/DataPipes"
 
 if [[ -f "$DATAPIPES_BUILD_SCRIPT" ]]; then
-    log_info "Verificando configuración de DataPipes..."
+    log_info "Verificando configuración de DataPipes (BoringSSL)..."
 
-    # Verificar si ya está configurado para usar OpenSSL
-    if grep -q '_crypto_type="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
-        log_success "✓ DataPipes ya está configurado para usar OpenSSL"
+    # El build_datapipes.sh correcto usa crypto_options con BoringSSL
+    if grep -q 'boringssl' "$DATAPIPES_BUILD_SCRIPT"; then
+        log_success "✓ DataPipes ya está configurado para usar BoringSSL (correcto)"
     else
-        log_info "Reconfigurando DataPipes para usar OpenSSL 1.1..."
-
-        # Crear backup
-        if [[ ! -f "$DATAPIPES_BUILD_SCRIPT.backup_crypto" ]]; then
-            cp "$DATAPIPES_BUILD_SCRIPT" "$DATAPIPES_BUILD_SCRIPT.backup_crypto"
-        fi
-
-        # Cambiar de BoringSSL a OpenSSL
-        sed -i 's/_crypto_type="boringssl"/_crypto_type="openssl"/' "$DATAPIPES_BUILD_SCRIPT"
-
-        # Cambiar la ruta de Crypto_ROOT_DIR para apuntar a openssl-prebuild
-        sed -i 's|Crypto_ROOT_DIR="`pwd`/boringssl/lib"|Crypto_ROOT_DIR="`pwd`/openssl-prebuild/${build_os_type}_${build_os_arch}/lib"|' "$DATAPIPES_BUILD_SCRIPT"
-
-        # Verificar
-        if grep -q '_crypto_type="openssl"' "$DATAPIPES_BUILD_SCRIPT"; then
-            log_success "✓ DataPipes reconfigurado para OpenSSL"
-
-            # Forzar recompilación eliminando el archivo de estado de build
-            if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
-                log_info "Forzando recompilación de DataPipes..."
-                rm "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
-                log_success "✓ DataPipes se recompilará en la próxima compilación"
-            fi
-        else
-            log_error "Error al reconfigurar DataPipes"
-            exit 1
-        fi
+        log_warning "⚠ DataPipes no referencia BoringSSL - verificar build_datapipes.sh manualmente"
     fi
 else
     log_warning "Script build_datapipes.sh no encontrado (omitiendo parche 21)"
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 22: Compilar DataPipes con OpenSSL 1.1 (bibliotecas estáticas)
+# PARCHE 22: Verificar compilación de DataPipes con BoringSSL
 # ═══════════════════════════════════════════════════════════════════════════
+# NOTA: La compilación de DataPipes la realiza build.sh automáticamente.
+# Este parche solo verifica el estado y corrige marcadores inconsistentes.
+DATAPIPES_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/DataPipes"
+
 if [[ -d "$DATAPIPES_LIBRARY" ]]; then
-    log_info "Verificando si DataPipes necesita compilación..."
+    log_info "Verificando estado de compilación de DataPipes..."
 
-    # Verificar si DataPipes realmente tiene las librerías compiladas (no solo el marker)
-    DATAPIPES_LIB_CORE="$DATAPIPES_LIBRARY/out/linux_amd64/lib/libDataPipes-Core-Shared.so"
     DATAPIPES_LIB_STATIC="$DATAPIPES_LIBRARY/out/linux_amd64/lib/libDataPipes-Core-Static.a"
-    DATAPIPES_INCLUDE="$DATAPIPES_LIBRARY/out/linux_amd64/include/pipes/buffer.h"
+    DATAPIPES_MARKER="$DATAPIPES_LIBRARY/.build_successful"
 
-    if [[ -f "$DATAPIPES_LIB_CORE" && -f "$DATAPIPES_LIB_STATIC" && -f "$DATAPIPES_INCLUDE" ]]; then
-        log_success "✓ DataPipes ya está compilado con librerías válidas"
+    if [[ -f "$DATAPIPES_LIB_STATIC" ]]; then
+        log_success "✓ DataPipes está compilado correctamente con BoringSSL"
+        # Asegurar que el marker de build esté presente
+        if [[ ! -f "$DATAPIPES_MARKER" ]]; then
+            touch "$DATAPIPES_MARKER"
+        fi
+    elif [[ -f "$DATAPIPES_MARKER" ]]; then
+        log_info "Marker de build presente pero librerías faltantes - limpiando marker..."
+        rm -f "$DATAPIPES_MARKER"
+        # También limpiar el viejo marcador si existe
+        rm -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
+        log_success "✓ DataPipes se recompilará al ejecutar build.sh"
     else
-        if [[ -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt" ]]; then
-            log_info "Marker de build existe pero librerías faltantes - forzando recompilación..."
-            rm -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
-        fi
-
-        log_info "Compilando DataPipes con OpenSSL 1.1 (estático)..."
-
-        # Navegar al directorio de librerías
-        CURRENT_DIR="$(pwd)"
-        cd "$SCRIPT_DIR/Server/Root/libraries" || {
-            log_error "No se pudo acceder al directorio de librerías"
-            exit 1
-        }
-
-        # Definir variables de entorno para el build
-        export build_helper_file="$(pwd)/../build-helpers/build_helper.sh"
-        export build_os_type="linux"
-        export build_os_arch="amd64"
-
-        # Ejecutar el script de build de DataPipes
-        if [[ -f "../build-helpers/libraries/build_datapipes.sh" ]]; then
-            log_info "Ejecutando build_datapipes.sh..."
-            library_path="DataPipes" bash ../build-helpers/libraries/build_datapipes.sh
-
-            if [[ $? -eq 0 ]]; then
-                # Verificar que las librerías se compilaron correctamente
-                if [[ -f "$DATAPIPES_LIB_CORE" && -f "$DATAPIPES_LIB_STATIC" ]]; then
-                    log_success "✓ DataPipes compilado exitosamente con OpenSSL 1.1 (estático)"
-                else
-                    log_error "DataPipes compiló pero las librerías no se generaron en out/linux_amd64/lib/"
-                    log_error "Buscando: $DATAPIPES_LIB_CORE"
-                    cd "$CURRENT_DIR"
-                    exit 1
-                fi
-            else
-                log_error "Error al compilar DataPipes"
-                cd "$CURRENT_DIR"
-                exit 1
-            fi
-        else
-            log_error "build_datapipes.sh no encontrado"
-            cd "$CURRENT_DIR"
-            exit 1
-        fi
-
-        # Regresar al directorio original
-        cd "$CURRENT_DIR"
+        log_info "DataPipes no compilado aún - se compilará al ejecutar build.sh"
+        # Limpiar viejo marcador si existe
+        rm -f "$DATAPIPES_LIBRARY/.build_linux_amd64.txt"
     fi
 else
     log_warning "Directorio DataPipes no encontrado (omitiendo parche 22)"

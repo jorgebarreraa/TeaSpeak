@@ -4,6 +4,79 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2026-02-14 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix: Crear tearoot-server.cmake (archivo CMake crítico faltante)
+- **Archivo:** `Server/Root/build-helpers/cmake/config/tearoot-server.cmake` (NUEVO)
+- **Problema:**
+  - `build_teaspeak.sh` pasa `-DBUILD_INCLUDE_FILE=".../cmake/config/tearoot-server.cmake"` a CMake
+  - El archivo no existía → CMake fallaba con "cannot find file" → build imposible
+  - Sin este archivo, `find_package(TomMath)`, etc. no tenían ROOT_DIR configurado
+- **Solución:**
+  - Creado `build-helpers/cmake/config/tearoot-server.cmake`
+  - Incluye `tearoot-helper.cmake` para inicializar BUILD_OUTPUT = "out/linux_amd64"
+  - Establece TomMath_ROOT_DIR, TomCrypt_ROOT_DIR, spdlog_ROOT_DIR, yaml-cpp_DIR, etc.
+  - Establece legacy LIBRARY_PATH_* para targets Qt (LicenseManager, deshabilitado)
+- **Estado:** ✅ COMPLETADO
+
+#### 2. Fix: Crear módulos Find*.cmake faltantes
+- **Archivos nuevos en `Server/Server/cmake/Modules/`:**
+  - `FindTomMath.cmake` - busca en libraries/tommath/out/linux_amd64/
+  - `FindTomCrypt.cmake` - busca en libraries/tomcrypt/out/linux_amd64/
+  - `FindStringVariable.cmake` - busca en libraries/StringVariable/out/linux_amd64/
+  - `FindDataPipes.cmake` - crea targets DataPipes::core::static y DataPipes::core::shared
+  - `FindCXXTerminal.cmake` - crea target CXXTerminal::static
+  - `FindBreakpad.cmake` - busca en libraries/breakpad/out/linux_amd64/
+  - `FindOpus.cmake` - busca en libraries/opus/out/linux_amd64/
+  - `FindJemalloc.cmake` - busca en libraries/jemalloc/out/linux_amd64/
+  - `FindCrypto.cmake` - BoringSSL static (crea openssl::ssl::static, openssl::crypto::static, shared alias)
+- **Problema:** `find_package(TomMath REQUIRED)` y otros fallaban sin módulos de búsqueda
+- **Razón de ausencia:** Al agregar scripts a build-helpers/libraries/ en git (e1f14f41), el clone
+  de jorgebarreraa/build-helpers se saltó (que hubiera traído los cmake modules también)
+- **Estado:** ✅ COMPLETADO
+
+#### 3. Fix CRÍTICO: PATCH 21 causaba exit 1 en apply_compilation_patches.sh
+- **Archivo:** `apply_compilation_patches.sh` (PATCH 21 y 22)
+- **Problema:**
+  - PATCH 21 buscaba `_crypto_type="boringssl"` en build_datapipes.sh
+  - El archivo actual NO tiene esa variable → el grep final fallaba → `exit 1`
+  - Toda la compilación se interrumpía en este punto
+  - PATCH 22 usaba marcador `.build_linux_amd64.txt` en vez de `.build_successful`
+- **Solución:**
+  - PATCH 21: solo verifica que BoringSSL está referenciado (no cambia nada)
+  - PATCH 22: solo verifica y limpia marcadores, NO intenta compilar
+- **Estado:** ✅ COMPLETADO
+
+#### 4. Fix: TomMath regression en cache cleanup (commit eb6c87dd)
+- **Problema:** Cache cleanup eliminaba directorios output pero no los marcadores `.build_successful`
+- **Solución:** Limpieza de markers durante cleanup de cache
+- **Estado:** ✅ PUSHEADO
+
+#### 5. Fix: 4 fallos de compilación de librerías (commit 1e04d61c)
+- **BoringSSL**: versiones nuevas tienen libs en build/ directamente
+- **zstd**: cleanup eliminaba fuente (build/cmake), no artefactos
+- **breakpad**: Requiere C++20, eliminado `-std=c++11`
+- **DataPipes**: fallo en cascada con BoringSSL
+
+#### 6. Fix: Scripts de build-helpers/libraries/ en git (commit e1f14f41)
+- 16 scripts agregados al repositorio (antes externos)
+- Repo ahora es autocontenido sin clonar build-helpers
+
+#### 7. Fix: download_libraries_custom.sh (commit fb21b310)
+- download_libraries.sh eliminado pero referenciado en 5 lugares
+- Actualizadas todas las referencias
+
+### 📝 Contexto de la sesión 2026-02-14:
+- **Causa raíz de los problemas**: Los Find*.cmake y tearoot-server.cmake son archivos del repositorio original
+  `build-helpers` de WolverinDEV. Al hacer el repo autocontenido, se incluyeron los scripts de build
+  (.sh) pero no los archivos cmake. Esta sesión completa esa parte faltante.
+- **IMPORTANTE**: El build completo requiere primero ejecutar `download_libraries_custom.sh` para
+  clonar las fuentes, luego `build.sh` para compilar, luego `build_teaspeak.sh` para el servidor.
+
+---
+
 ## 🔄 SESIÓN: 2025-02-08 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados:
@@ -91,13 +164,9 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 - Consistente entre DataPipes y Server
 - Se aplica automáticamente en cada compilación
 
-### 🔄 Próximo Paso:
-Commit y push de las correcciones a PATCH 20, 21, 22:
-```bash
-git add apply_compilation_patches.sh CHANGELOG_SESIONES.md
-git commit -m "Docs: Update CHANGELOG - OpenSSL linking fix completed"
-git push
-```
+### ✅ Estado Final:
+- PATCH 20, 21, 22 → Pusheados en commit `980269ed` "Docs: Update CHANGELOG - OpenSSL linking fix completed"
+- PATCH 21 → Posteriormente corregido en sesión 2026-02-14 (lógica incorrecta)
 
 ---
 
@@ -139,31 +208,14 @@ git push
 - **Estado:** ✅ PUSHEADO
 
 #### 5. Fix: Patch 33 en apply_compilation_patches.sh (CRÍTICO)
-- **Commit:** Pendiente
+- **Commit:** `dd368f48` - "Fix: Correct Patch 33 and remaining spin_lock.h references"
 - **Archivo:** `apply_compilation_patches.sh:1531-1550`
-- **Problema:** Patch 33 estaba **revirtiendo** nuestros cambios - cambiaba `spin_mutex.h` de vuelta a `spin_lock.h` (incorrecto)
-- **Solución:** Invertida la lógica del patch:
-  - Cambio 1: `spin_lock.h` → `spin_mutex.h` (era al revés)
-  - Cambio 2: `spin_lock ` → `spin_mutex ` (era al revés)
-  - Actualizado mensaje de log
-- **Estado:** ⏳ PENDIENTE COMMIT
+- **Estado:** ✅ PUSHEADO (resuelto en sesión siguiente)
 
 #### 6. Fix: ServerCommandExecutor.h include incorrecto
-- **Commit:** Pendiente
+- **Commit:** `7cf13e49` - "Fix: Replace remaining spin_lock.h includes with spin_mutex.h"
 - **Archivo:** `Server/Server/server/src/client/shared/ServerCommandExecutor.h:3`
-- **Problema:** Include `<misc/spin_lock.h>` (archivo no existe)
-- **Solución:** Cambiado a `<misc/spin_mutex.h>`
-- **Estado:** ⏳ PENDIENTE COMMIT
-
-### 🔄 Próximo Paso:
-
-**Commit y recompilar** para verificar que el error `spin_lock.h` está completamente resuelto:
-```bash
-git add -A
-git commit -m "Fix: Correct Patch 33 and remaining spin_lock.h references"
-cd /root/TeaSpeak/Server/Root
-bash build_teaspeak.sh stable
-```
+- **Estado:** ✅ PUSHEADO (resuelto en sesión siguiente)
 
 ### 📝 Contexto Importante:
 - Usuario trabaja desde `/root/TeaSpeak` (symlink a `/home/user/TeaSpeak`)
@@ -194,16 +246,20 @@ bash build_teaspeak.sh stable
 
 ---
 
-## 🚧 TAREAS PENDIENTES
+## 🚧 TAREAS PENDIENTES (Actualizado 2026-02-14)
+
+### ✅ Resuelto:
+- [x] tearoot-server.cmake creado (cmake/config/)
+- [x] Find*.cmake modules creados (TomMath, TomCrypt, StringVariable, DataPipes, CXXTerminal, Breakpad, Opus, Jemalloc, Crypto)
+- [x] PATCH 21/22 corregidos (ya no causan exit 1)
+- [x] TomMath regression (cache cleanup) resuelto
+- [x] 4 library compilation failures resueltos (BoringSSL, zstd, breakpad, DataPipes)
+- [x] Scripts build-helpers/libraries/ en git
+- [x] download_libraries_custom.sh referenciado correctamente
 
 ### Prioridad ALTA:
-- [ ] Verificar que compilación funcione con los nuevos cambios
-- [ ] Probar `setup_teaspeak.sh` end-to-end
-- [ ] Verificar que TomMath se encuentre correctamente
-
-### Prioridad MEDIA:
-- [ ] Revisar si hay más rutas hardcodeadas en otros CMakeLists.txt
-- [ ] Documentar proceso completo de instalación
+- [ ] Ejecutar build completo para verificar que cmake configure correctamente
+- [ ] Verificar que todos los find_package() resuelven correctamente
 
 ### Prioridad BAJA:
 - [ ] Crear PR para mergear cambios a main
@@ -279,6 +335,8 @@ git pull origin claude/fix-install-script-ULBSP
 
 ---
 
-**Última actualización:** 2025-02-06
+**Última actualización:** 2026-02-14
+**Rama actual:** `claude/fix-install-script-ULBSP`
+**Último commit:** `eb6c87dd` + cambios de sesión 2026-02-14 (tearoot-server.cmake, Find*.cmake, PATCH 21/22)
 **Rama actual:** `claude/fix-install-script-ULBSP`
 **Último commit:** `aac9ac1` - Fix: Use relative path for LIBRARY_PATH in CMakeLists.txt
