@@ -1203,8 +1203,13 @@ compile_libraries() {
         # StringVariable
         log_substep "Compilando StringVariable..."
         if library_path="StringVariable" ../build-helpers/libraries/build_stringvariable.sh >> "$LOG_FILE.libraries" 2>&1; then
-            log_success "StringVariable compilada"
-            ((compiled_libs++))
+            if [[ -f "StringVariable/out/linux_amd64/lib/libStringVariable.a" ]]; then
+                log_success "StringVariable compilada"
+                ((compiled_libs++))
+            else
+                log_warning "StringVariable: script exitó OK pero libStringVariable.a no encontrada"
+                failed_libs+=("StringVariable (archivo no encontrado)")
+            fi
         else
             log_warning "StringVariable falló"
             failed_libs+=("StringVariable")

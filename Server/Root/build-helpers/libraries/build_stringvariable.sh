@@ -12,7 +12,15 @@ source ${build_helper_file}
 }
 
 requires_rebuild "${library_path}"
-[[ $? -eq 0 ]] && exit 0
+if [[ $? -eq 0 ]]; then
+    # Marker exists; verify the output library is actually present before skipping.
+    _sv_out="${library_path}/out/${build_os_type:-linux}_${build_os_arch:-amd64}/lib/libStringVariable.a"
+    if [[ -f "$_sv_out" ]]; then
+        exit 0
+    fi
+    echo "WARNING: .build_successful marker exists but $_sv_out is missing. Rebuilding StringVariable..."
+    rm -f "${library_path}/.build_successful"
+fi
 
 [[ ! -d "${library_path}" ]] && {
     echo "ERROR: StringVariable source directory '${library_path}' not found."

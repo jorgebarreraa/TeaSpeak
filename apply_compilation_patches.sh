@@ -937,6 +937,31 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PARCHE 22b: Verificar consistencia del marcador de StringVariable
+# ═══════════════════════════════════════════════════════════════════════════
+SV_LIBRARY="$SCRIPT_DIR/Server/Root/libraries/StringVariable"
+if [[ -d "$SV_LIBRARY" ]]; then
+    SV_LIB_STATIC="$SV_LIBRARY/out/linux_amd64/lib/libStringVariable.a"
+    SV_MARKER="$SV_LIBRARY/.build_successful"
+
+    if [[ -f "$SV_LIB_STATIC" ]]; then
+        log_success "✓ StringVariable está compilada correctamente"
+        # Asegurar que el marker esté presente
+        if [[ ! -f "$SV_MARKER" ]]; then
+            touch "$SV_MARKER"
+        fi
+    elif [[ -f "$SV_MARKER" ]]; then
+        log_info "Marker de build presente pero libStringVariable.a faltante - limpiando marker..."
+        rm -f "$SV_MARKER"
+        log_success "✓ StringVariable se recompilará al ejecutar build.sh"
+    else
+        log_info "StringVariable no compilada aún - se compilará al ejecutar build.sh"
+    fi
+else
+    log_warning "Directorio StringVariable no encontrado (omitiendo parche 22b)"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 23: REVERTIDO - Usar OpenSSL prebuild del proyecto (no del sistema)
 # ═══════════════════════════════════════════════════════════════════════════
 # Este parche se revirtió porque el servidor necesita OpenSSL prebuild del proyecto

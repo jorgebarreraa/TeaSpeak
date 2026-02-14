@@ -557,6 +557,13 @@ compile_libraries() {
     if [[ -f "build.sh" ]]; then
         log_info "Usando build.sh del proyecto..."
         bash build.sh 2>&1 | tee /tmp/build_libraries.log
+        _build_exit="${PIPESTATUS[0]}"
+        if [[ $_build_exit -ne 0 ]]; then
+            log_error "build.sh falló con código $_build_exit"
+            log_error "Últimas 50 líneas del log:"
+            tail -50 /tmp/build_libraries.log
+            exit $_build_exit
+        fi
         log_success "Librerías compiladas con build.sh"
     else
         log_warning "build.sh no encontrado, compilando manualmente..."
