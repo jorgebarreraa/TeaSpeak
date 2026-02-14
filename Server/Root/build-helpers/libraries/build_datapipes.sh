@@ -32,7 +32,17 @@ _cxx_options="-fPIC -static-libgcc -static-libstdc++"
 [[ "${build_os_type}" == "win32" ]] && _cxx_options="-DWIN32"
 
 general_options="-DCMAKE_C_FLAGS=\"-fPIC\" -DCMAKE_CXX_FLAGS=\"${_cxx_options}\" -DBUILD_EXAMPLES=OFF -DBUILD_STATIC=1 -DBUILD_SHARED=1 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Release}"
-crypto_options="-DCrypto_ROOT_DIR=\"${local_root}/boringssl/lib/\" -DCRYPTO_TYPE=\"boringssl\""
+
+# DataPipes' FindCrypto.cmake only searches for shared (.so) library names and derives
+# the include path as ${Crypto_ROOT_DIR}/include.  We built BoringSSL as static (.a),
+# so we must point ROOT_DIR at the BoringSSL source root (where include/ lives) and
+# explicitly pass the library paths to prevent find_library from failing to locate .a files.
+boringssl_root="${local_root}/boringssl"
+crypto_options="-DCRYPTO_TYPE=\"boringssl\""
+crypto_options="${crypto_options} -DCrypto_ROOT_DIR=\"${boringssl_root}\""
+crypto_options="${crypto_options} -DCrypto_INCLUDE_DIR=\"${boringssl_root}/include\""
+crypto_options="${crypto_options} -DCrypto_SSL_LIBRARY=\"${boringssl_root}/lib/libssl.a\""
+crypto_options="${crypto_options} -DCrypto_CRYPTO_LIBRARY=\"${boringssl_root}/lib/libcrypto.a\""
 
 web_cmake_flags="-DBUILD_WEBRTC=${_datapipes_webrtc}"
 if [[ "${build_os_type}" != "win32" && "${_datapipes_webrtc}" == "ON" ]]; then
