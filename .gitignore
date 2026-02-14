@@ -59,7 +59,9 @@ Thumbs.db
 # Build test directory
 build_test/
 
-# Submodules (managed separately)
+# Submodules (managed separately, may be symlinks created by apply_compilation_patches.sh)
+Server/Server/shared
 Server/Server/shared/
+Server/Server/music
 Server/Server/music/
 *.backup_patch*
