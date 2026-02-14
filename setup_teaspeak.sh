@@ -669,8 +669,9 @@ clone_lib() {
 
     # Verificación especial para build-helpers
     if [[ "$dir" == "build-helpers" ]]; then
-        if [[ -d "$dir" && ! -f "$dir/build_helper.sh" ]]; then
-            echo "  ⚠ $dir existe pero está incompleto, eliminando..."
+        # Check if library scripts are present (not just build_helper.sh which is now in git)
+        if [[ -d "$dir" && ! -f "$dir/libraries/build_tommath.sh" ]]; then
+            echo "  ⚠ $dir/libraries/ está incompleto (faltan scripts de compilación), eliminando para re-clonar..."
             rm -rf "$dir"
         fi
     fi

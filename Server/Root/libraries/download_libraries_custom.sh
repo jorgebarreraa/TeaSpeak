@@ -110,11 +110,11 @@ clone_with_fallback "https://github.com/jorgebarreraa/openssl-prebuild.git" "ope
 clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 
 # build-helpers
-# NOTE: build-helpers/ already exists in the repo (with cmake/ subdirectory).
-# We need to populate build-helpers/libraries/ which contains the library build scripts.
-# Since the directory exists, a plain git clone would be skipped. We handle this specially:
+# NOTE: build-helpers/ already exists in the repo (with cmake/ subdirectory and build_helper.sh).
+# We need to populate build-helpers/libraries/ which contains ALL library build scripts.
+# Check for a required library script to determine if the full set is present.
 cd ..
-if [ ! -d "build-helpers/libraries" ]; then
+if [ ! -f "build-helpers/libraries/build_tommath.sh" ]; then
     echo "  Populating build-helpers/libraries/ from jorgebarreraa/build-helpers..."
     if [ -d "build-helpers/.git" ]; then
         # Already a git repo, pull the libraries/ subdirectory
