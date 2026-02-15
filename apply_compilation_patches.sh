@@ -1798,6 +1798,67 @@ fi
 
 log_success "✓ PARCHE 41 aplicado exitosamente"
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 42: Compilar spdlog si no está disponible"
+log_info "════════════════════════════════════════════════════════════"
+_LIBRARIES_DIR="$SCRIPT_DIR/Server/Root/libraries"
+_SPDLOG_OUT="$_LIBRARIES_DIR/spdlog/out/linux_amd64"
+_SPDLOG_CMAKE_CONFIG="$_SPDLOG_OUT/lib/cmake/spdlog/spdlogConfig.cmake"
+
+if [ -f "$_SPDLOG_CMAKE_CONFIG" ]; then
+    log_success "✓ spdlog ya está compilado correctamente"
+else
+    log_info "spdlog no compilado - buscando código fuente..."
+    _SPDLOG_SRC=""
+    if [ -d "$_LIBRARIES_DIR/spdlog" ] && [ -f "$_LIBRARIES_DIR/spdlog/CMakeLists.txt" ]; then
+        _SPDLOG_SRC="$_LIBRARIES_DIR/spdlog"
+    elif [ -d "$SCRIPT_DIR/libraries/spdlog-master" ] && [ -f "$SCRIPT_DIR/libraries/spdlog-master/CMakeLists.txt" ]; then
+        _SPDLOG_SRC="$SCRIPT_DIR/libraries/spdlog-master"
+    fi
+
+    if [ -z "$_SPDLOG_SRC" ]; then
+        log_error "✗ PARCHE 42: Código fuente de spdlog no encontrado"
+        log_error "  Buscado en: $_LIBRARIES_DIR/spdlog"
+        log_error "  Buscado en: $SCRIPT_DIR/libraries/spdlog-master"
+        exit 1
+    fi
+
+    log_info "Compilando spdlog desde: $_SPDLOG_SRC"
+    _SPDLOG_BUILD="/tmp/spdlog_cmake_build_$$"
+    mkdir -p "$_SPDLOG_OUT"
+    mkdir -p "$_SPDLOG_BUILD"
+
+    (
+        cmake -S "$_SPDLOG_SRC" -B "$_SPDLOG_BUILD" \
+            -DCMAKE_C_FLAGS="-fPIC" \
+            -DCMAKE_CXX_FLAGS="-fPIC" \
+            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_INSTALL_PREFIX="$_SPDLOG_OUT" \
+            -DSPDLOG_BUILD_EXAMPLE=OFF \
+            -DSPDLOG_BUILD_EXAMPLES=OFF \
+            -DSPDLOG_BUILD_TESTING=OFF \
+            -DSPDLOG_BUILD_TESTS=OFF \
+            -DBUILD_TESTING=OFF
+        cmake --build "$_SPDLOG_BUILD" -j$(nproc 2>/dev/null || echo 4)
+        cmake --install "$_SPDLOG_BUILD"
+    ) || {
+        rm -rf "$_SPDLOG_BUILD" 2>/dev/null || true
+        log_error "✗ PARCHE 42: Error al compilar spdlog"
+        exit 1
+    }
+
+    rm -rf "$_SPDLOG_BUILD" 2>/dev/null || true
+
+    if [ -f "$_SPDLOG_CMAKE_CONFIG" ]; then
+        log_success "✓ PARCHE 42: spdlog compilado exitosamente"
+        touch "$_LIBRARIES_DIR/spdlog/.build_successful" 2>/dev/null || true
+    else
+        log_error "✗ PARCHE 42: spdlog compilado pero cmake config no encontrado en:"
+        log_error "  $_SPDLOG_CMAKE_CONFIG"
+        exit 1
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"
