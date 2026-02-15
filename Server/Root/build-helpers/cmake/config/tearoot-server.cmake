@@ -22,9 +22,9 @@ set(TomMath_ROOT_DIR "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}")
 # TomCrypt: installed to tomcrypt/out/linux_amd64/{include,lib}
 set(TomCrypt_ROOT_DIR "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}")
 
-# spdlog: installs its own cmake config to spdlog/out/linux_amd64/lib/cmake/spdlog/
+# spdlog: installs its own cmake config to spdlog/out/linux_amd64/lib/spdlog/cmake/
 set(spdlog_ROOT_DIR "${LIBRARY_PATH}/spdlog/${BUILD_OUTPUT}")
-set(spdlog_DIR "${LIBRARY_PATH}/spdlog/${BUILD_OUTPUT}/lib/cmake/spdlog")
+set(spdlog_DIR "${LIBRARY_PATH}/spdlog/${BUILD_OUTPUT}/lib/spdlog/cmake")
 
 # yaml-cpp: installs cmake config to yaml-cpp/out/linux_amd64/lib/cmake/yaml-cpp/
 set(yaml-cpp_ROOT_DIR "${LIBRARY_PATH}/yaml-cpp/${BUILD_OUTPUT}")

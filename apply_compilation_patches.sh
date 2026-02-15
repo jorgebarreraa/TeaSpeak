@@ -1803,7 +1803,7 @@ log_info "  PARCHE 42: Compilar spdlog si no está disponible"
 log_info "════════════════════════════════════════════════════════════"
 _LIBRARIES_DIR="$SCRIPT_DIR/Server/Root/libraries"
 _SPDLOG_OUT="$_LIBRARIES_DIR/spdlog/out/linux_amd64"
-_SPDLOG_CMAKE_CONFIG="$_SPDLOG_OUT/lib/cmake/spdlog/spdlogConfig.cmake"
+_SPDLOG_CMAKE_CONFIG="$_SPDLOG_OUT/lib/spdlog/cmake/spdlogConfig.cmake"
 
 if [ -f "$_SPDLOG_CMAKE_CONFIG" ]; then
     log_success "✓ spdlog ya está compilado correctamente"
@@ -1855,6 +1855,7 @@ else
     else
         log_error "✗ PARCHE 42: spdlog compilado pero cmake config no encontrado en:"
         log_error "  $_SPDLOG_CMAKE_CONFIG"
+        log_error "  Rutas instaladas: $(find $_SPDLOG_OUT -name 'spdlogConfig.cmake' 2>/dev/null || echo 'ninguna')"
         exit 1
     fi
 fi
