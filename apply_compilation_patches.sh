@@ -1860,6 +1860,89 @@ else
     fi
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 43: Compilar libevent si no está disponible"
+log_info "════════════════════════════════════════════════════════════"
+_LIBRARIES_DIR="$SCRIPT_DIR/Server/Root/libraries"
+_EVENT_DIR="$_LIBRARIES_DIR/event"
+_EVENT_OUT="$_EVENT_DIR/out/linux_amd64"
+_EVENT_LIB="$_EVENT_OUT/lib/libevent_core.a"
+
+if [ -f "$_EVENT_LIB" ]; then
+    log_success "✓ libevent ya está compilado correctamente"
+else
+    log_info "libevent no compilado - descargando y compilando..."
+
+    # Clone libevent if source directory is missing or incomplete
+    if [ ! -d "$_EVENT_DIR" ] || [ ! -f "$_EVENT_DIR/CMakeLists.txt" ]; then
+        log_info "Clonando libevent desde GitHub..."
+        rm -rf "$_EVENT_DIR" 2>/dev/null || true
+        git clone --depth 1 "https://github.com/libevent/libevent.git" "$_EVENT_DIR" || {
+            log_error "✗ PARCHE 43: No se pudo clonar libevent"
+            exit 1
+        }
+    fi
+
+    # Apply CMake version compatibility patch for AddLinkerFlags.cmake
+    if [ -f "$_EVENT_DIR/cmake/AddLinkerFlags.cmake" ]; then
+        log_info "Aplicando parche de compatibilidad CMake a libevent..."
+        cat > "$_EVENT_DIR/cmake/AddLinkerFlags.cmake" << 'EOFPATCH'
+if (NOT CMAKE_VERSION VERSION_LESS 3.18)
+	include(CheckLinkerFlag)
+endif()
+
+macro(add_linker_flags)
+	foreach(flag ${ARGN})
+		string(REGEX REPLACE "[-.+/:= ]" "_" _flag_esc "${flag}")
+
+if (NOT CMAKE_VERSION VERSION_LESS 3.18)
+		check_linker_flag(C "${flag}" check_c_linker_flag_${_flag_esc})
+endif()
+
+		if (check_c_linker_flag_${_flag_esc})
+			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${flag}")
+			set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${flag}")
+		endif()
+	endforeach()
+endmacro()
+EOFPATCH
+    fi
+
+    log_info "Compilando libevent desde: $_EVENT_DIR"
+    _EVENT_BUILD="/tmp/libevent_cmake_build_$$"
+    mkdir -p "$_EVENT_OUT"
+    mkdir -p "$_EVENT_BUILD"
+
+    (
+        cmake -S "$_EVENT_DIR" -B "$_EVENT_BUILD" \
+            -DCMAKE_C_FLAGS="-fPIC" \
+            -DCMAKE_CXX_FLAGS="-fPIC" \
+            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_INSTALL_PREFIX="$_EVENT_OUT" \
+            -DEVENT__DISABLE_TESTS=ON \
+            -DEVENT__DISABLE_OPENSSL=ON \
+            -DEVENT__DISABLE_SAMPLES=ON \
+            -DEVENT__DISABLE_BENCHMARK=ON
+        cmake --build "$_EVENT_BUILD" -j$(nproc 2>/dev/null || echo 4)
+        cmake --install "$_EVENT_BUILD"
+    ) || {
+        rm -rf "$_EVENT_BUILD" 2>/dev/null || true
+        log_error "✗ PARCHE 43: Error al compilar libevent"
+        exit 1
+    }
+
+    rm -rf "$_EVENT_BUILD" 2>/dev/null || true
+
+    if [ -f "$_EVENT_LIB" ]; then
+        log_success "✓ PARCHE 43: libevent compilado exitosamente"
+    else
+        log_error "✗ PARCHE 43: libevent compilado pero librería no encontrada en:"
+        log_error "  $_EVENT_LIB"
+        log_error "  Rutas instaladas: $(find "$_EVENT_OUT" -name '*.a' 2>/dev/null | head -10 || echo 'ninguna')"
+        exit 1
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"

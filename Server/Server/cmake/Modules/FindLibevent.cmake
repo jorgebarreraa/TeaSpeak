@@ -39,9 +39,11 @@ message(STATUS "BUILD_OS_TYPE=${BUILD_OS_TYPE}, BUILD_OS_ARCH=${BUILD_OS_ARCH}")
 message(STATUS "Searching for LibeventConfig.cmake in: ${LIBEVENT_CONFIG_PATHS}")
 
 # Try to find the LibeventConfig.cmake file in project directories
+# PATH_SUFFIXES handles standard cmake install layout: lib/cmake/libevent/
 find_path(LIBEVENT_CONFIG_DIR
     NAMES LibeventConfig.cmake
     PATHS ${LIBEVENT_CONFIG_PATHS}
+    PATH_SUFFIXES lib/cmake/libevent cmake/libevent
     NO_DEFAULT_PATH
     NO_CMAKE_FIND_ROOT_PATH
 )
