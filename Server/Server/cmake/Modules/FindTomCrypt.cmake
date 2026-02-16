@@ -54,9 +54,9 @@ endif()
 
 if(TomCrypt_INCLUDE_DIR AND TomCrypt_LIBRARIES)
     message(STATUS "Found TomCrypt: ${TomCrypt_LIBRARIES}")
-    if(NOT TARGET TomCrypt::static)
-        add_library(TomCrypt::static STATIC IMPORTED)
-        set_target_properties(TomCrypt::static PROPERTIES
+    if(NOT TARGET tomcrypt::static)
+        add_library(tomcrypt::static STATIC IMPORTED)
+        set_target_properties(tomcrypt::static PROPERTIES
             IMPORTED_LOCATION "${TomCrypt_LIBRARIES}"
             INTERFACE_INCLUDE_DIRECTORIES "${TomCrypt_INCLUDE_DIR}"
         )

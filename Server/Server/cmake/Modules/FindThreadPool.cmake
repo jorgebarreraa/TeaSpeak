@@ -27,7 +27,7 @@ set(THREADPOOL_SEARCH_PATHS
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/_build/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}/include
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/build/include
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/src
-    ${CMAKE_SOURCE_DIR}/../shared/src
+    ${CMAKE_SOURCE_DIR}/shared/src
 )
 
 message(STATUS "Searching for ThreadPool in: ${THREADPOOL_SEARCH_PATHS}")
@@ -66,7 +66,7 @@ if(ThreadPool_INCLUDE_DIR)
 else()
     message(STATUS "ThreadPool not found, using TeaSpeakLibrary's task_executor implementation")
     # Use TeaSpeakLibrary's task_executor.h instead
-    set(ThreadPool_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../shared/src")
+    set(ThreadPool_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/shared/src")
 
     if(NOT TARGET threadpool::static)
         add_library(threadpool::static INTERFACE IMPORTED)
