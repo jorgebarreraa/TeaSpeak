@@ -485,39 +485,93 @@ compile_libraries() {
 
     cd "$INSTALL_DIR/Server/Root/libraries"
 
-    # Verificar si tenemos permisos de sudo
-    if [[ $EUID -ne 0 ]]; then
-        SUDO="sudo"
-    else
-        SUDO=""
-    fi
-
     # Exportar variables de entorno para los scripts de compilación
+    export build_os_type=linux
+    export build_os_arch=amd64
     export CXX_FLAGS="-fPIC"
     export C_FLAGS="-fPIC"
     export CMAKE_BUILD_TYPE="Release"
     export CMAKE_OPTIONS=""
-    export CMAKE_MAKE_OPTIONS="-j$(nproc)"
+    export CMAKE_MAKE_OPTIONS="-j4"
 
-    # PASO 8.1: Compilar librerías
+    # PASO 8.1: Compilar librerías con build.sh (puede fallar parcialmente)
     log_info "Compilando librerías C/C++..."
 
-    # Compilar usando el script principal
     if [[ -f "build.sh" ]]; then
         log_info "Usando build.sh del proyecto..."
+        set +e  # No salir en error - manejamos individualmente
         bash build.sh 2>&1 | tee /tmp/build_libraries.log
-        log_success "Librerías compiladas con build.sh"
+        _build_exit=${PIPESTATUS[0]}
+        set -e
+        if [[ $_build_exit -ne 0 ]]; then
+            log_warning "build.sh terminó con errores (código $_build_exit). Verificando librerías críticas..."
+        else
+            log_success "Librerías compiladas con build.sh"
+        fi
     else
         log_warning "build.sh no encontrado, compilando manualmente..."
+    fi
 
-        # Librerías individuales
-        for lib_script in build_stringvariable.sh build_jsoncpp.sh build_event.sh; do
-            if [[ -f "$lib_script" ]]; then
-                log_info "Ejecutando $lib_script..."
-                bash "$lib_script" 2>&1 | tee "/tmp/$lib_script.log" || true
+    # Helper: build a cmake library from local source if the output library is missing
+    _ensure_cmake_lib() {
+        local lib_name="$1"
+        local lib_file="$2"
+        local install_dir="$3"
+        shift 3
+        local src_dirs=("$@")
+
+        if [[ -f "$lib_file" ]]; then
+            log_success "$lib_name ya compilado"
+            return 0
+        fi
+
+        log_warning "$lib_name no encontrado. Compilando desde fuente del repositorio..."
+        local src_dir=""
+        for _src in "${src_dirs[@]}"; do
+            if [[ -f "$_src/CMakeLists.txt" ]]; then
+                src_dir="$_src"
+                break
             fi
         done
-    fi
+
+        if [[ -n "$src_dir" ]]; then
+            mkdir -p "$install_dir"
+            log_info "Compilando $lib_name desde: $src_dir"
+            local _bdir="/tmp/${lib_name}_cmake_build"
+            rm -rf "$_bdir"
+            cmake "$src_dir" \
+                -DCMAKE_C_FLAGS="-fPIC" \
+                -DCMAKE_CXX_FLAGS="-fPIC" \
+                -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                -DCMAKE_INSTALL_PREFIX="$install_dir" \
+                -B "$_bdir" 2>&1
+            cmake --build "$_bdir" -j4 2>&1
+            cmake --install "$_bdir" 2>&1
+            rm -rf "$_bdir"
+            log_success "$lib_name compilado: $lib_file"
+        else
+            log_error "No se encontró fuente de $lib_name. Abortando."
+            exit 1
+        fi
+    }
+
+    local _lib_base="$INSTALL_DIR/Server/Root/libraries"
+
+    # PASO 8.2: Asegurar que tommath esté compilado (crítico para cmake)
+    _ensure_cmake_lib "tommath" \
+        "$_lib_base/tommath/out/linux_amd64/lib/libtommathStatic.a" \
+        "$_lib_base/tommath/out/linux_amd64" \
+        "$INSTALL_DIR/libraries/tommath-develop" \
+        "$_lib_base/tommath" \
+        "$INSTALL_DIR/libraries/tommath"
+
+    # PASO 8.3: Asegurar que tomcrypt esté compilado
+    _ensure_cmake_lib "tomcrypt" \
+        "$_lib_base/tomcrypt/out/linux_amd64/lib/libtomcrypt.a" \
+        "$_lib_base/tomcrypt/out/linux_amd64" \
+        "$INSTALL_DIR/libraries/tomcrypt-master" \
+        "$_lib_base/tomcrypt" \
+        "$INSTALL_DIR/libraries/tomcrypt"
 
     # Volver al directorio Root
     cd "$INSTALL_DIR/Server/Root"
