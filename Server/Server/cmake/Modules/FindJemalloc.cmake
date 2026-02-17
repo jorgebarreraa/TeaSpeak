@@ -55,6 +55,20 @@ endif()
 if(Jemalloc_INCLUDE_DIR AND Jemalloc_LIBRARIES)
     message(STATUS "Found Jemalloc: ${Jemalloc_LIBRARIES}")
     set(Jemalloc_FOUND TRUE)
+    if(NOT TARGET jemalloc::static)
+        add_library(jemalloc::static STATIC IMPORTED)
+        set_target_properties(jemalloc::static PROPERTIES
+            IMPORTED_LOCATION "${Jemalloc_LIBRARIES}"
+            INTERFACE_INCLUDE_DIRECTORIES "${Jemalloc_INCLUDE_DIR}"
+        )
+    endif()
+    if(NOT TARGET jemalloc::shared)
+        add_library(jemalloc::shared STATIC IMPORTED)
+        set_target_properties(jemalloc::shared PROPERTIES
+            IMPORTED_LOCATION "${Jemalloc_LIBRARIES}"
+            INTERFACE_INCLUDE_DIRECTORIES "${Jemalloc_INCLUDE_DIR}"
+        )
+    endif()
 else()
     set(Jemalloc_FOUND FALSE)
     message(STATUS "Jemalloc not found in project libraries or system")

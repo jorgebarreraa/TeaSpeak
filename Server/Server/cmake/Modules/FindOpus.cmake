@@ -56,6 +56,13 @@ endif()
 if(Opus_INCLUDE_DIR AND Opus_LIBRARIES)
     message(STATUS "Found Opus: ${Opus_LIBRARIES}")
     set(Opus_FOUND TRUE)
+    if(NOT TARGET opus::static)
+        add_library(opus::static STATIC IMPORTED)
+        set_target_properties(opus::static PROPERTIES
+            IMPORTED_LOCATION "${Opus_LIBRARIES}"
+            INTERFACE_INCLUDE_DIRECTORIES "${Opus_INCLUDE_DIR}"
+        )
+    endif()
 else()
     set(Opus_FOUND FALSE)
     if(Opus_FIND_REQUIRED)

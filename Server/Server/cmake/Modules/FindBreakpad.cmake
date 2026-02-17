@@ -51,6 +51,13 @@ find_library(breakpad_LIBRARY
 if(breakpad_INCLUDE_DIR AND breakpad_LIBRARY)
     message(STATUS "Found Breakpad: ${breakpad_LIBRARY}")
     set(Breakpad_FOUND TRUE)
+    if(NOT TARGET breakpad::static)
+        add_library(breakpad::static STATIC IMPORTED)
+        set_target_properties(breakpad::static PROPERTIES
+            IMPORTED_LOCATION "${breakpad_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${breakpad_INCLUDE_DIR}"
+        )
+    endif()
 else()
     set(Breakpad_FOUND FALSE)
     if(Breakpad_FIND_REQUIRED)
