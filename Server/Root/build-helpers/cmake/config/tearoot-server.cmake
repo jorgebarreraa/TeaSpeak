@@ -33,6 +33,17 @@ set(yaml-cpp_DIR "${LIBRARY_PATH}/yaml-cpp/${BUILD_OUTPUT}/lib/cmake/yaml-cpp")
 # jsoncpp: installs cmake config to jsoncpp/out/linux_amd64/lib/cmake/jsoncpp/
 set(jsoncpp_ROOT_DIR "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}")
 set(jsoncpp_DIR "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/cmake/jsoncpp")
+# Explicitly define jsoncpp_lib IMPORTED target.
+# server/CMakeLists.txt and license/CMakeLists.txt both reference jsoncpp_lib as
+# a CMake target. If find_package(jsoncpp) fails to find the cmake config the
+# target is never created and CMake degrades it to -ljsoncpp_lib (linker error).
+if(NOT TARGET jsoncpp_lib)
+    add_library(jsoncpp_lib STATIC IMPORTED GLOBAL)
+    set_target_properties(jsoncpp_lib PROPERTIES
+        IMPORTED_LOCATION "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/libjsoncpp.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/include"
+    )
+endif()
 
 # zstd: installs cmake config to zstd/out/linux_amd64/lib/cmake/zstd/
 set(zstd_ROOT_DIR "${LIBRARY_PATH}/zstd/${BUILD_OUTPUT}")

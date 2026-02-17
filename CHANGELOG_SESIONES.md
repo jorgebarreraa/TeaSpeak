@@ -84,6 +84,28 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Fallback: Si jsoncpp instala como `libjsoncpp_static.a`, crea symlink a `libjsoncpp.a`
 - **Estado:** ✅ COMPLETADO
 
+#### 6. Fix: jsoncpp_lib CMake target no definido → error de linker "-ljsoncpp_lib"
+- **Archivo:**
+  - `Server/Root/build-helpers/cmake/config/tearoot-server.cmake`
+- **Problema:**
+  - `server/CMakeLists.txt` (línea 267), `license/CMakeLists.txt` (línea 68), y `shared/CMakeLists.txt`
+    usan `jsoncpp_lib` como nombre de target CMake en `target_link_libraries()`
+  - `find_package(jsoncpp)` falla silenciosamente si el cmake config no existe en el path esperado
+  - Sin ese cmake config, el target `jsoncpp_lib` nunca se crea como IMPORTED target
+  - CMake degrada el nombre desconocido a un flag de linker raw: `-ljsoncpp_lib`
+  - Error: `/usr/bin/ld: cannot find -ljsoncpp_lib: No such file or directory`
+  - El servidor C++ compilaba al 100% pero fallaba en el link final con este único error
+- **Solución:**
+  - Agrega bloque `if(NOT TARGET jsoncpp_lib)` en `tearoot-server.cmake` después de las
+    variables `jsoncpp_DIR` ya existentes
+  - Crea explícitamente `jsoncpp_lib` como `STATIC IMPORTED GLOBAL` con:
+    - `IMPORTED_LOCATION` apuntando a `libraries/jsoncpp/${BUILD_OUTPUT}/lib/libjsoncpp.a`
+    - `INTERFACE_INCLUDE_DIRECTORIES` apuntando a `libraries/jsoncpp/${BUILD_OUTPUT}/include`
+  - Sigue el mismo patrón usado en todos los otros Find*.cmake del proyecto
+  - `tearoot-server.cmake` se carga en el top-level antes de todos los subdirectorios
+    → el target queda disponible para server/, license/ y shared/ al mismo tiempo
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-17:
 - CMake configuration pasó exitosamente después de los fixes de targets IMPORTED de la sesión anterior
 - El error Thread-Pool apareció en la fase de compilación (make), no en cmake configure
@@ -91,6 +113,7 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 - `music/include/teaspeak/MusicPlayer.h` incluye `<ThreadPool/Future.h>` → necesita los headers instalados
 - Se usa el proyecto del usuario (`jorgebarreraa/Thread-Pool.git`) para el clone de fallback
 - libevent se instala a `out/linux_amd64/` (por PARCHE 43), no a `_build/linux_amd64/`
+- El servidor llegó a compilar al 100% pero fallaba el link final por jsoncpp_lib (fix 6 de esta sesión)
 
 ---
 
@@ -452,6 +475,6 @@ git pull origin claude/fix-install-script-ULBSP
 
 ---
 
-**Última actualización:** 2026-02-16
+**Última actualización:** 2026-02-17
 **Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** (sesión 2026-02-16) Fix FindTomMath.cmake: TomMath::static → tommath::static
+**Último commit:** (sesión 2026-02-17) Fix tearoot-server.cmake: add jsoncpp_lib IMPORTED target to resolve -ljsoncpp_lib linker error
