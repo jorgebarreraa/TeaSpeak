@@ -235,13 +235,13 @@ include_directories(include)
 # Include directories - CORREGIDOS AUTOMÁTICAMENTE
 include_directories(../../Root/libraries/Thread-Pool/out/linux_amd64/include)
 include_directories(../../Root/libraries/event/include)
-include_directories(../../Root/libraries/event/_build/linux_amd64/include)
+include_directories(../../Root/libraries/event/out/linux_amd64/include)
 
 # Library paths - CORREGIDOS AUTOMÁTICAMENTE
 # Convert relative paths to absolute paths for proper linking
 # Use CMAKE_SOURCE_DIR (root CMakeLists.txt dir) instead of CMAKE_CURRENT_SOURCE_DIR to avoid symlink issues
-get_filename_component(LIBEVENT_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/_build/linux_amd64/lib/libevent.a" ABSOLUTE)
-get_filename_component(LIBEVENT_PTHREADS_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/_build/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
+get_filename_component(LIBEVENT_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/out/linux_amd64/lib/libevent.a" ABSOLUTE)
+get_filename_component(LIBEVENT_PTHREADS_LIB "${CMAKE_SOURCE_DIR}/../libraries/event/out/linux_amd64/lib/libevent_pthreads.a" ABSOLUTE)
 
 if (BUILD_PROVIDER_YT)
 	message("Building YouTube provider")
@@ -278,7 +278,7 @@ EOFMUSIC
     # Verificar
     if grep -q "../../Root/libraries/Thread-Pool/out/linux_amd64/include" "$MUSIC_CMAKE" && \
        grep -q "../../Root/libraries/event/include" "$MUSIC_CMAKE" && \
-       grep -q "../../Root/libraries/event/_build/linux_amd64/include" "$MUSIC_CMAKE" && \
+       grep -q "../../Root/libraries/event/out/linux_amd64/include" "$MUSIC_CMAKE" && \
        grep -q 'get_filename_component(LIBEVENT_LIB' "$MUSIC_CMAKE" && \
        grep -q 'get_filename_component(LIBEVENT_PTHREADS_LIB' "$MUSIC_CMAKE"; then
         log_success "music/CMakeLists.txt parcheado correctamente"

@@ -43,12 +43,26 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Se instala a `libraries/Thread-Pool/out/linux_amd64/` con headers en `include/ThreadPool/`
 - **Estado:** ✅ COMPLETADO
 
+#### 3. Fix: music/CMakeLists.txt usa path incorrecto para libevent
+- **Archivos:**
+  - `Server/Server/music/CMakeLists.txt`
+  - `apply_compilation_patches.sh` (PARCHE 1 actualizado)
+- **Problema:**
+  - `music/CMakeLists.txt` referenciaba libevent en `event/_build/linux_amd64/`
+  - PARCHE 43 instala libevent en `event/out/linux_amd64/` (no en `_build/`)
+  - Error: `No rule to make target '.../event/_build/linux_amd64/lib/libevent.a'`
+- **Solución:**
+  - Cambiado `event/_build/linux_amd64/` → `event/out/linux_amd64/` en include_directories y get_filename_component para LIBEVENT_LIB y LIBEVENT_PTHREADS_LIB
+  - También actualizado el check de verificación del PARCHE 1
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-17:
 - CMake configuration pasó exitosamente después de los fixes de targets IMPORTED de la sesión anterior
 - El error Thread-Pool apareció en la fase de compilación (make), no en cmake configure
 - Thread-Pool NO es header-only: tiene código fuente en `src/` y crea `libThreadPoolStatic.a`
 - `music/include/teaspeak/MusicPlayer.h` incluye `<ThreadPool/Future.h>` → necesita los headers instalados
 - Se usa el proyecto del usuario (`jorgebarreraa/Thread-Pool.git`) para el clone de fallback
+- libevent se instala a `out/linux_amd64/` (por PARCHE 43), no a `_build/linux_amd64/`
 
 ---
 
