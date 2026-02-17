@@ -1943,6 +1943,61 @@ EOFPATCH
     fi
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 44: Compilar Thread-Pool si no está disponible"
+log_info "════════════════════════════════════════════════════════════"
+_LIBRARIES_DIR="$SCRIPT_DIR/Server/Root/libraries"
+_TPOOL_DIR="$_LIBRARIES_DIR/Thread-Pool"
+_TPOOL_OUT="$_TPOOL_DIR/out/linux_amd64"
+_TPOOL_LIB="$_TPOOL_OUT/lib/libThreadPoolStatic.a"
+
+if [ ! -f "$_TPOOL_LIB" ]; then
+    log_info "Thread-Pool library no encontrada, compilando..."
+
+    # Clone Thread-Pool if source directory is missing or incomplete
+    if [ ! -d "$_TPOOL_DIR" ] || [ ! -f "$_TPOOL_DIR/CMakeLists.txt" ]; then
+        log_info "Clonando Thread-Pool desde GitHub..."
+        rm -rf "$_TPOOL_DIR" 2>/dev/null || true
+        git clone --depth 1 "https://github.com/jorgebarreraa/Thread-Pool.git" "$_TPOOL_DIR" || {
+            log_error "✗ PARCHE 44: No se pudo clonar Thread-Pool"
+            exit 1
+        }
+    fi
+
+    log_info "Compilando Thread-Pool desde: $_TPOOL_DIR"
+    _TPOOL_BUILD="/tmp/threadpool_cmake_build_$$"
+    mkdir -p "$_TPOOL_OUT"
+    mkdir -p "$_TPOOL_BUILD"
+
+    (
+        cmake -S "$_TPOOL_DIR" -B "$_TPOOL_BUILD" \
+            -DCMAKE_C_FLAGS="-fPIC" \
+            -DCMAKE_CXX_FLAGS="-fPIC -std=c++17" \
+            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_INSTALL_PREFIX="$_TPOOL_OUT" \
+            -DBUILD_TESTS=OFF
+        cmake --build "$_TPOOL_BUILD" -j$(nproc 2>/dev/null || echo 4)
+        cmake --install "$_TPOOL_BUILD"
+    ) || {
+        rm -rf "$_TPOOL_BUILD" 2>/dev/null || true
+        log_error "✗ PARCHE 44: Error al compilar Thread-Pool"
+        exit 1
+    }
+
+    rm -rf "$_TPOOL_BUILD" 2>/dev/null || true
+
+    if [ -f "$_TPOOL_LIB" ]; then
+        log_success "✓ PARCHE 44: Thread-Pool compilado exitosamente"
+    else
+        log_error "✗ PARCHE 44: Thread-Pool compilado pero librería no encontrada en:"
+        log_error "  $_TPOOL_LIB"
+        log_error "  Rutas instaladas: $(find "$_TPOOL_OUT" -name '*.a' 2>/dev/null | head -10 || echo 'ninguna')"
+        exit 1
+    fi
+else
+    log_success "✓ PARCHE 44: Thread-Pool ya compilado en $_TPOOL_LIB"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"

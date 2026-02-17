@@ -4,6 +4,54 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2026-02-17 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix: Módulos Find*.cmake sin targets IMPORTED (ed25519, opus, jemalloc, breakpad)
+- **Archivos:**
+  - `Server/Server/cmake/Modules/FindEd25519.cmake`
+  - `Server/Server/cmake/Modules/FindOpus.cmake`
+  - `Server/Server/cmake/Modules/FindJemalloc.cmake`
+  - `Server/Server/cmake/Modules/FindBreakpad.cmake`
+- **Problema:**
+  - Estos módulos Find*.cmake solo definían variables pero no creaban targets IMPORTED
+  - El submódulo git `shared/` (TeaSpeakLibrary) usa `target_link_libraries(... ed25519::static opus::static jemalloc::shared breakpad::static ...)`
+  - CMake requiere que targets con `::` sean targets reales registrados (no solo variables)
+  - Error: `CMake Error: Target "TeaSpeak" links to: ed25519::static but the target was not found`
+- **Solución:**
+  - `FindEd25519.cmake`: Agrega target `ed25519::static` STATIC IMPORTED
+  - `FindOpus.cmake`: Agrega target `opus::static` STATIC IMPORTED
+  - `FindJemalloc.cmake`: Agrega targets `jemalloc::static` y `jemalloc::shared` STATIC IMPORTED
+  - `FindBreakpad.cmake`: Agrega target `breakpad::static` STATIC IMPORTED (solo si Breakpad está disponible)
+- **Commit:** `e4f2c5f3`
+- **Estado:** ✅ COMPLETADO
+
+#### 2. Fix: Thread-Pool library no compilada / nombre de librería incorrecto
+- **Archivos:**
+  - `Server/Root/build-helpers/cmake/config/tearoot-server.cmake`
+  - `apply_compilation_patches.sh` (PARCHE 44 agregado)
+- **Problema:**
+  - `tearoot-server.cmake` seteaba `LIBRARY_PATH_THREAD_POOL` apuntando a `libthread_pool.a`
+  - El CMakeLists.txt del proyecto Thread-Pool instala la biblioteca estática como `libThreadPoolStatic.a` (no `libthread_pool.a`)
+  - El directorio `libraries/Thread-Pool/` no estaba construido en la máquina de build
+  - Error: `No rule to make target '.../Thread-Pool/out/linux_amd64/lib/libthread_pool.a'`
+- **Solución:**
+  - `tearoot-server.cmake` línea 68: `libthread_pool.a` → `libThreadPoolStatic.a`
+  - PARCHE 44 en `apply_compilation_patches.sh`: Clona Thread-Pool desde GitHub y lo compila con CMake si `libThreadPoolStatic.a` no existe
+  - Thread-Pool se clona desde `https://github.com/jorgebarreraa/Thread-Pool.git`
+  - Se instala a `libraries/Thread-Pool/out/linux_amd64/` con headers en `include/ThreadPool/`
+- **Estado:** ✅ COMPLETADO
+
+### 📝 Contexto de la sesión 2026-02-17:
+- CMake configuration pasó exitosamente después de los fixes de targets IMPORTED de la sesión anterior
+- El error Thread-Pool apareció en la fase de compilación (make), no en cmake configure
+- Thread-Pool NO es header-only: tiene código fuente en `src/` y crea `libThreadPoolStatic.a`
+- `music/include/teaspeak/MusicPlayer.h` incluye `<ThreadPool/Future.h>` → necesita los headers instalados
+- Se usa el proyecto del usuario (`jorgebarreraa/Thread-Pool.git`) para el clone de fallback
+
+---
+
 ## 🔄 SESIÓN: 2026-02-16 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados:
