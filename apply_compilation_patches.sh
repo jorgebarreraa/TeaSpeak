@@ -1998,6 +1998,71 @@ else
     log_success "✓ PARCHE 44: Thread-Pool ya compilado en $_TPOOL_LIB"
 fi
 
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 45: Compilar jsoncpp estático si no está disponible"
+log_info "════════════════════════════════════════════════════════════"
+_JSONCPP_DIR="$SCRIPT_DIR/Server/Root/libraries/jsoncpp"
+_JSONCPP_OUT="$_JSONCPP_DIR/out/linux_amd64"
+_JSONCPP_LIB="$_JSONCPP_OUT/lib/libjsoncpp.a"
+
+if [ ! -f "$_JSONCPP_LIB" ]; then
+    log_info "jsoncpp static library no encontrada, compilando..."
+
+    # Clone jsoncpp if source directory is missing or incomplete
+    if [ ! -d "$_JSONCPP_DIR" ] || [ ! -f "$_JSONCPP_DIR/CMakeLists.txt" ]; then
+        log_info "Clonando jsoncpp desde GitHub..."
+        rm -rf "$_JSONCPP_DIR" 2>/dev/null || true
+        git clone --depth 1 "https://github.com/open-source-parsers/jsoncpp.git" "$_JSONCPP_DIR" || {
+            log_error "✗ PARCHE 45: No se pudo clonar jsoncpp"
+            exit 1
+        }
+    fi
+
+    log_info "Compilando jsoncpp desde: $_JSONCPP_DIR"
+    _JSONCPP_BUILD="/tmp/jsoncpp_cmake_build_$$"
+    mkdir -p "$_JSONCPP_OUT"
+    mkdir -p "$_JSONCPP_BUILD"
+
+    (
+        cmake -S "$_JSONCPP_DIR" -B "$_JSONCPP_BUILD" \
+            -DCMAKE_CXX_FLAGS="-fPIC -std=c++11" \
+            -DCMAKE_C_FLAGS="-fPIC" \
+            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_INSTALL_PREFIX="$_JSONCPP_OUT" \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DJSONCPP_WITH_TESTS=OFF \
+            -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+        cmake --build "$_JSONCPP_BUILD" -j$(nproc 2>/dev/null || echo 4)
+        cmake --install "$_JSONCPP_BUILD"
+    ) || {
+        rm -rf "$_JSONCPP_BUILD" 2>/dev/null || true
+        log_error "✗ PARCHE 45: Error al compilar jsoncpp"
+        exit 1
+    }
+
+    rm -rf "$_JSONCPP_BUILD" 2>/dev/null || true
+
+    # jsoncpp may install as libjsoncpp.a or libjsoncpp_static.a depending on version
+    if [ ! -f "$_JSONCPP_LIB" ]; then
+        _ALT_LIB="$_JSONCPP_OUT/lib/libjsoncpp_static.a"
+        if [ -f "$_ALT_LIB" ]; then
+            ln -sf "$_ALT_LIB" "$_JSONCPP_LIB"
+            log_info "Creado symlink libjsoncpp.a -> libjsoncpp_static.a"
+        fi
+    fi
+
+    if [ -f "$_JSONCPP_LIB" ]; then
+        log_success "✓ PARCHE 45: jsoncpp compilado exitosamente"
+    else
+        log_error "✗ PARCHE 45: jsoncpp compilado pero librería no encontrada en:"
+        log_error "  $_JSONCPP_LIB"
+        log_error "  Rutas instaladas: $(find "$_JSONCPP_OUT" -name '*.a' 2>/dev/null | head -10 || echo 'ninguna')"
+        exit 1
+    fi
+else
+    log_success "✓ PARCHE 45: jsoncpp ya compilado en $_JSONCPP_LIB"
+fi
+
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}  ✅ Parches aplicados exitosamente${NC}"

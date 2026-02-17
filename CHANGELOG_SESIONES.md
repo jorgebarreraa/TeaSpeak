@@ -56,6 +56,21 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - También actualizado el check de verificación del PARCHE 1
 - **Estado:** ✅ COMPLETADO
 
+#### 4. Fix: jsoncpp static library faltante para ProviderYT
+- **Archivos:**
+  - `apply_compilation_patches.sh` (PARCHE 45 agregado)
+- **Problema:**
+  - `tearoot-server.cmake` referencia `LIBRARY_PATH_JSON = libraries/jsoncpp/out/linux_amd64/lib/libjsoncpp.a`
+  - PARCHE 24 compila jsoncpp como **shared** (`-DBUILD_SHARED_LIBS=ON`) y lo instala en `/usr/local/`
+  - El archivo `libjsoncpp.a` (estático) nunca se crea en `libraries/jsoncpp/out/linux_amd64/`
+  - Error: `No rule to make target '.../jsoncpp/out/linux_amd64/lib/libjsoncpp.a'` al enlazar `ProviderYT.so`
+- **Solución:**
+  - PARCHE 45 en `apply_compilation_patches.sh`: Clona jsoncpp y lo compila como biblioteca ESTÁTICA
+  - Flags: `-DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="-fPIC -std=c++11"`
+  - Instala a `libraries/jsoncpp/out/linux_amd64/`
+  - Fallback: Si jsoncpp instala como `libjsoncpp_static.a`, crea symlink a `libjsoncpp.a`
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-17:
 - CMake configuration pasó exitosamente después de los fixes de targets IMPORTED de la sesión anterior
 - El error Thread-Pool apareció en la fase de compilación (make), no en cmake configure
