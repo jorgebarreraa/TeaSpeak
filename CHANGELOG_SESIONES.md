@@ -4,6 +4,33 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2026-02-16 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix CRÍTICO: FindTomMath.cmake crea target con nombre incorrecto
+- **Archivos:**
+  - `Server/Root/TeaSpeak/cmake/Modules/FindTomMath.cmake`
+  - `Server/Server/cmake/Modules/FindTomMath.cmake`
+- **Problema:**
+  - `FindTomMath.cmake` creaba el target `TomMath::static` (CamelCase)
+  - `shared/CMakeLists.txt` (líneas 206, 261) y `server/CMakeLists.txt` (líneas 264, 403) referencian `tommath::static` (minúsculas)
+  - Los nombres de targets CMake son case-sensitive → `TomMath::static` ≠ `tommath::static`
+  - Error: `CMake Error: Target "TeaSpeak" links to: tommath::static but the target was not found`
+  - Comparación: `FindTomCrypt.cmake` correctamente creaba `tomcrypt::static` (minúsculas)
+- **Solución:**
+  - Cambiado `TomMath::static` → `tommath::static` en ambos archivos FindTomMath.cmake
+  - Ahora consistente con el patrón de `FindTomCrypt.cmake`
+- **Estado:** ✅ COMPLETADO
+
+### 📝 Contexto de la sesión 2026-02-16:
+- Error detectado después de que Rust (teaspeak-webrtc) compiló exitosamente
+- La compilación de Rust completó en ~1m 40s con solo warnings (no errores)
+- El error era en la fase CMake Configure del servidor C++
+- Solo afectaba a `tommath::static`, no a `tomcrypt::static` (ese ya estaba correcto)
+
+---
+
 ## 🔄 SESIÓN: 2026-02-14 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados:
@@ -335,8 +362,6 @@ git pull origin claude/fix-install-script-ULBSP
 
 ---
 
-**Última actualización:** 2026-02-14
+**Última actualización:** 2026-02-16
 **Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** `eb6c87dd` + cambios de sesión 2026-02-14 (tearoot-server.cmake, Find*.cmake, PATCH 21/22)
-**Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** `aac9ac1` - Fix: Use relative path for LIBRARY_PATH in CMakeLists.txt
+**Último commit:** (sesión 2026-02-16) Fix FindTomMath.cmake: TomMath::static → tommath::static
