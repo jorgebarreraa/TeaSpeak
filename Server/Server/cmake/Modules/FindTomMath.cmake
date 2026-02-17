@@ -8,7 +8,7 @@
 #  TomMath_FOUND              System has TomMath
 #  TomMath_INCLUDE_DIR        The TomMath include directory
 #  TomMath_LIBRARIES          The TomMath static library
-#  TomMath::static            IMPORTED target
+#  tommath::static            IMPORTED target
 
 include(FindPackageHandleStandardArgs)
 
@@ -56,9 +56,9 @@ endif()
 
 if(TomMath_INCLUDE_DIR AND TomMath_LIBRARIES)
     message(STATUS "Found TomMath: ${TomMath_LIBRARIES}")
-    if(NOT TARGET TomMath::static)
-        add_library(TomMath::static STATIC IMPORTED)
-        set_target_properties(TomMath::static PROPERTIES
+    if(NOT TARGET tommath::static)
+        add_library(tommath::static STATIC IMPORTED)
+        set_target_properties(tommath::static PROPERTIES
             IMPORTED_LOCATION "${TomMath_LIBRARIES}"
             INTERFACE_INCLUDE_DIRECTORIES "${TomMath_INCLUDE_DIR}"
         )
