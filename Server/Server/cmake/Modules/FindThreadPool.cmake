@@ -23,6 +23,7 @@ endif()
 # ThreadPool is header-only, so we only need to find the include directory
 # The task_executor.h is now part of TeaSpeakLibrary's misc directory
 set(THREADPOOL_SEARCH_PATHS
+    ${CMAKE_SOURCE_DIR}/../libraries/Thread-Pool/out/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}/include
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/out/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}/include
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/_build/${BUILD_OS_TYPE}_${BUILD_OS_ARCH}/include
     ${CMAKE_SOURCE_DIR}/../libraries/threadpool/build/include

@@ -56,6 +56,19 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - También actualizado el check de verificación del PARCHE 1
 - **Estado:** ✅ COMPLETADO
 
+#### 5. Fix: FindThreadPool.cmake no busca en libraries/Thread-Pool/ (capital T-P)
+- **Archivos:**
+  - `Server/Server/cmake/Modules/FindThreadPool.cmake`
+- **Problema:**
+  - `FindThreadPool.cmake` busca en `libraries/threadpool/` (minúsculas, sin guión)
+  - PARCHE 44 construye Thread-Pool en `libraries/Thread-Pool/out/linux_amd64/include/ThreadPool/`
+  - Fallback usa `shared/src` (tiene `misc/task_executor.h` pero NO `ThreadPool/ThreadPool.h`)
+  - Error: `fatal error: ThreadPool/ThreadPool.h: No such file or directory` en SqlQuery.h
+- **Solución:**
+  - Agrega `${CMAKE_SOURCE_DIR}/../libraries/Thread-Pool/out/.../include` como primer path de búsqueda
+  - Ahora `find_path` encuentra `ThreadPool/Timer.h` en el Thread-Pool construido antes que en `shared/src`
+- **Estado:** ✅ COMPLETADO
+
 #### 4. Fix: jsoncpp static library faltante para ProviderYT
 - **Archivos:**
   - `apply_compilation_patches.sh` (PARCHE 45 agregado)
