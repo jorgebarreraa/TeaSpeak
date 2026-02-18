@@ -1554,7 +1554,7 @@ compile_teaspeak() {
 verify_build() {
     log_step "PASO 11: Verificando Compilación"
 
-    local build_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64"
+    local build_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
 
     if [[ -f "$build_dir/TeaSpeakServer" ]]; then
         local size=$(du -h "$build_dir/TeaSpeakServer" | cut -f1)
@@ -1594,7 +1594,7 @@ show_summary() {
     echo ""
 
     log_info "Para ejecutar TeaSpeak:"
-    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64"
+    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
     echo "  ./TeaSpeakServer"
     echo ""
 

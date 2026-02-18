@@ -128,18 +128,20 @@ fi
 # so it must be run from server/environment/resources/ where ../helpers/ → server/helpers/.
 echo "Building PermHelper (permission template generator)..."
 cmake --build "$(pwd)" --target PermHelper -- -j "$_cpu_cores"; _perm_code=$?
-if [[ $_perm_code -eq 0 ]] && [[ -f "$(pwd)/server/PermHelper" ]]; then
+# Binaries land in ../server/environment/ (relative to the cmake build dir),
+# not inside the build dir itself — cmake output dirs are set in CMakeLists.txt.
+_perm_binary="$(pwd)/../server/environment/PermHelper"
+_resources_dir="$(pwd)/../server/environment/resources"
+if [[ $_perm_code -eq 0 ]] && [[ -f "$_perm_binary" ]]; then
     echo "Generating resources/permissions.template..."
-    _perm_binary="$(pwd)/server/PermHelper"
-    _resources_dir="$(pwd)/../server/environment/resources"
     mkdir -p "$_resources_dir"
-    if (cd "$_resources_dir" && "$_perm_binary" > /dev/null); then
+    if (cd "$_resources_dir" && "$_perm_binary" > /dev/null 2>&1); then
         echo "✓ permissions.template generated successfully"
     else
         echo "⚠ permissions.template generation failed (non-fatal)"
     fi
 else
-    echo "⚠ PermHelper build failed or binary not found (non-fatal, code: $_perm_code)"
+    echo "⚠ PermHelper build failed or binary not found (code: $_perm_code, path: $_perm_binary)"
 fi
 
 echo "✓ All components built successfully!"

@@ -82,6 +82,25 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - El paso es no-fatal (fallo en `⚠`) para no bloquear el proceso si la generación falla
 - **Estado:** ✅ COMPLETADO
 
+#### 4. Fix: build_teaspeak.sh verifica ruta incorrecta para PermHelper + setup_teaspeak.sh muestra ruta incorrecta
+- **Archivos:**
+  - `Server/Root/build_teaspeak.sh`
+  - `setup_teaspeak.sh`
+  - `update_and_rebuild.sh`
+- **Problema:**
+  - El paso de PermHelper en `build_teaspeak.sh` verificaba `$(pwd)/server/PermHelper` pero
+    los binarios CMake se generan en `../server/environment/` (relativo al dir de build),
+    NO dentro del build dir. Resultaba: `⚠ PermHelper build failed or binary not found`
+    aunque cmake lo había compilado correctamente (code 0).
+  - `setup_teaspeak.sh` y `update_and_rebuild.sh` mostraban ruta incorrecta:
+    `Server/Root/TeaSpeak/Server/server/out/linux_amd64` (no existe)
+    en lugar de `Server/Root/TeaSpeak/server/environment`
+- **Solución:**
+  - `build_teaspeak.sh`: `_perm_binary="$(pwd)/../server/environment/PermHelper"`
+  - `setup_teaspeak.sh`: corrige `build_dir` y mensaje "Para ejecutar TeaSpeak"
+  - `update_and_rebuild.sh`: corrige mensaje de binarios compilados
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado

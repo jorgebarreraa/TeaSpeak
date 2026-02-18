@@ -79,7 +79,7 @@ if [[ $? -eq 0 ]]; then
     echo -e "${GREEN}════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "${CYAN}Binarios compilados:${NC}"
-    echo "  • TeaSpeakServer: Server/Root/TeaSpeak/Server/server/out/linux_amd64/"
+    echo "  • TeaSpeakServer: Server/Root/TeaSpeak/server/environment/"
     echo "  • Music Providers: Server/Root/TeaSpeak/music/bin/providers/"
     echo ""
     echo -e "${GREEN}¡TeaSpeak está listo para usar!${NC}"
