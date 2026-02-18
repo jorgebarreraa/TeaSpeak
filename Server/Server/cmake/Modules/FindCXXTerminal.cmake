@@ -7,7 +7,7 @@
 #
 #  CXXTerminal_FOUND            System has CXXTerminal
 #  CXXTerminal_INCLUDE_DIR      The include directory
-#  CXXTerminal::static          IMPORTED static library target
+#  CXXTerminal::static          IMPORTED library target (STATIC or SHARED depending on what's found)
 
 include(FindPackageHandleStandardArgs)
 
@@ -51,7 +51,17 @@ if(CXXTerminal_INCLUDE_DIR AND CXXTerminal_LIBRARY)
     set(CXXTerminal_FOUND TRUE)
 
     if(NOT TARGET CXXTerminal::static)
-        add_library(CXXTerminal::static STATIC IMPORTED)
+        # Detect whether the found library is shared (.so) or static (.a).
+        # CMake only adds a library's directory to the binary's rpath for
+        # SHARED IMPORTED targets. Creating a STATIC IMPORTED target for a .so
+        # causes the linker to find it at build time but the dynamic linker
+        # can't find it at runtime (no rpath entry). Detect the actual type and
+        # create the correct IMPORTED target so cmake adds rpath automatically.
+        if(CXXTerminal_LIBRARY MATCHES "\\.so(\\.[0-9]+)*$")
+            add_library(CXXTerminal::static SHARED IMPORTED)
+        else()
+            add_library(CXXTerminal::static STATIC IMPORTED)
+        endif()
         set_target_properties(CXXTerminal::static PROPERTIES
             IMPORTED_LOCATION "${CXXTerminal_LIBRARY}"
             INTERFACE_INCLUDE_DIRECTORIES "${CXXTerminal_INCLUDE_DIR}"

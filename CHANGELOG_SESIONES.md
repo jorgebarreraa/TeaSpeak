@@ -35,14 +35,40 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
     de filename exacto en CMake (sin añadir prefijos/sufijos automáticos)
 - **Estado:** ✅ COMPLETADO
 
+#### 2. Fix: FindCXXTerminal.cmake crea STATIC IMPORTED para un .so → sin rpath → error en runtime
+- **Archivo:**
+  - `Server/Server/cmake/Modules/FindCXXTerminal.cmake`
+- **Problema:**
+  - `libCXXTerminal.so` es una biblioteca dinámica compartida (`.so`), NO estática
+  - `FindCXXTerminal.cmake` usaba `add_library(CXXTerminal::static STATIC IMPORTED)`
+  - CMake solo agrega el directorio de una biblioteca al rpath del binario cuando el
+    target es `SHARED IMPORTED`. Para `STATIC IMPORTED`, asume que el código está
+    integrado y no necesita rpath.
+  - Resultado: el binario `TeaSpeakServer` compilaba correctamente (el linker encontraba
+    el `.so` por ruta absoluta) pero al ejecutarse fallaba:
+    ```
+    ./TeaSpeakServer: error while loading shared libraries: libCXXTerminal.so:
+    cannot open shared object file: No such file or directory
+    ```
+  - El rpath del binario solo tenía `MusicBot/libs` y `rtclib`, nunca el directorio
+    de CXXTerminal (`libraries/CXXTerminal/out/linux_amd64/lib/`)
+- **Solución:**
+  - Agrega detección del tipo real de biblioteca usando regex `\.so(\.[0-9]+)*$`
+  - Si la biblioteca encontrada es `.so` → `SHARED IMPORTED` (cmake agrega rpath auto)
+  - Si la biblioteca encontrada es `.a` → `STATIC IMPORTED` (sin rpath, correcto)
+  - Esta lógica maneja correctamente cualquier futura versión estática también
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
-- La compilación C++ llegó al 100% en sesiones anteriores
-- El link de TeaSpeakServer fallaba con ~80 `undefined reference` a símbolos de Thread-Pool
-- Todos los símbolos faltantes pertenecen al namespace `threads::` → implementados en `libThreadPoolStatic.a`
-- PARCHE 44 (sesión 2026-02-17) ya compila correctamente `libThreadPoolStatic.a`; solo faltaba
-  que CMake enlazara el `.a` al definir el IMPORTED target (INTERFACE no enlaza nada)
+- **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
+- Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado
+- Causa sistemática: STATIC vs SHARED IMPORTED es la distinción que controla si cmake
+  agrega automáticamente la ruta de la biblioteca al rpath del binario
+- El patrón de este bug puede afectar a cualquier otro `.so` declarado como STATIC IMPORTED
 
 ---
+
+
 
 ## 🔄 SESIÓN: 2026-02-17 (Rama: claude/fix-install-script-ULBSP)
 
@@ -517,4 +543,4 @@ git pull origin claude/fix-install-script-ULBSP
 
 **Última actualización:** 2026-02-18
 **Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** (sesión 2026-02-18) Fix FindThreadPool.cmake: create STATIC IMPORTED target to link libThreadPoolStatic.a
+**Último commit:** (sesión 2026-02-18) Fix FindCXXTerminal.cmake: detect .so vs .a and create correct SHARED/STATIC IMPORTED target
