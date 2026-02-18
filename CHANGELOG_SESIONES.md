@@ -59,6 +59,29 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Esta lógica maneja correctamente cualquier futura versión estática también
 - **Estado:** ✅ COMPLETADO
 
+#### 3. Fix: build_teaspeak.sh no construye ni ejecuta PermHelper → resources/permissions.template faltante
+- **Archivo:**
+  - `Server/Root/build_teaspeak.sh`
+- **Problema:**
+  - El servidor fallaba en runtime con:
+    ```
+    [CRITICAL] GLOBL | Could not open default permissions file resources/permissions.template
+    [CRITICAL] GLOBL | Could not setup server instance! Stopping...
+    ```
+  - `PermHelper` (compilado desde `helpers/permgen.cpp`) genera este archivo leyendo
+    `../helpers/server_groups` y `../helpers/channel_groups` y escribiendo `permissions.template`
+  - `build_teaspeak.sh` solo construía `ProviderFFMpeg`, `ProviderYT` y `TeaSpeakServer`,
+    nunca `PermHelper` y nunca lo ejecutaba
+- **Solución:**
+  - Agrega paso en `build_teaspeak.sh` después de la construcción de TeaSpeakServer:
+    1. `cmake --build . --target PermHelper` para compilar el binario
+    2. `mkdir -p ../server/environment/resources` para asegurar que el directorio existe
+    3. Ejecutar PermHelper desde `../server/environment/resources/` para que las rutas
+       relativas (`../helpers/`) resuelvan correctamente a `server/helpers/`
+    4. El archivo generado queda en `server/environment/resources/permissions.template`
+  - El paso es no-fatal (fallo en `⚠`) para no bloquear el proceso si la generación falla
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado

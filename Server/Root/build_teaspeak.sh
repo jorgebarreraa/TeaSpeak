@@ -123,6 +123,25 @@ if [[ $_code -ne 0 ]]; then
 	exit 1
 fi
 
+# Build PermHelper and generate resources/permissions.template
+# PermHelper reads ../helpers/server_groups + ../helpers/channel_groups relative to CWD,
+# so it must be run from server/environment/resources/ where ../helpers/ → server/helpers/.
+echo "Building PermHelper (permission template generator)..."
+cmake --build "$(pwd)" --target PermHelper -- -j "$_cpu_cores"; _perm_code=$?
+if [[ $_perm_code -eq 0 ]] && [[ -f "$(pwd)/server/PermHelper" ]]; then
+    echo "Generating resources/permissions.template..."
+    _perm_binary="$(pwd)/server/PermHelper"
+    _resources_dir="$(pwd)/../server/environment/resources"
+    mkdir -p "$_resources_dir"
+    if (cd "$_resources_dir" && "$_perm_binary" > /dev/null); then
+        echo "✓ permissions.template generated successfully"
+    else
+        echo "⚠ permissions.template generation failed (non-fatal)"
+    fi
+else
+    echo "⚠ PermHelper build failed or binary not found (non-fatal, code: $_perm_code)"
+fi
+
 echo "✓ All components built successfully!"
 
 #${CXX_FLAGS}
