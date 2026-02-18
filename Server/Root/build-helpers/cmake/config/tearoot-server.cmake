@@ -77,7 +77,14 @@ set(LIBRARY_TOM_MATH    "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}/lib/libtommathS
 set(LIBRARY_TOM_CRYPT   "${LIBRARY_PATH}/tomcrypt/${BUILD_OUTPUT}/lib/libtomcrypt.a")
 set(LIBRARY_PATH_ED255  "${LIBRARY_PATH}/ed25519/${BUILD_OUTPUT}/lib/libed25519.a")
 set(LIBRARY_PATH_THREAD_POOL "${LIBRARY_PATH}/Thread-Pool/${BUILD_OUTPUT}/lib/libThreadPoolStatic.a")
-set(LIBRARY_PATH_TERMINAL    "${LIBRARY_PATH}/CXXTerminal/${BUILD_OUTPUT}/lib/libCXXTerminal.a")
+# CXXTerminal: the library may be built as shared (.so) or static (.a).
+# PermMapHelper and LicenseManager link against this raw path variable, so we
+# must detect which variant is actually present at configure time.
+if(EXISTS "${LIBRARY_PATH}/CXXTerminal/${BUILD_OUTPUT}/lib/libCXXTerminal.so")
+    set(LIBRARY_PATH_TERMINAL "${LIBRARY_PATH}/CXXTerminal/${BUILD_OUTPUT}/lib/libCXXTerminal.so")
+else()
+    set(LIBRARY_PATH_TERMINAL "${LIBRARY_PATH}/CXXTerminal/${BUILD_OUTPUT}/lib/libCXXTerminal.a")
+endif()
 set(LIBRARY_PATH_VARIBALES   "${LIBRARY_PATH}/StringVariable/${BUILD_OUTPUT}/lib/libStringVariablesStatic.a")
 set(LIBRARY_PATH_YAML        "${LIBRARY_PATH}/yaml-cpp/${BUILD_OUTPUT}/lib/libyaml-cpp.a")
 set(LIBRARY_PATH_JSON        "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/libjsoncpp.a")

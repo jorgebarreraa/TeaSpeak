@@ -119,6 +119,23 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Ambos binarios: `$_env_dir/PermHelper` y `$_env_dir/PermMapHelper`
 - **Estado:** ✅ COMPLETADO
 
+#### 6. Fix: LIBRARY_PATH_TERMINAL hardcodeado a .a en tearoot-server.cmake → falla PermMapHelper
+- **Archivo:**
+  - `Server/Root/build-helpers/cmake/config/tearoot-server.cmake`
+- **Problema:**
+  - `LIBRARY_PATH_TERMINAL` estaba hardcodeado a `libCXXTerminal.a` (biblioteca estática)
+  - Solo existe `libCXXTerminal.so` (biblioteca compartida) en la instalación actual
+  - `PermMapHelper` y `LicenseManager` usan esta variable raw en lugar de `CXXTerminal::static`
+  - Error al compilar: `No rule to make target 'libCXXTerminal.a'`
+  - Nota: `FindCXXTerminal.cmake` ya detectaba `.so` vs `.a` para el target IMPORTED, pero no
+    corregía esta variable legacy usada por targets que no usan `CXXTerminal::static`
+- **Solución:**
+  - Agregar detección `if(EXISTS .../libCXXTerminal.so)` en `tearoot-server.cmake`
+  - Si existe `.so` → `LIBRARY_PATH_TERMINAL` apunta al `.so`
+  - Si no → fallback al `.a` (comportamiento original)
+  - Mismo patrón de detección que en `FindCXXTerminal.cmake`
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado
