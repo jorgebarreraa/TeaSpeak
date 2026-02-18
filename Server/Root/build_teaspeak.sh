@@ -123,25 +123,46 @@ if [[ $_code -ne 0 ]]; then
 	exit 1
 fi
 
-# Build PermHelper and generate resources/permissions.template
-# PermHelper reads ../helpers/server_groups + ../helpers/channel_groups relative to CWD,
-# so it must be run from server/environment/resources/ where ../helpers/ → server/helpers/.
-echo "Building PermHelper (permission template generator)..."
+# Paths shared by both resource generators.
+# Binaries land in ../server/environment/ relative to the cmake build dir,
+# NOT inside the build dir itself (cmake RUNTIME_OUTPUT_DIRECTORY is set in CMakeLists.txt).
+_env_dir="$(pwd)/../server/environment"
+_resources_dir="$_env_dir/resources"
+mkdir -p "$_resources_dir"
+
+# --- Build PermHelper and generate resources/permissions.template ---
+# permgen.cpp reads ../helpers/server_groups + ../helpers/channel_groups relative to CWD.
+# Run from environment/ so ../helpers/ → server/helpers/ (where those files live).
+# Then move the generated file into resources/.
+echo "Building PermHelper (permissions.template generator)..."
 cmake --build "$(pwd)" --target PermHelper -- -j "$_cpu_cores"; _perm_code=$?
-# Binaries land in ../server/environment/ (relative to the cmake build dir),
-# not inside the build dir itself — cmake output dirs are set in CMakeLists.txt.
-_perm_binary="$(pwd)/../server/environment/PermHelper"
-_resources_dir="$(pwd)/../server/environment/resources"
+_perm_binary="$_env_dir/PermHelper"
 if [[ $_perm_code -eq 0 ]] && [[ -f "$_perm_binary" ]]; then
     echo "Generating resources/permissions.template..."
-    mkdir -p "$_resources_dir"
-    if (cd "$_resources_dir" && "$_perm_binary" > /dev/null 2>&1); then
+    if (cd "$_env_dir" && "$_perm_binary" > /dev/null 2>&1 && mv -f permissions.template "$_resources_dir/"); then
         echo "✓ permissions.template generated successfully"
     else
         echo "⚠ permissions.template generation failed (non-fatal)"
     fi
 else
-    echo "⚠ PermHelper build failed or binary not found (code: $_perm_code, path: $_perm_binary)"
+    echo "⚠ PermHelper build failed or binary not found (code: $_perm_code)"
+fi
+
+# --- Build PermMapHelper and generate resources/permission_mapping.txt ---
+# PermMapGen.cpp writes permission_mapping.txt to CWD with no file reads from helpers.
+# Run from resources/ so the output lands directly in resources/permission_mapping.txt.
+echo "Building PermMapHelper (permission_mapping.txt generator)..."
+cmake --build "$(pwd)" --target PermMapHelper -- -j "$_cpu_cores"; _map_code=$?
+_map_binary="$_env_dir/PermMapHelper"
+if [[ $_map_code -eq 0 ]] && [[ -f "$_map_binary" ]]; then
+    echo "Generating resources/permission_mapping.txt..."
+    if (cd "$_resources_dir" && "$_map_binary" > /dev/null 2>&1); then
+        echo "✓ permission_mapping.txt generated successfully"
+    else
+        echo "⚠ permission_mapping.txt generation failed (non-fatal)"
+    fi
+else
+    echo "⚠ PermMapHelper build failed or binary not found (code: $_map_code)"
 fi
 
 echo "✓ All components built successfully!"

@@ -101,6 +101,24 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - `update_and_rebuild.sh`: corrige mensaje de binarios compilados
 - **Estado:** ✅ COMPLETADO
 
+#### 5. Fix: PermHelper ejecutado en directorio incorrecto + PermMapHelper nunca construido
+- **Archivo:**
+  - `Server/Root/build_teaspeak.sh`
+- **Problema:**
+  - PermHelper estaba ejecutándose desde `environment/resources/` pero `permgen.cpp` lee
+    `../helpers/server_groups` y `../helpers/channel_groups`. Desde `resources/`, `../helpers/`
+    resuelve a `environment/helpers/` (no existe). El template generado era vacío/incompleto.
+  - El servidor seguía fallando con `Missing instance server groups` al arrancar.
+  - `PermMapHelper` (genera `resources/permission_mapping.txt`) nunca se construía ni ejecutaba.
+    El servidor terminaba con: `Failed to initialize permission name mapping: file does not exists`
+- **Solución:**
+  - PermHelper: ejecutar desde `environment/` (no `resources/`) para que `../helpers/` resuelva
+    correctamente a `server/helpers/`. Luego mover el `permissions.template` generado a `resources/`
+  - PermMapHelper: construir target `PermMapHelper` y ejecutarlo desde `resources/` (solo escribe,
+    no lee de helpers). Output va directo a `resources/permission_mapping.txt`.
+  - Ambos binarios: `$_env_dir/PermHelper` y `$_env_dir/PermMapHelper`
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado
