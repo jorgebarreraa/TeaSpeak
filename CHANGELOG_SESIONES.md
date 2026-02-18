@@ -4,6 +4,46 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2026-02-18 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix: FindThreadPool.cmake crea target INTERFACE en lugar de STATIC IMPORTED
+- **Archivo:**
+  - `Server/Server/cmake/Modules/FindThreadPool.cmake`
+- **Problema:**
+  - `FindThreadPool.cmake` creaba `threadpool::static` como `INTERFACE IMPORTED`
+  - Un target INTERFACE solo proporciona directorios de include, NO enlaza ninguna biblioteca
+  - Thread-Pool (jorgebarreraa/Thread-Pool.git) NO es header-only: `threads::ThreadPool`,
+    `threads::timer`, `threads::impl::ThreadBase`, `threads::impl::FutureHandleData`, etc.
+    tienen sus implementaciones compiladas en `libThreadPoolStatic.a`
+  - El comentario en el archivo decía "header-only, no library to link" — incorrecto
+  - `libThreadPoolStatic.a` no aparecía en el comando final de linkeo → ~80 errores:
+    - `undefined reference to threads::ThreadPool::execute(...)`
+    - `undefined reference to threads::timer::timer(...)`
+    - `undefined reference to threads::impl::FutureHandleData::triggerWaiters(...)`
+    - `undefined reference to threads::impl::ThreadBase::start(...)`
+    - (muchos más del mismo tipo)
+- **Solución:**
+  - Agrega búsqueda de `libThreadPoolStatic.a` con `find_library()` en paths paralelos
+    a los paths de include (mismo orden de prioridad)
+  - Si se encuentra la biblioteca: crea `threadpool::static` como `STATIC IMPORTED`
+    con `IMPORTED_LOCATION` y `INTERFACE_INCLUDE_DIRECTORIES`
+  - Si NO se encuentra: mantiene fallback a `INTERFACE` target (compatible con
+    instalaciones que solo tienen headers)
+  - `NAMES libThreadPoolStatic.a ThreadPoolStatic` — el nombre con `.` fuerza búsqueda
+    de filename exacto en CMake (sin añadir prefijos/sufijos automáticos)
+- **Estado:** ✅ COMPLETADO
+
+### 📝 Contexto de la sesión 2026-02-18:
+- La compilación C++ llegó al 100% en sesiones anteriores
+- El link de TeaSpeakServer fallaba con ~80 `undefined reference` a símbolos de Thread-Pool
+- Todos los símbolos faltantes pertenecen al namespace `threads::` → implementados en `libThreadPoolStatic.a`
+- PARCHE 44 (sesión 2026-02-17) ya compila correctamente `libThreadPoolStatic.a`; solo faltaba
+  que CMake enlazara el `.a` al definir el IMPORTED target (INTERFACE no enlaza nada)
+
+---
+
 ## 🔄 SESIÓN: 2026-02-17 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados:
@@ -475,6 +515,6 @@ git pull origin claude/fix-install-script-ULBSP
 
 ---
 
-**Última actualización:** 2026-02-17
+**Última actualización:** 2026-02-18
 **Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** (sesión 2026-02-17) Fix tearoot-server.cmake: add jsoncpp_lib IMPORTED target to resolve -ljsoncpp_lib linker error
+**Último commit:** (sesión 2026-02-18) Fix FindThreadPool.cmake: create STATIC IMPORTED target to link libThreadPoolStatic.a
