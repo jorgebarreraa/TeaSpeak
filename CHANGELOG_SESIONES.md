@@ -730,6 +730,64 @@ git pull origin claude/fix-install-script-ULBSP
 
 ---
 
-**Última actualización:** 2026-02-18
+---
+
+## 🔄 SESIÓN: 2026-02-19 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 12. Fix: ABORT "Loaded 5 saved channels. Assembling..." — assert(channel) en initializeTempParents y buildChannelTree
+- **Archivo:**
+  - `Server/Server/server/src/channel/ServerChannel.cpp`
+- **Problema:**
+  - Tras los fixes de la sesión anterior (buildChannelTreeFromTemp + null check en InstanceHandler),
+    el servidor con el binario nuevo (Build 1771491483) seguía crasheando con:
+    ```
+    Loaded 5 saved channels. Assembling... Aborted (core dumped)
+    ```
+  - El assert anterior (`assert(tmpChannelList.empty())` en buildChannelTreeFromTemp) fue reemplazado
+    correctamente, pero existían otros asserts duros (`assert(channel)`) en el mismo path de carga:
+    1. **Línea 138** en `initializeTempParents()`: `assert(channel)` tras `dynamic_pointer_cast<BasicChannel>`
+       — esta función se llama ANTES de `buildChannelTreeFromTemp()`, por lo que nuestro fix previo
+       nunca se alcanzaba si el assert en 138 disparaba primero.
+    2. **Línea 222** en inline `buildChannelTree()`: `assert(channel)` en el bucle de ordenamiento
+    3. **Línea 311** en inline `buildChannelTree()`: `assert(channel)` en el bucle de verificación del árbol
+  - Adicionalmente, `validateChannelNames()` (llamada después de buildChannelTree):
+    4. **Línea 464**: `dynamic_pointer_cast<ServerChannel>` sin null check → desreferencia nula si falla
+    5. **Línea 469**: `assert(taken_channel)` tras lookup en mapa
+  - Y en `loadChannelFromData()`:
+    6. **Línea 564**: `assert(channelId != 0)` redundante — la siguiente línea `if(channelId == 0) return 0;`
+       ya manejaba esto, pero el assert causaba ABORT antes de llegar al return
+- **Solución:**
+  - Línea 138: Reemplazado `assert(channel)` por `if(!channel) { logError(...); continue; }`
+  - Línea 222: Reemplazado `assert(channel)` por `if(!channel) { logError(...); continue; }`
+  - Línea 311: Reemplazado `assert(channel)` por `if(!channel) { logError(...); entry = entry->next; continue; }`
+  - Línea 464+469: Agregado null check tras dynamic_pointer_cast en validateChannelNames y reemplazado
+    `assert(taken_channel)` por `if(!taken_channel) { logError(...); continue; }`
+  - Línea 564: Eliminado `assert(channelId != 0)` — reemplazado por logError dentro del guard existente
+  - Todos los asserts duros reemplazados por manejo graceful: log del error + continuar sin crashear
+- **Estado:** ✅ COMPLETADO
+
+### 📝 Contexto de la sesión 2026-02-19:
+- El binario nuevo (Build 1771491483) sí tenía el fix de buildChannelTreeFromTemp, pero otro assert
+  más temprano en la cadena de llamadas causaba el ABORT antes de llegar al código fijo.
+- El orden exacto de llamadas en loadChannelsFromDatabase():
+  1. `loadChannelFromData()` callbacks → tmpChannelList (assert de channelId aquí)
+  2. logMessage "Loaded N saved channels. Assembling..."
+  3. `initializeTempParents()` ← assert(channel) en línea 138 (AQUÍ fallaba)
+  4. `buildChannelTreeFromTemp()` → `buildChannelTree()` ← asserts en 222, 311
+  5. `updateOrderIds()` — sin asserts duros
+  6. `validateChannelNames()` ← null-deref + assert en 464/469
+- Todos los asserts en el path de carga de canales son ahora graceful (logError + skip/continue).
+- NOTA IMPORTANTE para el usuario: Después de hacer pull del nuevo código y recompilar,
+  se recomienda borrar la DB de canales antes de probar:
+  ```bash
+  rm -f /root/TeaSpeak/Server/Root/TeaSpeak/server/environment/*.db
+  ```
+  Esto evita que los 5 canales corruptos del crash anterior interfieran con el nuevo arranque.
+
+---
+
+**Última actualización:** 2026-02-19
 **Rama actual:** `claude/fix-install-script-ULBSP`
-**Último commit:** (sesión 2026-02-18) Fix FindCXXTerminal.cmake: detect .so vs .a and create correct SHARED/STATIC IMPORTED target
+**Último commit:** (sesión 2026-02-19) Fix assert(channel) y assert(taken_channel) en path de carga de canales
