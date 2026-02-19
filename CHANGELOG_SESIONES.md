@@ -224,6 +224,30 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Previene el SEGFAULT y registra el error correctamente si falla.
 - **Estado:** ✅ COMPLETADO
 
+#### 11. Fix: ABORT en buildChannelTreeFromTemp — assert(tmpChannelList.empty()) sin recuperación
+- **Archivo:**
+  - `Server/Root/TeaSpeak/server/src/channel/ServerChannel.cpp`
+- **Problema:**
+  - `buildChannelTreeFromTemp()` terminaba con `assert(tmpChannelList.empty())`.
+  - Si algún canal no podía ser colocado en el árbol (datos inconsistentes en DB de un
+    crash anterior), `tmpChannelList` no quedaba vacío y el assert disparaba → ABORT.
+  - Escenario concreto: el primer crash (SEGFAULT en "Generating default tree" con binario
+    antiguo) dejaba los 5 canales en la DB en estado inconsistente. Al reiniciar: "Loaded 5
+    saved channels. Assembling... Aborted (core dumped)".
+  - El assert estaba pensado como sanity check pero no tiene mecanismo de recuperación.
+- **Solución:**
+  - Reemplazar el `assert` por manejo de error con log + `tmpChannelList.clear()`:
+    ```cpp
+    if(!tmpChannelList.empty()) {
+        logError(..., "buildChannelTreeFromTemp: {} channel(s) could not be placed in tree (orphaned). Discarding them.");
+        for(const auto& entry : this->tmpChannelList) { logError(..., channel info); }
+        this->tmpChannelList.clear();
+    }
+    ```
+  - Permite que el servidor arranque aunque haya canales huérfanos en la DB.
+  - Los canales descartados quedan en la tabla `channels` pero ya no afectan el startup.
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado

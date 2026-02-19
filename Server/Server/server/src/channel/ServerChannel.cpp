@@ -340,7 +340,14 @@ bool ServerChannelTree::buildChannelTreeFromTemp() {
     if(this->tmpChannelList.empty()) return true;
 
     this->head = buildChannelTree(this->getServerId(), nullptr, this->tmpChannelList);
-    assert(tmpChannelList.empty());
+    if(!tmpChannelList.empty()) {
+        logError(this->getServerId(), "buildChannelTreeFromTemp: {} channel(s) could not be placed in tree (orphaned). Discarding them.", this->tmpChannelList.size());
+        for(const auto& entry : this->tmpChannelList) {
+            auto ch = dynamic_pointer_cast<BasicChannel>(entry->entry);
+            if(ch) logError(this->getServerId(), "  Discarding orphaned channel {} ({})", ch->channelId(), ch->name());
+        }
+        this->tmpChannelList.clear();
+    }
     return true;
 }
 
