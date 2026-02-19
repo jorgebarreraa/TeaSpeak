@@ -1561,7 +1561,7 @@ verify_build() {
         log_success "TeaSpeakServer encontrado ($size)"
 
         log_substep "Verificando versión..."
-        "$build_dir/TeaSpeakServer" --version 2>&1 || true
+        (cd "$build_dir" && ./TeaSpeakServer --version 2>&1) || true
     else
         log_warning "TeaSpeakServer no encontrado en la ubicación esperada"
         log_info "Buscando en otros directorios..."

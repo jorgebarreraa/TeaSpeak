@@ -175,6 +175,55 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
     lo sobreescriben en cada instalación
 - **Estado:** ✅ COMPLETADO
 
+#### 9. Fix: verify_build() ejecuta TeaSpeakServer desde CWD incorrecto
+- **Archivo:**
+  - `setup_teaspeak.sh`
+- **Problema:**
+  - `verify_build()` (PASO 11) ejecutaba el binario así:
+    ```bash
+    "$build_dir/TeaSpeakServer" --version 2>&1 || true
+    ```
+  - Se llama con ruta absoluta pero desde el CWD del script (no desde `environment/`).
+  - El servidor abre `resources/permissions.template` como ruta relativa al CWD.
+  - Resultado: `[CRITICAL] Could not open default permissions file resources/permissions.template`
+- **Solución:**
+  - Cambiar a subshell con `cd` explícito:
+    ```bash
+    (cd "$build_dir" && ./TeaSpeakServer --version 2>&1) || true
+    ```
+  - El servidor ahora corre desde `environment/` donde `resources/` es accesible.
+- **Estado:** ✅ COMPLETADO
+
+#### 10. Fix: SEGFAULT al crear "Administrator Room" — sin null check tras createChannel()
+- **Archivo:**
+  - `Server/Root/TeaSpeak/server/src/InstanceHandler.cpp`
+- **Problema:**
+  - Durante startup, al detectar 4 canales en DB (primera vez), el constructor de
+    `InstanceHandler` crea el canal "Administrator Room":
+    ```cpp
+    auto ch = this->default_tree->createChannel(..., "[cspacer05]Administrator Room");
+    ch->permissions()->set_permission(...);  // ← SEGFAULT si ch == nullptr
+    ```
+  - Si `createChannel()` falla y devuelve `nullptr`, la siguiente línea desreferencia
+    un puntero nulo → **SEGFAULT**.
+  - El canal SÍ se insertaba en la BD antes del crash (por eso el 2do arranque
+    mostraba "Loaded 5 saved channels" en vez de 4), pero la operación de árbol
+    en memoria fallaba silenciosamente devolviendo nullptr.
+  - 2do arranque: `assert(tmpChannelList.empty())` fallaba → **ABORT**.
+- **Solución:**
+  - Envolver el bloque de permisos en un `if(ch)`:
+    ```cpp
+    auto ch = this->default_tree->createChannel(..., "[cspacer05]Administrator Room");
+    if(ch) {
+        ch->permissions()->set_permission(...);
+        this->save_channel_permissions();
+    } else {
+        logCritical(LOG_INSTANCE, "Failed to create Administrator Room channel");
+    }
+    ```
+  - Previene el SEGFAULT y registra el error correctamente si falla.
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado

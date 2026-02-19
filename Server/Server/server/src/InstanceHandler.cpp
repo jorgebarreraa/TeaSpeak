@@ -202,8 +202,12 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
             auto default_channel = this->default_tree->findChannel("[cspacer04]Default Channel", nullptr);
             if(default_channel) {
                 auto ch = this->default_tree->createChannel(0, default_channel->channelId(), "[cspacer05]Administrator Room");
-                ch->permissions()->set_permission(permission::i_channel_needed_view_power, {75, 0}, permission::v2::set_value, permission::v2::do_nothing, false, false);
-                this->save_channel_permissions();
+                if(ch) {
+                    ch->permissions()->set_permission(permission::i_channel_needed_view_power, {75, 0}, permission::v2::set_value, permission::v2::do_nothing, false, false);
+                    this->save_channel_permissions();
+                } else {
+                    logCritical(LOG_INSTANCE, "Failed to create Administrator Room channel");
+                }
             }
         }
         if(!this->default_tree->getDefaultChannel()) {
