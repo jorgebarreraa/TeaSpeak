@@ -26,9 +26,7 @@ if (BUILD_INCLUDE_FILE)
     include(${BUILD_INCLUDE_FILE})
 endif ()
 
-# Use BUILD_OUTPUT (set by tearoot-helper.cmake, included via BUILD_INCLUDE_FILE above).
-# Original hardcoded "_build/linux_amd64" was wrong; actual output dir is out/linux_amd64.
-set(LIBEVENT_PATH "${LIBRARY_PATH}/event/${BUILD_OUTPUT}/lib")
+set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")
 
 function(resolve_library VARIABLE FALLBACK PATHS)
     set( _PATHS ${PATHS} ${ARGN} ) # Merge them together

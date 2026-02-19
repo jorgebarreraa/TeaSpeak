@@ -196,8 +196,12 @@ target_link_libraries(PermMapHelper
         ${LIBRARY_PATH_YAML}
         pthread
         stdc++fs
-        ${LIBEVENT_PATH}/libevent_core.a
-        ${LIBEVENT_PATH}/libevent_pthreads.a
+        # Use cmake targets instead of ${LIBEVENT_PATH} raw paths.
+        # ${LIBEVENT_PATH} is set to _build/linux_amd64 by legacy patching scripts
+        # but the actual libraries are at out/linux_amd64. libevent::core and
+        # libevent::pthreads are resolved correctly by FindLibEvent.cmake.
+        libevent::core
+        libevent::pthreads
         ${LIBRARY_PATH_OPUS}
         ${LIBRARY_PATH_JSON}
         ${LIBRARY_PATH_PROTOBUF}

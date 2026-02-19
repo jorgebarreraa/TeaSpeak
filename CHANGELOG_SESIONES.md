@@ -154,6 +154,27 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - `server/CMakeLists.txt:199`: Cambia `libevent.a` a `libevent_core.a`
 - **Estado:** ✅ COMPLETADO
 
+#### 8. Fix: PermMapHelper usa ${LIBEVENT_PATH} raw (path incorrecto porque scripts de parche lo sobreescriben)
+- **Archivos:**
+  - `Server/Server/server/CMakeLists.txt`
+  - `Server/Server/CMakeLists.txt` (revertido — scripts lo sobreescriben)
+- **Problema:**
+  - `apply_music_fix_now.sh` y `manual_patch.sh` escriben `_build/linux_amd64` en
+    `Server/Server/CMakeLists.txt:29` durante el proceso de instalación. Cualquier
+    cambio git a ese archivo es sobreescrito por esos scripts.
+  - PermMapHelper linkea `${LIBEVENT_PATH}/libevent_core.a` pero LIBEVENT_PATH apunta
+    a `_build/linux_amd64` (no existe) por culpa de los scripts de parche.
+  - Error: `No rule to make target 'event/_build/linux_amd64/lib/libevent_core.a'`
+- **Solución:**
+  - `server/CMakeLists.txt`: Cambia el PermMapHelper target para usar cmake targets
+    `libevent::core` y `libevent::pthreads` en lugar de `${LIBEVENT_PATH}/libevent_core.a`
+  - Estos targets son definidos por `FindLibevent.cmake` y resuelven correctamente
+    a `out/linux_amd64/lib/` independientemente de lo que valga `LIBEVENT_PATH`
+  - Este es el mismo patrón que usan `PermHelper` y `TeaSpeakServer` para libevent
+  - Revertir cambio en `CMakeLists.txt:29` ya que es inútil: los scripts de parche
+    lo sobreescriben en cada instalación
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado
