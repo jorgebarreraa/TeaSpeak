@@ -136,6 +136,24 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
   - Mismo patrón de detección que en `FindCXXTerminal.cmake`
 - **Estado:** ✅ COMPLETADO
 
+#### 7. Fix: CMakeLists.txt LIBEVENT_PATH apunta a _build (inexistente) y usa libevent.a (renombrado)
+- **Archivos:**
+  - `Server/Server/CMakeLists.txt`
+  - `Server/Server/server/CMakeLists.txt`
+- **Problema:**
+  - `Server/Server/CMakeLists.txt` línea 29 definía `LIBEVENT_PATH` hardcodeado a
+    `event/_build/linux_amd64/lib`. Esto se ejecuta DESPUÉS de que `BUILD_INCLUDE_FILE`
+    (tearoot-server.cmake) lo define correctamente como `event/out/linux_amd64/lib`,
+    por lo que sobreescribe la configuración correcta.
+  - `Server/Server/server/CMakeLists.txt` linkea `${LIBEVENT_PATH}/libevent.a` pero libevent
+    moderno genera `libevent_core.a` (no `libevent.a`). La librería combinada `libevent.a`
+    ya no existe en builds separados. Error: `No rule to make target 'libevent.a'`
+- **Solución:**
+  - `CMakeLists.txt:29`: Cambia `_build/linux_amd64` a `${BUILD_OUTPUT}` (variable ya definida
+    por tearoot-helper.cmake incluido desde tearoot-server.cmake)
+  - `server/CMakeLists.txt:199`: Cambia `libevent.a` a `libevent_core.a`
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-18:
 - **TeaSpeakServer compiló exitosamente** al 100% tras los fixes de Thread-Pool y jsoncpp_lib
 - Error final era de runtime (no de compilación): `libCXXTerminal.so` no encontrado

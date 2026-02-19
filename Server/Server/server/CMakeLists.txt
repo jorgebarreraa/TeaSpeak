@@ -196,7 +196,7 @@ target_link_libraries(PermMapHelper
         ${LIBRARY_PATH_YAML}
         pthread
         stdc++fs
-        ${LIBEVENT_PATH}/libevent.a
+        ${LIBEVENT_PATH}/libevent_core.a
         ${LIBEVENT_PATH}/libevent_pthreads.a
         ${LIBRARY_PATH_OPUS}
         ${LIBRARY_PATH_JSON}
