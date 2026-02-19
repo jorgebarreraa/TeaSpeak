@@ -191,10 +191,14 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
 
             std::shared_ptr<BasicChannel>  ch;
             ch = this->default_tree->createChannel(0, 0, "[cspacer01]┏╋━━━━━━◥◣◆◢◤━━━━━━╋┓");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02] TeaSpeak Server");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]┗╋━━━━━━◥◣◆◢◤━━━━━━╋┛");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer04]Default Channel");
-            this->default_tree->setDefaultChannel(ch);
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02] TeaSpeak Server");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]┗╋━━━━━━◥◣◆◢◤━━━━━━╋┛");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer04]Default Channel");
+            if(ch) {
+                this->default_tree->setDefaultChannel(ch);
+            } else {
+                logCritical(LOG_INSTANCE, "Failed to create one or more default channels during tree generation");
+            }
 
             this->properties()[property::SERVERINSTANCE_UNIQUE_ID] = ""; /* we def got a new instance */
         }
@@ -214,9 +218,13 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
             this->default_tree->setDefaultChannel(this->default_tree->findChannel("[cspacer04]Default Channel", nullptr));
         }
         if(!this->default_tree->getDefaultChannel()) {
-            this->default_tree->setDefaultChannel(*this->default_tree->channels().begin());
+            auto channels = this->default_tree->channels();
+            if(!channels.empty())
+                this->default_tree->setDefaultChannel(*channels.begin());
         }
-        assert(this->default_tree->getDefaultChannel());
+        if(!this->default_tree->getDefaultChannel()) {
+            logCritical(LOG_INSTANCE, "No default channel could be set - server may not function correctly");
+        }
     }
 
     {
