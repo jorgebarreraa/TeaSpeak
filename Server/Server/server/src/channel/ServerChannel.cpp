@@ -600,7 +600,10 @@ void ServerChannelTree::on_channel_entry_deleted(const shared_ptr<BasicChannel> 
     BasicChannelTree::on_channel_entry_deleted(channel);
 
     auto server_channel = dynamic_pointer_cast<ServerChannel>(channel);
-    assert(server_channel);
+    if(!server_channel) {
+        logError(this->getServerId(), "on_channel_entry_deleted: channel cannot be cast to ServerChannel, skipping RTC/group cleanup");
+        return;
+    }
 
     auto server = this->server_ref.lock();
     if(server) {
