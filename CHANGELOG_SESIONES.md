@@ -48,6 +48,39 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 - **Commit:** `1c89d0be` "Fix BoringSSL double-free crash in SSL certificate generation"
 - **Estado:** ✅ COMPLETADO
 
+#### 2. Fix: Instalación automática de meson y ninja con verificación robusta
+- **Archivos:**
+  - `setup_teaspeak.sh`
+  - `install_teaspeak_complete.sh`
+- **Problema:**
+  - Durante la compilación, el build de glib fallaba con "meson: command not found"
+  - Aunque `meson` y `ninja-build` estaban en la lista de dependencias apt-get,
+    no había verificación de que se instalaran correctamente
+  - En algunos sistemas, apt-get puede fallar silenciosamente y el build continúa sin meson
+  - Sin meson, la compilación de glib (biblioteca requerida) falla inmediatamente
+- **Solución:**
+  - Agregada verificación explícita de meson después de apt-get install
+  - Si meson no está disponible, intenta instalarlo vía pip3 como fallback
+  - Agregada verificación explícita de ninja-build con reintento de instalación
+  - Logs informativos para diagnosticar problemas de instalación
+  - Ambos scripts (setup_teaspeak.sh e install_teaspeak_complete.sh) actualizados
+- **Código agregado en setup_teaspeak.sh (después de línea 460):**
+  ```bash
+  # Verificar que meson esté instalado (requerido para compilar glib)
+  if ! command -v meson &> /dev/null; then
+      log_warning "meson no detectado, intentando instalación vía pip3..."
+      if command -v pip3 &> /dev/null; then
+          if $SUDO pip3 install meson 2>/dev/null; then
+              log_success "meson instalado vía pip3"
+          fi
+      fi
+  else
+      log_success "meson ya está instalado ($(meson --version))"
+  fi
+  ```
+- **Commit:** `2cd3fdfe` "Add robust meson and ninja verification to installation scripts"
+- **Estado:** ✅ COMPLETADO
+
 ### 📝 Contexto de la sesión 2026-02-21:
 - **Crash crítico de BoringSSL** resuelto - servidor ya no aborta durante generación de certificados
 - El bug era un error de copy-paste donde el código del certificado copiaba el patrón del bloque
