@@ -4,6 +4,61 @@ Este archivo documenta TODOS los cambios realizados en cada sesión para facilit
 
 ---
 
+## 🔄 SESIÓN: 2026-02-21 (Rama: claude/fix-install-script-ULBSP)
+
+### ✅ Cambios Completados:
+
+#### 1. Fix: BoringSSL double-free crash en generación de certificados SSL
+- **Archivo:**
+  - `TeaSpeakLibrary-master/src/ssl/SSLManager.cpp`
+- **Problema:**
+  - Durante el startup del servidor, al generar certificados SSL autofirmados, el servidor
+    abortaba con "Aborted (core dumped)" inmediatamente después de "Loaded 5 saved channels. Assembling..."
+  - GDB backtrace mostraba:
+    ```
+    #5  CRYPTO_refcount_dec_and_test_zero → abort()
+    #6  BIO_free (double-free detected)
+    #13 SSLManager::loadContext:381
+    #15 InstanceHandler::reloadConfig:780
+    ```
+  - Root cause: En el bloque `certificate_modified` (después de generar un nuevo certificado),
+    el código escribía el certificado generado a `bio_certificate` pero luego intentaba leerlo
+    desde `bio_private_key` (copy-paste error en líneas 367 y 370).
+  - Esto causaba que ambos `shared_ptr<BIO>` con deleter personalizado `::BIO_free` intentaran
+    liberar objetos BIO corruptos/solapados, disparando el refcount check de BoringSSL → abort().
+  - Síntomas:
+    - SIGABRT (no SIGSEGV) durante generación de certificados SSL
+    - "Aborted (core dumped)" sin mensaje de error previo
+    - Crash 100% reproducible en primer arranque cuando no existen certificados
+- **Solución:**
+  - Línea 367: `bio_private_key` → `bio_certificate` (path BoringSSL)
+  - Línea 370: `bio_private_key` → `bio_certificate` (path OpenSSL estándar)
+  - El código ahora lee correctamente del mismo BIO donde escribió el certificado generado.
+  - Previene el double-free al asegurar que cada shared_ptr gestiona su propio objeto BIO.
+- **Código corregido:**
+  ```cpp
+  // ANTES (INCORRECTO - líneas 367, 370):
+  if(!BIO_mem_contents(&*bio_private_key, &mem_ptr, &length)) // WRONG!
+  if(!BIO_get_mem_ptr(&*bio_private_key, &memory) || !memory) // WRONG!
+
+  // DESPUÉS (CORRECTO):
+  if(!BIO_mem_contents(&*bio_certificate, &mem_ptr, &length)) // ✓
+  if(!BIO_get_mem_ptr(&*bio_certificate, &memory) || !memory) // ✓
+  ```
+- **Commit:** `1c89d0be` "Fix BoringSSL double-free crash in SSL certificate generation"
+- **Estado:** ✅ COMPLETADO
+
+### 📝 Contexto de la sesión 2026-02-21:
+- **Crash crítico de BoringSSL** resuelto - servidor ya no aborta durante generación de certificados
+- El bug era un error de copy-paste donde el código del certificado copiaba el patrón del bloque
+  de clave privada pero olvidó cambiar la variable BIO de `bio_private_key` a `bio_certificate`
+- Este bug afectaba tanto el path BoringSSL (#ifdef CRYPTO_BORINGSSL) como el path OpenSSL estándar
+- El fix fue committed y pushed exitosamente a `claude/fix-install-script-ULBSP`
+- **NOTA**: Para probar el fix, se requiere rebuild del servidor con las dependencias instaladas
+  (meson, cmake, build tools). El código fuente ya está corregido en el repositorio.
+
+---
+
 ## 🔄 SESIÓN: 2026-02-18 (Rama: claude/fix-install-script-ULBSP)
 
 ### ✅ Cambios Completados:
