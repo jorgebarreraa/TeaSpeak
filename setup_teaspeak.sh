@@ -460,6 +460,41 @@ install_dependencies() {
         log_success "MySQL client dev ya está instalado"
     fi
 
+    # Verificar que meson esté instalado (requerido para compilar glib)
+    log_substep "Verificando instalación de meson..."
+    if ! command -v meson &> /dev/null; then
+        log_warning "meson no detectado, intentando instalación vía pip3..."
+
+        # Intentar instalar meson vía pip3 como fallback
+        if command -v pip3 &> /dev/null; then
+            if $SUDO pip3 install meson 2>/dev/null; then
+                log_success "meson instalado vía pip3"
+            else
+                log_warning "No se pudo instalar meson automáticamente"
+                log_info "Si la compilación falla, instala manualmente: sudo apt-get install meson o sudo pip3 install meson"
+            fi
+        else
+            log_warning "pip3 no disponible, no se puede instalar meson como fallback"
+            log_info "Si la compilación falla, instala manualmente: sudo apt-get install python3-pip meson"
+        fi
+    else
+        log_success "meson ya está instalado ($(meson --version))"
+    fi
+
+    # Verificar que ninja esté instalado (requerido por meson)
+    log_substep "Verificando instalación de ninja..."
+    if ! command -v ninja &> /dev/null; then
+        log_warning "ninja no detectado, intentando instalación..."
+        if $SUDO apt-get install -y ninja-build 2>/dev/null; then
+            log_success "ninja-build instalado"
+        else
+            log_warning "No se pudo instalar ninja-build automáticamente"
+            log_info "Si la compilación falla, instala manualmente: sudo apt-get install ninja-build"
+        fi
+    else
+        log_success "ninja ya está instalado"
+    fi
+
     log_success "Todas las dependencias del sistema instaladas"
 }
 

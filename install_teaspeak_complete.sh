@@ -163,6 +163,28 @@ install_dependencies() {
         python3-dev \
         python3-pip
 
+    # Verificar que meson esté instalado (requerido para compilar glib)
+    log_info "Verificando instalación de meson..."
+    if ! command -v meson &> /dev/null; then
+        log_warning "meson no detectado, intentando instalación vía pip3..."
+        if command -v pip3 &> /dev/null; then
+            if $SUDO pip3 install meson 2>/dev/null; then
+                log_success "meson instalado vía pip3"
+            else
+                log_warning "No se pudo instalar meson automáticamente"
+            fi
+        fi
+    else
+        log_success "meson ya está instalado ($(meson --version))"
+    fi
+
+    # Verificar que ninja esté instalado (requerido por meson)
+    log_info "Verificando instalación de ninja..."
+    if ! command -v ninja &> /dev/null; then
+        log_warning "ninja no detectado, intentando instalación..."
+        $SUDO apt install -y ninja-build 2>/dev/null || true
+    fi
+
     log_success "Todas las dependencias instaladas"
 }
 
