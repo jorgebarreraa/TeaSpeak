@@ -37,12 +37,15 @@ set(jsoncpp_DIR "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/cmake/jsoncpp")
 # server/CMakeLists.txt and license/CMakeLists.txt both reference jsoncpp_lib as
 # a CMake target. If find_package(jsoncpp) fails to find the cmake config the
 # target is never created and CMake degrades it to -ljsoncpp_lib (linker error).
-if(NOT TARGET jsoncpp_lib)
-    add_library(jsoncpp_lib STATIC IMPORTED GLOBAL)
-    set_target_properties(jsoncpp_lib PROPERTIES
-        IMPORTED_LOCATION "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/libjsoncpp.a"
-        INTERFACE_INCLUDE_DIRECTORIES "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/include"
-    )
+# Only create the target if the cmake config doesn't exist to avoid conflicts.
+if(NOT EXISTS "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/cmake/jsoncpp/jsoncppConfig.cmake")
+    if(NOT TARGET jsoncpp_lib)
+        add_library(jsoncpp_lib STATIC IMPORTED GLOBAL)
+        set_target_properties(jsoncpp_lib PROPERTIES
+            IMPORTED_LOCATION "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/lib/libjsoncpp.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBRARY_PATH}/jsoncpp/${BUILD_OUTPUT}/include"
+        )
+    endif()
 endif()
 
 # zstd: installs cmake config to zstd/out/linux_amd64/lib/cmake/zstd/
@@ -66,6 +69,11 @@ set(Opus_ROOT_DIR "${LIBRARY_PATH}/opus/${BUILD_OUTPUT}")
 
 # Breakpad: autoconf install to breakpad/out/linux_amd64/
 set(breakpad_ROOT_DIR "${LIBRARY_PATH}/breakpad/${BUILD_OUTPUT}")
+
+# Protobuf: cmake install to protobuf/out/linux_amd64/
+set(Protobuf_ROOT_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}")
+set(Protobuf_INCLUDE_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/include")
+set(Protobuf_LIBRARIES "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/lib/libprotobuf.a")
 
 # BoringSSL: built to boringssl/lib/ (special layout)
 set(BoringSSL_ROOT_DIR "${LIBRARY_PATH}/boringssl")

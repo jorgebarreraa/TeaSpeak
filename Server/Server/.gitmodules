@@ -4,10 +4,10 @@
 	branch = master
 [submodule "shared"]
 	path = shared
-	url = https://git.did.science/TeaSpeak/TeaSpeakLibrary.git
+	url = https://github.com/jorgebarreraa/TeaSpeakLibrary.git
 [submodule "music"]
 	path = music
-	url = https://github.com/TeaSpeak/TeaMusic-Providers.git
+	url = https://github.com/jorgebarreraa/TeaMusic-Providers.git
 [submodule "rtclib"]
 	path = rtclib
 	url = https://git.did.science/TeaSpeak/Server/rtc.git

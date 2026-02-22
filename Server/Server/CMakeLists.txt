@@ -61,7 +61,7 @@ find_package(DataPipes) # Optional: Pipes library
 find_package(Opus) # Optional: Opus codec
 find_package(spdlog REQUIRED)
 find_package(Jemalloc REQUIRED)
-find_package(Protobuf REQUIRED)
+# find_package(Protobuf REQUIRED) # Duplicate - already called on line 53
 message("${zstd_DIR}")
 find_package(zstd) # Optional: zstd compression
 
@@ -81,7 +81,7 @@ macro(find_event static)
         set(LIBEVENT_STATIC_LINK TRUE)
         message("Use static libevent")
     endif ()
-    find_package(Libevent 2.2 REQUIRED COMPONENTS core pthreads)
+    find_package(Libevent 2.1 REQUIRED COMPONENTS core pthreads)
     if (NOT Libevent_FOUND)
         message(FATAL_ERROR "Failed to find libevent (Variable: ${LIBEVENT_FOUND})")
     endif ()

@@ -12,6 +12,15 @@ clone_lib() {
     local dir="$2"
     local branch="$3"
 
+    # Verificación especial para build-helpers
+    if [[ "$dir" == "build-helpers" ]]; then
+        # Check if library scripts are present (not just build_helper.sh which is now in git)
+        if [[ -d "$dir" && ! -f "$dir/libraries/build_tommath.sh" ]]; then
+            echo "  ⚠ $dir/libraries/ está incompleto (faltan scripts de compilación), eliminando para re-clonar..."
+            rm -rf "$dir"
+        fi
+    fi
+
     if [ -d "$dir" ]; then
         echo "  ✓ $dir ya existe, omitiendo"
         return 0
@@ -110,34 +119,20 @@ clone_with_fallback "https://github.com/jorgebarreraa/openssl-prebuild.git" "ope
 clone_with_fallback "https://github.com/facebook/zstd.git" "zstd"
 
 # build-helpers
-# NOTE: build-helpers/ already exists in the repo (with cmake/ subdirectory and build_helper.sh).
-# We need to populate build-helpers/libraries/ which contains ALL library build scripts.
-# Check for a required library script to determine if the full set is present.
 cd ..
-if [ ! -f "build-helpers/libraries/build_tommath.sh" ]; then
-    echo "  Populating build-helpers/libraries/ from jorgebarreraa/build-helpers..."
-    if [ -d "build-helpers/.git" ]; then
-        # Already a git repo, pull the libraries/ subdirectory
-        (cd build-helpers && git pull origin main 2>/dev/null || git pull origin master 2>/dev/null || true)
-    else
-        # build-helpers/ is from the main repo (not a git clone), clone into a temp location
-        # and copy the libraries/ directory
-        _tmp_bh="/tmp/_build_helpers_tmp_$$"
-        git clone --depth 1 "https://github.com/jorgebarreraa/build-helpers.git" "$_tmp_bh" 2>/dev/null && {
-            cp -r "$_tmp_bh/." "build-helpers/"
-            rm -rf "$_tmp_bh"
-            echo "  ✓ build-helpers/libraries/ populated"
-        } || {
-            echo "  ⚠ Could not clone jorgebarreraa/build-helpers (will use built-in scripts)"
-        }
-    fi
-else
-    echo "  ✓ build-helpers/libraries/ already exists, skipping"
+clone_with_fallback "https://github.com/jorgebarreraa/build-helpers.git" "build-helpers"
+
+# Asegurar que build-helpers tenga todos los archivos (puede haber sido parcialmente clonado antes)
+if [[ -d "build-helpers/.git" ]]; then
+    echo "  Verificando integridad de build-helpers..."
+    cd build-helpers
+    git reset --hard HEAD >/dev/null 2>&1
+    cd ..
 fi
 
-# Also ensure our local build_helper.sh is available (in case clone failed)
-if [ ! -f "build-helpers/build_helper.sh" ]; then
-    echo "  ⚠ build-helpers/build_helper.sh missing - using built-in fallback"
-fi
+# Sobrescribir build_jsoncpp.sh de build-helpers con versión C++17
+# NOTE: This file no longer exists in libraries/, build-helpers has the correct version
+# echo "Sobrescribiendo build_jsoncpp.sh con versión C++17..."
+# cp -f libraries/build_jsoncpp.sh build-helpers/libraries/build_jsoncpp.sh
 
 echo "✓ Todas las librerías descargadas exitosamente!"

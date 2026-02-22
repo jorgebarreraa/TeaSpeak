@@ -19,6 +19,15 @@ set(LICENCE_SOURCE_FILES
 )
 
 #Protobuf
+# Set Protobuf paths explicitly for license subdirectory
+if(NOT DEFINED Protobuf_INCLUDE_DIR)
+    # Compute library path relative to this CMakeLists.txt location
+    get_filename_component(_LICENSE_PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+    set(_PROTOBUF_ROOT "${_LICENSE_PARENT_DIR}/../libraries/protobuf/out/linux_amd64")
+    set(Protobuf_INCLUDE_DIR "${_PROTOBUF_ROOT}/include")
+    set(Protobuf_LIBRARIES "${_PROTOBUF_ROOT}/lib/libprotobuf.a")
+    message(STATUS "License: Setting Protobuf paths to ${_PROTOBUF_ROOT}")
+endif()
 find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 protobuf_generate_cpp(PROTO_SRCS TeaLicenseHelper_PROTOCOL_HEADERS shared/packets/LicenseRequest.proto shared/packets/LicenseManager.proto)
