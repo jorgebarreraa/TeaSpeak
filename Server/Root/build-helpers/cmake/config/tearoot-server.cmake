@@ -71,9 +71,10 @@ set(Opus_ROOT_DIR "${LIBRARY_PATH}/opus/${BUILD_OUTPUT}")
 set(breakpad_ROOT_DIR "${LIBRARY_PATH}/breakpad/${BUILD_OUTPUT}")
 
 # Protobuf: cmake install to protobuf/out/linux_amd64/
-set(Protobuf_ROOT_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}")
-set(Protobuf_INCLUDE_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/include")
-set(Protobuf_LIBRARIES "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/lib/libprotobuf.a")
+# Use CACHE variables so they propagate to subdirectories (like license/)
+set(Protobuf_ROOT_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}" CACHE PATH "Protobuf root directory" FORCE)
+set(Protobuf_INCLUDE_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/include" CACHE PATH "Protobuf include directory" FORCE)
+set(Protobuf_LIBRARIES "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/lib/libprotobuf.a" CACHE FILEPATH "Protobuf library" FORCE)
 # Create modern CMake target for protobuf (required by server and license CMakeLists.txt)
 if(NOT TARGET protobuf::libprotobuf)
     add_library(protobuf::libprotobuf STATIC IMPORTED GLOBAL)
