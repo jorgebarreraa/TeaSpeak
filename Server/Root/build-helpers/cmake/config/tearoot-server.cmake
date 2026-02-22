@@ -75,12 +75,20 @@ set(breakpad_ROOT_DIR "${LIBRARY_PATH}/breakpad/${BUILD_OUTPUT}")
 set(Protobuf_ROOT_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}" CACHE PATH "Protobuf root directory" FORCE)
 set(Protobuf_INCLUDE_DIR "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/include" CACHE PATH "Protobuf include directory" FORCE)
 set(Protobuf_LIBRARIES "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/lib/libprotobuf.a" CACHE FILEPATH "Protobuf library" FORCE)
+set(Protobuf_PROTOC_EXECUTABLE "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/bin/protoc" CACHE FILEPATH "Protobuf compiler" FORCE)
 # Create modern CMake target for protobuf (required by server and license CMakeLists.txt)
 if(NOT TARGET protobuf::libprotobuf)
     add_library(protobuf::libprotobuf STATIC IMPORTED GLOBAL)
     set_target_properties(protobuf::libprotobuf PROPERTIES
         IMPORTED_LOCATION "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/lib/libprotobuf.a"
         INTERFACE_INCLUDE_DIRECTORIES "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/include"
+    )
+endif()
+# Create protoc executable target
+if(NOT TARGET protobuf::protoc)
+    add_executable(protobuf::protoc IMPORTED GLOBAL)
+    set_target_properties(protobuf::protoc PROPERTIES
+        IMPORTED_LOCATION "${LIBRARY_PATH}/protobuf/${BUILD_OUTPUT}/bin/protoc"
     )
 endif()
 
