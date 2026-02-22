@@ -88,6 +88,18 @@ endif()
 set(BoringSSL_ROOT_DIR "${LIBRARY_PATH}/boringssl")
 set(Crypto_ROOT_DIR "${LIBRARY_PATH}/boringssl/lib")
 
+# Libevent: create modern CMake targets
+# Server code uses libevent::core which must be created as IMPORTED target
+set(LIBEVENT_INCLUDE_DIR "${LIBRARY_PATH}/event/${BUILD_OUTPUT}/include" CACHE PATH "Libevent include directory" FORCE)
+set(LIBEVENT_LIBRARY "${LIBRARY_PATH}/event/${BUILD_OUTPUT}/lib/libevent_core.a" CACHE FILEPATH "Libevent core library" FORCE)
+if(NOT TARGET libevent::core)
+    add_library(libevent::core STATIC IMPORTED GLOBAL)
+    set_target_properties(libevent::core PROPERTIES
+        IMPORTED_LOCATION "${LIBRARY_PATH}/event/${BUILD_OUTPUT}/lib/libevent_core.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBRARY_PATH}/event/${BUILD_OUTPUT}/include"
+    )
+endif()
+
 # ─── Legacy path variables (used by PermMapHelper, LicenseManager Qt targets) ─
 
 set(LIBRARY_TOM_MATH    "${LIBRARY_PATH}/tommath/${BUILD_OUTPUT}/lib/libtommathStatic.a")
