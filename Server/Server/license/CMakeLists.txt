@@ -19,13 +19,8 @@ set(LICENCE_SOURCE_FILES
 )
 
 #Protobuf
-# Set Protobuf paths explicitly for license subdirectory
-# Always set paths before find_package to ensure correct resolution
-get_filename_component(_LICENSE_PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
-set(_PROTOBUF_ROOT "${_LICENSE_PARENT_DIR}/../libraries/protobuf/out/linux_amd64")
-set(Protobuf_INCLUDE_DIR "${_PROTOBUF_ROOT}/include" CACHE PATH "Protobuf include directory" FORCE)
-set(Protobuf_LIBRARIES "${_PROTOBUF_ROOT}/lib/libprotobuf.a" CACHE FILEPATH "Protobuf library" FORCE)
-message(STATUS "License: Forcing Protobuf paths to ${_PROTOBUF_ROOT}")
+# Protobuf paths are already configured in tearoot-server.cmake
+# Just call find_package which will use the pre-configured variables and targets
 find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 protobuf_generate_cpp(PROTO_SRCS TeaLicenseHelper_PROTOCOL_HEADERS shared/packets/LicenseRequest.proto shared/packets/LicenseManager.proto)
