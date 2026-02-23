@@ -432,8 +432,8 @@ install_dependencies() {
         python3-dev \
         python3-pip 2>/dev/null || true
 
-    # Intentar instalar default-libmysqlclient-dev si está disponible
-    $SUDO apt-get install -y -qq default-libmysqlclient-dev 2>/dev/null || true
+    # Intentar instalar libmariadb-dev (compatible con MySQL en Ubuntu 24.04+)
+    $SUDO apt-get install -y -qq libmariadb-dev 2>/dev/null || true
 
     # Intentar instalar libncurses5-dev o libncurses-dev
     $SUDO apt-get install -y -qq libncurses5-dev 2>/dev/null || \
@@ -444,17 +444,17 @@ install_dependencies() {
     if ! dpkg -l | grep -q "libmysqlclient-dev\|default-libmysqlclient-dev\|libmariadb-dev"; then
         log_warning "MySQL client dev no detectado, intentando instalación alternativa..."
 
-        # Intentar diferentes paquetes en orden de prioridad
-        if $SUDO apt-get install -y libmysqlclient-dev 2>/dev/null; then
+        # Intentar diferentes paquetes en orden de prioridad (MariaDB primero para Ubuntu 24.04+)
+        if $SUDO apt-get install -y libmariadb-dev 2>/dev/null; then
+            log_success "libmariadb-dev instalado (compatible con MySQL)"
+        elif $SUDO apt-get install -y libmysqlclient-dev 2>/dev/null; then
             log_success "libmysqlclient-dev instalado"
         elif $SUDO apt-get install -y default-libmysqlclient-dev 2>/dev/null; then
             log_success "default-libmysqlclient-dev instalado"
-        elif $SUDO apt-get install -y libmariadb-dev libmariadb-dev-compat 2>/dev/null; then
-            log_success "libmariadb-dev instalado"
         else
             log_warning "No se pudo instalar MySQL client dev automáticamente"
             log_info "El módulo CMake está configurado para buscar en rutas estándar"
-            log_info "Si la compilación falla, instala manualmente: sudo apt-get install libmysqlclient-dev"
+            log_info "Si la compilación falla, instala manualmente: sudo apt-get install libmariadb-dev"
         fi
     else
         log_success "MySQL client dev ya está instalado"
