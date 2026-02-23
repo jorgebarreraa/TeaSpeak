@@ -40,7 +40,7 @@ function(find_mysql)
 
     if (NOT TARGET mysql::client::static)
         find_library(MYSQL_CLIENT_STATIC
-                NAMES mysql.lib libmysqlclient.a
+                NAMES mysql.lib libmysqlclient.a libmariadbclient.a libmariadb.a
                 HINTS ${mysql_ROOT_DIR} ${mysql_ROOT_DIR}/lib
                 PATHS
                     /usr/lib
@@ -61,6 +61,10 @@ function(find_mysql)
     find_package_handle_standard_args(mysql DEFAULT_MSG
             mysql_INCLUDE_DIR
     )
+
+    # Propagate variables to parent scope
+    set(mysql_FOUND ${mysql_FOUND} PARENT_SCOPE)
+    set(mysql_INCLUDE_DIR ${mysql_INCLUDE_DIR} PARENT_SCOPE)
 
     mark_as_advanced(
             mysql_ROOT_DIR

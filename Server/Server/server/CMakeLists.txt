@@ -40,6 +40,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(SERVER_SOURCE_FILES
         main.cpp
         tomcryptTest.cpp
+        src/arc4random_stub.c
         # Only needed for boringssl
         # MySQLLibSSLFix.c
 
@@ -119,8 +120,6 @@ set(SERVER_SOURCE_FILES
         src/client/query/XMacroEventTypes.h
 
         src/client/SpeakingClient.cpp
-
-        ../shared/src/ssl/SSLManager.cpp
 
         src/manager/SqlDataManager.cpp
 
