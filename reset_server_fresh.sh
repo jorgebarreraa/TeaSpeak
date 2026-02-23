@@ -16,9 +16,11 @@ echo
 
 echo "[2] Searching for existing database file..."
 DB_LOCATIONS=(
+    "$ENV_DIR/TeaData.sqlite"
     "$ENV_DIR/TeaSpeak.db"
     "$ENV_DIR/ts3server.db"
     "/root/.teaspeak/TeaSpeak.db"
+    "/root/.teaspeak/TeaData.sqlite"
 )
 
 DB_FILE=""
@@ -31,7 +33,17 @@ for loc in "${DB_LOCATIONS[@]}"; do
 done
 
 if [ -z "$DB_FILE" ]; then
-    echo "  ! No existing database found - server will create fresh one"
+    echo "  ! Database not found in common locations"
+    echo
+    echo "  Searching for any .sqlite or .db files in environment directory..."
+    DB_FILE=$(find "$ENV_DIR" -maxdepth 1 \( -name "*.sqlite" -o -name "*.db" \) -type f 2>/dev/null | head -1)
+    if [ -n "$DB_FILE" ]; then
+        echo "    ✓ Found: $DB_FILE ($(stat -c%s "$DB_FILE" 2>/dev/null || echo "0") bytes)"
+    fi
+fi
+
+if [ -z "$DB_FILE" ]; then
+    echo "  ✓ No existing database - server will create fresh one"
 else
     echo
     echo "[3] Backing up and removing old database..."
