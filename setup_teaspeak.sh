@@ -1610,7 +1610,7 @@ verify_build() {
 setup_server_environment() {
     log_step "🔧 CONFIGURANDO ENTORNO DEL SERVIDOR"
 
-    local build_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment"
+    local build_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
     local cert_dir="${build_dir}/certs"
 
     # Crear directorio de certificados
@@ -1684,13 +1684,13 @@ show_summary() {
     echo ""
 
     log_success "Certificados SSL generados automáticamente:"
-    echo "  • $SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment/certs/"
+    echo "  • $SCRIPT_DIR/Server/Root/TeaSpeak/server/environment/certs/"
     echo "  • Certificados del servidor: server-cert.pem + server-key.pem"
     echo "  • Certificados Query: query_certificate.pem + query_privatekey.pem"
     echo ""
 
     log_info "Para ejecutar TeaSpeak:"
-    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment"
+    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
     echo "  ./TeaSpeakServer"
     echo ""
 
