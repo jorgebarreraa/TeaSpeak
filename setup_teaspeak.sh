@@ -1605,6 +1605,61 @@ verify_build() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════
+# Configurar entorno del servidor (certificados SSL + base de datos limpia)
+# ═══════════════════════════════════════════════════════════════════════════
+setup_server_environment() {
+    log_step "🔧 CONFIGURANDO ENTORNO DEL SERVIDOR"
+
+    local build_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment"
+    local cert_dir="${build_dir}/certs"
+
+    # Crear directorio de certificados
+    log_substep "Creando directorio de certificados..."
+    mkdir -p "$cert_dir"
+    log_success "Directorio creado: $cert_dir"
+
+    # Generar certificados SSL
+    log_substep "Generando certificados SSL..."
+
+    # Certificados del servidor principal
+    openssl genrsa -out "$cert_dir/server-key.pem" 2048 >> "$LOG_FILE" 2>&1
+    openssl req -new -x509 -key "$cert_dir/server-key.pem" \
+        -out "$cert_dir/server-cert.pem" \
+        -days 3650 \
+        -subj "/C=US/ST=State/L=City/O=TeaSpeak/CN=teaspeak.server" \
+        >> "$LOG_FILE" 2>&1
+
+    # Certificados del servidor de consultas (Query)
+    openssl genrsa -out "$cert_dir/query_privatekey.pem" 2048 >> "$LOG_FILE" 2>&1
+    openssl req -new -x509 -key "$cert_dir/query_privatekey.pem" \
+        -out "$cert_dir/query_certificate.pem" \
+        -days 3650 \
+        -subj "/C=US/ST=State/L=City/O=TeaSpeak/CN=teaspeak.query" \
+        >> "$LOG_FILE" 2>&1
+
+    # Establecer permisos seguros
+    chmod 600 "$cert_dir"/*.pem >> "$LOG_FILE" 2>&1
+    chmod 755 "$cert_dir" >> "$LOG_FILE" 2>&1
+
+    log_success "✓ Certificados SSL generados"
+    log_info "  • server-cert.pem + server-key.pem"
+    log_info "  • query_certificate.pem + query_privatekey.pem"
+
+    # Limpiar base de datos inicial (si existe)
+    log_substep "Limpiando base de datos inicial..."
+    local db_file="${build_dir}/TeaData.sqlite"
+    if [[ -f "$db_file" ]]; then
+        log_info "Eliminando base de datos de prueba..."
+        rm -f "$db_file" "${db_file}-shm" "${db_file}-wal" >> "$LOG_FILE" 2>&1
+        log_success "Base de datos limpiada (se creará nueva en el primer arranque)"
+    else
+        log_info "No hay base de datos previa"
+    fi
+
+    log_success "✓ Entorno del servidor configurado correctamente"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════
 # Mostrar resumen
 # ═══════════════════════════════════════════════════════════════════════════
 show_summary() {
@@ -1628,8 +1683,14 @@ show_summary() {
     echo "  • TeaSpeak: $LOG_FILE.teaspeak"
     echo ""
 
+    log_success "Certificados SSL generados automáticamente:"
+    echo "  • $SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment/certs/"
+    echo "  • Certificados del servidor: server-cert.pem + server-key.pem"
+    echo "  • Certificados Query: query_certificate.pem + query_privatekey.pem"
+    echo ""
+
     log_info "Para ejecutar TeaSpeak:"
-    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
+    echo "  cd $SCRIPT_DIR/Server/Root/TeaSpeak/server/build/server/environment"
     echo "  ./TeaSpeakServer"
     echo ""
 
@@ -1744,6 +1805,7 @@ EOF
     sync_cmake_modules          # Sincronizar módulos CMake actualizados desde GitHub
     compile_teaspeak
     verify_build
+    setup_server_environment    # Generar certificados SSL y limpiar base de datos
     show_summary
 }
 
