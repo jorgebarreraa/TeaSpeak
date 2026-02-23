@@ -65,10 +65,10 @@ else
     echo "  ✗ server-cert.pem missing or empty!"
 fi
 
-if [ -f "$CERT_DIR/query-cert.pem" ] && [ -s "$CERT_DIR/query-cert.pem" ]; then
-    echo "  ✓ query-cert.pem exists ($(stat -c%s "$CERT_DIR/query-cert.pem") bytes)"
+if [ -f "$CERT_DIR/query_certificate.pem" ] && [ -s "$CERT_DIR/query_certificate.pem" ]; then
+    echo "  ✓ query_certificate.pem exists ($(stat -c%s "$CERT_DIR/query_certificate.pem") bytes)"
 else
-    echo "  ✗ query-cert.pem missing or empty!"
+    echo "  ✗ query_certificate.pem missing or empty!"
 fi
 
 echo

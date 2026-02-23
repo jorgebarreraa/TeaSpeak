@@ -34,16 +34,16 @@ echo
 echo "[3] Generating Query server SSL certificates..."
 
 # Generate private key for query
-openssl genrsa -out "$CERT_DIR/query-key.pem" 2048 2>/dev/null
-echo "  ✓ Generated: query-key.pem"
+openssl genrsa -out "$CERT_DIR/query_privatekey.pem" 2048 2>/dev/null
+echo "  ✓ Generated: query_privatekey.pem"
 
 # Generate self-signed certificate for query
-openssl req -new -x509 -key "$CERT_DIR/query-key.pem" \
-    -out "$CERT_DIR/query-cert.pem" \
+openssl req -new -x509 -key "$CERT_DIR/query_privatekey.pem" \
+    -out "$CERT_DIR/query_certificate.pem" \
     -days 3650 \
     -subj "/C=US/ST=State/L=City/O=TeaSpeak/CN=teaspeak.query" \
     2>/dev/null
-echo "  ✓ Generated: query-cert.pem"
+echo "  ✓ Generated: query_certificate.pem"
 
 echo
 echo "[4] Setting permissions..."
