@@ -190,9 +190,10 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
             logMessage(LOG_GENERAL, "Generating default tree");
 
             std::shared_ptr<BasicChannel>  ch;
-            ch = this->default_tree->createChannel(0, 0, "[cspacer01]┏╋━━━━━━◥◣◆◢◤━━━━━━╋┓");
-            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02] TeaSpeak Server");
-            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]┗╋━━━━━━◥◣◆◢◤━━━━━━╋┛");
+            // Simplified channel names without UTF-8 special characters to avoid potential crashes
+            ch = this->default_tree->createChannel(0, 0, "[cspacer01]Welcome to TeaSpeak");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02]TeaSpeak Server");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]General Channels");
             if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer04]Default Channel");
             if(ch) {
                 this->default_tree->setDefaultChannel(ch);
