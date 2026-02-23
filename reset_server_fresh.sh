@@ -58,25 +58,17 @@ else
 fi
 
 echo
-echo "[4] Verifying SSL certificates..."
-if [ -f "$CERT_DIR/server-cert.pem" ] && [ -s "$CERT_DIR/server-cert.pem" ]; then
-    echo "  ✓ server-cert.pem exists ($(stat -c%s "$CERT_DIR/server-cert.pem") bytes)"
-else
-    echo "  ✗ server-cert.pem missing or empty!"
-fi
-
-if [ -f "$CERT_DIR/query_certificate.pem" ] && [ -s "$CERT_DIR/query_certificate.pem" ]; then
-    echo "  ✓ query_certificate.pem exists ($(stat -c%s "$CERT_DIR/query_certificate.pem") bytes)"
-else
-    echo "  ✗ query_certificate.pem missing or empty!"
-fi
+echo "[4] Generating SSL certificates..."
+# Run the certificate generation script
+cd /root/TeaSpeak || exit 1
+./generate_ssl_certs.sh
 
 echo
 echo "═══════════════════════════════════════════════════════════"
 echo "  ✅ Server Reset Complete"
 echo "═══════════════════════════════════════════════════════════"
 echo
-echo "Now starting TeaSpeak server with fresh database..."
+echo "Now starting TeaSpeak server with fresh database and SSL certificates..."
 echo
 cd "$ENV_DIR" || exit 1
 timeout 15 ./TeaSpeakServer
