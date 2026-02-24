@@ -778,7 +778,7 @@ bool InstanceHandler::reloadConfig(std::vector<std::string>& errors, bool reload
 #endif
 
     auto result = this->sslMgr->initializeContext("query_new", config::query::ssl::keyFile, config::query::ssl::certFile, error, false, make_shared<ssl::SSLGenerator>(ssl::SSLGenerator{
-            .subjects = {},
+            .subjects = {{"CN", "TeaSpeak Query Server"}},
             .issues = {{"O", "TeaSpeak"}, {"OU", "Query server"}, {"creator", "WolverinDEV"}}
     }));
     if(!result)
