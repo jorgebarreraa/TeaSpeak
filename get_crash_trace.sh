@@ -3,7 +3,11 @@
 echo "Getting crash stack trace..."
 echo
 
-ENV_DIR="/root/TeaSpeak/Server/Root/TeaSpeak/server/environment"
+# Detect script location and use correct path
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_DIR="$SCRIPT_DIR/Server/Root/TeaSpeak/server/environment"
+
+echo "Using environment directory: $ENV_DIR"
 cd "$ENV_DIR" || exit 1
 
 # Enable core dumps
