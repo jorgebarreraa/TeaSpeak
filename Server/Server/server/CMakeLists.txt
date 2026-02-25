@@ -246,7 +246,9 @@ file(WRITE repro/env/buildVersion.txt "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PA
 add_executable(TeaSpeakServer ${SERVER_SOURCE_FILES})
 target_link_libraries(TeaSpeakServer
         threadpool::static    #Static
-        TeaSpeak            #Static
+        -Wl,--whole-archive
+        TeaSpeak            #Static - wrapped in --whole-archive to include logger symbols
+        -Wl,--no-whole-archive
         TeaLicenseHelper    #Static
         TeaMusic            #Static
         TeaSpeak-FileServer
@@ -376,14 +378,16 @@ endif ()
 # Use linker flags to force inclusion of crypto and z symbols for mysql
 target_link_options(TeaSpeakServer PRIVATE
     "LINKER:--push-state,--no-as-needed"
-    "LINKER:-lssl"
     "LINKER:-lcrypto"
     "LINKER:-lz"
     "LINKER:--pop-state"
 )
 
 # Fix zlib linking order for mysql compatibility
-# -lssl/-lcrypto are satisfied by the explicit BoringSSL link above
+# NOTE: Removed ALL -lssl/-lcrypto linker flags that were forcing dynamic linking
+# to system OpenSSL (/lib/x86_64-linux-gnu/libssl.so.3) instead of using the
+# static BoringSSL libraries from the project.
+# The static BoringSSL libraries are already linked explicitly at lines 318-321.
 target_link_options(TeaSpeakServer PRIVATE
     "LINKER:--push-state,--no-as-needed"
     "LINKER:-lz"

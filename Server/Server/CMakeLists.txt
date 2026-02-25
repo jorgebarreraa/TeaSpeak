@@ -56,7 +56,11 @@ find_package(ThreadPool REQUIRED)
 find_package(CXXTerminal) # Optional: Terminal library
 find_package(StringVariable REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(jsoncpp REQUIRED)
+# jsoncpp_lib target is manually defined in tearoot-server.cmake, skip find_package
+# to avoid CMake target conflict
+if(NOT TARGET jsoncpp_lib)
+    find_package(jsoncpp REQUIRED)
+endif()
 find_package(DataPipes) # Optional: Pipes library
 find_package(Opus) # Optional: Opus codec
 find_package(spdlog REQUIRED)

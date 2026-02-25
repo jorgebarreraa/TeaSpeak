@@ -1729,34 +1729,14 @@ else
 fi
 
 log_info "════════════════════════════════════════════════════════════"
-log_info "  PARCHE 40: Fix OpenSSL linking for DataPipes (add -lssl)"
+log_info "  PARCHE 40: DESHABILITADO - Causaba enlace dinámico a OpenSSL del sistema"
 log_info "════════════════════════════════════════════════════════════"
-SERVER_CMAKE="$SCRIPT_DIR/Server/Server/server/CMakeLists.txt"
-if [[ -f "$SERVER_CMAKE" ]]; then
-    # Check if -lssl is already in target_link_options
-    if grep -A 3 "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE" | grep -q '"LINKER:-lssl"'; then
-        log_success "✓ server/CMakeLists.txt ya incluye -lssl en target_link_options"
-    else
-        log_info "Agregando -lssl a target_link_options en server/CMakeLists.txt..."
-
-        # Create backup if not exists
-        if [[ ! -f "$SERVER_CMAKE.backup_patch40" ]]; then
-            cp "$SERVER_CMAKE" "$SERVER_CMAKE.backup_patch40"
-        fi
-
-        # Add "LINKER:-lssl" before "LINKER:-lcrypto"
-        sed -i '/"LINKER:-lcrypto"/i\    "LINKER:-lssl"' "$SERVER_CMAKE"
-
-        if grep -A 4 "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE" | grep -q '"LINKER:-lssl"'; then
-            log_success "✓ PARCHE 40 aplicado exitosamente"
-        else
-            log_error "Error al aplicar PARCHE 40"
-            exit 1
-        fi
-    fi
-else
-    log_warning "⚠ server/CMakeLists.txt no encontrado, saltando PARCHE 40"
-fi
+log_success "✓ PARCHE 40 deshabilitado - usando BoringSSL estático del proyecto"
+# Este parche agregaba -lssl y -lcrypto a target_link_options, lo cual forzaba
+# el enlace dinámico contra el OpenSSL del sistema (/lib/x86_64-linux-gnu/)
+# en lugar de usar las bibliotecas estáticas de BoringSSL del proyecto.
+# SOLUCIÓN: Las bibliotecas estáticas de BoringSSL ya están enlazadas explícitamente
+# en el CMakeLists.txt (líneas 318-321), por lo que no se necesita este parche.
 
 log_info "════════════════════════════════════════════════════════════"
 log_info "  PARCHE 41: Make CXXTerminal and Breakpad optional"
