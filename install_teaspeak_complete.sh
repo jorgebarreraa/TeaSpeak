@@ -474,6 +474,39 @@ fix_permissions() {
     log_info "Dando permisos de ejecución a todos los scripts .sh ..."
     find . -name "*.sh" -exec chmod +x {} \;
 
+    # Patch build-helpers scripts for known incompatibilities
+    local build_helpers="$INSTALL_DIR/Server/Root/build-helpers/libraries"
+
+    # Fix breakpad: uses -std=c++11 but newer breakpad requires C++17
+    local breakpad_sh="$build_helpers/build_breakpad.sh"
+    if [[ -f "$breakpad_sh" ]]; then
+        if grep -q '\-std=c++11' "$breakpad_sh"; then
+            sed -i 's/-std=c++11/-std=c++17/g' "$breakpad_sh"
+            log_success "✓ build_breakpad.sh: -std=c++11 → -std=c++17"
+        else
+            log_success "✓ build_breakpad.sh ya usa C++17"
+        fi
+    fi
+
+    # Fix opus: disables AVX but not AVX2, causing silk_NSQ_del_dec_avx2 errors
+    local opus_sh="$build_helpers/build_opus.sh"
+    if [[ -f "$opus_sh" ]]; then
+        if ! grep -q 'AVX2' "$opus_sh"; then
+            sed -i 's/-DOPUS_X86_MAY_HAVE_AVX=OFF/-DOPUS_X86_MAY_HAVE_AVX=OFF -DOPUS_X86_MAY_HAVE_AVX2=OFF -DOPUS_X86_PRESUME_AVX2=OFF/g' "$opus_sh"
+            log_success "✓ build_opus.sh: añadidas flags AVX2=OFF"
+        else
+            log_success "✓ build_opus.sh ya tiene AVX2=OFF"
+        fi
+    fi
+
+    # Fix build_protobuf.sh: uses "sudo make install" which fails when sudo is
+    # misconfigured. Since the install runs as root we don't need sudo.
+    local proto_sh="$INSTALL_DIR/Server/Root/libraries/build_protobuf.sh"
+    if [[ -f "$proto_sh" ]] && grep -q 'sudo make install' "$proto_sh"; then
+        sed -i 's/sudo make install/make install/g' "$proto_sh"
+        log_success "✓ build_protobuf.sh: sudo make install → make install"
+    fi
+
     log_success "Permisos arreglados"
 }
 
@@ -485,44 +518,218 @@ compile_libraries() {
 
     cd "$INSTALL_DIR/Server/Root/libraries"
 
-    # Verificar si tenemos permisos de sudo
-    if [[ $EUID -ne 0 ]]; then
-        SUDO="sudo"
-    else
-        SUDO=""
+    # Patch source headers that are missing GCC 13 compatible includes
+    # CXXTerminal/include/CString.h: missing #include <cstdint> for uint16_t
+    local cxxt_hdr="CXXTerminal/include/CString.h"
+    if [[ -f "$cxxt_hdr" ]] && ! grep -q '#include <cstdint>' "$cxxt_hdr"; then
+        sed -i '/#pragma once/a #include <cstdint>' "$cxxt_hdr"
+        log_success "✓ CString.h: añadido #include <cstdint>"
     fi
 
-    # Exportar variables de entorno para los scripts de compilación
-    export CXX_FLAGS="-fPIC"
-    export C_FLAGS="-fPIC"
-    export CMAKE_BUILD_TYPE="Release"
-    export CMAKE_OPTIONS=""
-    export CMAKE_MAKE_OPTIONS="-j$(nproc)"
+    # DataPipes/include/pipes/buffer.h: <stdexcept> and <string> were inside #ifdef _MSC_VER
+    local dp_buf="DataPipes/include/pipes/buffer.h"
+    if [[ -f "$dp_buf" ]]; then
+        if grep -q '#include <stdexcept>' "$dp_buf" && grep -B5 '#include <stdexcept>' "$dp_buf" | grep -q '_MSC_VER'; then
+            # Move stdexcept outside of the _MSC_VER block
+            sed -i '/#include <stdexcept>/d' "$dp_buf"
+            sed -i '/#define print_formated snprintf/a #include <stdexcept>\n#include <string>' "$dp_buf"
+            log_success "✓ buffer.h: movido #include <stdexcept> y <string> fuera de _MSC_VER"
+        elif ! grep -q '#include <stdexcept>' "$dp_buf"; then
+            sed -i '/#define print_formated snprintf/a #include <stdexcept>\n#include <string>' "$dp_buf"
+            log_success "✓ buffer.h: añadidos #include <stdexcept> y <string>"
+        else
+            log_success "✓ buffer.h ya tiene los includes correctos"
+        fi
+    fi
 
-    # PASO 8.1: Compilar librerías
-    log_info "Compilando librerías C/C++..."
-
-    # Compilar usando el script principal
-    if [[ -f "build.sh" ]]; then
-        log_info "Usando build.sh del proyecto..."
-        bash build.sh 2>&1 | tee /tmp/build_libraries.log
-        log_success "Librerías compiladas con build.sh"
-    else
-        log_warning "build.sh no encontrado, compilando manualmente..."
-
-        # Librerías individuales
-        for lib_script in build_stringvariable.sh build_jsoncpp.sh build_event.sh; do
-            if [[ -f "$lib_script" ]]; then
-                log_info "Ejecutando $lib_script..."
-                bash "$lib_script" 2>&1 | tee "/tmp/$lib_script.log" || true
+    # openssl-prebuild/linux_amd64/lib: libssl.so and libcrypto.so may be plain
+    # text files (containing "libssl.so.1.1") rather than proper symlinks.
+    # The linker treats them as linker scripts with invalid syntax → link error.
+    local openssl_lib="openssl-prebuild/linux_amd64/lib"
+    if [[ -d "$openssl_lib" ]]; then
+        for _soname in libssl.so libcrypto.so; do
+            local _target="${_soname%.so}.so.1.1"
+            local _path="$openssl_lib/$_soname"
+            if [[ -f "$_path" ]] && ! [[ -L "$_path" ]]; then
+                rm -f "$_path"
+                ln -s "$_target" "$_path"
+                log_success "✓ $openssl_lib/$_soname: texto → symlink → $_target"
             fi
         done
     fi
 
+    # Exportar variables de entorno para los scripts de compilación
+    export build_os_type=linux
+    export build_os_arch=amd64
+    export CXX_FLAGS="-fPIC"
+    export C_FLAGS="-fPIC"
+    export CMAKE_BUILD_TYPE="Release"
+    export CMAKE_OPTIONS=""
+    export CMAKE_MAKE_OPTIONS="-j4"
+
+    # PASO 8.1: Compilar librerías con build.sh (puede fallar parcialmente)
+    log_info "Compilando librerías C/C++..."
+
+    if [[ -f "build.sh" ]]; then
+        log_info "Usando build.sh del proyecto..."
+        set +e  # No salir en error - manejamos individualmente
+        bash build.sh 2>&1 | tee /tmp/build_libraries.log
+        _build_exit=${PIPESTATUS[0]}
+        set -e
+        if [[ $_build_exit -ne 0 ]]; then
+            log_warning "build.sh terminó con errores (código $_build_exit). Verificando librerías críticas..."
+        else
+            log_success "Librerías compiladas con build.sh"
+        fi
+    else
+        log_warning "build.sh no encontrado, compilando manualmente..."
+    fi
+
+    # Helper: build a cmake library from local source if the output library is missing
+    _ensure_cmake_lib() {
+        local lib_name="$1"
+        local lib_file="$2"
+        local install_dir="$3"
+        shift 3
+        local src_dirs=("$@")
+
+        if [[ -f "$lib_file" ]]; then
+            log_success "$lib_name ya compilado"
+            return 0
+        fi
+
+        log_warning "$lib_name no encontrado. Compilando desde fuente del repositorio..."
+        local src_dir=""
+        for _src in "${src_dirs[@]}"; do
+            if [[ -f "$_src/CMakeLists.txt" ]]; then
+                src_dir="$_src"
+                break
+            fi
+        done
+
+        if [[ -n "$src_dir" ]]; then
+            mkdir -p "$install_dir"
+            log_info "Compilando $lib_name desde: $src_dir"
+            local _bdir="/tmp/${lib_name}_cmake_build"
+            rm -rf "$_bdir"
+            cmake "$src_dir" \
+                -DCMAKE_C_FLAGS="-fPIC" \
+                -DCMAKE_CXX_FLAGS="-fPIC" \
+                -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                -DCMAKE_INSTALL_PREFIX="$install_dir" \
+                -B "$_bdir" 2>&1
+            cmake --build "$_bdir" -j4 2>&1
+            cmake --install "$_bdir" 2>&1
+            rm -rf "$_bdir"
+            log_success "$lib_name compilado: $lib_file"
+        else
+            log_error "No se encontró fuente de $lib_name. Abortando."
+            exit 1
+        fi
+    }
+
+    local _lib_base="$INSTALL_DIR/Server/Root/libraries"
+
+    # PASO 8.2: Asegurar que tommath esté compilado (crítico para cmake)
+    _ensure_cmake_lib "tommath" \
+        "$_lib_base/tommath/out/linux_amd64/lib/libtommathStatic.a" \
+        "$_lib_base/tommath/out/linux_amd64" \
+        "$INSTALL_DIR/libraries/tommath-develop" \
+        "$_lib_base/tommath" \
+        "$INSTALL_DIR/libraries/tommath"
+
+    # PASO 8.3: Asegurar que tomcrypt esté compilado
+    _ensure_cmake_lib "tomcrypt" \
+        "$_lib_base/tomcrypt/out/linux_amd64/lib/libtomcrypt.a" \
+        "$_lib_base/tomcrypt/out/linux_amd64" \
+        "$INSTALL_DIR/libraries/tomcrypt-master" \
+        "$_lib_base/tomcrypt" \
+        "$INSTALL_DIR/libraries/tomcrypt"
+
     # Volver al directorio Root
     cd "$INSTALL_DIR/Server/Root"
 
+    # PASO 8.4: Parchar archivos cmake críticos para tommath/tomcrypt targets
+    patch_cmake_tommath_targets
+
     log_success "Compilación de librerías completada"
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PARCHE CMake: Crear targets tommath::static y tomcrypt::static
+# ═══════════════════════════════════════════════════════════════════════
+# Fixes two bugs in build-helpers:
+#   1. FindTomCrypt.cmake checks TomMath_LIBRARIES_STATIC instead of
+#      TomCrypt_LIBRARIES_STATIC so tomcrypt::static is never created
+#   2. find_library in both finders can silently fail but find_package
+#      reports success (only checks include dir), leaving targets undefined
+patch_cmake_tommath_targets() {
+    local build_helpers="$INSTALL_DIR/Server/Root/build-helpers"
+    local tearoot_cfg="$build_helpers/cmake/config/tearoot-server.cmake"
+    local find_tomcrypt="$build_helpers/cmake/FindTomCrypt.cmake"
+
+    # Fix FindTomCrypt.cmake bug: wrong variable (TomMath_ instead of TomCrypt_)
+    if [[ -f "$find_tomcrypt" ]]; then
+        if grep -q 'if (TomMath_LIBRARIES_STATIC)' "$find_tomcrypt"; then
+            log_info "Corrigiendo bug en FindTomCrypt.cmake (variable incorrecta)..."
+            sed -i 's/if (TomMath_LIBRARIES_STATIC)/if (TomCrypt_LIBRARIES_STATIC)/g' "$find_tomcrypt"
+            # Also fix wrong library type (SHARED -> STATIC) for the static target
+            sed -i '/TomCrypt_LIBRARIES_STATIC/{n; s/add_library(tomcrypt::static SHARED IMPORTED)/add_library(tomcrypt::static STATIC IMPORTED)/}' "$find_tomcrypt"
+            # Fix second bug: creates tomcrypt::static instead of tomcrypt::shared for shared lib
+            sed -i 's/add_library(tomcrypt::static SHARED IMPORTED)/add_library(tomcrypt::shared SHARED IMPORTED)/g' "$find_tomcrypt"
+            log_success "✓ FindTomCrypt.cmake corregido"
+        else
+            log_success "✓ FindTomCrypt.cmake ya está corregido"
+        fi
+    fi
+
+    # Patch tearoot-server.cmake to explicitly create GLOBAL cmake targets
+    # This is needed because find_library can silently fail with HINTS paths
+    if [[ -f "$tearoot_cfg" ]]; then
+        if ! grep -q 'Force-create tommath::static GLOBAL' "$tearoot_cfg"; then
+            log_info "Añadiendo creación explícita de tommath::static/tomcrypt::static en tearoot-server.cmake..."
+            cat >> "$tearoot_cfg" << 'TOMMATH_CMAKE_PATCH'
+
+# PATCH: Force-create tommath::static GLOBAL target so it is visible in all
+# subdirectories regardless of whether FindTomMath.cmake's find_library succeeds.
+if (NOT TARGET tommath::static)
+    set(_tommath_lib "${TomMath_ROOT_DIR}/lib/libtommathStatic.a")
+    set(_tommath_inc "${TomMath_ROOT_DIR}/include")
+    if (EXISTS "${_tommath_lib}" AND EXISTS "${_tommath_inc}")
+        add_library(tommath::static STATIC IMPORTED GLOBAL)
+        set_target_properties(tommath::static PROPERTIES
+            IMPORTED_LOCATION "${_tommath_lib}"
+            INTERFACE_INCLUDE_DIRECTORIES "${_tommath_inc}"
+        )
+        message(STATUS "Force-created tommath::static: ${_tommath_lib}")
+    else()
+        message(WARNING "tommath library not found at ${_tommath_lib}")
+    endif()
+endif()
+
+# PATCH: Force-create tomcrypt::static GLOBAL target.
+if (NOT TARGET tomcrypt::static)
+    set(_tomcrypt_lib "${TomCrypt_ROOT_DIR}/lib/libtomcrypt.a")
+    set(_tomcrypt_inc "${TomCrypt_ROOT_DIR}/include")
+    if (EXISTS "${_tomcrypt_lib}" AND EXISTS "${_tomcrypt_inc}")
+        add_library(tomcrypt::static STATIC IMPORTED GLOBAL)
+        set_target_properties(tomcrypt::static PROPERTIES
+            IMPORTED_LOCATION "${_tomcrypt_lib}"
+            INTERFACE_INCLUDE_DIRECTORIES "${_tomcrypt_inc}"
+        )
+        message(STATUS "Force-created tomcrypt::static: ${_tomcrypt_lib}")
+    else()
+        message(WARNING "tomcrypt library not found at ${_tomcrypt_lib}")
+    endif()
+endif()
+TOMMATH_CMAKE_PATCH
+            log_success "✓ tearoot-server.cmake parcheado para tommath::static/tomcrypt::static"
+        else
+            log_success "✓ tearoot-server.cmake ya tiene los targets forzados"
+        fi
+    else
+        log_warning "No se encontró tearoot-server.cmake en $tearoot_cfg"
+    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════
