@@ -785,60 +785,17 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PARCHE 19: Arreglar orden de enlazado OpenSSL y zlib para mysql
+# PARCHE 19: DESHABILITADO - Causaba enlace dinámico a OpenSSL del sistema
 # ═══════════════════════════════════════════════════════════════════════════
-SERVER_CMAKE_LINK="$SCRIPT_DIR/Server/Root/TeaSpeak/server/CMakeLists.txt"
-
-if [[ -f "$SERVER_CMAKE_LINK" ]]; then
-    log_info "Parcheando server/CMakeLists.txt para enlazado OpenSSL y zlib..."
-
-    # Verificar si ya está parcheado (verificación multilínea mejorada)
-    if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
-       grep -q -- "--no-as-needed" "$SERVER_CMAKE_LINK" && \
-       grep -q "LINKER:-lcrypto" "$SERVER_CMAKE_LINK"; then
-        log_success "✓ server/CMakeLists.txt ya tiene el fix de OpenSSL/zlib linking (v12)"
-    else
-        # Crear backup
-        if [[ ! -f "$SERVER_CMAKE_LINK.backup_link" ]]; then
-            cp "$SERVER_CMAKE_LINK" "$SERVER_CMAKE_LINK.backup_link"
-        fi
-
-        # PATCH v12: Usar target_link_options insertado después del bloque jemalloc
-        # Patrón de verificación corregido: usa "--no-as-needed" en lugar de "LINKER:--no-as-needed"
-        awk '
-            # Detectar el endif del bloque jemalloc
-            /^endif \(\)/ && prev_line ~ /HAVE_JEMALLOC/ {
-                print $0
-                print ""
-                print "# Fix OpenSSL and zlib linking order for mysql compatibility"
-                print "# Use linker flags to force inclusion of crypto and z symbols for mysql"
-                print "target_link_options(TeaSpeakServer PRIVATE"
-                print "    \"LINKER:--push-state,--no-as-needed\""
-                print "    \"LINKER:-lcrypto\""
-                print "    \"LINKER:-lz\""
-                print "    \"LINKER:--pop-state\""
-                print ")"
-                next
-            }
-            {
-                prev_line = $0
-                print
-            }
-        ' "$SERVER_CMAKE_LINK" > "$SERVER_CMAKE_LINK.tmp"
-        mv "$SERVER_CMAKE_LINK.tmp" "$SERVER_CMAKE_LINK"
-
-        # Verificar con múltiples condiciones
-        if grep -q "target_link_options(TeaSpeakServer PRIVATE" "$SERVER_CMAKE_LINK" && \
-           grep -q -- "--no-as-needed" "$SERVER_CMAKE_LINK"; then
-            log_success "✓ OpenSSL y zlib linking order parcheado en server/CMakeLists.txt (v12)"
-        else
-            log_error "Error al parchar server/CMakeLists.txt linking"
-            exit 1
-        fi
-    fi
-else
-    log_warning "server/CMakeLists.txt no encontrado (omitiendo parche 19)"
-fi
+log_info "════════════════════════════════════════════════════════════"
+log_info "  PARCHE 19: DESHABILITADO - Causaba enlace dinámico a OpenSSL del sistema"
+log_info "════════════════════════════════════════════════════════════"
+log_success "✓ PARCHE 19 deshabilitado - usando BoringSSL estático del proyecto"
+# Este parche agregaba -lcrypto a target_link_options, lo cual forzaba el enlace
+# dinámico contra el OpenSSL del sistema (/lib/x86_64-linux-gnu/libcrypto.so.3)
+# en lugar de usar las bibliotecas estáticas de BoringSSL del proyecto.
+# SOLUCIÓN: Las bibliotecas estáticas de BoringSSL ya están enlazadas explícitamente
+# en el CMakeLists.txt (líneas 318-321), por lo que no se necesita este parche.
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PARCHE 20: Usar OpenSSL 1.1 (no 3.0) para evitar conflictos con librerías del sistema

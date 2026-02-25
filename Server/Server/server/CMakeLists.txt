@@ -246,9 +246,7 @@ file(WRITE repro/env/buildVersion.txt "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PA
 add_executable(TeaSpeakServer ${SERVER_SOURCE_FILES})
 target_link_libraries(TeaSpeakServer
         threadpool::static    #Static
-        -Wl,--whole-archive
-        TeaSpeak            #Static - wrapped in --whole-archive to include logger symbols
-        -Wl,--no-whole-archive
+        TeaSpeak            #Static
         TeaLicenseHelper    #Static
         TeaMusic            #Static
         TeaSpeak-FileServer
@@ -270,6 +268,9 @@ target_link_libraries(TeaSpeakServer
         tommath::static
 
         jsoncpp_lib
+
+        # Link TeaSpeak again at the end to resolve circular dependencies with FileServer
+        TeaSpeak
 )
 
 # Link optional dependencies if available
@@ -373,15 +374,6 @@ if (NOT DISABLE_JEMALLOC)
     )
     add_definitions(-DHAVE_JEMALLOC)
 endif ()
-
-# Fix OpenSSL and zlib linking order for mysql compatibility
-# Use linker flags to force inclusion of crypto and z symbols for mysql
-target_link_options(TeaSpeakServer PRIVATE
-    "LINKER:--push-state,--no-as-needed"
-    "LINKER:-lcrypto"
-    "LINKER:-lz"
-    "LINKER:--pop-state"
-)
 
 # Fix zlib linking order for mysql compatibility
 # NOTE: Removed ALL -lssl/-lcrypto linker flags that were forcing dynamic linking
