@@ -30,6 +30,7 @@ Server/Root/libraries/openssl-prebuild
 # Build outputs
 Server/Root/TeaSpeak/build/
 Server/Root/TeaSpeak/Server/server/environment/
+Server/Server/server/environment/
 Server/Root/TeaSpeak/*/out/
 *.so
 *.a
