@@ -165,14 +165,14 @@ if [[ -d "$SUBMODULES_DIR" ]]; then
 
     # Verificar submódulo shared
     if [[ ! -d "shared/.git" ]] && [[ ! -L "shared" ]]; then
-        # Check if TeaSpeakLibrary exists in the repository root
-        if [[ -d "/home/user/TeaSpeak/TeaSpeakLibrary-master" ]]; then
+        # Check if TeaSpeakLibrary exists in the repository root (relative to SCRIPT_DIR)
+        if [[ -d "$SCRIPT_DIR/TeaSpeakLibrary-master" ]]; then
             log_info "Creando symlink a TeaSpeakLibrary-master..."
-            ln -s /home/user/TeaSpeak/TeaSpeakLibrary-master shared
+            ln -s "$SCRIPT_DIR/TeaSpeakLibrary-master" shared
             log_success "✓ Symlink a TeaSpeakLibrary-master creado exitosamente"
-        elif [[ -d "/home/user/TeaSpeak/TeaSpeakLibrary-1.4.10" ]]; then
+        elif [[ -d "$SCRIPT_DIR/TeaSpeakLibrary-1.4.10" ]]; then
             log_info "Creando symlink a TeaSpeakLibrary-1.4.10..."
-            ln -s /home/user/TeaSpeak/TeaSpeakLibrary-1.4.10 shared
+            ln -s "$SCRIPT_DIR/TeaSpeakLibrary-1.4.10" shared
             log_success "✓ Symlink a TeaSpeakLibrary-1.4.10 creado exitosamente"
         else
             log_warning "TeaSpeakLibrary no encontrado en el repositorio"
