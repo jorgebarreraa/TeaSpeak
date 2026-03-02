@@ -399,7 +399,7 @@ clone_repository() {
                 # Limpiar symlinks y directorios vacíos
                 rm -f tomcrypt tommath spdlog ed25519 openssl-prebuild libraries 2>/dev/null || true
                 for dir in tomcrypt tommath spdlog ed25519 openssl-prebuild; do
-                    [[ -d "$dir" ]] && [[ -z "$(ls -A $dir 2>/dev/null)" ]] && rm -rf "$dir"
+                    [[ -d "$dir" ]] && [[ -z "$(ls -A "$dir" 2>/dev/null)" ]] && rm -rf "$dir"
                 done
 
                 bash download_libraries_custom.sh
@@ -438,7 +438,7 @@ clone_repository() {
 
         # DEBUG: Mostrar qué hay antes de limpiar
         log_info "DEBUG - Contenido antes de limpiar:"
-        ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries"
+        ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries" || true
 
         # Limpiar enlaces simbólicos y directorios vacíos que vienen del repositorio
         log_info "Limpiando enlaces simbólicos del repositorio..."
@@ -448,7 +448,11 @@ clone_repository() {
 
         # DEBUG: Mostrar qué hay después de limpiar
         log_info "DEBUG - Contenido después de limpiar:"
-        ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries" || log_info "  (symlinks eliminados correctamente)"
+        if ls -la | grep -E "tomcrypt|tommath|spdlog|ed25519|openssl-prebuild|libraries" 2>/dev/null; then
+            log_warning "  Algunos symlinks aún presentes"
+        else
+            log_info "  (symlinks eliminados correctamente)"
+        fi
 
         log_info "Ejecutando download_libraries_custom.sh..."
         bash download_libraries_custom.sh || {
@@ -506,13 +510,24 @@ compile_libraries() {
     cd "$INSTALL_DIR/Server/rtc"
 
     # Forzar descarga de dependencias sin compilar
-    timeout 60 cargo fetch 2>/dev/null || true
+    if command -v timeout &>/dev/null; then
+        timeout 60 cargo fetch 2>/dev/null || true
+    else
+        # Si timeout no existe, ejecutar sin límite de tiempo
+        log_warning "timeout command not found, executing cargo fetch without timeout..."
+        cargo fetch 2>/dev/null || true
+    fi
 
     # Aplicar parche INMEDIATAMENTE después de descargar
     log_info "Aplicando parche crítico a rust-webrtc Cargo.toml..."
 
     # Buscar el archivo Cargo.toml de rust-webrtc
-    RUST_WEBRTC_CARGO=$(find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | head -1)
+    # Verificar que el directorio de checkouts existe primero
+    if [[ -d "$HOME/.cargo/git/checkouts" ]]; then
+        RUST_WEBRTC_CARGO=$(find "$HOME/.cargo/git/checkouts" -type f -path "*/rust-webrtc-*/*/Cargo.toml" 2>/dev/null | head -1)
+    else
+        RUST_WEBRTC_CARGO=""
+    fi
 
     if [[ -n "$RUST_WEBRTC_CARGO" ]] && [[ -f "$RUST_WEBRTC_CARGO" ]]; then
         log_info "Encontrado: $RUST_WEBRTC_CARGO"
@@ -526,15 +541,19 @@ compile_libraries() {
                 cp "$RUST_WEBRTC_CARGO" "$RUST_WEBRTC_CARGO.bak"
 
                 # Aplicar parche
-                sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_CARGO"
-
-                # Verificar que se aplicó
-                if grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
-                    log_success "✓ Parche aplicado y verificado correctamente"
-                    log_info "Mostrando cambio:"
-                    grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"
+                if sed -i '/^\[dev-dependencies\.slog\]$/a version = "2.5.2"' "$RUST_WEBRTC_CARGO"; then
+                    # Verificar que se aplicó correctamente
+                    if grep -A1 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO" | grep -q 'version'; then
+                        log_success "✓ Parche aplicado y verificado correctamente"
+                        log_info "Mostrando cambio:"
+                        grep -A2 '^\[dev-dependencies\.slog\]$' "$RUST_WEBRTC_CARGO"
+                    else
+                        log_error "✗ Parche falló la verificación, restaurando backup"
+                        mv "$RUST_WEBRTC_CARGO.bak" "$RUST_WEBRTC_CARGO"
+                        exit 1
+                    fi
                 else
-                    log_error "✗ Parche falló, restaurando backup"
+                    log_error "✗ sed command failed, restaurando backup"
                     mv "$RUST_WEBRTC_CARGO.bak" "$RUST_WEBRTC_CARGO"
                     exit 1
                 fi
@@ -594,7 +613,11 @@ compile_libraries() {
         for lib_script in build_stringvariable.sh build_jsoncpp.sh build_event.sh; do
             if [[ -f "$lib_script" ]]; then
                 log_info "Ejecutando $lib_script..."
-                bash "$lib_script" 2>&1 | tee "/tmp/$lib_script.log" || true
+                bash "$lib_script" 2>&1 | tee "/tmp/$lib_script.log"
+                _lib_exit="${PIPESTATUS[0]}"
+                if [[ $_lib_exit -ne 0 ]]; then
+                    log_warning "$lib_script falló con código $_lib_exit (continuando...)"
+                fi
             fi
         done
     fi
