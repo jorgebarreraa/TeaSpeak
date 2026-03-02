@@ -130,6 +130,23 @@ _env_dir="$(pwd)/../server/environment"
 _resources_dir="$_env_dir/resources"
 mkdir -p "$_resources_dir"
 
+# --- Copy GeoLocation CSV files if available ---
+_geoloc_source="$(pwd)/../../server/geoloc_data"
+_geoloc_dest="$_env_dir/geoloc"
+if [[ -d "$_geoloc_source" ]]; then
+    echo "Copying GeoLocation CSV files..."
+    mkdir -p "$_geoloc_dest"
+    if ls "$_geoloc_source"/*.csv >/dev/null 2>&1 || ls "$_geoloc_source"/*.CSV >/dev/null 2>&1; then
+        cp -f "$_geoloc_source"/*.csv "$_geoloc_dest/" 2>/dev/null || true
+        cp -f "$_geoloc_source"/*.CSV "$_geoloc_dest/" 2>/dev/null || true
+        echo "✓ GeoLocation CSV files copied to environment/geoloc/"
+    else
+        echo "⚠ No CSV files found in geoloc_data/ (optional)"
+    fi
+else
+    echo "⚠ geoloc_data/ directory not found (optional)"
+fi
+
 # --- Build PermHelper and generate resources/permissions.template ---
 # permgen.cpp reads ../helpers/server_groups + ../helpers/channel_groups relative to CWD.
 # Run from environment/ so ../helpers/ → server/helpers/ (where those files live).
