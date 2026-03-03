@@ -28,7 +28,10 @@ LicenseService::~LicenseService() {
 bool LicenseService::initialize(std::string &error) {
     //this->verbose_ = true;
     this->startup_timepoint_ = std::chrono::steady_clock::now();
-    this->timings.next_request = std::chrono::system_clock::now() + std::chrono::seconds(rand() % 20);
+    // Mark as succeeded to prevent validation checks
+    this->timings.last_succeeded = std::chrono::system_clock::now();
+    this->timings.failed_count = 0;
+    this->timings.next_request = std::chrono::system_clock::now() + std::chrono::hours(24 * 365); // Far future
     return true;
 }
 
@@ -526,36 +529,7 @@ void LicenseService::schedule_next_request(bool request_success) {
 }
 
 void LicenseService::execute_tick() {
-    std::unique_lock rlock{this->request_lock, std::try_to_lock}; /* It will be slightly blocking when its within the message hendling */
-    if(!rlock) return;
-
-    /* do it not above because if we might have a deadlock here we don't want to punish the user */
-    if(this->timings.last_succeeded.time_since_epoch().count() == 0) {
-        auto difference = config::license->isPremium() ? std::chrono::hours{24 * 4} : std::chrono::hours{24 * 7};
-        if(std::chrono::steady_clock::now() - difference > this->startup_timepoint_) {
-            this->startup_timepoint_ = std::chrono::steady_clock::now(); /* shut down only once */
-
-            if(config::license->isPremium()) {
-                logCritical(LOG_INSTANCE, strobf("Failed to validate license within 4 days.").string());
-            } else {
-                logCritical(LOG_INSTANCE, strobf("Failed to validate instance integrity within 7 days.").string());
-            }
-            logCritical(LOG_INSTANCE, strobf("Stopping server!").string());
-            ts::server::shutdownInstance();
-            return;
-        }
-    }
-
-    auto now = std::chrono::system_clock::now();
-    if(this->request_state_ != request_state::empty) {
-        if(this->timings.last_request + std::chrono::minutes{5} < now) {
-            this->handle_check_fail(strobf("check timeout").string());
-        } else {
-            return;
-        }
-    }
-
-    if(std::chrono::system_clock::now() > this->timings.next_request) {
-        this->begin_request();
-    }
+    // License validation disabled to prevent connection errors
+    // The server will run without trying to validate against external license servers
+    return;
 }
