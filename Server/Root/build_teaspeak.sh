@@ -131,7 +131,8 @@ _resources_dir="$_env_dir/resources"
 mkdir -p "$_resources_dir"
 
 # --- Copy GeoLocation CSV files if available ---
-_geoloc_source="$(pwd)/server/geoloc_data"
+# The geoloc_data directory is at ../server/geoloc_data relative to the build directory
+_geoloc_source="$(pwd)/../server/geoloc_data"
 _geoloc_dest="$_env_dir/geoloc"
 if [[ -d "$_geoloc_source" ]]; then
     echo "Copying GeoLocation CSV files..."
