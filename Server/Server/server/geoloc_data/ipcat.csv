@@ -1,0 +1,5 @@
+start_ip,end_ip,category,country
+16777216,16777471,residential,US
+16777472,16778239,residential,CN
+16778240,16779263,residential,AU
+3232235520,3232235775,residential,US
