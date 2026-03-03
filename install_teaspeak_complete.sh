@@ -17,9 +17,10 @@
 #  7. Arregla permisos de scripts
 #  8. Compila todas las librerías necesarias con -fPIC
 #  9. Configura entorno de compilación
-#  10. Compila TeaSpeak en modo STABLE
-#  11. Verifica que la compilación fue exitosa
-#  12. Muestra resumen final con ubicación de binarios
+#  10. Prepara archivos de GeoLocalización (CSV)
+#  11. Compila TeaSpeak en modo STABLE
+#  12. Verifica que la compilación fue exitosa
+#  13. Muestra resumen final con ubicación de binarios
 #
 #  Uso:
 #    bash install_teaspeak_complete.sh [directorio_instalacion]
@@ -652,10 +653,79 @@ setup_environment() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 10: Compilar TeaSpeak
+# PASO 10: Preparar archivos GeoLocation
+# ═══════════════════════════════════════════════════════════════════════
+prepare_geolocation() {
+    log_step "PASO 10: Preparando Archivos de GeoLocalización"
+
+    cd "$INSTALL_DIR/Server"
+
+    local geoloc_source="Server/server/geoloc_data"
+    local geoloc_dest="Server/server/environment/geoloc"
+
+    # Verificar si existe el directorio fuente
+    if [[ ! -d "$geoloc_source" ]]; then
+        log_warning "Directorio geoloc_data no encontrado en $geoloc_source"
+        log_warning "GeoLocation no estará disponible (característica opcional)"
+        return 0
+    fi
+
+    log_info "Verificando archivos CSV de GeoLocation en $geoloc_source..."
+
+    # Contar archivos CSV
+    local csv_count=$(find "$geoloc_source" -type f \( -name "*.csv" -o -name "*.CSV" \) 2>/dev/null | wc -l)
+
+    if [[ $csv_count -eq 0 ]]; then
+        log_warning "No se encontraron archivos CSV en $geoloc_source"
+        log_warning "GeoLocation no estará disponible (característica opcional)"
+        return 0
+    fi
+
+    log_info "Encontrados $csv_count archivo(s) CSV:"
+
+    # Mostrar detalles de cada archivo
+    find "$geoloc_source" -type f \( -name "*.csv" -o -name "*.CSV" \) 2>/dev/null | while read csvfile; do
+        local filename=$(basename "$csvfile")
+        local filesize=$(du -h "$csvfile" | cut -f1)
+        log_info "  ▸ $filename ($filesize)"
+    done
+
+    # Crear directorio destino si no existe
+    log_info "Creando directorio de destino: $geoloc_dest"
+    mkdir -p "$geoloc_dest"
+
+    # Copiar archivos
+    log_info "Copiando archivos CSV a $geoloc_dest..."
+
+    local copy_success=true
+    local copied_count=0
+
+    find "$geoloc_source" -type f \( -name "*.csv" -o -name "*.CSV" \) 2>/dev/null | while read csvfile; do
+        local filename=$(basename "$csvfile")
+        if cp -f "$csvfile" "$geoloc_dest/" 2>/dev/null; then
+            log_success "  ✓ Copiado: $filename"
+            ((copied_count++))
+        else
+            log_error "  ✗ Error copiando: $filename"
+            copy_success=false
+        fi
+    done
+
+    # Verificar que se copiaron correctamente
+    local dest_csv_count=$(find "$geoloc_dest" -type f \( -name "*.csv" -o -name "*.CSV" \) 2>/dev/null | wc -l)
+
+    if [[ $dest_csv_count -eq $csv_count ]]; then
+        log_success "GeoLocation configurado exitosamente ($dest_csv_count archivos copiados)"
+    else
+        log_warning "GeoLocation parcialmente copiado ($dest_csv_count de $csv_count archivos)"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASO 11: Compilar TeaSpeak
 # ═══════════════════════════════════════════════════════════════════════
 compile_teaspeak() {
-    log_step "PASO 10: Compilando TeaSpeak Server (Modo STABLE)"
+    log_step "PASO 11: Compilando TeaSpeak Server (Modo STABLE)"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -687,10 +757,10 @@ compile_teaspeak() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 11: Verificar binarios
+# PASO 12: Verificar binarios
 # ═══════════════════════════════════════════════════════════════════════
 verify_build() {
-    log_step "PASO 11: Verificando Binarios Compilados"
+    log_step "PASO 12: Verificando Binarios Compilados"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -714,31 +784,28 @@ verify_build() {
 
     if [[ "$all_found" == true ]]; then
         log_success "Todos los binarios principales encontrados"
+
+        # Verificar archivos CSV de GeoLocation en el destino final
+        log_info "Verificando GeoLocation en binarios finales..."
+        local geoloc_dir="Server/server/environment/geoloc"
+        if [[ -d "$geoloc_dir" ]]; then
+            local csv_count=$(find "$geoloc_dir" -type f \( -name "*.csv" -o -name "*.CSV" \) 2>/dev/null | wc -l)
+            if [[ $csv_count -gt 0 ]]; then
+                log_success "GeoLocation disponible: $csv_count archivo(s) CSV"
+            else
+                log_warning "GeoLocation no disponible (sin archivos CSV)"
+            fi
+        else
+            log_warning "GeoLocation no disponible (directorio no encontrado)"
+        fi
     else
         log_warning "Algunos binarios no fueron encontrados"
         log_warning "La compilación puede haber sido parcial"
     fi
-
-    # Verificar archivos CSV de GeoLocation
-    log_info "Verificando archivos GeoLocation..."
-    local geoloc_dir="Server/server/environment/geoloc"
-    if [[ -d "$geoloc_dir" ]]; then
-        local csv_count=$(find "$geoloc_dir" -name "*.csv" -o -name "*.CSV" 2>/dev/null | wc -l)
-        if [[ $csv_count -gt 0 ]]; then
-            log_success "Archivos GeoLocation encontrados: $csv_count archivos en $geoloc_dir"
-            ls -lh "$geoloc_dir"/*.{csv,CSV} 2>/dev/null | while read line; do
-                log_info "  $line"
-            done
-        else
-            log_warning "No se encontraron archivos CSV en $geoloc_dir"
-        fi
-    else
-        log_warning "Directorio geoloc no encontrado (se creará en primer arranque)"
-    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# PASO 12: Resumen final
+# PASO 13: Resumen final
 # ═══════════════════════════════════════════════════════════════════════
 show_summary() {
     log_step "✅ INSTALACIÓN COMPLETA"
@@ -815,6 +882,7 @@ main() {
     fix_permissions
     compile_libraries
     setup_environment
+    prepare_geolocation
     compile_teaspeak
     verify_build
     show_summary
