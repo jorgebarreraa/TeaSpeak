@@ -695,10 +695,9 @@ verify_build() {
     cd "$INSTALL_DIR/Server/Root"
 
     local binaries=(
-        "TeaSpeak/Server/server/out/linux_amd64/TeaSpeakServer"
-        "TeaSpeak/MusicBot/provider/ffmpeg/out/linux_amd64/libProviderFFMpeg.so"
-        "TeaSpeak/MusicBot/provider/yt/out/linux_amd64/libProviderYT.so"
-        "TeaSpeak/MusicBot/out/linux_amd64/libTeaMusic.so"
+        "Server/server/environment/TeaSpeakServer"
+        "Server/server/environment/PermHelper"
+        "Server/server/environment/PermMapHelper"
     )
 
     local all_found=true
@@ -719,6 +718,23 @@ verify_build() {
         log_warning "Algunos binarios no fueron encontrados"
         log_warning "La compilación puede haber sido parcial"
     fi
+
+    # Verificar archivos CSV de GeoLocation
+    log_info "Verificando archivos GeoLocation..."
+    local geoloc_dir="Server/server/environment/geoloc"
+    if [[ -d "$geoloc_dir" ]]; then
+        local csv_count=$(find "$geoloc_dir" -name "*.csv" -o -name "*.CSV" 2>/dev/null | wc -l)
+        if [[ $csv_count -gt 0 ]]; then
+            log_success "Archivos GeoLocation encontrados: $csv_count archivos en $geoloc_dir"
+            ls -lh "$geoloc_dir"/*.{csv,CSV} 2>/dev/null | while read line; do
+                log_info "  $line"
+            done
+        else
+            log_warning "No se encontraron archivos CSV en $geoloc_dir"
+        fi
+    else
+        log_warning "Directorio geoloc no encontrado (se creará en primer arranque)"
+    fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -738,11 +754,11 @@ show_summary() {
     echo ""
 
     log_info "Binario principal:"
-    echo "  $INSTALL_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64/TeaSpeakServer"
+    echo "  $INSTALL_DIR/Server/Server/server/environment/TeaSpeakServer"
     echo ""
 
     log_info "Para ejecutar TeaSpeak:"
-    echo "  cd $INSTALL_DIR/Server/Root/TeaSpeak/Server/server/out/linux_amd64"
+    echo "  cd $INSTALL_DIR/Server/Server/server/environment"
     echo "  ./TeaSpeakServer"
     echo ""
 
