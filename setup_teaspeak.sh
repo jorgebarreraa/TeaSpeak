@@ -1632,6 +1632,40 @@ compile_teaspeak() {
     rm -rf TeaSpeak/server/build 2>/dev/null || true
     log_info "Build del servidor limpiado - se recompilará con JsonCpp C++17"
 
+    # CRÍTICO: Preguntar si desea limpiar el directorio environment
+    local env_dir="TeaSpeak/server/environment"
+    if [[ -d "$env_dir" ]]; then
+        echo ""
+        log_warning "═══════════════════════════════════════════════════════════"
+        log_warning "ADVERTENCIA: Directorio 'environment' existente detectado"
+        log_warning "═══════════════════════════════════════════════════════════"
+        echo ""
+        echo "Opciones:"
+        echo "  [S] Sí - Borrar environment (recomendado para compilación limpia)"
+        echo "      → El servidor generará nuevas credenciales y token"
+        echo "      → Base de datos será recreada desde cero"
+        echo ""
+        echo "  [N] No - Mantener environment existente"
+        echo "      → Se mantendrán credenciales y datos actuales"
+        echo "      → Útil si solo recompilas sin cambios en DB"
+        echo ""
+        read -p "¿Borrar directorio environment? [S/n]: " -n 1 -r
+        echo ""
+
+        # Si presiona Enter (vacío) o 'S'/'s', borrar
+        if [[ -z "$REPLY" ]] || [[ $REPLY =~ ^[Ss]$ ]]; then
+            log_warning "Borrando directorio environment..."
+            rm -rf "$env_dir"
+            log_success "✓ Directorio environment limpiado - se generarán nuevas credenciales"
+        else
+            log_info "Manteniendo environment existente"
+            log_warning "⚠ No se generarán nuevas credenciales en esta ejecución"
+        fi
+        echo ""
+    else
+        log_info "No existe environment previo - se creará uno nuevo"
+    fi
+
     # Configurar variables de entorno
     export build_os_type=linux
     export build_os_arch=amd64

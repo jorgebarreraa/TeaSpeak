@@ -732,12 +732,38 @@ compile_teaspeak() {
     log_info "Esto tomará varios minutos (10-20 min aproximadamente)..."
     log_info "Usando $(nproc) núcleos de CPU"
 
-    # CRÍTICO: Limpiar directorio environment para compilación limpia
+    # CRÍTICO: Preguntar si desea limpiar el directorio environment
     local env_dir="TeaSpeak/server/environment"
     if [[ -d "$env_dir" ]]; then
-        log_warning "Limpiando directorio environment para compilación limpia..."
-        rm -rf "$env_dir"
-        log_success "Directorio environment limpiado"
+        echo ""
+        log_warning "═══════════════════════════════════════════════════════════"
+        log_warning "ADVERTENCIA: Directorio 'environment' existente detectado"
+        log_warning "═══════════════════════════════════════════════════════════"
+        echo ""
+        echo "Opciones:"
+        echo "  [S] Sí - Borrar environment (recomendado para compilación limpia)"
+        echo "      → El servidor generará nuevas credenciales y token"
+        echo "      → Base de datos será recreada desde cero"
+        echo ""
+        echo "  [N] No - Mantener environment existente"
+        echo "      → Se mantendrán credenciales y datos actuales"
+        echo "      → Útil si solo recompilas sin cambios en DB"
+        echo ""
+        read -p "¿Borrar directorio environment? [S/n]: " -n 1 -r
+        echo ""
+
+        # Si presiona Enter (vacío) o 'S'/'s', borrar
+        if [[ -z "$REPLY" ]] || [[ $REPLY =~ ^[Ss]$ ]]; then
+            log_warning "Borrando directorio environment..."
+            rm -rf "$env_dir"
+            log_success "✓ Directorio environment limpiado - se generarán nuevas credenciales"
+        else
+            log_info "Manteniendo environment existente"
+            log_warning "⚠ No se generarán nuevas credenciales en esta ejecución"
+        fi
+        echo ""
+    else
+        log_info "No existe environment previo - se creará uno nuevo"
     fi
 
     # Exportar variables
