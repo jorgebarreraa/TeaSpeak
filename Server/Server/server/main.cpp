@@ -3,7 +3,7 @@
 //#include <client/linux/handler/exception_handler.h>
 #include <iostream>
 #include <misc/strobf.h>
-#define ENABLE_TERMINAL 0
+#define ENABLE_TERMINAL 1
 #if ENABLE_TERMINAL
 //#include <CXXTerminal/QuickTerminal.h>
 #endif
