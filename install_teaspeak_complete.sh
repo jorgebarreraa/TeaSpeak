@@ -741,7 +741,7 @@ compile_teaspeak() {
         log_warning "═══════════════════════════════════════════════════════════"
         echo ""
         echo "Opciones:"
-        echo "  [S] Sí - Borrar environment (recomendado para compilación limpia)"
+        echo "  [Y] Sí - Borrar environment (recomendado para compilación limpia)"
         echo "      → El servidor generará nuevas credenciales y token"
         echo "      → Base de datos será recreada desde cero"
         echo ""
@@ -749,11 +749,11 @@ compile_teaspeak() {
         echo "      → Se mantendrán credenciales y datos actuales"
         echo "      → Útil si solo recompilas sin cambios en DB"
         echo ""
-        read -p "¿Borrar directorio environment? [S/n]: " -n 1 -r
+        read -p "¿Borrar directorio environment? [Y/n]: " -n 1 -r
         echo ""
 
-        # Si presiona Enter (vacío) o 'S'/'s', borrar
-        if [[ -z "$REPLY" ]] || [[ $REPLY =~ ^[Ss]$ ]]; then
+        # Si presiona Enter (vacío) o 'Y'/'y', borrar
+        if [[ -z "$REPLY" ]] || [[ $REPLY =~ ^[Yy]$ ]]; then
             log_warning "Borrando directorio environment..."
             rm -rf "$env_dir"
             log_success "✓ Directorio environment limpiado - se generarán nuevas credenciales"
