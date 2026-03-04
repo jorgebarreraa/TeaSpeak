@@ -19,6 +19,8 @@ set(LICENCE_SOURCE_FILES
 )
 
 #Protobuf
+# Protobuf paths are already configured in tearoot-server.cmake
+# Just call find_package which will use the pre-configured variables and targets
 find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
 protobuf_generate_cpp(PROTO_SRCS TeaLicenseHelper_PROTOCOL_HEADERS shared/packets/LicenseRequest.proto shared/packets/LicenseManager.proto)
@@ -57,24 +59,30 @@ add_executable(TeaLicenseServer ${LICENCE_SOURCE_FILES}
 		# Only for boringssl: MySQLLibSSLFix.c
 )
 
+# PATCH 37: Use explicit OpenSSL paths to avoid linking conflicts
 target_link_libraries(TeaLicenseServer
 		TeaSpeak
 		TeaLicenseHelper    #Static
         threadpool::static    #Static
-        CXXTerminal::static  #Static
         libevent::core libevent::pthreads
 
         mysqlclient
         jsoncpp_lib
-		DataPipes::core::static
-        openssl::ssl::static
-        openssl::crypto::static
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libssl.a
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
 
         pthread
         dl
 		z
 		rt
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaLicenseServer CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+# PATCH 37: Use explicit OpenSSL paths to avoid linking conflicts
+    target_link_libraries(TeaLicenseServer DataPipes::core::static)
+endif()
 
 #The test license client
 add_executable(TeaLicenseClient LicenseClientMain.cpp)

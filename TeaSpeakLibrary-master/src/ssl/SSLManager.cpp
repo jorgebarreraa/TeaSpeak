@@ -315,7 +315,8 @@ std::shared_ptr<SSLContext> SSLManager::loadContext(std::string &rawKey, std::st
     }
 
     //Create context
-    context = shared_ptr<SSL_CTX>(SSL_CTX_new(SSLv23_server_method()), ::SSL_CTX_free);
+    /* SSLv23_server_method was renamed to TLS_server_method in OpenSSL 1.1+ and removed in BoringSSL */
+    context = shared_ptr<SSL_CTX>(SSL_CTX_new(TLS_server_method()), ::SSL_CTX_free);
     if (!context) SSL_ERROR("Could not create context: ");
 
 
@@ -363,10 +364,10 @@ std::shared_ptr<SSLContext> SSLManager::loadContext(std::string &rawKey, std::st
             const uint8_t* mem_ptr{nullptr};
             size_t length{0};
 #ifdef CRYPTO_BORINGSSL
-            if(!BIO_mem_contents(&*bio_private_key, &mem_ptr, &length)) SSL_ERROR("Failed to get mem contents: ");
+            if(!BIO_mem_contents(&*bio_certificate, &mem_ptr, &length)) SSL_ERROR("Failed to get mem contents: ");
 #else
             BUF_MEM* memory{nullptr};
-            if(!BIO_get_mem_ptr(&*bio_private_key, &memory) || !memory) SSL_ERROR("Failed to get mem contents: ");
+            if(!BIO_get_mem_ptr(&*bio_certificate, &memory) || !memory) SSL_ERROR("Failed to get mem contents: ");
 
             mem_ptr = (uint8_t*) memory->data;
             length = memory->length;

@@ -266,8 +266,8 @@ set(TEST_LIBRARIES
         ${ed25519_LIBRARIES_STATIC}
         ${DataPipes_LIBRARIES_SHARED} # Also includes glib2.0
 
-        openssl::ssl::shared
-        openssl::crypto::shared
+        openssl::ssl::static
+        openssl::crypto::static
         dl
         z
 )

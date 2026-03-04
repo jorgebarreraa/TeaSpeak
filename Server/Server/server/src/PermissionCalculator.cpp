@@ -175,7 +175,7 @@ std::vector<std::pair<PermissionType, PermissionFlaggedValue>> ClientPermissionC
             server_group_data.erase(remove_if(server_group_data.begin(), server_group_data.end(), [](auto data) { return !std::get<2>(data); }), server_group_data.end());
             logTrace(this->virtual_server_id, "[Permission] Found negate flag within server groups. Groups left: {}", server_group_data.size());
             if(server_group_data.empty()) {
-                logTrace(this->virtual_server_id, "[Permission] After non negated groups have been kicked out the negated groups are empty! This should not happen! Permission: {}, Client ID: {}", permission_type, this->client_database_id);
+                logTrace(this->virtual_server_id, "[Permission] After non negated groups have been kicked out the negated groups are empty! This should not happen! Permission: {}, Client ID: {}", static_cast<int>(permission_type), this->client_database_id);
             }
             permission::PermissionValue current_lowest = 0;
             for(auto& group : server_group_data) {

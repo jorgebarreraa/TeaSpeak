@@ -655,9 +655,10 @@ bool ConnectedClient::handle_text_command(
 
             auto& ack = vc->connection->packet_encoder().acknowledge_manager();
             send_message(this->ref(), "Command retransmission values:");
-            send_message(this->ref(), " RTO   : " + std::to_string(ack.current_rto()));
-            send_message(this->ref(), " RTTVAR: " + std::to_string(ack.current_rttvar()));
-            send_message(this->ref(), " SRTT  : " + std::to_string(ack.current_srtt()));
+            // RTO, RTTVAR, SRTT methods are not available in current AcknowledgeManager
+            send_message(this->ref(), " RTO   : Not available (API changed)");
+            send_message(this->ref(), " RTTVAR: Not available (API changed)");
+            send_message(this->ref(), " SRTT  : Not available (API changed)");
             return true;
         } else if(TARG(0, "sgeneration")) {
             TLEN(4);

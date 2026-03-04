@@ -1,0 +1,5 @@
+# TeaSpeak teafile requires nightly Rust
+# Features used: backtrace, with_options, new_uninit, drain_filter,
+#                label_break_value, box_syntax, btree_drain_filter, hash_drain_filter
+[toolchain]
+channel = "nightly"

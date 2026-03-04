@@ -1,8 +1,9 @@
+#include <memory>
 #include <dlfcn.h>
 #include <algorithm>
 #include <log/LogUtils.h>
 #include <experimental/filesystem>
-#include "teaspeak/MusicPlayer.h"
+#include <teaspeak/MusicPlayer.h>
 
 using namespace std;
 using namespace music;

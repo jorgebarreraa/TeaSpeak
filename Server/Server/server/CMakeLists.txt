@@ -3,9 +3,16 @@ project(TeaSpeak-Server)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #--allow-multiple-definition
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -Wall -Wno-reorder -Wno-sign-compare -static-libgcc -static-libstdc++ -g -Wl,--no-whole-archive -pthread ${MEMORY_DEBUG_FLAGS} -Werror=return-type -Werror=delete-non-virtual-dtor")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3")
+
+# Base flags without debug symbols
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -Wall -Wno-reorder -Wno-sign-compare -static-libgcc -static-libstdc++ -Wl,--no-whole-archive -pthread ${MEMORY_DEBUG_FLAGS} -Werror=return-type -Werror=delete-non-virtual-dtor")
+
+# Release flags: optimize and strip symbols
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+
+# RelWithDebInfo and Debug: add debug symbols
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 -g")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 #NDEBUG
 #set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
@@ -19,12 +26,14 @@ include_directories(../music/include/)
 include_directories(../shared/src)
 include_directories(../license/src)
 include_directories(../MusicBot/src)
+include_directories(../../../TeaSpeakLibrary-1.4.10/src)
 # include_directories(/usr/local/include/breakpad)
 # include_directories(${LIBRARY_PATH}/tomcrypt/src/headers)
 
 add_definitions(-DLTM_DESC)
 add_definitions(-DMUSIC_BOT)
 add_definitions(-DUSE_BORINGSSL)
+add_definitions(-DEXTERNALIZE_PROPERTY_DEFINITIONS)
 
 #0 = STABLE
 #1 = BETA
@@ -32,13 +41,14 @@ add_definitions(-DUSE_BORINGSSL)
 #3 = PRIVATE
 option(BUILD_TYPE "Sets the build type" OFF)
 option(BUILD_TYPE_NAME "Sets the build type name" OFF)
-option(COMPILE_WEB_CLIENT "Enable/Disable the web cleint future" OFF)
-#set(COMPILE_WEB_CLIENT "ON")
+option(COMPILE_WEB_CLIENT "Enable/Disable the web client feature" ON)
+# Web client enabled by default for full functionality
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(SERVER_SOURCE_FILES
         main.cpp
         tomcryptTest.cpp
+        src/arc4random_stub.c
         # Only needed for boringssl
         # MySQLLibSSLFix.c
 
@@ -119,8 +129,6 @@ set(SERVER_SOURCE_FILES
 
         src/client/SpeakingClient.cpp
 
-        ../shared/src/ssl/SSLManager.cpp
-
         src/manager/SqlDataManager.cpp
 
         src/ShutdownHelper.cpp
@@ -175,10 +183,12 @@ add_executable(PermHelper helpers/permgen.cpp)
 target_link_libraries(PermHelper
         TeaSpeak
         stdc++fs
-        CXXTerminal::static
         libevent::core libevent::pthreads
         ${StringVariable_LIBRARIES_STATIC}
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(PermHelper CXXTerminal::static)
+endif()
 
 add_executable(PermMapHelper helpers/PermMapGen.cpp)
 target_link_libraries(PermMapHelper
@@ -188,13 +198,16 @@ target_link_libraries(PermMapHelper
         TeaLicenseHelper    #Static
         TeaMusic            #Static
         ${LIBRARY_PATH_THREAD_POOL}    #Static
-        ${LIBRARY_PATH_TERMINAL}   #Static
         ${LIBRARY_PATH_VARIBALES}
         ${LIBRARY_PATH_YAML}
         pthread
         stdc++fs
-        ${LIBEVENT_PATH}/libevent.a
-        ${LIBEVENT_PATH}/libevent_pthreads.a
+        # Use cmake targets instead of ${LIBEVENT_PATH} raw paths.
+        # ${LIBEVENT_PATH} is set to _build/linux_amd64 by legacy patching scripts
+        # but the actual libraries are at out/linux_amd64. libevent::core and
+        # libevent::pthreads are resolved correctly by FindLibEvent.cmake.
+        libevent::core
+        libevent::pthreads
         ${LIBRARY_PATH_OPUS}
         ${LIBRARY_PATH_JSON}
         ${LIBRARY_PATH_PROTOBUF}
@@ -216,8 +229,10 @@ target_link_libraries(PermMapHelper
         ${LIBRARY_PATH_BORINGSSL_SSL}
         ${LIBRARY_PATH_BORINGSSL_CRYPTO}
         dl
-        jemalloc
         )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(PermMapHelper CXXTerminal::static)
+endif()
 
 
 SET(CPACK_PACKAGE_VERSION_MAJOR "1")
@@ -243,7 +258,6 @@ target_link_libraries(TeaSpeakServer
         TeaSpeak            #Static
         TeaLicenseHelper    #Static
         TeaMusic            #Static
-        CXXTerminal::static  #Static
         TeaSpeak-FileServer
         # TeaSpeak-FileRust
         ${StringVariable_LIBRARIES_STATIC}
@@ -251,14 +265,11 @@ target_link_libraries(TeaSpeakServer
         pthread
         stdc++fs
         libevent::core libevent::pthreads
-        opus::static
         yaml-cpp
 
         #Require a so
         sqlite3
-        DataPipes::core::static
 
-        breakpad::static
         protobuf::libprotobuf
         #jemalloc::shared
 
@@ -266,8 +277,30 @@ target_link_libraries(TeaSpeakServer
         tommath::static
 
         jsoncpp_lib
-        zstd::libzstd_static
+
+        # Link TeaSpeak again at the end to resolve circular dependencies with FileServer
+        TeaSpeak
 )
+
+# Link optional dependencies if available
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaSpeakServer CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaSpeakServer DataPipes::core::static)
+endif()
+if(TARGET zstd::libzstd_static)
+    target_link_libraries(TeaSpeakServer zstd::libzstd_static)
+endif()
+
+# Link optional dependencies if available
+if(TARGET opus::static)
+    target_link_libraries(TeaSpeakServer opus::static)
+endif()
+
+if(TARGET breakpad::static)
+    target_link_libraries(TeaSpeakServer breakpad::static)
+endif()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/rtclib/libteaspeak_rtc.so" AND NOT NO_RELEASE_RTC)
    message("Linking to release librtc file")
@@ -283,10 +316,53 @@ else()
     message(FATAL_ERROR "Missing librtc library file")
 endif()
 
-# include_directories(${LIBRARY_PATH}/boringssl/include/)
+# Link against BoringSSL (required for DataPipes compatibility).
+# DataPipes is compiled against BoringSSL (googlesource), where functions such as
+# SSL_CTX_set_tlsext_servername_callback, BIO_clear_retry_flags, BIO_set_retry_read
+# are OPENSSL_EXPORT symbols.  openssl-prebuild-master is OpenSSL 1.x where these
+# are plain macros – so the symbols are absent from the archive and the linker fails.
+#
+# IMPORTANT: include_directories is only added when the library files exist, to avoid
+# compiling with BoringSSL headers but linking against OpenSSL (causing symbol mismatches).
+if(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.a")
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/lib/libssl.a
+            ${LIBRARY_PATH}/boringssl/lib/libcrypto.a
+    )
+elseif(EXISTS "${LIBRARY_PATH}/boringssl/lib/libssl.so")
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/lib/libssl.so
+            ${LIBRARY_PATH}/boringssl/lib/libcrypto.so
+    )
+elseif(EXISTS "${LIBRARY_PATH}/boringssl/build/ssl/libssl.a")
+    # BoringSSL built but not yet installed to lib/ subdirectory
+    include_directories(${LIBRARY_PATH}/boringssl/include/)
+    add_definitions(-DCRYPTO_BORINGSSL)
+    target_link_libraries(TeaSpeakServer
+            ${LIBRARY_PATH}/boringssl/build/ssl/libssl.a
+            ${LIBRARY_PATH}/boringssl/build/crypto/libcrypto.a
+    )
+else()
+    message(WARNING "BoringSSL not found at ${LIBRARY_PATH}/boringssl/lib/ -- "
+                    "falling back to openssl-prebuild-master.\n"
+                    "NOTE: DataPipes requires BoringSSL. Build BoringSSL first:\n"
+                    "  cd ${LIBRARY_PATH} && bash build_boringssl.sh")
+    # Use prebuild OpenSSL.
+    target_link_libraries(TeaSpeakServer
+            ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libssl.a
+            ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild-master/linux_amd64/lib/libcrypto.a
+    )
+    # DataPipes was compiled with BoringSSL, which exports these as real functions.
+    # OpenSSL provides them only as macros (no exported symbols), so the linker
+    # cannot resolve them.  Compile a thin wrapper that implements them via the
+    # underlying OpenSSL function calls.
+    target_sources(TeaSpeakServer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/boringssl_compat.c)
+endif()
 target_link_libraries(TeaSpeakServer
-        openssl::ssl::shared
-        openssl::crypto::shared
         dl
         z
         rt # For clock_gettime
@@ -308,11 +384,30 @@ if (NOT DISABLE_JEMALLOC)
     add_definitions(-DHAVE_JEMALLOC)
 endif ()
 
+# Fix zlib linking order for mysql compatibility
+# NOTE: Removed ALL -lssl/-lcrypto linker flags that were forcing dynamic linking
+# to system OpenSSL (/lib/x86_64-linux-gnu/libssl.so.3) instead of using the
+# static BoringSSL libraries from the project.
+# The static BoringSSL libraries are already linked explicitly at lines 318-321.
+target_link_options(TeaSpeakServer PRIVATE
+    "LINKER:--push-state,--no-as-needed"
+    "LINKER:-lz"
+    "LINKER:--pop-state"
+)
+
+# Automatically strip symbols in Release builds to reduce binary size
+# Release: ~14-18 MB (production-ready, no debug symbols)
+# RelWithDebInfo/Debug: ~363 MB (includes debug symbols for development)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_custom_command(TARGET TeaSpeakServer POST_BUILD
+        COMMAND ${CMAKE_STRIP} $<TARGET_FILE:TeaSpeakServer>
+        COMMENT "Stripping release binary to reduce size..."
+    )
+endif()
 
 add_executable(Snapshots-Permissions-Test src/snapshots/permission.cpp tests/snapshots/permission.cpp)
 target_link_libraries(Snapshots-Permissions-Test PUBLIC
     TeaSpeak
-    CXXTerminal::static  #Static
     ${StringVariable_LIBRARIES_STATIC}
     ${YAML_CPP_LIBRARIES}
     pthread
@@ -321,9 +416,14 @@ target_link_libraries(Snapshots-Permissions-Test PUBLIC
 
     #Require a so
     sqlite3
-    DataPipes::core::static
 
     tomcrypt::static
     tommath::static
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(Snapshots-Permissions-Test PUBLIC DataPipes::core::static)
+endif()
 target_include_directories(Snapshots-Permissions-Test PUBLIC ${CMAKE_SOURCE_DIR}/server/src/)

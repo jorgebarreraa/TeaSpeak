@@ -647,7 +647,7 @@ bool ConnectedClient::notifyClientEnterView(const std::shared_ptr<ConnectedClien
         case ViewReasonId::VREASON_CHANNEL_KICK:
         case ViewReasonId::VREASON_SERVER_KICK:
             if(!invoker) {
-                logCritical(this->getServerId(), "{} ConnectedClient::notifyClientEnterView() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, reasonId);
+                logCritical(this->getServerId(), "{} ConnectedClient::notifyClientEnterView() => missing invoker for reason id {}", CLIENT_STR_LOG_PREFIX, static_cast<int>(reasonId));
                 if(this->server)
                     ;//invoker = this->server->serverRoot.get();
             }

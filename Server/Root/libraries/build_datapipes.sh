@@ -35,8 +35,8 @@ _cxx_options=""
 [[ ${build_os_type} == "win32" ]] && _cxx_options="-DWIN32"
 
 general_options="-DCMAKE_C_FLAGS=\"-fPIC\" -DCMAKE_CXX_FLAGS=\"$_cxx_options\" -DBUILD_EXAMPLES=OFF -DBUILD_STATIC=1 -DBUILD_SHARED=1 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-#crypto_options="-DCrypto_ROOT_DIR=\"$(pwd)/boringssl/lib/\" -DCRYPTO_TYPE=\"boringssl\""
-crypto_options="-DCRYPTO_TYPE=\"openssl\" -DCrypto_ROOT_DIR=\"$(pwd)/openssl-prebuild/${build_os_type}_${build_os_arch}/\""
+crypto_options="-DCrypto_ROOT_DIR=\"$(pwd)/boringssl/lib/\" -DCRYPTO_TYPE=\"boringssl\""
+#crypto_options="-DCRYPTO_TYPE=\"openssl\" -DCrypto_ROOT_DIR=\"$(pwd)/openssl-prebuild/${build_os_type}_${build_os_arch}/\""
 
 command="cmake_build ${library_path} ${general_options} ${crypto_options} ${web_cmake_flags} ${CMAKE_OPTIONS}"
 eval "$command"

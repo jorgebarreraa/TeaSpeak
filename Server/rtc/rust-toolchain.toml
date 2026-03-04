@@ -1,0 +1,4 @@
+# TeaSpeak rtclib requires nightly Rust
+# Features used: backtrace, core_intrinsics, array_methods
+[toolchain]
+channel = "nightly"

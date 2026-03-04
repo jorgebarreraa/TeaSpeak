@@ -29,21 +29,26 @@ target_link_libraries(TeaSpeak-FileServer PUBLIC TeaSpeak ${StringVariable_LIBRA
         libevent::core libevent::pthreads
         # We're not linking this here, since we may later use DataPipes::shared linking
         # DataPipes::core::static
-        openssl::ssl::shared
-        openssl::crypto::shared
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libssl.a
+        ${CMAKE_SOURCE_DIR}/../../libraries/openssl-prebuild/linux_amd64/lib/libcrypto.a
 )
 
 target_include_directories(TeaSpeak-FileServer PUBLIC include/)
+target_include_directories(TeaSpeak-FileServer PUBLIC ${CMAKE_SOURCE_DIR}/shared/src)
 target_compile_options(TeaSpeak-FileServer PUBLIC "-Wswitch-enum")
 target_compile_features(TeaSpeak-FileServer PUBLIC cxx_std_20)
 
 add_executable(TeaSpeak-FileServerTest test/main.cpp)
 target_link_libraries(TeaSpeak-FileServerTest PUBLIC TeaSpeak-FileServer
         TeaMusic            #Static (Must be in here, so we link against TeaMusic which uses C++11. That forbids GCC to use the newer glibc version)
-        CXXTerminal::static
-        DataPipes::core::static
         stdc++fs
 )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(TeaSpeak-FileServerTest PUBLIC CXXTerminal::static)
+endif()
+if(TARGET DataPipes::core::static)
+    target_link_libraries(TeaSpeak-FileServerTest PUBLIC DataPipes::core::static)
+endif()
 target_compile_options(TeaSpeak-FileServerTest PUBLIC -static-libgcc -static-libstdc++)
 
 add_executable(FileServer-CLNText local_server/clnpath.cpp)

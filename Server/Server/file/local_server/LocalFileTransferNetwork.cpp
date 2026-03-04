@@ -1214,7 +1214,7 @@ size_t LocalFileTransfer::handle_transfer_read(const std::shared_ptr<FileClient>
             return 0;
         }
     } else {
-        logWarning(LOG_FT, "{} Read message at invalid client state ({}). Dropping message.", client->log_prefix(), client->state);
+        logWarning(LOG_FT, "{} Read message at invalid client state ({}). Dropping message.", client->log_prefix(), static_cast<int>(client->state));
     }
     return 0;
 }

@@ -96,7 +96,7 @@ std::shared_ptr<ts::music::PlayableSong> PlayablePlaylist::current_song(bool& aw
 
     if(result->type != ::music::UrlType::TYPE_VIDEO && result->type != ::music::UrlType::TYPE_STREAM) {
         /* we cant replay that kind of entry. Skipping it */
-        debugMessage(this->get_server_id(), "[PlayList] Tried to replay an invalid entry type (SongID: {}, Type: {})! Skipping song", entry->song_id, result->type);
+        debugMessage(this->get_server_id(), "[PlayList] Tried to replay an invalid entry type (SongID: {}, Type: {})! Skipping song", entry->song_id, static_cast<int>(result->type));
         return nullptr;
     }
 

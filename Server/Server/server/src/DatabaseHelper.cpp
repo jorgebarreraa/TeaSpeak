@@ -1197,7 +1197,7 @@ void DatabaseHelper::loadStartupPropertyCache() {
 
         const auto& info = property::find(type, key);
         if(info.is_undefined()) {
-            logError(serverId, "Invalid property ({} | {})", key, type);
+            logError(serverId, "Invalid property ({} | {})", key, static_cast<int>(type));
             return 0;
         }
         if(serverId == 0) return 0;

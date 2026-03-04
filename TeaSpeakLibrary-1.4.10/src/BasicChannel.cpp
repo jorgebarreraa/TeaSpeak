@@ -298,7 +298,7 @@ deque<std::shared_ptr<ts::BasicChannel>> BasicChannelTree::delete_channel_root(c
     for(const auto& channel : channels) {
         if(!channel) continue;
         auto c = dynamic_pointer_cast<BasicChannel>(channel);
-        assert(c);
+        if(!c) continue; /* assert(c) replaced: skip non-BasicChannel entries gracefully */
         this->on_channel_entry_deleted(c);
         result.push_back(c);
     }

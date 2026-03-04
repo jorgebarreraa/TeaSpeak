@@ -20,12 +20,13 @@ if (NOT BUILD_OS_ARCH)
     set(BUILD_OS_ARCH $ENV{build_os_arch})
 endif ()
 
-set(LIBRARY_PATH "${CMAKE_SOURCE_DIR}/../libraries/")
+# Use relative path to libraries directory (works from any location)
+get_filename_component(LIBRARY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libraries/" ABSOLUTE)
 if (BUILD_INCLUDE_FILE)
     include(${BUILD_INCLUDE_FILE})
 endif ()
 
-set(LIBEVENT_PATH "${LIBRARY_PATH}/event/build/lib/")
+set(LIBEVENT_PATH "${LIBRARY_PATH}/event/_build/linux_amd64/lib")
 
 function(resolve_library VARIABLE FALLBACK PATHS)
     set( _PATHS ${PATHS} ${ARGN} ) # Merge them together
@@ -48,24 +49,34 @@ endfunction()
 
 find_package(TomMath REQUIRED)
 find_package(TomCrypt REQUIRED)
-find_package(Breakpad REQUIRED)
+find_package(Breakpad) # Optional: crash reporting
 find_package(Protobuf REQUIRED)
 find_package(Crypto REQUIRED)
 find_package(ThreadPool REQUIRED)
-find_package(CXXTerminal REQUIRED)
+find_package(CXXTerminal) # Optional: Terminal library
 find_package(StringVariable REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(jsoncpp REQUIRED)
-find_package(DataPipes REQUIRED)
-find_package(Opus REQUIRED)
+# jsoncpp_lib target is manually defined in tearoot-server.cmake, skip find_package
+# to avoid CMake target conflict
+if(NOT TARGET jsoncpp_lib)
+    find_package(jsoncpp REQUIRED)
+endif()
+find_package(DataPipes) # Optional: Pipes library
+find_package(Opus) # Optional: Opus codec
 find_package(spdlog REQUIRED)
 find_package(Jemalloc REQUIRED)
-find_package(Protobuf REQUIRED)
+# find_package(Protobuf REQUIRED) # Duplicate - already called on line 53
 message("${zstd_DIR}")
-find_package(zstd REQUIRED)
+find_package(zstd) # Optional: zstd compression
 
 include_directories(${StringVariable_INCLUDE_DIR})
+# Get spdlog include directory from the target
+get_target_property(SPDLOG_INCLUDE_DIRS spdlog::spdlog INTERFACE_INCLUDE_DIRECTORIES)
+include_directories(${SPDLOG_INCLUDE_DIRS})
 add_subdirectory(music/)
+
+# Add music include directory for server to access MusicPlayer.h
+include_directories(music/include)
 
 # LibEvent fucks up the CMAKE_FIND_LIBRARY_SUFFIXES variable
 macro(find_event static)
@@ -74,7 +85,7 @@ macro(find_event static)
         set(LIBEVENT_STATIC_LINK TRUE)
         message("Use static libevent")
     endif ()
-    find_package(Libevent 2.2 REQUIRED COMPONENTS core pthreads)
+    find_package(Libevent 2.1 REQUIRED COMPONENTS core pthreads)
     if (NOT Libevent_FOUND)
         message(FATAL_ERROR "Failed to find libevent (Variable: ${LIBEVENT_FOUND})")
     endif ()
@@ -93,14 +104,19 @@ if(HAVE_MYSQL_H)
 endif()
 
 #FIXME: Use module for this
-include_directories(${breakpad_INCLUDE_DIR})
+if(breakpad_INCLUDE_DIR)
+    include_directories(${breakpad_INCLUDE_DIR})
+endif()
 include_directories(${ThreadPool_INCLUDE_DIR})
-include_directories(${DataPipes_INCLUDE_DIR})
+if(DataPipes_INCLUDE_DIR)
+    include_directories(${DataPipes_INCLUDE_DIR})
+endif()
 include_directories(${LIBEVENT_INCLUDE_DIRS})
 include_directories(${StringVariable_INCLUDE_DIR})
 
 add_definitions(-DINET -DINET6)
 
+# shared/ is a library directory used by other modules, not a CMake project
 add_subdirectory(shared/)
 add_subdirectory(server/)
 add_subdirectory(license/)

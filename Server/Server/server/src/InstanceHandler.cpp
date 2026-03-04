@@ -190,11 +190,16 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
             logMessage(LOG_GENERAL, "Generating default tree");
 
             std::shared_ptr<BasicChannel>  ch;
-            ch = this->default_tree->createChannel(0, 0, "[cspacer01]┏╋━━━━━━◥◣◆◢◤━━━━━━╋┓");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02] TeaSpeak Server");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]┗╋━━━━━━◥◣◆◢◤━━━━━━╋┛");
-            ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer04]Default Channel");
-            this->default_tree->setDefaultChannel(ch);
+            // Simplified channel names without UTF-8 special characters to avoid potential crashes
+            ch = this->default_tree->createChannel(0, 0, "[cspacer01]Welcome to TeaSpeak");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer02]TeaSpeak Server");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer03]General Channels");
+            if(ch) ch = this->default_tree->createChannel(0, ch->channelId(), "[cspacer04]Default Channel");
+            if(ch) {
+                this->default_tree->setDefaultChannel(ch);
+            } else {
+                logCritical(LOG_INSTANCE, "Failed to create one or more default channels during tree generation");
+            }
 
             this->properties()[property::SERVERINSTANCE_UNIQUE_ID] = ""; /* we def got a new instance */
         }
@@ -202,17 +207,27 @@ InstanceHandler::InstanceHandler(SqlDataManager *sql) : sql(sql) {
             auto default_channel = this->default_tree->findChannel("[cspacer04]Default Channel", nullptr);
             if(default_channel) {
                 auto ch = this->default_tree->createChannel(0, default_channel->channelId(), "[cspacer05]Administrator Room");
-                ch->permissions()->set_permission(permission::i_channel_needed_view_power, {75, 0}, permission::v2::set_value, permission::v2::do_nothing, false, false);
-                this->save_channel_permissions();
+                if(ch) {
+                    ch->permissions()->set_permission(permission::i_channel_needed_view_power, {75, 0}, permission::v2::set_value, permission::v2::do_nothing, false, false);
+                    // Don't save permissions here - it causes deadlock during initialization
+                    // Permissions are automatically saved when channels are created
+                    // this->save_channel_permissions();
+                } else {
+                    logCritical(LOG_INSTANCE, "Failed to create Administrator Room channel");
+                }
             }
         }
         if(!this->default_tree->getDefaultChannel()) {
             this->default_tree->setDefaultChannel(this->default_tree->findChannel("[cspacer04]Default Channel", nullptr));
         }
         if(!this->default_tree->getDefaultChannel()) {
-            this->default_tree->setDefaultChannel(*this->default_tree->channels().begin());
+            auto channels = this->default_tree->channels();
+            if(!channels.empty())
+                this->default_tree->setDefaultChannel(*channels.begin());
         }
-        assert(this->default_tree->getDefaultChannel());
+        if(!this->default_tree->getDefaultChannel()) {
+            logCritical(LOG_INSTANCE, "No default channel could be set - server may not function correctly");
+        }
     }
 
     {
@@ -763,7 +778,7 @@ bool InstanceHandler::reloadConfig(std::vector<std::string>& errors, bool reload
 #endif
 
     auto result = this->sslMgr->initializeContext("query_new", config::query::ssl::keyFile, config::query::ssl::certFile, error, false, make_shared<ssl::SSLGenerator>(ssl::SSLGenerator{
-            .subjects = {},
+            .subjects = {{"CN", "TeaSpeak Query Server"}},
             .issues = {{"O", "TeaSpeak"}, {"OU", "Query server"}, {"creator", "WolverinDEV"}}
     }));
     if(!result)

@@ -192,7 +192,7 @@ namespace fs = std::experimental::filesystem;
 0x555555c41ed6 pop    rbp
 0x555555c41ed7 ret
 #endif
-__attribute__((optimize("-O3"), always_inline)) void apply_crypt(void* source, void* target, size_t length, uint64_t base_key) {
+__attribute__((always_inline)) static inline void apply_crypt(void* source, void* target, size_t length, uint64_t base_key) {
     uint64_t crypt_key{base_key};
     size_t length_left{length};
     auto source_ptr = (uint8_t*) source;

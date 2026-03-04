@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstddef>
 #include <bitset>
+#include <cstdint>
 
 namespace ts::protocol {
     template <size_t N>

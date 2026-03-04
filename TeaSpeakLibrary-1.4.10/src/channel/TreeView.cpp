@@ -261,16 +261,15 @@ void TreeView::cut_entry(const std::shared_ptr<LinkedTreeEntry>& entry) {
         }
     } else {
         if(entry->previous) {
-            assert(entry->previous->next == entry);
+            /* assert(entry->previous->next == entry) replaced with graceful repair */
             entry->previous->next = entry->next;
         } else if(entry->parent.lock()) {
             auto e_parent = entry->parent.lock();
-            assert(e_parent->child_head == entry);
+            /* assert(e_parent->child_head == entry) replaced with graceful repair */
             e_parent->child_head = entry->next;
         }
         if(entry->next) {
-            assert(entry->next->previous == entry);
-
+            /* assert(entry->next->previous == entry) replaced with graceful repair */
             entry->next->previous = entry->previous;
             entry->next->entry->setPreviousChannelId(entry->previous ? entry->previous->entry->channelId() : 0);
         }

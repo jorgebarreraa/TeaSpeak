@@ -135,7 +135,10 @@ bool ServerChannelTree::initializeTempParents() {
     auto channelList = this->tmpChannelList;
     for(const auto& linked_channel : channelList) {
         auto channel = dynamic_pointer_cast<BasicChannel>(linked_channel->entry);
-        assert(channel);
+        if(!channel) {
+            logError(this->getServerId(), "initializeTempParents: channel entry cannot be cast to BasicChannel, skipping");
+            continue;
+        }
 
         if(channel->properties()[property::CHANNEL_PID].as_or<ChannelId>(0) != 0){
             if(!channel->parent())
@@ -219,7 +222,10 @@ inline std::shared_ptr<TreeView::LinkedTreeEntry> buildChannelTree(ServerId serv
     bool brokenTree = false;
     for(const auto& linked_channel : top_channels){
         auto channel = dynamic_pointer_cast<BasicChannel>(linked_channel->entry);
-        assert(channel);
+        if(!channel) {
+            logError(serverId, "buildChannelTree: channel entry cannot be cast to BasicChannel, skipping");
+            continue;
+        }
 
         if(channel->channelOrder() != 0) {
             if(channel->channelOrder() == channel->channelId()) {
@@ -308,7 +314,11 @@ inline std::shared_ptr<TreeView::LinkedTreeEntry> buildChannelTree(ServerId serv
         auto entry = heads[0];
         while(entry) {
             auto channel = dynamic_pointer_cast<BasicChannel>(entry->entry);
-            assert(channel);
+            if(!channel) {
+                logError(serverId, "buildChannelTree: channel entry cannot be cast to BasicChannel during tree verification, skipping");
+                entry = entry->next;
+                continue;
+            }
 
             auto evaluated_order_id = entry->previous ? entry->previous->entry->channelId() : 0;
             if(evaluated_order_id != channel->previousChannelId()) {
@@ -340,7 +350,14 @@ bool ServerChannelTree::buildChannelTreeFromTemp() {
     if(this->tmpChannelList.empty()) return true;
 
     this->head = buildChannelTree(this->getServerId(), nullptr, this->tmpChannelList);
-    assert(tmpChannelList.empty());
+    if(!tmpChannelList.empty()) {
+        logError(this->getServerId(), "buildChannelTreeFromTemp: {} channel(s) could not be placed in tree (orphaned). Discarding them.", this->tmpChannelList.size());
+        for(const auto& entry : this->tmpChannelList) {
+            auto ch = dynamic_pointer_cast<BasicChannel>(entry->entry);
+            if(ch) logError(this->getServerId(), "  Discarding orphaned channel {} ({})", ch->channelId(), ch->name());
+        }
+        this->tmpChannelList.clear();
+    }
     return true;
 }
 
@@ -445,11 +462,20 @@ bool ServerChannelTree::validateChannelNames() {
         auto it = head;
         while(it) {
             auto channel = dynamic_pointer_cast<ServerChannel>(it->entry);
+            if(!channel) {
+                logError(this->getServerId(), "validateChannelNames: channel entry cannot be cast to ServerChannel, skipping");
+                it = it->next;
+                continue;
+            }
             auto name = channel->name();
 
             if(used_names.count(name) > 0) {
                 auto taken_channel = used_names[name];
-                assert(taken_channel);
+                if(!taken_channel) {
+                    logError(this->getServerId(), "validateChannelNames: taken_channel is null unexpectedly, skipping duplicate check");
+                    it = it->next;
+                    continue;
+                }
 
                 size_t index = 1;
                 while(true) {
@@ -535,9 +561,10 @@ int ServerChannelTree::loadChannelFromData(int argc, char **data, char **column)
     }
 
     //assert(type != 0xFF);
-    assert(channelId != 0);
-    if(channelId == 0)
+    if(channelId == 0) {
+        logError(this->getServerId(), "loadChannelFromData: channelId is 0, skipping invalid channel");
         return 0;
+    }
 
     auto server = this->server_ref.lock();
 
@@ -573,7 +600,10 @@ void ServerChannelTree::on_channel_entry_deleted(const shared_ptr<BasicChannel> 
     BasicChannelTree::on_channel_entry_deleted(channel);
 
     auto server_channel = dynamic_pointer_cast<ServerChannel>(channel);
-    assert(server_channel);
+    if(!server_channel) {
+        logError(this->getServerId(), "on_channel_entry_deleted: channel cannot be cast to ServerChannel, skipping RTC/group cleanup");
+        return;
+    }
 
     auto server = this->server_ref.lock();
     if(server) {

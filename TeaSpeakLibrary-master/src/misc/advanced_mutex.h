@@ -6,6 +6,7 @@
 #include <shared_mutex>
 #include <atomic>
 #include <map>
+#include <memory>
 
 namespace std {
     template<class T, class Lock>

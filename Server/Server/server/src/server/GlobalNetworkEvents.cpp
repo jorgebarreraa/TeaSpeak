@@ -73,7 +73,8 @@ event* NetworkEventLoop::allocate_event(int fd, short events, event_callback_fn 
 
     size_t try_count{0};
     while(try_count < this->event_loops.size()) {
-        event_loop = this->event_loops[this->event_loop_index % this->event_loops.size()];
+        size_t current_index = (this->event_loop_index + try_count) % this->event_loops.size();
+        event_loop = this->event_loops[current_index];
 
         if(!use_list) {
             /* we have our event loop */

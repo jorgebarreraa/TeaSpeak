@@ -3,6 +3,7 @@
 #include <any>
 #include <string>
 #include <cstddef>
+#include <cstdint>
 
 namespace ts {
     typedef long double long_double;

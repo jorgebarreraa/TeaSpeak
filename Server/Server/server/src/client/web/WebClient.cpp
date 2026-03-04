@@ -529,7 +529,7 @@ void WebClient::handleMessage(const pipes::buffer_view &message) {
         }
     } catch (const std::exception& ex) {
         logError(this->server->getServerId(), "Could not handle json packet! Message {}", ex.what());
-        logTrace(this->server->getServerId(), "Message: {}", message);
+        logTrace(this->server->getServerId(), "Message: {}", message.string());
     }
 }
 //candidate:3260795824 1 udp 2122194687 192.168.43.141 37343 typ host generation 0 ufrag JCsw network-id 2

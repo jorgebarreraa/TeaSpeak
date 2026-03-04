@@ -19,20 +19,34 @@
 include(FindPackageHandleStandardArgs)
 
 function(find_mysql)
+    # First try to find mysql_ROOT_DIR if provided
     find_path(mysql_ROOT_DIR
-            NAMES include/mysql.h include/mysql_version.h
+            NAMES include/mysql.h include/mysql_version.h include/mysql/mysql.h
             HINTS ${mysql_ROOT_DIR}
+            PATHS /usr /usr/local
     )
 
+    # Search for MySQL headers in common Ubuntu/Debian locations
     find_path(mysql_INCLUDE_DIR
             NAMES mysql.h mysql_version.h
-            HINTS ${mysql_ROOT_DIR}/include/
+            HINTS ${mysql_ROOT_DIR}/include/ ${mysql_ROOT_DIR}/include/mysql/
+            PATHS
+                /usr/include/mysql
+                /usr/local/include/mysql
+                /usr/include/mariadb
+                /usr/local/include/mariadb
+            PATH_SUFFIXES mysql mariadb
     )
 
     if (NOT TARGET mysql::client::static)
         find_library(MYSQL_CLIENT_STATIC
-                NAMES mysql.lib libmysqlclient.a
+                NAMES mysql.lib libmysqlclient.a libmariadbclient.a libmariadb.a
                 HINTS ${mysql_ROOT_DIR} ${mysql_ROOT_DIR}/lib
+                PATHS
+                    /usr/lib
+                    /usr/lib/x86_64-linux-gnu
+                    /usr/local/lib
+                PATH_SUFFIXES mysql mariadb
         )
 
         if(MYSQL_CLIENT_STATIC)
@@ -47,6 +61,10 @@ function(find_mysql)
     find_package_handle_standard_args(mysql DEFAULT_MSG
             mysql_INCLUDE_DIR
     )
+
+    # Propagate variables to parent scope
+    set(mysql_FOUND ${mysql_FOUND} PARENT_SCOPE)
+    set(mysql_INCLUDE_DIR ${mysql_INCLUDE_DIR} PARENT_SCOPE)
 
     mark_as_advanced(
             mysql_ROOT_DIR
