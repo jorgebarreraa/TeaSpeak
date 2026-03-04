@@ -33,6 +33,7 @@ include_directories(../../../TeaSpeakLibrary-1.4.10/src)
 add_definitions(-DLTM_DESC)
 add_definitions(-DMUSIC_BOT)
 add_definitions(-DUSE_BORINGSSL)
+add_definitions(-DEXTERNALIZE_PROPERTY_DEFINITIONS)
 
 #0 = STABLE
 #1 = BETA

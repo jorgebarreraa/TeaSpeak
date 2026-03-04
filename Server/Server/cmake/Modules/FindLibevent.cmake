@@ -89,10 +89,15 @@ if(LIBEVENT_CONFIG_DIR)
 
     if(LIBEVENT_STATIC_LINK)
         # Use static libraries
-        if(TARGET event_core_static AND NOT TARGET libevent::core)
-            get_target_property(_LOCATION event_core_static IMPORTED_LOCATION_RELEASE)
+        if((TARGET event_core_static OR TARGET event_core) AND NOT TARGET libevent::core)
+            if(TARGET event_core_static)
+                set(_EVENT_CORE_TARGET event_core_static)
+            else()
+                set(_EVENT_CORE_TARGET event_core)
+            endif()
+            get_target_property(_LOCATION ${_EVENT_CORE_TARGET} IMPORTED_LOCATION_RELEASE)
             if(NOT _LOCATION)
-                get_target_property(_LOCATION event_core_static IMPORTED_LOCATION)
+                get_target_property(_LOCATION ${_EVENT_CORE_TARGET} IMPORTED_LOCATION)
             endif()
             add_library(libevent::core STATIC IMPORTED)
             set_target_properties(libevent::core PROPERTIES
@@ -102,10 +107,18 @@ if(LIBEVENT_CONFIG_DIR)
             message(STATUS "Created libevent::core from ${_LOCATION}")
         endif()
 
-        if(TARGET event_pthreads_static AND NOT TARGET libevent::pthreads)
-            get_target_property(_LOCATION event_pthreads_static IMPORTED_LOCATION_RELEASE)
+        # Create libevent::pthreads target
+        # Note: Some versions of libevent don't have a separate pthreads target
+        # In those cases, we create one manually from libevent_pthreads.a
+        if((TARGET event_pthreads_static OR TARGET event_pthreads) AND NOT TARGET libevent::pthreads)
+            if(TARGET event_pthreads_static)
+                set(_EVENT_PTHREADS_TARGET event_pthreads_static)
+            else()
+                set(_EVENT_PTHREADS_TARGET event_pthreads)
+            endif()
+            get_target_property(_LOCATION ${_EVENT_PTHREADS_TARGET} IMPORTED_LOCATION_RELEASE)
             if(NOT _LOCATION)
-                get_target_property(_LOCATION event_pthreads_static IMPORTED_LOCATION)
+                get_target_property(_LOCATION ${_EVENT_PTHREADS_TARGET} IMPORTED_LOCATION)
             endif()
             add_library(libevent::pthreads STATIC IMPORTED)
             set_target_properties(libevent::pthreads PROPERTIES
@@ -114,12 +127,32 @@ if(LIBEVENT_CONFIG_DIR)
                 INTERFACE_LINK_LIBRARIES "libevent::core;pthread"
             )
             message(STATUS "Created libevent::pthreads from ${_LOCATION}")
+        elseif(NOT TARGET libevent::pthreads)
+            # Fallback: create pthreads target manually using libevent_pthreads.a library file
+            foreach(INCLUDE_DIR ${LIBEVENT_INCLUDE_DIRS})
+                get_filename_component(LIB_DIR "${INCLUDE_DIR}/../lib" ABSOLUTE)
+                if(EXISTS "${LIB_DIR}/libevent_pthreads.a")
+                    add_library(libevent::pthreads STATIC IMPORTED)
+                    set_target_properties(libevent::pthreads PROPERTIES
+                        IMPORTED_LOCATION "${LIB_DIR}/libevent_pthreads.a"
+                        INTERFACE_INCLUDE_DIRECTORIES "${LIBEVENT_INCLUDE_DIRS}"
+                        INTERFACE_LINK_LIBRARIES "libevent::core;pthread"
+                    )
+                    message(STATUS "Created libevent::pthreads from ${LIB_DIR}/libevent_pthreads.a")
+                    break()
+                endif()
+            endforeach()
         endif()
 
-        if(TARGET event_extra_static AND NOT TARGET libevent::extra)
-            get_target_property(_LOCATION event_extra_static IMPORTED_LOCATION_RELEASE)
+        if((TARGET event_extra_static OR TARGET event_extra) AND NOT TARGET libevent::extra)
+            if(TARGET event_extra_static)
+                set(_EVENT_EXTRA_TARGET event_extra_static)
+            else()
+                set(_EVENT_EXTRA_TARGET event_extra)
+            endif()
+            get_target_property(_LOCATION ${_EVENT_EXTRA_TARGET} IMPORTED_LOCATION_RELEASE)
             if(NOT _LOCATION)
-                get_target_property(_LOCATION event_extra_static IMPORTED_LOCATION)
+                get_target_property(_LOCATION ${_EVENT_EXTRA_TARGET} IMPORTED_LOCATION)
             endif()
             add_library(libevent::extra STATIC IMPORTED)
             set_target_properties(libevent::extra PROPERTIES
