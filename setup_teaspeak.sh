@@ -1722,6 +1722,23 @@ setup_server_environment() {
     log_info "  • server-cert.pem + server-key.pem"
     log_info "  • query_certificate.pem + query_privatekey.pem"
 
+    # Copiar Music Providers
+    log_substep "Copiando Music Providers..."
+    local providers_src="$SCRIPT_DIR/Server/Server/music/bin/providers"
+    local providers_dest="${build_dir}/providers"
+
+    mkdir -p "$providers_dest"
+
+    if [[ -d "$providers_src" ]] && [[ -n "$(ls -A "$providers_src" 2>/dev/null)" ]]; then
+        cp -v "$providers_src"/*.so "$providers_dest/" >> "$LOG_FILE" 2>&1
+        chmod 755 "$providers_dest"/*.so >> "$LOG_FILE" 2>&1
+        log_success "✓ Music Providers copiados"
+        log_info "  • $(ls -1 "$providers_dest" | wc -l) providers instalados"
+    else
+        log_warning "No se encontraron Music Providers compilados"
+        log_info "  • Esperado en: $providers_src"
+    fi
+
     # Limpiar base de datos inicial (si existe)
     log_substep "Limpiando base de datos inicial..."
     local db_file="${build_dir}/TeaData.sqlite"
@@ -1765,6 +1782,20 @@ show_summary() {
     echo "  • $SCRIPT_DIR/Server/Root/TeaSpeak/server/environment/certs/"
     echo "  • Certificados del servidor: server-cert.pem + server-key.pem"
     echo "  • Certificados Query: query_certificate.pem + query_privatekey.pem"
+    echo ""
+
+    log_success "Music Providers instalados:"
+    local providers_dir="$SCRIPT_DIR/Server/Root/TeaSpeak/server/environment/providers"
+    if [[ -d "$providers_dir" ]] && [[ -n "$(ls -A "$providers_dir" 2>/dev/null)" ]]; then
+        echo "  • $providers_dir"
+        for provider in "$providers_dir"/*.so; do
+            if [[ -f "$provider" ]]; then
+                echo "  • $(basename "$provider")"
+            fi
+        done
+    else
+        echo "  • No instalados (requerido para música)"
+    fi
     echo ""
 
     log_info "Para ejecutar TeaSpeak:"
