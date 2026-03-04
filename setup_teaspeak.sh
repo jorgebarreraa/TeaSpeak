@@ -20,14 +20,18 @@
 #
 #  Opciones:
 #    --github-user <username>  : Usar forks de este usuario de GitHub
+#    --github-token <token>    : Token de acceso personal de GitHub
 #    --skip-deps              : Saltar instalación de dependencias del sistema
+#    --skip-libs              : Saltar compilación de librerías (usar cache)
 #    --build-type <type>      : Tipo de build (stable|optimized|debug|nightly)
+#    --install-mode <mode>    : Modo de instalación (normal|development|production|minimal)
 #    --help                   : Mostrar ayuda
 #
 #  Ejemplos:
 #    ./setup_teaspeak.sh
-#    ./setup_teaspeak.sh --github-user jorgebarreraa
-#    ./setup_teaspeak.sh --github-user jorgebarreraa --build-type stable
+#    ./setup_teaspeak.sh --github-user jorgebarreraa --github-token ghp_xxxxx
+#    ./setup_teaspeak.sh --install-mode development
+#    ./setup_teaspeak.sh --install-mode production --build-type optimized
 #    ./setup_teaspeak.sh --skip-deps --build-type optimized
 #
 # ═══════════════════════════════════════════════════════════════════════════
@@ -85,6 +89,7 @@ GITHUB_TOKEN=""
 SKIP_DEPS=false
 SKIP_LIBS=false
 BUILD_TYPE="stable"
+INSTALL_MODE="normal"
 REQUIRED_OPENSSL_VERSION="3.0"
 MIN_GCC_VERSION="9"
 LOG_FILE="/tmp/teaspeak_setup_$(date +%Y%m%d_%H%M%S).log"
@@ -266,6 +271,10 @@ parse_args() {
                 BUILD_TYPE="$2"
                 shift 2
                 ;;
+            --install-mode)
+                INSTALL_MODE="$2"
+                shift 2
+                ;;
             --help)
                 show_help
                 exit 0
@@ -305,6 +314,7 @@ OPCIONES:
   --skip-deps               Saltar instalación de dependencias del sistema
   --skip-libs               Saltar compilación de librerías (usar cache)
   --build-type <type>       Tipo de build (default: stable)
+  --install-mode <mode>     Modo de instalación (default: normal)
   --help                    Mostrar esta ayuda
 
 TIPOS DE BUILD:
@@ -313,12 +323,24 @@ TIPOS DE BUILD:
   debug      - Build con símbolos de debugging
   nightly    - Build experimental con últimas características
 
+MODOS DE INSTALACIÓN:
+  normal       - Instalación estándar con todas las dependencias (recomendado)
+  development  - Incluye herramientas de desarrollo adicionales (gdb, valgrind, etc.)
+  production   - Instalación optimizada sin herramientas de desarrollo
+  minimal      - Solo lo esencial para compilar (más rápido)
+
 EJEMPLOS:
   # Primera instalación (solicitará credenciales interactivamente)
   $0
 
   # Con credenciales en línea de comandos
   $0 --github-user jorgebarreraa --github-token ghp_xxxxx
+
+  # Instalación para desarrollo con herramientas adicionales
+  $0 --install-mode development
+
+  # Instalación para producción optimizada
+  $0 --install-mode production --build-type optimized
 
   # Build optimizado reutilizando credenciales guardadas
   $0 --build-type optimized
@@ -384,7 +406,7 @@ install_dependencies() {
         return
     fi
 
-    log_step "PASO 2: Instalando Dependencias del Sistema"
+    log_step "PASO 2: Instalando Dependencias del Sistema (Modo: $INSTALL_MODE)"
 
     # Detectar si necesitamos sudo
     if [[ $EUID -ne 0 ]]; then
@@ -397,26 +419,81 @@ install_dependencies() {
     log_substep "Actualizando lista de paquetes..."
     $SUDO apt-get update -qq
 
-    log_substep "Instalando herramientas de compilación..."
-    $SUDO apt-get install -y -qq \
-        build-essential \
-        gcc \
-        g++ \
-        cmake \
-        make \
-        git \
-        pkg-config \
-        curl \
-        wget \
-        meson \
-        ninja-build \
-        autoconf \
-        automake \
-        libtool \
-        gettext \
-        coreutils \
-        software-properties-common \
+    # ═══════════════════════════════════════════════════════════════════════
+    # Paquetes según el modo de instalación
+    # ═══════════════════════════════════════════════════════════════════════
+
+    # Paquetes mínimos esenciales (todos los modos)
+    local MINIMAL_PACKAGES=(
+        build-essential
+        gcc
+        g++
+        cmake
+        make
+        git
+        pkg-config
+        curl
+        wget
+    )
+
+    # Paquetes adicionales para instalación normal
+    local NORMAL_PACKAGES=(
+        meson
+        ninja-build
+        autoconf
+        automake
+        libtool
+        gettext
+        coreutils
+        software-properties-common
         golang-go
+    )
+
+    # Herramientas de desarrollo adicionales
+    local DEV_PACKAGES=(
+        gdb
+        valgrind
+        strace
+        ltrace
+        vim
+        tmux
+        htop
+        iotop
+        net-tools
+        dnsutils
+        tcpdump
+        lsof
+        tree
+    )
+
+    # Instalar paquetes según el modo
+    case "$INSTALL_MODE" in
+        minimal)
+            log_info "Modo minimal: Solo paquetes esenciales"
+            log_substep "Instalando herramientas mínimas de compilación..."
+            $SUDO apt-get install -y -qq "${MINIMAL_PACKAGES[@]}"
+            ;;
+
+        production)
+            log_info "Modo production: Optimizado sin herramientas de desarrollo"
+            log_substep "Instalando herramientas de compilación..."
+            $SUDO apt-get install -y -qq "${MINIMAL_PACKAGES[@]}" "${NORMAL_PACKAGES[@]}"
+            ;;
+
+        development)
+            log_info "Modo development: Con herramientas adicionales de desarrollo"
+            log_substep "Instalando herramientas de compilación..."
+            $SUDO apt-get install -y -qq "${MINIMAL_PACKAGES[@]}" "${NORMAL_PACKAGES[@]}"
+            log_substep "Instalando herramientas de desarrollo..."
+            $SUDO apt-get install -y -qq "${DEV_PACKAGES[@]}" 2>/dev/null || true
+            ;;
+
+        normal|*)
+            log_info "Modo normal: Instalación estándar completa"
+            log_substep "Instalando herramientas de compilación..."
+            $SUDO apt-get install -y -qq "${MINIMAL_PACKAGES[@]}" "${NORMAL_PACKAGES[@]}"
+            ;;
+    esac
 
     log_substep "Instalando librerías del sistema..."
     # Instalar librerías del sistema (ignorar errores de paquetes no disponibles)
@@ -1673,6 +1750,7 @@ show_summary() {
 
     log_info "Configuración utilizada:"
     echo "  • Build type: $BUILD_TYPE"
+    echo "  • Install mode: $INSTALL_MODE"
     echo "  • GitHub user: ${GITHUB_USER:-ninguno (repos originales)}"
     echo "  • CPU cores: $(nproc)"
     echo ""
@@ -1730,6 +1808,18 @@ EOF
     # Parsear argumentos
     parse_args "$@"
 
+    # Validar modo de instalación
+    case "$INSTALL_MODE" in
+        minimal|normal|production|development)
+            # Modo válido
+            ;;
+        *)
+            log_error "Modo de instalación inválido: $INSTALL_MODE"
+            log_info "Modos válidos: minimal, normal, production, development"
+            exit 1
+            ;;
+    esac
+
     # Cargar configuración guardada (si existe)
     load_config
 
@@ -1762,6 +1852,7 @@ EOF
         log_info "GitHub user: $GITHUB_USER"
     fi
     log_info "Build type: $BUILD_TYPE"
+    log_info "Install mode: $INSTALL_MODE"
     echo ""
 
     # Confirmar
