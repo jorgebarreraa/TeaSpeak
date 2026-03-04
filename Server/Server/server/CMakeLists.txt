@@ -3,9 +3,16 @@ project(TeaSpeak-Server)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #--allow-multiple-definition
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -Wall -Wno-reorder -Wno-sign-compare -static-libgcc -static-libstdc++ -g -Wl,--no-whole-archive -pthread ${MEMORY_DEBUG_FLAGS} -Werror=return-type -Werror=delete-non-virtual-dtor")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3")
+
+# Base flags without debug symbols
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -Wall -Wno-reorder -Wno-sign-compare -static-libgcc -static-libstdc++ -Wl,--no-whole-archive -pthread ${MEMORY_DEBUG_FLAGS} -Werror=return-type -Werror=delete-non-virtual-dtor")
+
+# Release flags: optimize and strip symbols
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
+
+# RelWithDebInfo and Debug: add debug symbols
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 -g")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 #NDEBUG
 #set(CMAKE_CXX_FLAGS_RELWITHDEBINFO  "${CMAKE_CXX_FLAGS_RELEASE} -O2")
@@ -386,6 +393,15 @@ target_link_options(TeaSpeakServer PRIVATE
     "LINKER:--pop-state"
 )
 
+# Automatically strip symbols in Release builds to reduce binary size
+# Release: ~14-18 MB (production-ready, no debug symbols)
+# RelWithDebInfo/Debug: ~363 MB (includes debug symbols for development)
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_custom_command(TARGET TeaSpeakServer POST_BUILD
+        COMMAND ${CMAKE_STRIP} $<TARGET_FILE:TeaSpeakServer>
+        COMMENT "Stripping release binary to reduce size..."
+    )
+endif()
 
 add_executable(Snapshots-Permissions-Test src/snapshots/permission.cpp tests/snapshots/permission.cpp)
 target_link_libraries(Snapshots-Permissions-Test PUBLIC
