@@ -94,6 +94,55 @@ check_build_dependencies() {
     return 0
 }
 
+check_optional_dependencies() {
+    print_section "Checking optional dependencies for MusicBot..."
+
+    local missing_optional=()
+
+    # Check for ffmpeg
+    if ! command -v ffmpeg &> /dev/null; then
+        missing_optional+=("ffmpeg")
+    else
+        ffmpeg_version=$(ffmpeg -version 2>/dev/null | head -n1 | grep -Po '(?<=version )(\d)+\.(\d)+\.(\d)+' || echo "unknown")
+        print_success "ffmpeg is installed (version: $ffmpeg_version)"
+    fi
+
+    # Check for youtube-dl
+    if ! command -v youtube-dl &> /dev/null; then
+        missing_optional+=("youtube-dl")
+    else
+        ytdl_version=$(youtube-dl --version 2>/dev/null || echo "unknown")
+        print_success "youtube-dl is installed (version: $ytdl_version)"
+    fi
+
+    if [ ${#missing_optional[@]} -ne 0 ]; then
+        echo ""
+        print_warning "Optional dependencies for MusicBot are not installed: ${missing_optional[*]}"
+        echo ""
+        echo "The TeaSpeak server will work, but MusicBot features will be limited."
+        echo "To enable full MusicBot functionality, install the missing dependencies:"
+        echo ""
+        for dep in "${missing_optional[@]}"; do
+            case "$dep" in
+                ffmpeg)
+                    echo "  Ubuntu/Debian: sudo apt-get install ffmpeg"
+                    echo "  CentOS/RHEL:   sudo yum install ffmpeg"
+                    ;;
+                youtube-dl)
+                    echo "  Ubuntu/Debian: sudo apt-get install youtube-dl"
+                    echo "  CentOS/RHEL:   sudo yum install youtube-dl"
+                    echo "  Or download:   curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl"
+                    echo "                 chmod +x /usr/local/bin/youtube-dl"
+                    ;;
+            esac
+            echo ""
+        done
+        echo "After installing, you can run the install_music.sh script to configure them."
+    else
+        print_success "All optional dependencies are installed"
+    fi
+}
+
 show_menu() {
     echo -e "\n${BLUE}Select installation method:${NC}\n"
     echo "1) ${GREEN}Precompiled optimized binary${NC} (Recommended)"
@@ -152,6 +201,9 @@ compile_from_source() {
         return 1
     fi
 
+    # Check optional dependencies for MusicBot
+    check_optional_dependencies
+
     # Ask for build type
     echo ""
     echo "Select build type:"
@@ -170,6 +222,12 @@ compile_from_source() {
     print_section "Building with type: $BUILD_TYPE"
 
     cd Server/Server
+
+    # Clean environment directory for fresh compilation
+    if [ -d "server/environment" ]; then
+        print_warning "Cleaning environment directory for fresh build..."
+        rm -rf server/environment/*
+    fi
 
     # Clean previous builds if they exist
     if [ -d "build" ]; then
