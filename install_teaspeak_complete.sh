@@ -732,6 +732,14 @@ compile_teaspeak() {
     log_info "Esto tomará varios minutos (10-20 min aproximadamente)..."
     log_info "Usando $(nproc) núcleos de CPU"
 
+    # CRÍTICO: Limpiar directorio environment para compilación limpia
+    local env_dir="TeaSpeak/server/environment"
+    if [[ -d "$env_dir" ]]; then
+        log_warning "Limpiando directorio environment para compilación limpia..."
+        rm -rf "$env_dir"
+        log_success "Directorio environment limpiado"
+    fi
+
     # Exportar variables
     export build_os_type=linux
     export build_os_arch=amd64
@@ -760,7 +768,7 @@ compile_teaspeak() {
 # PASO 12: Verificar binarios
 # ═══════════════════════════════════════════════════════════════════════
 verify_build() {
-    log_step "PASO 12: Verificando Binarios Compilados"
+    log_step "PASO 12: Verificando Compilación"
 
     cd "$INSTALL_DIR/Server/Root"
 
@@ -798,6 +806,21 @@ verify_build() {
         else
             log_warning "GeoLocation no disponible (directorio no encontrado)"
         fi
+
+        # Información sobre primera ejecución
+        echo ""
+        log_info "═══════════════════════════════════════════════════════════"
+        log_info "IMPORTANTE: Primera Ejecución del Servidor"
+        log_info "═══════════════════════════════════════════════════════════"
+        echo ""
+        echo "Al ejecutar el servidor por primera vez, verás:"
+        echo "  • Generación de credenciales de Server Query (serveradmin)"
+        echo "  • Token de serveradmin (usar UNA SOLA VEZ)"
+        echo "  • Inicialización de base de datos"
+        echo "  • Creación del árbol de canales por defecto"
+        echo ""
+        log_warning "Guarda las credenciales y el token en un lugar seguro"
+        echo ""
     else
         log_warning "Algunos binarios no fueron encontrados"
         log_warning "La compilación puede haber sido parcial"
