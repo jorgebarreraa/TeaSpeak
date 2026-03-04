@@ -198,7 +198,6 @@ target_link_libraries(PermMapHelper
         TeaLicenseHelper    #Static
         TeaMusic            #Static
         ${LIBRARY_PATH_THREAD_POOL}    #Static
-        ${LIBRARY_PATH_TERMINAL}   #Static
         ${LIBRARY_PATH_VARIBALES}
         ${LIBRARY_PATH_YAML}
         pthread
@@ -230,8 +229,10 @@ target_link_libraries(PermMapHelper
         ${LIBRARY_PATH_BORINGSSL_SSL}
         ${LIBRARY_PATH_BORINGSSL_CRYPTO}
         dl
-        jemalloc
         )
+if(TARGET CXXTerminal::static)
+    target_link_libraries(PermMapHelper CXXTerminal::static)
+endif()
 
 
 SET(CPACK_PACKAGE_VERSION_MAJOR "1")
